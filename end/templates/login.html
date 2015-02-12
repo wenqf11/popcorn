@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}登录{% endblock %}
+{% block css %}
+    <link href="../static/assets/styles.css" rel="stylesheet" media="screen">
+{% endblock %}
+{% block js %}
+    <script src="../static/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../static/vendors/jquery-1.9.1.min.js"></script>
+{% endblock %}
+{% block content %}
+    <div id = "login">
+    <div class="container">
+
+      <form class="form-signin">
+        <h2 class="form-signin-heading">用户登录</h2>
+        <input type="text" class="input-block-level" placeholder="Username">
+        <input type="password" class="input-block-level" placeholder="Password">
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> 记住我
+        </label>
+        <button class="btn btn-large btn-primary" type="submit">登录</button>
+      </form>
+
+    </div> <!-- /container -->
+    </div>
+{% endblock %}
