@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}注册{% endblock %}
+
+{% block js %}
+    <script src="../static/vendors/jquery-1.9.1.min.js"></script>
+{% endblock %}
+{% block content %}
+    <div id = "login">
+    <div class="container">
+
+      <form class="form-signin" method="POST">
+        <h2 class="form-signin-heading">注册</h2>
+        <input name="username" type="text" class="input-block-level" placeholder="Username">
+        <input name="password" type="password" class="input-block-level" placeholder="Password">
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> 记住我
+        </label>
+        <button class="btn btn-large btn-primary" type="submit">注册</button>
+      </form>
+
+    </div> <!-- /container -->
+    </div>
+{% endblock %}
