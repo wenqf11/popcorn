@@ -12,6 +12,9 @@ body {
     }
 }
 
+footer{
+    text-align: center;
+}
 
 /** Login Page **/
 #login {
