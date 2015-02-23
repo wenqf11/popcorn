@@ -29,7 +29,7 @@ def usermgt(request):
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user'})
-        return render_to_response('index.html',variables)
+        return render_to_response('user.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -41,7 +41,7 @@ def devicemgt(request):
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
-        return render_to_response('index.html',variables)
+        return render_to_response('device.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -53,7 +53,7 @@ def profile(request):
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username})
-        return render_to_response('index.html',variables)
+        return render_to_response('profile.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -64,7 +64,7 @@ def front(request):
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'front'})
-        return render_to_response('index.html',variables)
+        return render_to_response('front.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -75,7 +75,77 @@ def setting(request):
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'setting'})
-        return render_to_response('index.html',variables)
+        return render_to_response('setting.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def unmain(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'maintenance'})
+        return render_to_response('unmain.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def mainhist(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'maintenance'})
+        return render_to_response('mainhist.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def spare(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
+        return render_to_response('spare.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def sparetype(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
+        return render_to_response('sparetype.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+def sparebrand(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
+        return render_to_response('sparebrand.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+def sparehist(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
+        return render_to_response('sparehist.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -114,7 +184,7 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return render_to_response('index.html',{'username':username})
+                return render_to_response('frame.html',{'username':username})
             else:
                 return HttpResponseRedirect('/login/')
     else:
