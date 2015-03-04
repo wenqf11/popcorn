@@ -1,4 +1,10 @@
 {% extends 'userframe.html' %}
+{% block js %}
+    <script src="../static/datepicker/bootstrap-datepicker.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="../static/datepicker/datepicker.css" rel="stylesheet" media="screen">
+{% endblock %}
 {% block maincontent %}
          <!-- validation -->
         <div class="row-fluid">
@@ -36,7 +42,6 @@
                     <label class="control-label">用户状态<span class="required">*</span></label>
                     <div class="controls">
                         <select class="span6 m-wrap" name="state">
-                            <option value="">选择...</option>
                             <option value="Category 1">锁定</option>
                             <option value="Category 2">在岗</option>
                             <option value="Category 3">长假</option>
@@ -101,7 +106,7 @@
                 <div class="control-group">
                     <label class="control-label">出生年月日<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="birthday" type="text" class="span6 m-wrap"/>
+                        <input name="birthday" id="birthday" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
@@ -180,7 +185,6 @@
                     <label class="control-label">状态<span class="required">*</span></label>
                     <div class="controls">
                         <select class="span6 m-wrap" name="status">
-                            <option value="">选择...</option>
                             <option value="Category 1">删除</option>
                             <option value="Category 2">有效</option>
                             <option value="Category 3">审核未通过</option>
@@ -208,3 +212,12 @@
 </div>
          <!-- /validation -->
 {% endblock %}
+
+{% block tailjs %}
+    <script>
+    $(function(){
+        $('#birthday').datepicker()
+    })
+    </script>
+{% endblock %}
+
