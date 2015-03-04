@@ -9,6 +9,7 @@ from django.utils.crypto import get_random_string
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from datetime import date
 # from django.contrib.auth.hashers import (
 #    check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
 
@@ -123,7 +124,7 @@ class k_user(models.Model):
     email = models.EmailField(_('e-mail address'))
     address = models.CharField(max_length=80)
     zipcode = models.CharField(max_length=30)
-    birthday = models.DateField()
+    birthday = models.DateField(blank=True, default=date.today)
     idcard = models.CharField(max_length=30)
     idcardtype = models.CharField(max_length=1, choices=CARD_TYPE, default='1')
     content = models.CharField(max_length=200)
@@ -131,12 +132,12 @@ class k_user(models.Model):
     contact = models.CharField(max_length=30)
     contactmobile = models.CharField(max_length=30)
     objects = UserManager()
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     #loginlog = models.CharField(max_length=100)
     def set_password(self, raw_password):
