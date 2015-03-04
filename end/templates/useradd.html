@@ -21,65 +21,182 @@
                     Your form validation is successful!
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Name<span class="required">*</span></label>
+                    <label class="control-label">分类编号<span class="required">*</span></label>
                     <div class="controls">
-                        <input type="text" name="name" data-required="1" class="span6 m-wrap"/>
+                        <input type="text" name="classid" data-required="1" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Email<span class="required">*</span></label>
+                    <label class="control-label">权限集合<span class="required">*</span></label>
+                    <div class="controls">
+                        <input type="text" name="permission" data-required="1" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">用户状态<span class="required">*</span></label>
+                    <div class="controls">
+                        <select class="span6 m-wrap" name="state">
+                            <option value="">选择...</option>
+                            <option value="Category 1">锁定</option>
+                            <option value="Category 2">在岗</option>
+                            <option value="Category 3">长假</option>
+                            <option value="Category 4">离职</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">用户名<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="username" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">密码<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="password" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">确认密码<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="confirmpassword" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">真实姓名<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="name" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">图像</label>
+                    <div class="controls">
+                        <input name="face" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">手机<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="mobile" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">电子邮箱<span class="required">*</span></label>
                     <div class="controls">
                         <input name="email" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">URL<span class="required">*</span></label>
+                    <label class="control-label">联系地址<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="url" type="text" class="span6 m-wrap"/>
-                        <span class="help-block">e.g: http://www.demo.com or http://demo.com</span>
+                        <input name="address" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Number<span class="required">*</span></label>
+                    <label class="control-label">邮政编码<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="number" type="text" class="span6 m-wrap"/>
+                        <input name="zipcode" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Digits<span class="required">*</span></label>
+                    <label class="control-label">出生年月日<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="digits" type="text" class="span6 m-wrap"/>
+                        <input name="birthday" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Credit Card<span class="required">*</span></label>
+                    <label class="control-label">身份证号码<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="creditcard" type="text" class="span6 m-wrap"/>
-                        <span class="help-block">e.g: 5500 0000 0000 0004</span>
+                        <input name="idcard" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Occupation&nbsp;&nbsp;</label>
+                    <label class="control-label">有效证件类型<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="occupation" type="text" class="span6 m-wrap"/>
-                        <span class="help-block">optional field</span>
+                        <input name="idcardtype" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Category<span class="required">*</span></label>
+                    <label class="control-label">内容<span class="required">*</span></label>
                     <div class="controls">
-                        <select class="span6 m-wrap" name="category">
-                            <option value="">Select...</option>
-                            <option value="Category 1">Category 1</option>
-                            <option value="Category 2">Category 2</option>
-                            <option value="Category 3">Category 5</option>
-                            <option value="Category 4">Category 4</option>
+                        <input name="content" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">备注<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="memo" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">紧急联系人<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="contact" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">紧急联系人手机<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="contactmobile" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">创建人编号<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="creatorid" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">创建时间<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="createdatetime" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">编辑人编号<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="editorid" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">编辑时间<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="editdatetime" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">审核人编号<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="auditorid" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">审核时间<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="auditordatetime" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">状态<span class="required">*</span></label>
+                    <div class="controls">
+                        <select class="span6 m-wrap" name="status">
+                            <option value="">选择...</option>
+                            <option value="Category 1">删除</option>
+                            <option value="Category 2">有效</option>
+                            <option value="Category 3">审核未通过</option>
+                            <option value="Category 4">审核通过</option>
                         </select>
                     </div>
                 </div>
+                <div class="control-group">
+                    <label class="control-label">登陆记录</label>
+                    <div class="controls">
+                        <input name="loginlog" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Validate</button>
-                    <button type="button" class="btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">确定</button>
+                    <button type="button" class="btn">取消</button>
                 </div>
             </fieldset>
         </form>
