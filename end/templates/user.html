@@ -1,5 +1,84 @@
 {% extends 'userframe.html' %}
+{% block css %}
+    <link href="../static/css/filetree.css" rel="stylesheet" media="screen">
+{% endblock %}
 {% block maincontent %}
     <!--画文件树-->
-    user
+ <div class="tree well">
+ <ul>
+  <li>
+   <span><i class="glyphicon glyphicon-folder-open"></i> 项目部</span>
+   <ul>
+    <li>
+      <span><i class="glyphicon glyphicon-minus-sign"></i> 天坛项目部</span>
+     <ul>
+      <li>
+        <span><i class="glyphicon glyphicon-leaf"></i> 空调组</span>
+      </li>
+     </ul>
+    </li>
+    <li>
+      <span><i class="glyphicon glyphicon-minus-sign"></i> 义庄项目部</span>
+     <ul>
+      <li>
+        <span><i class="glyphicon glyphicon-leaf"></i> 空调组</span>
+      </li>
+      <li>
+        <span><i class="glyphicon glyphicon-minus-sign"></i> 锅炉组</span>
+       <ul>
+        <li>
+          <span><i class="glyphicon glyphicon-minus-sign"></i> 班组长</span>
+           <ul>
+            <li>
+              <span><i class="glyphicon glyphicon-leaf"></i> 李四</span>
+            </li>
+            <li>
+              <span><i class="glyphicon glyphicon-leaf"></i> 张三</span>
+            </li>
+            </ul>
+        </li>
+        <li>
+          <span><i class="glyphicon glyphicon-leaf"></i> 班组长</span>
+        </li>
+        <li>
+          <span><i class="glyphicon glyphicon-leaf"></i> 班组长</span>
+        </li>
+       </ul>
+      </li>
+      <li>
+        <span><i class="glyphicon glyphicon-leaf"></i> 治水组</span>
+      </li>
+     </ul>
+    </li>
+   </ul>
+  </li>
+  <li>
+   <span><i class="glyphicon glyphicon-folder-open"></i> Parent2</span> 
+   <ul>
+    <li>
+      <span><i class="glyphicon glyphicon-leaf"></i> Child</span> 
+      </li>
+     </ul>
+  </li>
+ </ul>
+</div>
+{% endblock %}
+
+{% block tailjs %}
+<script>
+    $(function () {
+  $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+  $('.tree li.parent_li > span').on('click', function (e) {
+    var children = $(this).parent('li.parent_li').find(' > ul > li');
+    if (children.is(":visible")) {
+      children.hide('fast');
+      $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+    } else {
+      children.show('fast');
+      $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+    }
+    e.stopPropagation();
+  });
+});
+</script>
 {% endblock %}
