@@ -10,28 +10,87 @@
               <fieldset>
                 <legend>用户信息</legend>
                 <div class="control-group">
-                  <label class="control-label" for="typeahead">用户名 </label>
+                  <label class="control-label" for="typeahead">用户名<span class="required">*</span></label>
                   <div class="controls">
                     <input type="text" class="span6" id="typeahead"  data-provide="typeahead" data-items="4" >
                     <p class="help-block">限制条件</p>
                   </div>
                 </div>
                 <div class="control-group">
-                  <label class="control-label">身份证号码</label>
+                    <label class="control-label">旧密码</label>
+                    <div class="controls">
+                        <input name="oldpassword" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">新密码</label>
+                    <div class="controls">
+                        <input name="newpassword" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">确认新密码</label>
+                    <div class="controls">
+                        <input name="confirmnewpassword" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">手机<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="mobile" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">电子邮箱<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="email" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">联系地址<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="address" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">邮政编码<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="zipcode" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label">证件号码<span class="required">*</span></label>
                   <div class="controls">
                     <span class="input-xlarge uneditable-input">350802****0528****</span>
                   </div>
                 </div>
                 <div class="control-group">
-                  <label class="control-label" for="date01">出生年月</label>
+                    <label class="control-label">有效证件类型<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="idcardtype" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="date01">出生年月<span class="required">*</span></label>
                   <div class="controls">
                     <input type="text" class="input-xlarge datepicker" id="date01" value="02/16/12">
                     <p class="help-block"></p>
                   </div>
                 </div>
-
                 <div class="control-group">
-                  <label class="control-label" for="fileInput">上传头像</label>
+                    <label class="control-label">紧急联系人<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="contact" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">紧急联系人手机<span class="required">*</span></label>
+                    <div class="controls">
+                        <input name="contactmobile" type="text" class="span6 m-wrap"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="fileInput">上传头像<span class="required">*</span></label>
                   <div class="controls">
                     <input class="input-file uniform_on" id="fileInput" type="file">
                   </div>
