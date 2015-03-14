@@ -78,7 +78,7 @@
 </div>
 
 <script>
-    var clicked = {{ clicked_item }};
+    var clicked = {{ clicked_item|default:"''" }};
     if(clicked != '')
     {
         if(clicked.className != '')

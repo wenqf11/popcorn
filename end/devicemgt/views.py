@@ -84,6 +84,7 @@ def devicemgt(request):
 
 #个人信息
 def profile(request):
+    print "profile"
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
