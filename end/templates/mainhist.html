@@ -1,4 +1,192 @@
 {% extends 'frame.html' %}
+{% block css %}
+    <link href="../static/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
+{% endblock %}
+
 {% block content %}
-    mainhist
+ <div class="row-fluid">
+    <!-- block -->
+    <div class="block">
+        <div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">维修记录</div>
+        </div>
+        <div class="block-content collapse in">
+            <div class="span12">
+
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+                    <thead>
+                        <tr>
+                            <th>设备编号</th>
+                            <th>设备</th>
+                            <th>时间</th>
+                            <th>地点</th>
+                            <th>上报人</th>
+                            <th>负责人</th>
+                            <th>维修人</th>
+                            <th>故障原因</th>
+                            <th>维修结论</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd gradeA">
+                            <td>61</td>
+                            <td>锅炉</td>
+                            <td>2015/3/5</td>
+                            <td>A楼303</td>
+                            <td class="center">张三</td>
+                            <td class="center">陈六</td>
+                            <td class="center">宋八</td>
+                            <td class="center">机械部件损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>91</td>
+                            <td>锅炉</td>
+                            <td>2015/3/5</td>
+                            <td>A楼305</td>
+                            <td class="center">张三</td>
+                            <td class="center">陈六</td>
+                            <td class="center">王五</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="odd gradeA">
+                            <td>131</td>
+                            <td>空调</td>
+                            <td>2015/3/7</td>
+                            <td>C楼403</td>
+                            <td class="center">李四</td>
+                            <td class="center">杨七</td>
+                            <td class="center">王五</td>
+                            <td class="center">机械部件损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>20</td>
+                            <td>空调</td>
+                            <td>2015/3/9</td>
+                            <td>A楼108</td>
+                            <td class="center">张三</td>
+                            <td class="center">杨七</td>
+                            <td class="center">宋八</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="odd gradeA">
+                            <td>23</td>
+                            <td>空调</td>
+                            <td>2015/3/10</td>
+                            <td>C楼403</td>
+                            <td class="center">李四</td>
+                            <td class="center">杨七</td>
+                            <td class="center">宋八</td>
+                            <td class="center">机械部件损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>84</td>
+                            <td>消防中控</td>
+                            <td>2015/3/10</td>
+                            <td>A楼211</td>
+                            <td class="center">张三</td>
+                            <td class="center">杨七</td>
+                            <td class="center">宋八</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="odd gradeA">
+                            <td>63</td>
+                            <td>空调</td>
+                            <td>2015/3/12</td>
+                            <td>C楼403</td>
+                            <td class="center">李四</td>
+                            <td class="center">杨七</td>
+                            <td class="center">王五</td>
+                            <td class="center">机械部件损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>71</td>
+                            <td>空调</td>
+                            <td>2015/3/12</td>
+                            <td>A楼211</td>
+                            <td class="center">李四</td>
+                            <td class="center">杨七</td>
+                            <td class="center">宋八</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>22</td>
+                            <td>锅炉</td>
+                            <td>2015/3/14</td>
+                            <td>A楼307</td>
+                            <td class="center">张三</td>
+                            <td class="center">陈六</td>
+                            <td class="center">王五</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>27</td>
+                            <td>锅炉</td>
+                            <td>2015/3/14</td>
+                            <td>A楼307</td>
+                            <td class="center">张三</td>
+                            <td class="center">陈六</td>
+                            <td class="center">王五</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>28</td>
+                            <td>锅炉</td>
+                            <td>2015/3/14</td>
+                            <td>A楼307</td>
+                            <td class="center">张三</td>
+                            <td class="center">陈六</td>
+                            <td class="center">王五</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>30</td>
+                            <td>锅炉</td>
+                            <td>2015/3/14</td>
+                            <td>A楼307</td>
+                            <td class="center">张三</td>
+                            <td class="center">陈六</td>
+                            <td class="center">王五</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                        <tr class="even gradeA">
+                            <td>33</td>
+                            <td>锅炉</td>
+                            <td>2015/3/14</td>
+                            <td>A楼307</td>
+                            <td class="center">张三</td>
+                            <td class="center">陈六</td>
+                            <td class="center">王五</td>
+                            <td class="center">显示屏部分损坏</td>
+                            <td class="center">维修完成</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /block -->
+</div>
+{% endblock %}
+
+{% block tailjs %}
+    <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../static/assets/DT_bootstrap.js"></script>
+    <script type="text/javascript">
+    $('td').click(function(){
+        $('input').val($(this).html());
+        $('input').select();
+    });
+    </script>
 {% endblock %}

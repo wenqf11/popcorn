@@ -5,7 +5,39 @@
 {% endblock %}
 
 {% block content %}
- <div class="row-fluid">
+<div class="row-fluid">
+<!-- block -->
+<div class="block">
+    <div class="navbar navbar-inner block-header">
+        <div class="muted pull-left">用户信息</div>
+    </div>
+    <div class="block-content collapse in">
+        <div class="span12">
+                <div class="control-group">
+                  <label class="control-label">真实姓名：王小五</label>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="typeahead">用户名：123</label>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">手机：13388800088</label>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">电子邮箱：hhy@hhy.com</label>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">联系地址：清华大学</label>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">紧急联系人：张三</label>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">紧急联系人手机：13516165353</label>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- /block -->
     <!-- block -->
     <div class="block">
         <div class="navbar navbar-inner block-header">
@@ -17,6 +49,7 @@
                 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
                     <thead>
                         <tr>
+                            <th>设备编号</th>
                             <th>设备</th>
                             <th>时间</th>
                             <th>地点</th>
@@ -25,10 +58,12 @@
                             <th>维修人</th>
                             <th>故障原因</th>
                             <th>维修状态</th>
+                            <th>维修结论</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="odd gradeX">
+                            <td>1</td>
                             <td>Trident</td>
                             <td>Internet
                                  Explorer 4.0</td>
@@ -38,8 +73,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="even gradeC">
+                            <td>1</td>
                             <td>Trident</td>
                             <td>Internet
                                  Explorer 5.0</td>
@@ -49,8 +86,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="odd gradeA">
+                            <td>1</td>
                             <td>Trident</td>
                             <td>Internet
                                  Explorer 5.5</td>
@@ -60,8 +99,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="even gradeA">
+                            <td>1</td>
                             <td>Trident</td>
                             <td>Internet
                                  Explorer 6</td>
@@ -71,8 +112,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="odd gradeA">
+                            <td>1</td>
                             <td>Trident</td>
                             <td>Internet Explorer 7</td>
                             <td>Win XP SP2+</td>
@@ -81,8 +124,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="even gradeA">
+                            <td>1</td>
                             <td>Trident</td>
                             <td>AOL browser (AOL desktop)</td>
                             <td>Win XP</td>
@@ -91,8 +136,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Firefox 1.0</td>
                             <td>Win 98+ / OSX.2+</td>
@@ -101,8 +148,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Firefox 1.5</td>
                             <td>Win 98+ / OSX.2+</td>
@@ -111,8 +160,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Firefox 2.0</td>
                             <td>Win 98+ / OSX.2+</td>
@@ -121,8 +172,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Firefox 3.0</td>
                             <td>Win 2k+ / OSX.3+</td>
@@ -131,8 +184,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Camino 1.0</td>
                             <td>OSX.2+</td>
@@ -141,8 +196,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Camino 1.5</td>
                             <td>OSX.3+</td>
@@ -151,8 +208,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Netscape 7.2</td>
                             <td>Win 95+ / Mac OS 8.6-9.2</td>
@@ -161,8 +220,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Netscape Browser 8</td>
                             <td>Win 98SE+</td>
@@ -171,8 +232,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Netscape Navigator 9</td>
                             <td>Win 98+ / OSX.2+</td>
@@ -181,8 +244,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.0</td>
                             <td>Win 95+ / OSX.1+</td>
@@ -191,8 +256,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.1</td>
                             <td>Win 95+ / OSX.1+</td>
@@ -201,8 +268,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.2</td>
                             <td>Win 95+ / OSX.1+</td>
@@ -211,8 +280,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.3</td>
                             <td>Win 95+ / OSX.1+</td>
@@ -221,8 +292,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.4</td>
                             <td>Win 95+ / OSX.1+</td>
@@ -231,8 +304,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.5</td>
                             <td>Win 95+ / OSX.1+</td>
@@ -241,8 +316,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.6</td>
                             <td>Win 95+ / OSX.1+</td>
@@ -251,8 +328,10 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.7</td>
                             <td>Win 98+ / OSX.1+</td>
@@ -261,13 +340,16 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
+                            <td class="center">X</td>
                         </tr>
                         <tr class="gradeA">
+                            <td>1</td>
                             <td>Gecko</td>
                             <td>Mozilla 1.8</td>
                             <td>Win 98+ / OSX.1+</td>
                             <td class="center">1.8</td>
                             <td class="center">A</td>
+                            <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
                             <td class="center">X</td>
