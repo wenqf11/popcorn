@@ -1,6 +1,11 @@
 {% extends 'frame.html' %}
 {% block css %}
     <link href="../static/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
+    <style type="text/css">
+        i:hover {
+            cursor: default;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -16,8 +21,8 @@
                 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
                     <thead>
                         <tr>
-                            <th>表项序号</th>
                             <th>表项</th>
+                            <th>单位</th>
                             <th>阈值下限（“x”表示不限）</th>
                             <th>阈值上限（“x”表示不限）</th>
                             <th>操作</th>
@@ -25,25 +30,25 @@
                     </thead>
                     <tbody>
                         <tr class="odd gradeA">
-                            <td>1</td>
-                            <td>蒸汽压力MPa</td>
+                            <td>蒸汽压力</td>
+                            <td>MPa</td>
                             <td>x</td>
                             <td>13</td>
-                            <td class="center"><i class="icon-edit bigger-120"></i><i class="icon-ok bigger-120" style="display:none"></i>&nbsp;<i class="icon-trash bigger-120"></i></td>
+                            <td class="center"><i class="icon-edit bigger-120"></i><i class="icon-ok bigger-120" style="display:none"></i>&nbsp;<i class="icon-trash bigger-120"></i>&nbsp;<i class="icon-plus bigger-120"></i></td>
                         </tr>
                         <tr class="even gradeA">
-                            <td>2</td>
-                            <td>给水压力MPa</td>
+                            <td>给水压力</td>
+                            <td>MPa</td>
                             <td>20</td>
                             <td>x</td>
-                            <td class="center"><i class="icon-edit bigger-120"></i><i class="icon-ok bigger-120" style="display:none"></i>&nbsp;<i class="icon-trash bigger-120"></i></td>
+                            <td class="center"><i class="icon-edit bigger-120"></i><i class="icon-ok bigger-120" style="display:none"></i>&nbsp;<i class="icon-trash bigger-120"></i>&nbsp;<i class="icon-plus bigger-120"></i></td>
                         </tr>
                         <tr class="odd gradeA">
-                            <td>3</td>
-                            <td>燃气压力KPa</td>
+                            <td>燃气压力</td>
+                            <td>KPa</td>
                             <td>5</td>
                             <td>10</td>
-                            <td class="center"><i class="icon-edit bigger-120"></i><i class="icon-ok bigger-120" style="display:none"></i>&nbsp;<i class="icon-trash bigger-120"></i></td>
+                            <td class="center"><i class="icon-edit bigger-120"></i><i class="icon-ok bigger-120" style="display:none"></i>&nbsp;<i class="icon-trash bigger-120"></i>&nbsp;<i class="icon-plus bigger-120"></i></td>
                         </tr>
                     </tbody>
                 </table>
@@ -56,24 +61,42 @@
 
 {% block tailjs %}
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../static/js/jquery.tablednd_0_5.js"></script>
     <!--<script src="../static/assets/DT_bootstrap.js"></script>-->
     <script type="text/javascript">
-    $('.icon-edit').click(function(){
+    $(document).on('click', '.icon-edit', function(){
+    // $('.icon-edit').click(function(){
     	var tds = this.parentNode.parentNode.getElementsByTagName("td");
-        for (var i = 1; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         	tds[i].innerHTML = "<input class='span6 m-wrap' value='"+tds[i].innerHTML+"'>";
         this.nextSibling.setAttribute("style","");
         this.setAttribute("style","display:none");
     });
-    $('.icon-ok').click(function(){
+    $(document).on('click', '.icon-ok', function(){
+    // $('.icon-ok').click(function(){
     	var tds = this.parentNode.parentNode.getElementsByTagName("td");
-        for (var i = 1; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         	tds[i].innerHTML = tds[i].childNodes[0].value;
         this.previousSibling.setAttribute("style","");
         this.setAttribute("style","display:none");
     });
-    $('.icon-trash').click(function(){
-    	var tds = this.parentNode.parentNode.remove();
+    $(document).on('click', '.icon-trash', function(){
+    // $('.icon-trash').click(function(){
+        var tds = this.parentNode.parentNode.remove();
+    });
+    $(document).on('click', '.icon-plus', function(){
+    // $('.icon-plus').click(function(){
+        var table_row = '<tr class="odd gradeA">'+
+                            '<td><input class="span6 m-wrap"></td>'+
+                            '<td><input class="span6 m-wrap"></td>'+
+                            '<td><input class="span6 m-wrap"></td>'+
+                            '<td><input class="span6 m-wrap"></td>'+
+                            '<td class="center"><i class="icon-edit bigger-120" style="display:none"></i><i class="icon-ok bigger-120"></i>&nbsp;<i class="icon-trash bigger-120"></i>&nbsp;<i class="icon-plus bigger-120"></i></td>'+
+                        '</tr>';
+        $(this.parentNode.parentNode).after(table_row);
+    });
+    $(document).ready(function() {
+        $("#example").tableDnD();
     });
     </script>
 {% endblock %}
