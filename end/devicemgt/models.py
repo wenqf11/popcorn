@@ -245,6 +245,25 @@ class k_device(models.Model):
 """
 Meter, Maintenance
 """
+class k_meter(models.Model):
+    METER_STATUS = (
+        ('0', '不正常'),
+        ('1', '正常'),
+        ('2', '引起注意'),
+    )
+    deviceid = models.ForeignKey(k_device, related_name='meter_set')
+    state = models.CharField(max_length=1, choices=METER_STATUS, default='0')
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=100)
+    memo = models.CharField(max_length=100)
+    creatorid = models.PositiveIntegerField()
+    createdatetime = models.DateField()
+    editorid = models.PositiveIntegerField()
+    editdatetime = models.DateField()
+    auditorid = models.PositiveIntegerField()
+    auditdatetime = models.DateField()
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
 class k_formitem(models.Model):
     classid = models.ForeignKey(k_class, related_name='formitem_set')
     name = models.CharField(max_length=30)
@@ -260,6 +279,7 @@ class k_formitem(models.Model):
 class k_form(models.Model):
     classid = models.ForeignKey(k_class, related_name='form_set')
     content = models.CharField(max_length=200)
+    brief = models.CharField(max_length=30)
     formitemid = models.ManyToManyField(k_formitem)
     period = models.PositiveIntegerField()
     creatorid = models.PositiveIntegerField()
