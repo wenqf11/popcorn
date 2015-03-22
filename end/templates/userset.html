@@ -1,4 +1,92 @@
 {% extends 'userframe.html' %}
+{% block js %}
+    <script src="../static/plugin/icheck.min.js"></script>
+    <script>
+$(document).ready(function(){
+  $('input').iCheck({
+    checkboxClass: 'icheckbox_flat-red',
+    radioClass: 'iradio_flat-red'
+  });
+});
+    </script>
+{% endblock %}
+{% block css %}
+    <link href="../static/plugin/skins/flat/red.css" rel="stylesheet">
+{% endblock %}
 {% block maincontent %}
-    userset
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+    <h5>现存角色</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="icon-chevron-up"></i>
+        </a>
+    </div>
+</div>
+    <div class="ibox-content">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>张三</td>
+                <td>男</td>
+                <td>23</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>李四</td>
+                <td>男</td>
+                <td>27</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>王麻子</td>
+                <td>男</td>
+                <td>65</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+</div>
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+    <h5>创建角色</h5>
+    <div class="ibox-tools">
+        <a class="collapse-link">
+            <i class="icon-chevron-up"></i>
+        </a>
+    </div>
+        <input type="checkbox">
+<input type="checkbox" checked>
+<input type="radio" name="iCheck">
+<input type="radio" name="iCheck" checked>
+</div>
+
+</div>
+{% endblock %}
+
+{% block tailjs %}
+ <script>
+     $('.collapse-link').click( function() {
+        var ibox = $(this).closest('div.ibox');
+        var button = $(this).find('i');
+        var content = ibox.find('div.ibox-content');
+        content.slideToggle(200);
+        button.toggleClass('icon-chevron-up').toggleClass('icon-chevron-down');
+        ibox.toggleClass('').toggleClass('border-bottom');
+        setTimeout(function () {
+            ibox.resize();
+            ibox.find('[id^=map-]').resize();
+        }, 50);
+    });
+ </script>
 {% endblock %}

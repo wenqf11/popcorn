@@ -8,7 +8,10 @@
 
 {% block frame %}
     {% include 'header.html' %}
-    {% block content %}{% endblock %}
-    {% block tailjs %}{% endblock %}
+    <div id="container">
+        {% block content %}{% endblock %}
+    </div>
     {% include 'footer.html' %}
+    <script src="../static/js/footer.js"></script>
+    {% block tailjs %}{% endblock %}
 {% endblock %}
