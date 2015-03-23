@@ -1,4 +1,10 @@
 {% extends 'userframe.html' %}
+{% block js %}
+    <script src="../static/datepicker/bootstrap-datepicker.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="../static/datepicker/datepicker.css" rel="stylesheet" media="screen">
+{% endblock %}
 {% block maincontent %}
          <!-- validation -->
         <div class="row-fluid">
@@ -10,33 +16,32 @@
                 <div class="block-content collapse in">
                     <div class="span12">
         <!-- BEGIN FORM-->
-        <form action="#" id="form_sample_1" class="form-horizontal">
+        <form action="#" id="form_sample_1" class="form-horizontal" method="POST">
             <fieldset>
-                <div class="alert alert-error hide">
-                    <button class="close" data-dismiss="alert"></button>
-                    You have some form errors. Please check below.
-                </div>
-                <div class="alert alert-success hide">
-                    <button class="close" data-dismiss="alert"></button>
-                    Your form validation is successful!
-                </div>
                 <div class="control-group">
                     <label class="control-label">分类编号<span class="required">*</span></label>
                     <div class="controls">
-                        <input type="text" name="classid" data-required="1" class="span6 m-wrap"/>
+                        <select class="span6 m-wrap" name="state">
+                            {% for class in class_list %}
+                            <option value="{{ class }}">{{ class }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">权限集合<span class="required">*</span></label>
                     <div class="controls">
-                        <input type="text" name="permission" data-required="1" class="span6 m-wrap"/>
+                        <select class="span6 m-wrap" name="state">
+                            {% for role in role_list %}
+                            <option value="{{ role }}">{{ role }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">用户状态<span class="required">*</span></label>
                     <div class="controls">
                         <select class="span6 m-wrap" name="state">
-                            <option value="">选择...</option>
                             <option value="Category 1">锁定</option>
                             <option value="Category 2">在岗</option>
                             <option value="Category 3">长假</option>
@@ -53,13 +58,13 @@
                 <div class="control-group">
                     <label class="control-label">密码<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="password" type="text" class="span6 m-wrap"/>
+                        <input name="password" type="password" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">确认密码<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="confirmpassword" type="text" class="span6 m-wrap"/>
+                        <input name="confirmpassword" type="password" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
@@ -101,11 +106,11 @@
                 <div class="control-group">
                     <label class="control-label">出生年月日<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="birthday" type="text" class="span6 m-wrap"/>
+                        <input name="birthday" id="birthday" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">身份证号码<span class="required">*</span></label>
+                    <label class="control-label">证件号码<span class="required">*</span></label>
                     <div class="controls">
                         <input name="idcard" type="text" class="span6 m-wrap"/>
                     </div>
@@ -113,17 +118,19 @@
                 <div class="control-group">
                     <label class="control-label">有效证件类型<span class="required">*</span></label>
                     <div class="controls">
-                        <input name="idcardtype" type="text" class="span6 m-wrap"/>
+                        <select class="span6 m-wrap" name="status">
+                            <option value="">身份证</option>
+                        </select>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">内容<span class="required">*</span></label>
+                    <label class="control-label">内容</label>
                     <div class="controls">
                         <input name="content" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">备注<span class="required">*</span></label>
+                    <label class="control-label">备注</label>
                     <div class="controls">
                         <input name="memo" type="text" class="span6 m-wrap"/>
                     </div>
@@ -142,43 +149,6 @@
                 </div>
                 <!--
                 <div class="control-group">
-                    <label class="control-label">创建人编号<span class="required">*</span></label>
-                    <div class="controls">
-                        <input name="creatorid" type="text" class="span6 m-wrap"/>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">创建时间<span class="required">*</span></label>
-                    <div class="controls">
-                        <input name="createdatetime" type="text" class="span6 m-wrap"/>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">编辑人编号<span class="required">*</span></label>
-                    <div class="controls">
-                        <input name="editorid" type="text" class="span6 m-wrap"/>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">编辑时间<span class="required">*</span></label>
-                    <div class="controls">
-                        <input name="editdatetime" type="text" class="span6 m-wrap"/>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">审核人编号<span class="required">*</span></label>
-                    <div class="controls">
-                        <input name="auditorid" type="text" class="span6 m-wrap"/>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">审核时间<span class="required">*</span></label>
-                    <div class="controls">
-                        <input name="auditordatetime" type="text" class="span6 m-wrap"/>
-                    </div>
-                </div>
-                -->
-                <div class="control-group">
                     <label class="control-label">状态<span class="required">*</span></label>
                     <div class="controls">
                         <select class="span6 m-wrap" name="status">
@@ -190,12 +160,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">登陆记录</label>
-                    <div class="controls">
-                        <input name="loginlog" type="text" class="span6 m-wrap"/>
-                    </div>
-                </div>
+                -->
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">确定</button>
                     <button type="button" class="btn">取消</button>
@@ -209,4 +174,12 @@
             <!-- /block -->
 </div>
          <!-- /validation -->
+{% endblock %}
+
+{% block tailjs %}
+    <script>
+    $(function(){
+        $('#birthday').datepicker();
+    })
+    </script>
 {% endblock %}

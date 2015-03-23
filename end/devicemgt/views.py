@@ -38,9 +38,22 @@ def useradd(request):
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
+        if request.method == 'POST':
+            print request.method
+            print request.POST['address']
+            print request.POST['birthday']
+            #如果错误，要把已经填写的信息给返回回去
+            user = k_user.objects.create_user(username = request.POST['username'],
+                birthday=request.POST['birthday']
+            )
+            #保存
+            #user.save()
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user'})
+        class_list = ['class1', 'class2']
+        role_list = ['tmp1', 'tmp2']
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user',
+                                          'class_list':class_list, 'role_list':role_list})
         return render_to_response('useradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
