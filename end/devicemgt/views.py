@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
 from models import k_user
 from forms import *
+import json
 
 #首页
 def index(request):
@@ -240,3 +241,24 @@ def login(request):
                 return HttpResponseRedirect('/login/')
     else:
         return render_to_response('login.html')
+
+def form(request):
+    response = {
+    "data": [
+    {
+    "table_item": "row_1",
+    "unit": "Tiger",
+    "lower_shreshold": "Nixon",
+    "upper_threshold": "System Architect"
+    },
+    {
+    "table_item": "row_1",
+    "unit": "Tiger",
+    "lower_shreshold": "Nixon",
+    "upper_threshold": "System Architect"
+    }
+    ],
+    "options": []
+    };
+    response['Access-Control-Allow-Origin'] = '*'
+    return HttpResponse(json.dumps(response))

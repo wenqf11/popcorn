@@ -31,4 +31,5 @@ urlpatterns = patterns('',
     url(r'^sparetype/$', sparetype),
     url(r'^sparebrand/$', sparebrand),
     url(r'^sparehist/$', sparehist),
+    url(r'^form/$', form)
 )
