@@ -256,19 +256,71 @@ def login(request):
         return render_to_response('login.html')
 
 def form(request):
+    if request.method == 'POST':
+        response = {
+        "data": [
+        {
+        "table_item": "row_1",
+        "unit": "Tiger",
+        "lower_shreshold": "Nixon",
+        "upper_threshold": "System Architect"
+        },
+        {
+        "table_item": "row_1",
+        "unit": "Tiger",
+        "lower_shreshold": "Nixon",
+        "upper_threshold": "System Architect"
+        },
+        {
+        "table_item": "row_1",
+        "unit": "Tiger",
+        "lower_shreshold": "Nixon",
+        "upper_threshold": "System Architect"
+        }
+        ],
+        "options": []
+        };
+        response['Access-Control-Allow-Origin'] = '*'
+        return HttpResponse(json.dumps(response))
+    else:
+        response = {
+        "data": [
+        {
+        "table_item": "row_1",
+        "unit": "Tiger",
+        "lower_shreshold": "Nixon",
+        "upper_threshold": "System Architect"
+        },
+        {
+        "table_item": "row_1",
+        "unit": "Tiger",
+        "lower_shreshold": "Nixon",
+        "upper_threshold": "System Architect"
+        }
+        ],
+        "options": []
+        };
+        response['Access-Control-Allow-Origin'] = '*'
+        return HttpResponse(json.dumps(response))
+
+def deviceall(request):
+    #if request.method != 'POST':
     response = {
     "data": [
     {
-    "table_item": "row_1",
-    "unit": "Tiger",
-    "lower_shreshold": "Nixon",
-    "upper_threshold": "System Architect"
-    },
-    {
-    "table_item": "row_1",
-    "unit": "Tiger",
-    "lower_shreshold": "Nixon",
-    "upper_threshold": "System Architect"
+    "classid": "2",
+    "name": "无油螺杆空气压缩机",
+    "brief": "SZ012012GC120",
+    "brand": "unknown",
+    "producer": "日本KOBELCO",
+    "supplier": "盛世神钢压缩机（北京）有限公司",
+    "typeid": "6",
+    "state": "锁定",
+    "serial": "6216610100000000000",
+    "model": "大型设备",
+    "buytime": "2015/03/21",
+    "content": "unknown",
+    "memo": "unknown"
     }
     ],
     "options": []
