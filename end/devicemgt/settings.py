@@ -4,6 +4,8 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+IMG_DIR = os.getcwd() + '/data/user_avatar/'
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )

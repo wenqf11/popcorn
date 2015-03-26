@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
 from models import k_user
 from forms import *
+from helper import handle_uploaded_file
 import json
 
 #首页
@@ -40,12 +41,24 @@ def useradd(request):
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
         if request.method == 'POST':
-            print request.method
-            print request.POST['address']
-            print request.POST['birthday']
+            face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
+            print face
             #如果错误，要把已经填写的信息给返回回去
+            #总共要有26项信息
             user = k_user.objects.create_user(username = request.POST['username'],
-                birthday=request.POST['birthday']
+                password=request.POST['password'],
+                name=request.POST['name'],
+                face=face,
+                mobile=request.POST['mobile'],
+                email=request.POST['email'],
+                address=request.POST['address'],
+                zipcode=request.POST['zipcode'],
+                birthday=request.POST['birthday'],
+                idcard=request.POST['idcard'],
+                content=request.POST['content'],
+                memo=request.POST['memo'],
+                contact=request.POST['contact'],
+                contactmobile=request.POST['contactmobile']
             )
             #保存
             #user.save()

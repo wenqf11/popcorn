@@ -10,8 +10,8 @@ from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from datetime import date
-# from django.contrib.auth.hashers import (
-#    check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
+from django.contrib.auth.hashers import (
+    check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
 
 # Create your models here.
 
@@ -37,7 +37,9 @@ class UserManager(models.Manager):
             email = '@'.join([email_name, domain_part.lower()])
         return email
 
-    def create_user(self, StudentNumber, username,department, Graduation_Date, phone_num, IsEmail, email=None, password=None):
+    def create_user(self, classid, permission, state, username, password, name, face, mobile, email, address, zipcode, birthday,
+                    idcard, idcardtype, content, memo, contact, contactmobile, creatorid, createdatetime, editorid,
+                    editdatetime, auditorid, auditdatetime, status ):
         """
         Creates and saves a User with the given username, email and password.
         """
@@ -45,8 +47,11 @@ class UserManager(models.Manager):
         if not username:
             raise ValueError('The given username must be set')
         email = UserManager.normalize_email(email)
-        user = self.model(username=username, department=department, email=email,
-            StudentNumber=StudentNumber, Graduation_Date=Graduation_Date, phone_num=phone_num, IsEmail = IsEmail)
+        user = self.model(classid=classid, permission=permission, state=state, username=username,
+            password=password, name=name, face=face, mobile = mobile, email=email, address=address, zipcode=zipcode,
+            birthday=birthday, idcard=idcard, idcardtype=idcardtype, content=content, memo=memo, contact=contact,
+            creatorid=creatorid, createdatetime=createdatetime, editorid=editorid, editdatetime=editdatetime,
+            auditorid=auditorid, auditdatetime=auditdatetime, status=status)
         user.set_password(password)
         return user
 
