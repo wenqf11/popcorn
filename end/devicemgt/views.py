@@ -249,7 +249,7 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return render_to_response('frame.html',{'username':username})
+                return render_to_response('index.html',{'username':username})
             else:
                 return HttpResponseRedirect('/login/')
     else:
