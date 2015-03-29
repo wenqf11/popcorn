@@ -92,6 +92,58 @@
 	var meter; // use a global for the submit and return data rendering in the examples
 
 	$(document).ready(function() {
+		tdclick = function() {
+			alldatafields = ["classid", "name", "brief", "brand", "producer", "supplier", "typeid",
+							 "state", "serial", "model", "buytime", "content", "memo"];
+			oldinputvalue = "";
+		    $('#deviceshow tbody td:not(:first-child)').on('mouseup', function (e){
+		    	console.log('clicked');
+		    	if(!this.getElementsByTagName('div')[0]){
+		    		oldinputvalue = this.innerHTML;
+		    		console.log(oldinputvalue);
+		    	}
+		        $(this).keydown(function(e){
+		    		inputelement = this.getElementsByTagName('input')[0];
+		        	if(e.which == 13){
+		        		e.preventDefault();
+		    			console.log(1);
+		    			console.log(oldinputvalue);
+		    			console.log(2);
+		    			console.log(inputelement.value);
+		        		if(oldinputvalue == inputelement.value)
+		        			return;
+		        		siblingsofinputelement = this.parentNode.childNodes;
+		        		var childindex;
+		        		for(childindex = 1; ; childindex++) {
+		        			if(siblingsofinputelement[childindex] == this)
+		        				break;
+		        		}
+		        		var briefindex = 3;
+		        		if(childindex == briefindex) {
+		        			$.ajax({
+								type: 'POST',
+								url: '/deviceall/',
+								data: {'brief': oldinputvalue, 'newbrief': inputelement.value},
+								success: function () {location.reload();},
+								error: function () {location.reload();}
+								//dataType: dataType
+							});
+		        		}
+		        		else {
+		        			$.ajax({
+								type: 'POST',
+								url: '/deviceall/',
+								data: {'brief': siblingsofinputelement[briefindex].innerHTML, 'fieldname': alldatafields[childindex-1], 'fielddata': inputelement.value},
+								success: function () {location.reload();},
+								error: function () {location.reload();}
+								//dataType: dataType
+							});
+		        		}
+		        	}
+		        });
+		    });
+		};
+
 	    deviceshow = new $.fn.dataTable.Editor( {
 	        ajax: "/deviceall/",
 	        //ajax: "../php/staff.php",
@@ -174,7 +226,8 @@
 	                { sExtends: "editor_edit",   editor: deviceshow },
 	                { sExtends: "editor_remove", editor: deviceshow }
 	            ]
-	        }
+	        },
+			initComplete: tdclick
 	    } );
 	} );
 /*

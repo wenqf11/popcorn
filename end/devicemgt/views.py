@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
-from models import k_user
+from models import *
 from forms import *
 from helper import handle_uploaded_file
 import json
@@ -304,26 +304,46 @@ def form(request):
         return HttpResponse(json.dumps(response))
 
 def deviceall(request):
-    #if request.method != 'POST':
-    response = {
-    "data": [
-    {
-    "classid": "2",
-    "name": "无油螺杆空气压缩机",
-    "brief": "SZ012012GC120",
-    "brand": "unknown",
-    "producer": "日本KOBELCO",
-    "supplier": "盛世神钢压缩机（北京）有限公司",
-    "typeid": "6",
-    "state": "锁定",
-    "serial": "6216610100000000000",
-    "model": "大型设备",
-    "buytime": "2015/03/21",
-    "content": "unknown",
-    "memo": "unknown"
-    }
-    ],
-    "options": []
-    };
+    if request.method == 'POST':
+        response = HttpResponse()
+        response['Content-Type'] = "text/javascript"
+        brief = request.POST.get("brief")
+        if brief:
+            thedevice = k_device.objects.filter(brief = brief)[0]
+            newbrief = request.POST.get("newbrief")
+            if newbrief:
+                thedevice.brief = newbrief
+                thedevice.save()
+            else:
+                fieldname = request.POST.get("fieldname")
+                fielddata = request.POST.get("fielddata")
+                exec("thedevice."+fieldname+"="+fielddata)
+                thedevice.save()
+    alldevice = k_device.objects.all()
+    devicedata = []
+    for d in alldevice:
+        onedevice = dict()
+        theclass = k_class.objects.filter(id = d.classid_id)
+        onedevice["classid"] = theclass[0].id
+        onedevice["name"] = d.name
+        onedevice["brief"] = d.brief
+        onedevice["brand"] = d.brand
+        theproducer = k_producer.objects.filter(id = d.producerid_id)
+        onedevice["producer"] = theproducer[0].name
+        thesupplier = k_supplier.objects.filter(id = d.supplierid_id)
+        onedevice["supplier"] = thesupplier[0].name
+        thedevicetype = k_devicetype.objects.filter(id = d.typeid_id)
+        onedevice["typeid"] = thedevicetype[0].id
+        onedevice["state"] = d.state
+        onedevice["serial"] = d.serial
+        onedevice["model"] = d.model
+        ### here
+        onedevice["buytime"] = '2015/3/19'
+        onedevice["content"] = d.content
+        onedevice["memo"] = d.memo
+        devicedata.append(onedevice)
+    response = {}
+    response["data"] = devicedata
+    response["options"] = []
     response['Access-Control-Allow-Origin'] = '*'
     return HttpResponse(json.dumps(response))
