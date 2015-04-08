@@ -109,6 +109,19 @@ def devicemgt(request):
     else:
         return HttpResponseRedirect('/login/')
 
+
+def deviceadd(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        return render_to_response('deviceadd.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
 #个人信息
 def profile(request):
     print "profile"
