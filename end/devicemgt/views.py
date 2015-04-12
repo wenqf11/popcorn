@@ -236,7 +236,7 @@ def register(req):
             username = uf.cleaned_data['username']
             password = uf.cleaned_data['password']
             #添加到数据库
-            user = k_user.objects.create(username= username,password=password, classid_id=1, permission_id = 1)
+            user = k_user.objects.create(username= username,password=password, classid_id=1, roles=1)
             olduser = User.objects.create_user(
                 username=user.username,
                 email=user.email,

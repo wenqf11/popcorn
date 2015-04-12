@@ -37,7 +37,7 @@ class UserManager(models.Manager):
             email = '@'.join([email_name, domain_part.lower()])
         return email
 
-    def create_user(self, classid, permission, state, username, password, name, face, mobile, email, address, zipcode, birthday,
+    def create_user(self, classid, roles, state, username, password, name, face, mobile, email, address, zipcode, birthday,
                     idcard, idcardtype, content, memo, contact, contactmobile, creatorid, createdatetime, editorid,
                     editdatetime, auditorid, auditdatetime, status ):
         """
@@ -47,7 +47,7 @@ class UserManager(models.Manager):
         if not username:
             raise ValueError('The given username must be set')
         email = UserManager.normalize_email(email)
-        user = self.model(classid=classid, permission=permission, state=state, username=username,
+        user = self.model(class_id=classid, roles=roles, state=state, username=username,
             password=password, name=name, face=face, mobile = mobile, email=email, address=address, zipcode=zipcode,
             birthday=birthday, idcard=idcard, idcardtype=idcardtype, content=content, memo=memo, contact=contact,
             creatorid=creatorid, createdatetime=createdatetime, editorid=editorid, editdatetime=editdatetime,
