@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from datetime import date
 from django.contrib.auth.hashers import (
-    check_password, make_password, is_password_usable, UNUSABLE_PASSWORD)
+    check_password, make_password, is_password_usable)
 
 # Create your models here.
 
@@ -88,25 +88,56 @@ STATUS_CHOICES =  (
 
 class k_class(models.Model):
     parentid = models.PositiveIntegerField()
-    depth = models.PositiveIntegerField()
-    depthname = models.CharField(max_length=50)
-    depthnumber = models.PositiveIntegerField()
-    purview = models.PositiveIntegerField()
-    role = models.PositiveIntegerField()
-    name = models.CharField(max_length=30)
+    depth = models.PositiveIntegerField() #such as "3", means "班组"
+    depthname = models.CharField(max_length=50) #such as "班组"
+    # roles = models.ManyToManyField(k_role) #absorbed to k_classrole
+    name = models.CharField(max_length=30) #such as "空调组"
+    code = models.CharField(max_length=5) #4 digits, globally unique
+    logo = models.CharField(max_length=30)
+    address = models.CharField(max_length=80)
+    zipcode = models.CharField(max_length=30)
+    phone = models.CharField(max_length=50, default='0')
+    license = models.CharField(max_length=30)
+    licensetype = models.CharField(max_length=30, default='企业营业执照')
+    content = models.CharField(max_length=200)
+    memo = models.CharField(max_length=100)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
+class k_purview(models.Model):
+    classid = models.ForeignKey(k_class, related_name='purview_set')
+    name = models.CharField(max_length=20) #such as "设备"
+    item = models.CharField(max_length=20) #such as "查看"、"添加"、"编辑"、"审核"、"删除"
+    memo = models.CharField(max_length=100)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_role(models.Model):
     classid = models.ForeignKey(k_class, related_name='role_set')
-    name = models.CharField(max_length=30)
-    item = models.CharField(max_length=30) # ???
-    memo = models.CharField(max_length=300)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    name = models.CharField(max_length=30) #such as "权限设计", "维修记录", etc.
+    purviews = models.ManyToManyField(k_purview)
+    memo = models.CharField(max_length=100)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
+class k_classrole(models.Model):
+    classid = models.ForeignKey(k_class, related_name='classrole_set')
+    roleid = models.ForeignKey(k_role, related_name='classrole_set')
 
 class k_user(models.Model):
     USER_STATUS = (
@@ -119,7 +150,7 @@ class k_user(models.Model):
         ('1','身份证'),
     )
     classid = models.ForeignKey(k_class, related_name='user_set')
-    permission = models.ForeignKey(k_role, related_name='user_set')
+    roles = models.ManyToManyField(k_role)
     state = models.CharField(max_length=1, choices=USER_STATUS, default='0')
     username = models.CharField(max_length=30)
     password = models.CharField(_('password'), max_length=128)
@@ -144,7 +175,9 @@ class k_user(models.Model):
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    #loginlog = models.CharField(max_length=100)
+    #? loginlog = models.CharField(max_length=100)
+    todo = models.PositiveIntegerField(default=0)
+    onlinetime = models.PositiveIntegerField(default=0)
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
 
@@ -155,15 +188,15 @@ Device Management
 """
 class k_devicetype(models.Model):
     parentid = models.PositiveIntegerField()
-    depthnumber = models.PositiveIntegerField()
+    depth = models.PositiveIntegerField()
     name = models.CharField(max_length=30)
     memo = models.CharField(max_length=100)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_supplier(models.Model):
@@ -171,18 +204,20 @@ class k_supplier(models.Model):
     contact = models.CharField(max_length=30)
     addr = models.CharField(max_length=80)
     memo = models.CharField(max_length=100)
-    creator = models.CharField(max_length=30)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
 
 class k_producer(models.Model):
     name = models.CharField(max_length=30)
     contact = models.CharField(max_length=30)
     addr = models.CharField(max_length=80)
     memo = models.CharField(max_length=100)
-    creator = models.CharField(max_length=30)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
 
 class k_spare(models.Model):
     classid = models.ForeignKey(k_class, related_name='spare_set')
@@ -197,12 +232,12 @@ class k_spare(models.Model):
     memo = models.CharField(max_length=100)
     minimum = models.PositiveIntegerField()
     stock = models.PositiveIntegerField()
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     ownerid = models.PositiveIntegerField()
 
@@ -227,29 +262,68 @@ class k_device(models.Model):
     model = models.CharField(max_length=30)
     buytime = models.DateField()
     content = models.CharField(max_length=200)
+    qrcode = models.CharField(max_length=625)
+    position = models.CharField(max_length=80)
     memo = models.CharField(max_length=100)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    lastmaintenance = models.DateField()
-    nextmaintenance = models.DateField()
+    lastmaintenance = models.DateField(blank=True, default=date.today)
+    nextmaintenance = models.DateField(blank=True, default=date.today)
     maintenanceperiod = models.PositiveIntegerField()
-    lastrepaire = models.DateField()
+    lastrepaire = models.DateField(blank=True, default=date.today)
     spare = models.ManyToManyField(k_spare)
-    lastmeter = models.DateField()
+    lastmeter = models.DateField(blank=True, default=date.today)
     notice = models.CharField(max_length=100)
-    #statelog = models.CharField(max_length=100)
+    #? statelog = models.CharField(max_length=100)
     ownerid = models.PositiveIntegerField()
 
+class k_form(models.Model):
+    classid = models.ForeignKey(k_class, related_name='form_set')
+    content = models.CharField(max_length=200)
+    brief = models.CharField(max_length=30)
+    period = models.PositiveIntegerField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
+class k_formitem(models.Model):
+    classid = models.ForeignKey(k_class, related_name='formitem_set')
+    formid = models.ForeignKey(k_form, related_name='formitem_set')
+    name = models.CharField(max_length=30)
+    threshold = models.CharField(max_length=30)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
 
 
 """
-Meter, Maintenance
+Route, Meter, Maintenance, Task
 """
+class k_route(models.Model):
+    classid = models.ForeignKey(k_class, related_name='route_set')
+    formid = models.CharField(max_length=80)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
 class k_meter(models.Model):
     METER_STATUS = (
         ('0', '不正常'),
@@ -261,49 +335,12 @@ class k_meter(models.Model):
     title = models.CharField(max_length=50)
     content = models.CharField(max_length=100)
     memo = models.CharField(max_length=100)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-
-class k_formitem(models.Model):
-    classid = models.ForeignKey(k_class, related_name='formitem_set')
-    name = models.CharField(max_length=30)
-    threshold = models.CharField(max_length=30)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-
-class k_form(models.Model):
-    classid = models.ForeignKey(k_class, related_name='form_set')
-    content = models.CharField(max_length=200)
-    brief = models.CharField(max_length=30)
-    formitemid = models.ManyToManyField(k_formitem)
-    period = models.PositiveIntegerField()
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-
-class k_route(models.Model):
-    classid = models.ForeignKey(k_class, related_name='route_set')
-    formid = models.CharField(max_length=80)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_maintenance(models.Model):
@@ -328,19 +365,80 @@ class k_maintenance(models.Model):
     createcontent = models.CharField(max_length=100)
     editcontent = models.CharField(max_length=100)
     auditcontent = models.CharField(max_length=100)
+    image = models.CharField(max_length=30)
+    factor = models.PositiveIntegerField()
     memo = models.CharField(max_length=100)
     mtype = models.CharField(max_length=1, choices=MAINTENANCE_TYPE, default='1')
     priority = models.CharField(max_length=1, choices=MAINTENANCE_PRIORITY, default='1')
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    #statelog = models.CharField(max_length=100)
+    #? statelog = models.CharField(max_length=100)
 
-class k_bill(models.Model):
+class k_task(models.Model):
+    TASK_STATUS = (
+        ('1', '计划'),
+        ('2', '执行中'),
+        ('3', '执行完成'),
+        ('4', '审核完成'),
+    )
+    TASK_PRIORITY = (
+        ('1', '一般'),
+        ('2', '重要'),
+        ('3', '紧急'),
+    )
+    state = models.CharField(max_length=1, choices=TASK_STATUS, default='1')
+    title = models.CharField(max_length=50)
+    createcontent = models.CharField(max_length=100)
+    editcontent = models.CharField(max_length=100)
+    auditcontent = models.CharField(max_length=100)
+    memo = models.CharField(max_length=100)
+    priority = models.CharField(max_length=1, choices=TASK_PRIORITY, default='1')
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
+class k_taskitem(models.Model):
+    TASK_STATUS = (
+        ('1', '计划'),
+        ('2', '执行中'),
+        ('3', '执行完成'),
+        ('4', '审核完成'),
+    )
+    TASK_PRIORITY = (
+        ('1', '一般'),
+        ('2', '重要'),
+        ('3', '紧急'),
+    )
+    state = models.CharField(max_length=1, choices=TASK_STATUS, default='1')
+    title = models.CharField(max_length=50)
+    taskid = models.ForeignKey(k_task, related_name='taskitem_set')
+    createcontent = models.CharField(max_length=100)
+    editcontent = models.CharField(max_length=100)
+    auditcontent = models.CharField(max_length=100)
+    factor = models.PositiveIntegerField()
+    memo = models.CharField(max_length=100)
+    priority = models.CharField(max_length=1, choices=TASK_PRIORITY, default='1')
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
+
+
+"""
+Stock Management
+"""
+class k_sparebill(models.Model):
     BILL_STATUS = (
         ('1', '采购入库'),
         ('2', '领用退回'),
@@ -349,13 +447,13 @@ class k_bill(models.Model):
         ('5', '领用出库'),
         ('6', '对账出库'),
     )
-    classid = models.ForeignKey(k_class, related_name='bill_set')
+    classid = models.ForeignKey(k_class, related_name='sparebill_set')
     state = models.CharField(max_length=1, choices=BILL_STATUS, default='1')
     memo = models.CharField(max_length=100)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_sparecount(models.Model):
@@ -367,22 +465,17 @@ class k_sparecount(models.Model):
         ('5', '领用出库'),
         ('6', '对账出库'),
     )
-    billid = models.ForeignKey(k_bill)
+    billid = models.ForeignKey(k_sparebill)
     maintenanceid = models.ManyToManyField(k_maintenance)
     deviceid = models.ForeignKey(k_device)
     spareid = models.ForeignKey(k_spare)
     count = models.IntegerField()
     state = models.CharField(max_length=1, choices=SPARECOUNT_STATUS, default='1')
     memo = models.CharField(max_length=100)
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
-
-
-"""
-Tool Management
-"""
 class k_tool(models.Model):
     classid = models.ForeignKey(k_class, related_name='tool_set')
     name = models.CharField(max_length=30) #项目本级内唯一
@@ -396,12 +489,12 @@ class k_tool(models.Model):
     memo = models.CharField(max_length=100)
     minimum = models.PositiveIntegerField()
     stock = models.PositiveIntegerField()
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_tooluse(models.Model):
@@ -426,10 +519,53 @@ class k_toolcount(models.Model):
     state = models.CharField(max_length=1, choices=TOOLCOUNT_STATUS, default='1')
     memo = models.CharField(max_length=100)
     stock = models.PositiveIntegerField()
-    creatorid = models.PositiveIntegerField()
-    createdatetime = models.DateField()
-    editorid = models.PositiveIntegerField()
-    editdatetime = models.DateField()
-    auditorid = models.PositiveIntegerField()
-    auditdatetime = models.DateField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
+
+
+"""
+Others
+"""
+class k_project(models.Model):
+    classid = models.ForeignKey(k_class, related_name='project_set')
+    meterscore = models.PositiveIntegerField()
+    maintenancescore = models.PositiveIntegerField()
+    taskscore = models.PositiveIntegerField()
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+
+class k_schedule(models.Model):
+    classid = models.ForeignKey(k_class, related_name='schedule_set')
+    range = models.CharField(max_length=30)
+    content = models.CharField(max_length=500)
+    memo = models.CharField(max_length=100)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+
+class k_staffworkinfo(models.Model):
+    userid = models.ForeignKey(k_user, related_name='staffworkinfo_set')
+    checkin = models.DateField(blank=True, default=date.today)
+    checkout = models.DateField(blank=True, default=date.today)
+    shifting = models.CharField(max_length=1) #1 yes, 0 no
+
+class k_staffscoreinfo(models.Model):
+    userid = models.ForeignKey(k_user, related_name='staffscoreinfo_set')
+    score = models.PositiveIntegerField()
+    content = models.CharField(max_length=80)
+    time = models.DateField(blank=True, default=date.today)
+
+class k_staffegginfo(models.Model):
+    userid = models.ForeignKey(k_user, related_name='staffegginfo_set')
+    time = models.DateField(blank=True, default=date.today)
+    state = models.CharField(max_length=1) #1 yes, 0 no
+
+class k_feedback(models.Model):
+    feedback = models.CharField(max_length=200)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
