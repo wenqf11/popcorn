@@ -33,5 +33,7 @@ urlpatterns = patterns('',
     url(r'^sparebrand/$', sparebrand),
     url(r'^sparehist/$', sparehist),
     url(r'^form/$', form),
-    url(r'^deviceall/$', deviceall)
+    url(r'^deviceall/$', deviceall),
+    url(r'^purview/$', purview),
+    url(r'^view_role/$', view_role)
 )

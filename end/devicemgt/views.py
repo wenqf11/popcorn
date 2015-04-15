@@ -360,3 +360,96 @@ def deviceall(request):
     response["options"] = []
     response['Access-Control-Allow-Origin'] = '*'
     return HttpResponse(json.dumps(response))
+
+def purview(request):
+    allpurview = k_purview.objects.all()
+    purviewdata = []
+    for p in allpurview:
+        onepurview = dict()
+        theclass = k_class.objects.filter(id = p.classid_id)
+        onepurview["class"] = theclass[0].name
+        onepurview["name"] = p.name
+        onepurview["item"] = p.item
+        onepurview["memo"] = p.memo
+        thecreator = k_user.objects.filter(id = p.creatorid)
+        onepurview["creator"] = thecreator[0].username
+        onepurview["createdatetime"] = '2015/4/12'
+        theeditor = k_user.objects.filter(id = p.editorid)
+        onepurview["editor"] = theeditor[0].username
+        onepurview["editdatetime"] = '2015/4/13'
+        purviewdata.append(onepurview)
+    response = {}
+    response["aaData"] = purviewdata
+    #response["sInfo"] = ""
+    #response["iTotalRecords"] = 11
+    #response["iTotalDisplayRecords"] = 11
+    response["options"] = []
+    response['Access-Control-Allow-Origin'] = '*'
+    return HttpResponse(json.dumps(response))
+
+def view_role(request):
+    allrole = k_role.objects.all()
+    roledata = []
+    for p in allrole:
+        onerole = dict()
+        theclass = k_class.objects.filter(id=p.classid_id)
+        onerole["id"] = p.id
+        onerole["class"] = theclass[0].name
+        onerole["name"] = p.name
+        onerole["purviews"] = []
+        therolepurviews = p.purviews.all()
+        lastname = ""
+        nowitem = ""
+        for i in range(0,len(therolepurviews)):
+            q = therolepurviews[i]
+            if q.name == lastname:
+                nowitem += ", "+q.item
+            elif q.name != lastname:
+                if lastname != "":
+                    onepurview = dict()
+                    onepurview["name"] = lastname
+                    onepurview["item"] = nowitem
+                    onerole["purviews"].append(onepurview)
+                lastname = q.name
+                nowitem = q.item
+            if i == len(therolepurviews) - 1:
+                onepurview = dict()
+                onepurview["name"] = lastname
+                onepurview["item"] = nowitem
+                onerole["purviews"].append(onepurview)
+        onerole["memo"] = p.memo
+        thecreator = k_user.objects.filter(id=p.creatorid)
+        onerole["creator"] = thecreator[0].username
+        onerole["createdatetime"] = '2015/4/12'
+        theeditor = k_user.objects.filter(id=p.editorid)
+        onerole["editor"] = theeditor[0].username
+        onerole["editdatetime"] = '2015/4/13'
+        roledata.append(onerole)
+    return render_to_response('roleview.html',{'data':roledata})
+
+def operate_role(request):
+    theid = request.GET.get("id")
+    if theid:
+        roledata = dict()
+        therole = k_role.objects.filter(id=theid)
+        therole = therole[0]
+        roledata["id"] = therole.id
+        roledata["name"] = therole.name
+        roledata["purviews"] = []
+        therolepurviews = therole.purviews.all()
+        for q in therolepurviews:
+            roledata["purviews"].append(q.name+", "+q.item)
+        roledata["memo"] = therole.memo
+        thecreator = k_user.objects.filter(id=therole.creatorid)
+        roledata["creator"] = thecreator[0].username
+        roledata["createdatetime"] = '2015/4/12'
+        theeditor = k_user.objects.filter(id=therole.editorid)
+        roledata["editor"] = theeditor[0].username
+        roledata["editdatetime"] = '2015/4/13'
+        return render_to_response('roleoperate.html', {'isNew':False, 'data':roledata})
+    else:
+        return render_to_response('roleoperate.html', {'isNew':True})
+
+def delete_role(request):
+    #delete to db
+    return render_to_response('roledelete.html', {'isNew':True})
