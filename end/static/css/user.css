@@ -1,0 +1,13 @@
+.my-user-info{
+    font-size : 18px;
+    text-align: right;
+}
+
+.my-user-info .info-icon {
+    border:2px solid #AAA;
+    border-radius: 100%;
+    padding: 3px 5px;
+}
+.my-user-info .info-text {
+    margin-left: 20px;
+}

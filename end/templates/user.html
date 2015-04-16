@@ -5,6 +5,7 @@
 {% block css %}
     <link href="../static/treeview/css/bootstrap-treeview.css" rel="stylesheet" media="screen">
     <link href="../static/css/filetree.css" rel="stylesheet" media="screen">
+    <link href="../static/css/user.css" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block pageheader %}
@@ -13,7 +14,78 @@
 
 {% block maincontent %}
     <!--画文件树-->
+<div class="col-xs-5">
     <div id="treeview6"></div>
+
+</div>
+<div class="col-xs-7">
+    <div class="profile-users clearfix">
+        <div class="itemdiv memberdiv">
+            <div class="inline pos-rel">
+                <div class="user">
+                    <a href="#">
+                        <img src="../static/images/user.png" >
+                    </a>
+                </div>
+                <!--
+                <div class="body">
+                    <div class="name">
+                            <span class="user-status status-online"></span>
+                            昵称
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+        <h2>
+            {{ username }}
+        </h2>
+    </div>
+    <hr style="margin: 10px" />
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-phone info-icon"></i>
+        </div>
+        <h5 class="col-xs-5 info-text">
+              手机：18810305382
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-phone info-icon"></i>
+        </div>
+        <h5 class="col-xs-5 info-text">
+              手机：18810305382
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-phone info-icon"></i>
+        </div>
+        <h5 class="col-xs-5 info-text">
+              手机：18810305382
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-phone info-icon"></i>
+        </div>
+        <h5 class="col-xs-5 info-text">
+              手机：18810305382
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/delete_user?id={{userid}}">
+        <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
+    </a>
+    <span style="float:right">&nbsp;&nbsp;</span>
+    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/edit_user?id={{userid}}">
+        <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+    </a>
+</div>
 {% endblock %}
 
 {% block tailjs %}
@@ -174,7 +246,6 @@
         });
 
         $('#treeview4').treeview({
-
           color: "#428bca",
           data: defaultData
         });
