@@ -11,6 +11,7 @@ from forms import *
 from helper import handle_uploaded_file
 import json
 
+
 #首页
 def index(request):
     if request.user.is_authenticated():
@@ -22,6 +23,7 @@ def index(request):
         return render_to_response('index.html',variables)
     else:
         return HttpResponseRedirect('/login/')
+
 
 #用户管理
 def usermgt(request):
@@ -135,6 +137,7 @@ def profile(request):
     else:
         return HttpResponseRedirect('/login/')
 
+
 def front(request):
     if request.user.is_authenticated():
         #登陆成功
@@ -145,6 +148,7 @@ def front(request):
         return render_to_response('front.html',variables)
     else:
         return HttpResponseRedirect('/login/')
+
 
 def setting(request):
     if request.user.is_authenticated():
@@ -205,6 +209,7 @@ def sparetype(request):
     else:
         return HttpResponseRedirect('/login/')
 
+
 def sparebrand(request):
     if request.user.is_authenticated():
         #登陆成功
@@ -216,6 +221,7 @@ def sparebrand(request):
     else:
         return HttpResponseRedirect('/login/')
 
+
 def sparehist(request):
     if request.user.is_authenticated():
         #登陆成功
@@ -226,6 +232,7 @@ def sparehist(request):
         return render_to_response('sparehist.html',variables)
     else:
         return HttpResponseRedirect('/login/')
+
 
 #注册, 创建一个新用户
 def register(req):
@@ -249,6 +256,7 @@ def register(req):
         uf = UserForm()
     return render_to_response('register.html',{'uf':uf}, context_instance=RequestContext(req))
 
+
 #处理登录请求
 def login(request):
     if request.method == 'POST':
@@ -267,6 +275,7 @@ def login(request):
                 return HttpResponseRedirect('/login/')
     else:
         return render_to_response('login.html')
+
 
 def form(request):
     if request.method == 'POST':
@@ -316,6 +325,7 @@ def form(request):
         response['Access-Control-Allow-Origin'] = '*'
         return HttpResponse(json.dumps(response))
 
+
 def deviceall(request):
     if request.method == 'POST':
         response = HttpResponse()
@@ -361,20 +371,21 @@ def deviceall(request):
     response['Access-Control-Allow-Origin'] = '*'
     return HttpResponse(json.dumps(response))
 
+
 def purview(request):
     allpurview = k_purview.objects.all()
     purviewdata = []
     for p in allpurview:
         onepurview = dict()
-        theclass = k_class.objects.filter(id = p.classid_id)
+        theclass = k_class.objects.filter(id=p.classid_id)
         onepurview["class"] = theclass[0].name
         onepurview["name"] = p.name
         onepurview["item"] = p.item
         onepurview["memo"] = p.memo
-        thecreator = k_user.objects.filter(id = p.creatorid)
+        thecreator = k_user.objects.filter(id=p.creatorid)
         onepurview["creator"] = thecreator[0].username
         onepurview["createdatetime"] = '2015/4/12'
-        theeditor = k_user.objects.filter(id = p.editorid)
+        theeditor = k_user.objects.filter(id=p.editorid)
         onepurview["editor"] = theeditor[0].username
         onepurview["editdatetime"] = '2015/4/13'
         purviewdata.append(onepurview)
@@ -386,6 +397,7 @@ def purview(request):
     response["options"] = []
     response['Access-Control-Allow-Origin'] = '*'
     return HttpResponse(json.dumps(response))
+
 
 def view_role(request):
     allrole = k_role.objects.all()
@@ -400,7 +412,7 @@ def view_role(request):
         therolepurviews = p.purviews.all()
         lastname = ""
         nowitem = ""
-        for i in range(0,len(therolepurviews)):
+        for i in xrange(0, len(therolepurviews)):
             q = therolepurviews[i]
             if q.name == lastname:
                 nowitem += ", "+q.item
@@ -425,7 +437,8 @@ def view_role(request):
         onerole["editor"] = theeditor[0].username
         onerole["editdatetime"] = '2015/4/13'
         roledata.append(onerole)
-    return render_to_response('roleview.html',{'data':roledata})
+    return render_to_response('roleview.html', {'data': roledata})
+
 
 def operate_role(request):
     theid = request.GET.get("id")
@@ -435,10 +448,11 @@ def operate_role(request):
         therole = therole[0]
         roledata["id"] = therole.id
         roledata["name"] = therole.name
-        roledata["purviews"] = []
+
         therolepurviews = therole.purviews.all()
+        purview_ids = []
         for q in therolepurviews:
-            roledata["purviews"].append(q.name+", "+q.item)
+            purview_ids.append(q.id)
         roledata["memo"] = therole.memo
         thecreator = k_user.objects.filter(id=therole.creatorid)
         roledata["creator"] = thecreator[0].username
@@ -446,10 +460,63 @@ def operate_role(request):
         theeditor = k_user.objects.filter(id=therole.editorid)
         roledata["editor"] = theeditor[0].username
         roledata["editdatetime"] = '2015/4/13'
-        return render_to_response('roleoperate.html', {'isNew':False, 'data':roledata})
+
+        all_purview = k_purview.objects.all()
+        roledata["purviews"] = []
+        for _purview in all_purview:
+            roledata['purviews'].append({
+                'id': _purview.id,
+                'name': _purview.name + ', ' + _purview.item,
+                'selected': _purview.id in purview_ids
+            })
+        return render_to_response('roleoperate.html', {'isNew': False, 'data': roledata})
     else:
-        return render_to_response('roleoperate.html', {'isNew':True})
+        data = {}
+        data['creator'] = 'current username'
+        data['createdatetime'] = '2015-04-17'
+        data['editor'] = 'none(maybe current user)'
+        data['editdatetime'] = '2015-04-17'
+
+        data['purviews'] = []
+        purviews = k_purview.objects.all()
+        for p in purviews:
+            data['purviews'].append({
+                'id': p.id,
+                'name': p.name + ', ' + p.item,
+                'selected': False
+            })
+
+        return render_to_response('roleoperate.html', {'isNew': True, 'data': data})
+
 
 def delete_role(request):
-    #delete to db
-    return render_to_response('roledelete.html', {'isNew':True})
+    _id = request.GET.get('id')
+    if _id:
+        _role = k_role.objects.filter(id=_id)
+        _role.delete()
+        pass
+    return HttpResponseRedirect('/view_role/')
+
+
+def submit_role(request, _id):
+    _name = request.GET.get('name')
+    _editdatetime = '2014-04-14'
+    _editor = 1
+    _purviews = request.GET.getlist('duallistbox')
+    _memo = request.GET.get('memo')
+
+    if _id:
+        _role = k_role.objects.filter(id=_id)[0]
+    else:
+        _role = k_role.objects.create(classid=k_class.objects.all()[0])
+        _role.creatorid = 1
+    _role.name = _name
+    _role.editdatetime = _editdatetime
+    _role.editorid = _editor
+    _role.purviews = _purviews
+    _role.memo = _memo
+
+    _role.save()
+    return HttpResponseRedirect('/view_role/')
+
+

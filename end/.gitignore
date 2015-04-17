@@ -1,0 +1,3 @@
+# gitignore file of 'end' directory
+/.idea/
+*.pyc

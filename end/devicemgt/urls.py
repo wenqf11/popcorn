@@ -35,5 +35,8 @@ urlpatterns = patterns('',
     url(r'^form/$', form),
     url(r'^deviceall/$', deviceall),
     url(r'^purview/$', purview),
-    url(r'^view_role/$', view_role)
+    url(r'^view_role/$', view_role),
+    url(r'^operate_role/$', operate_role),
+    url(r'^submit_role/(\d*)/$', submit_role),
+    url(r'^delete_role/$', delete_role)
 )
