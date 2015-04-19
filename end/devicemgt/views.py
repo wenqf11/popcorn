@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
 from models import *
 from forms import *
-from helper import handle_uploaded_file
+from helper import handle_uploaded_file, get_current_time
 import json
 
 
@@ -387,7 +387,7 @@ def purview(request):
         onepurview["createdatetime"] = '2015/4/12'
         theeditor = k_user.objects.filter(id=p.editorid)
         onepurview["editor"] = theeditor[0].username
-        onepurview["editdatetime"] = '2015/4/13'
+        onepurview["editdatetime"] = get_current_time()
         purviewdata.append(onepurview)
     response = {}
     response["aaData"] = purviewdata
@@ -400,45 +400,49 @@ def purview(request):
 
 
 def view_role(request):
-    allrole = k_role.objects.all()
-    roledata = []
-    for p in allrole:
-        onerole = dict()
-        theclass = k_class.objects.filter(id=p.classid_id)
-        onerole["id"] = p.id
-        onerole["class"] = theclass[0].name
-        onerole["name"] = p.name
-        onerole["purviews"] = []
-        therolepurviews = p.purviews.all()
-        lastname = ""
-        nowitem = ""
-        for i in xrange(0, len(therolepurviews)):
-            q = therolepurviews[i]
-            if q.name == lastname:
-                nowitem += ", "+q.item
-            elif q.name != lastname:
-                if lastname != "":
+    if request.user.is_authenticated():
+        user=User.objects.get(username=request.user.username)
+        allrole = k_role.objects.all()
+        roledata = []
+        for p in allrole:
+            onerole = dict()
+            theclass = k_class.objects.filter(id=p.classid_id)
+            onerole["id"] = p.id
+            onerole["class"] = theclass[0].name
+            onerole["name"] = p.name
+            onerole["purviews"] = []
+            therolepurviews = p.purviews.all()
+            lastname = ""
+            nowitem = ""
+            for i in xrange(0, len(therolepurviews)):
+                q = therolepurviews[i]
+                if q.name == lastname:
+                    nowitem += ", "+q.item
+                elif q.name != lastname:
+                    if lastname != "":
+                        onepurview = dict()
+                        onepurview["name"] = lastname
+                        onepurview["item"] = nowitem
+                        onerole["purviews"].append(onepurview)
+                    lastname = q.name
+                    nowitem = q.item
+                if i == len(therolepurviews) - 1:
                     onepurview = dict()
                     onepurview["name"] = lastname
                     onepurview["item"] = nowitem
                     onerole["purviews"].append(onepurview)
-                lastname = q.name
-                nowitem = q.item
-            if i == len(therolepurviews) - 1:
-                onepurview = dict()
-                onepurview["name"] = lastname
-                onepurview["item"] = nowitem
-                onerole["purviews"].append(onepurview)
-        onerole["memo"] = p.memo
-        thecreator = k_user.objects.filter(id=p.creatorid)
-        onerole["creator"] = thecreator[0].username
-        onerole["createdatetime"] = '2015/4/12'
-        theeditor = k_user.objects.filter(id=p.editorid)
-        onerole["editor"] = theeditor[0].username
-        onerole["editdatetime"] = '2015/4/13'
-        roledata.append(onerole)
-    return render_to_response('roleview.html', {'data': roledata})
-
+            onerole["memo"] = p.memo
+            thecreator = k_user.objects.filter(id=p.creatorid)
+            therole = k_role.objects.filter(name=p.name)
+            onerole["creator"] = thecreator[0].username
+            onerole["createdatetime"] = therole[0].createdatetime
+            theeditor = k_user.objects.filter(id=p.editorid)
+            onerole["editor"] = theeditor[0].username
+            onerole["editdatetime"] = therole[0].editdatetime
+            roledata.append(onerole)
+        return render_to_response('roleview.html', {'username':user.username, 'data': roledata})
+    else:
+        return render_to_response('login.html')
 
 def operate_role(request):
     theid = request.GET.get("id")
@@ -456,10 +460,10 @@ def operate_role(request):
         roledata["memo"] = therole.memo
         thecreator = k_user.objects.filter(id=therole.creatorid)
         roledata["creator"] = thecreator[0].username
-        roledata["createdatetime"] = '2015/4/12'
+        roledata["createdatetime"] = get_current_time()
         theeditor = k_user.objects.filter(id=therole.editorid)
         roledata["editor"] = theeditor[0].username
-        roledata["editdatetime"] = '2015/4/13'
+        roledata["editdatetime"] = get_current_time()
 
         all_purview = k_purview.objects.all()
         roledata["purviews"] = []
@@ -473,9 +477,9 @@ def operate_role(request):
     else:
         data = {}
         data['creator'] = 'current username'
-        data['createdatetime'] = '2015-04-17'
+        data['createdatetime'] = get_current_time()
         data['editor'] = 'none(maybe current user)'
-        data['editdatetime'] = '2015-04-17'
+        data['editdatetime'] = get_current_time()
 
         data['purviews'] = []
         purviews = k_purview.objects.all()
@@ -500,7 +504,7 @@ def delete_role(request):
 
 def submit_role(request, _id):
     _name = request.GET.get('name')
-    _editdatetime = '2014-04-14'
+    _editdatetime =get_current_time()
     _editor = 1
     _purviews = request.GET.getlist('duallistbox')
     _memo = request.GET.get('memo')

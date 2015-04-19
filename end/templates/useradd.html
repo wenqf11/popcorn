@@ -24,9 +24,9 @@
         <!-- BEGIN FORM-->
         <form action="#" id="form_sample_1" class="form-horizontal" enctype="multipart/form-data" method="POST">
             <fieldset>
-                <div class="control-group">
-                    <label class="control-label">分类编号<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">分类编号<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <select class="span6 m-wrap" name="state">
                             {% for class in class_list %}
                             <option value="{{ class }}">{{ class }}</option>
@@ -34,9 +34,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">权限集合<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">权限集合<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <select class="span6 m-wrap" name="state">
                             {% for role in role_list %}
                             <option value="{{ role }}">{{ role }}</option>
@@ -44,9 +44,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">用户状态<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">用户状态<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <select class="span6 m-wrap" name="state">
                             <option value="0">锁定</option>
                             <option value="1">在岗</option>
@@ -55,109 +55,109 @@
                         </select>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">用户名<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">用户名<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="username" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">密码<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">密码<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="password" type="password" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">确认密码<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">确认密码<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="confirmpassword" type="password" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">真实姓名<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">真实姓名<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="name" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">图像</label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">图像</label>
+                    <div class="col-sm-9">
                         <div id="imgdiv"><img id="imgShow" width="100" height="100" /></div>
                         <input type="file" class="file-uploader" name="face" id="up_img">
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">手机<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">手机<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="mobile" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">电子邮箱<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">电子邮箱<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="email" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">联系地址</label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">联系地址</label>
+                    <div class="col-sm-9">
                         <input name="address" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">邮政编码</label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">邮政编码</label>
+                    <div class="col-sm-9">
                         <input name="zipcode" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">出生年月日<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">出生年月日<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="birthday" id="birthday" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">证件号码<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">证件号码<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="idcard" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">有效证件类型<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">有效证件类型<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <select class="span6 m-wrap" name="status">
                             <option value="">身份证</option>
                         </select>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">紧急联系人<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">紧急联系人<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="contact" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">紧急联系人手机<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">紧急联系人手机<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <input name="contactmobile" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">内容</label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">内容</label>
+                    <div class="col-sm-9">
                         <input name="content" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">备注</label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">备注</label>
+                    <div class="col-sm-9">
                         <input name="memo" type="text" class="span6 m-wrap"/>
                     </div>
                 </div>
                 <!--
-                <div class="control-group">
-                    <label class="control-label">状态<span class="required">*</span></label>
-                    <div class="controls">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">状态<span class="required">*</span></label>
+                    <div class="col-sm-9">
                         <select class="span6 m-wrap" name="status">
                             <option value="">选择...</option>
                             <option value="Category 1">删除</option>
@@ -168,9 +168,11 @@
                     </div>
                 </div>
                 -->
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">确定</button>
-                    <button type="button" class="btn">取消</button>
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn btn-primary">确定</button>
+                        <button type="button" class="btn">取消</button>
+                    </div>
                 </div>
             </fieldset>
         </form>
