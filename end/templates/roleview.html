@@ -11,8 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="panel-group span6" id="accordion" role="tablist" aria-multiselectable="true">
- 
+<div class="panel-group span6" id="accordion" role="tablist" aria-multiselectable="true"> 
     {% for dataitem in data %}
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id={{dataitem.name}}>
@@ -37,6 +36,8 @@
                 <p>权限：
                     {% for purviewitem in dataitem.purviews %}
                         {{ purviewitem.name }}:&nbsp;{{ purviewitem.item }};
+                    {% empty %}
+                        无
                     {% endfor %}
                 </p>
             </div>

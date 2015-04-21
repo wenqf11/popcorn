@@ -146,6 +146,10 @@ class k_user(models.Model):
         ('2', '长假'),
         ('3', '离职'),
     )
+    GENDER_CHOICES = (
+        ('0', '女'),
+        ('1', '男'),
+    )
     CARD_TYPE = (
         ('1','身份证'),
     )
@@ -155,6 +159,7 @@ class k_user(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(_('password'), max_length=128)
     name = models.CharField(max_length=30)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='1')
     face = models.CharField(max_length=30)
     mobile = models.CharField(max_length=50, default='0')
     email = models.EmailField(_('e-mail address'))
@@ -286,7 +291,6 @@ class k_form(models.Model):
     classid = models.ForeignKey(k_class, related_name='form_set')
     content = models.CharField(max_length=200)
     brief = models.CharField(max_length=30)
-    period = models.PositiveIntegerField()
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)
@@ -315,7 +319,10 @@ Route, Meter, Maintenance, Task
 """
 class k_route(models.Model):
     classid = models.ForeignKey(k_class, related_name='route_set')
+    name = models.CharField(max_length=80)
     formid = models.CharField(max_length=80)
+    starttime = models.TimeField()
+    period = models.PositiveIntegerField()
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)
@@ -335,6 +342,9 @@ class k_meter(models.Model):
     title = models.CharField(max_length=50)
     content = models.CharField(max_length=100)
     memo = models.CharField(max_length=100)
+    orderedtime = models.TimeField()
+    metertime = models.DateTimeField(auto_now=True)
+    routeid = models.ForeignKey(k_route, related_name='meter_set')
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)

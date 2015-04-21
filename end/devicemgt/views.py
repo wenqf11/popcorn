@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
 from helper import handle_uploaded_file, get_current_time, get_current_date
@@ -17,11 +18,11 @@ import json
 def index(request):
     if request.user.is_authenticated():
         #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
+        #user = k_user.objects.get(username=request.user.username)
+        user = User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'index'})
-        return render_to_response('index.html',variables)
+        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'index'})
+        return render_to_response('index.html', variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -31,8 +32,8 @@ def index(request):
 def usermgt(request):
     if request.user.is_authenticated():
         #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
+        #user = k_user.objects.get(username=request.user.username)
+        user = User.objects.get(username=request.user.username)
         #读取权限，显示内容
         userdata1 = "[" \
           "{"\
@@ -53,6 +54,8 @@ def usermgt(request):
         userdata = json.dumps(userdata)
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdatas})
         return render_to_response('user.html',variables)
+        variables = RequestContext(request,{'username': user.username, 'clicked_item': 'user'})
+        return render_to_response('user.html', variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -97,7 +100,7 @@ def useradd(request):
     print "useradd"
     if request.user.is_authenticated():
         #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
+        #user = k_user.objects.get(username=request.user.username)
         if request.method == 'POST':
             #face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
             face = "../static/images/user.png"
@@ -107,6 +110,7 @@ def useradd(request):
             #总共要有26项信息
             classid = k_class.objects.filter(id=1)[0]
             user = k_user.objects.create_user(username = request.POST['username'],
+            user = k_user.objects.create_user(username=request.POST['username'],
                 classid=classid,
                 state=1,
                 password=request.POST['password'],
@@ -139,8 +143,8 @@ def useradd(request):
         #读取权限，显示内容
         class_list = ['class1', 'class2']
         role_list = ['tmp1', 'tmp2']
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user',
-                                          'class_list':class_list, 'role_list':role_list})
+        variables=RequestContext(request, {'username': user.username, 'clicked_item': 'user',
+                                          'class_list': class_list, 'role_list': role_list})
         return HttpResponseRedirect('/user_operate/')
     else:
         return HttpResponseRedirect('/login/')
@@ -149,11 +153,11 @@ def useradd(request):
 def userdel(request):
     if request.user.is_authenticated():
         #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
+        #user = k_user.objects.get(username=request.user.username)
+        user = User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user'})
-        return render_to_response('userdel.html',variables)
+        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user'})
+        return render_to_response('userdel.html', variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -161,11 +165,11 @@ def userdel(request):
 def userset(request):
     if request.user.is_authenticated():
         #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
+        #user = k_user.objects.get(username=request.user.username)
+        user = User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user'})
-        return render_to_response('userset.html',variables)
+        variables = RequestContext(request,{'username': user.username, 'clicked_item': 'user'})
+        return render_to_response('userset.html', variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -215,10 +219,10 @@ def front(request):
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
+        user = User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'front'})
-        return render_to_response('front.html',variables)
+        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'front'})
+        return render_to_response('front.html', variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -316,7 +320,7 @@ def register(req):
             username = uf.cleaned_data['username']
             password = uf.cleaned_data['password']
             #添加到数据库
-            user = k_user.objects.create(username= username,password=password, classid_id=1, roles=1)
+            user = k_user.objects.create(username=username, password=password, classid_id=1, roles=1)
             olduser = User.objects.create_user(
                 username=user.username,
                 email=user.email,
@@ -327,7 +331,7 @@ def register(req):
             return HttpResponse('register success!!')
     else:
         uf = UserForm()
-    return render_to_response('register.html',{'uf':uf}, context_instance=RequestContext(req))
+    return render_to_response('register.html', {'uf': uf}, context_instance=RequestContext(req))
 
 
 #处理登录请求
@@ -343,7 +347,7 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return render_to_response('index.html',{'username':username})
+                return render_to_response('index.html', {'username': username})
             else:
                 return HttpResponseRedirect('/login/')
     else:
@@ -353,27 +357,27 @@ def login(request):
 def form(request):
     if request.method == 'POST':
         response = {
-        "data": [
-        {
-        "table_item": "row_1",
-        "unit": "Tiger",
-        "lower_shreshold": "Nixon",
-        "upper_threshold": "System Architect"
-        },
-        {
-        "table_item": "row_1",
-        "unit": "Tiger",
-        "lower_shreshold": "Nixon",
-        "upper_threshold": "System Architect"
-        },
-        {
-        "table_item": "row_1",
-        "unit": "Tiger",
-        "lower_shreshold": "Nixon",
-        "upper_threshold": "System Architect"
-        }
-        ],
-        "options": []
+            "data": [
+                {
+                    "table_item": "row_1",
+                    "unit": "Tiger",
+                    "lower_shreshold": "Nixon",
+                    "upper_threshold": "System Architect"
+                },
+                {
+                    "table_item": "row_1",
+                    "unit": "Tiger",
+                    "lower_shreshold": "Nixon",
+                    "upper_threshold": "System Architect"
+                },
+                {
+                    "table_item": "row_1",
+                    "unit": "Tiger",
+                    "lower_shreshold": "Nixon",
+                    "upper_threshold": "System Architect"
+                }
+            ],
+            "options": []
         };
         response['Access-Control-Allow-Origin'] = '*'
         return HttpResponse(json.dumps(response))
@@ -445,6 +449,7 @@ def deviceall(request):
     return HttpResponse(json.dumps(response))
 
 
+@login_required
 def purview(request):
     allpurview = k_purview.objects.all()
     purviewdata = []
@@ -472,57 +477,56 @@ def purview(request):
     return HttpResponse(json.dumps(response))
 
 
+@login_required
 def view_role(request):
-    if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
-        allrole = k_role.objects.all()
-        roledata = []
-        for p in allrole:
-            onerole = dict()
-            theclass = k_class.objects.filter(id=p.classid_id)
-            onerole["id"] = p.id
-            onerole["class"] = theclass[0].name
-            onerole["name"] = p.name
-            onerole["purviews"] = []
-            therolepurviews = p.purviews.all()
-            lastname = ""
-            nowitem = ""
-            for i in xrange(0, len(therolepurviews)):
-                q = therolepurviews[i]
-                if q.name == lastname:
-                    nowitem += ", "+q.item
-                elif q.name != lastname:
-                    if lastname != "":
-                        onepurview = dict()
-                        onepurview["name"] = lastname
-                        onepurview["item"] = nowitem
-                        onerole["purviews"].append(onepurview)
-                    lastname = q.name
-                    nowitem = q.item
-                if i == len(therolepurviews) - 1:
-                    onepurview = dict()
+    user = k_user.objects.get(username=request.user.username)
+    allrole = k_role.objects.all()
+    roledata = []
+    for p in allrole:
+        onerole = {}
+        theclass = k_class.objects.get(id=p.classid_id)
+        onerole["id"] = p.id
+        onerole["class"] = theclass.name
+        onerole["name"] = p.name
+        onerole["purviews"] = []
+        therolepurviews = p.purviews.all()
+        lastname = ""
+        nowitem = ""
+        for i in xrange(0, len(therolepurviews)):
+            q = therolepurviews[i]
+            if q.name == lastname:
+                nowitem += ", "+q.item
+            elif q.name != lastname:
+                if lastname != "":
+                    onepurview = {}
                     onepurview["name"] = lastname
                     onepurview["item"] = nowitem
                     onerole["purviews"].append(onepurview)
-            onerole["memo"] = p.memo
-            thecreator = k_user.objects.filter(id=p.creatorid)
-            therole = k_role.objects.filter(name=p.name)
-            onerole["creator"] = thecreator[0].username
-            onerole["createdatetime"] = therole[0].createdatetime
-            theeditor = k_user.objects.filter(id=p.editorid)
-            onerole["editor"] = theeditor[0].username
-            onerole["editdatetime"] = therole[0].editdatetime
-            roledata.append(onerole)
-        return render_to_response('roleview.html', {'username':user.username, 'data': roledata})
-    else:
-        return render_to_response('login.html')
+                lastname = q.name
+                nowitem = q.item
+            if i == len(therolepurviews) - 1:
+                onepurview = {}
+                onepurview["name"] = lastname
+                onepurview["item"] = nowitem
+                onerole["purviews"].append(onepurview)
+        onerole["memo"] = p.memo
+        thecreator = k_user.objects.get(id=p.creatorid)
+        therole = k_role.objects.get(name=p.name)
+        onerole["creator"] = thecreator.username
+        onerole["createdatetime"] = therole.createdatetime
+        theeditor = k_user.objects.get(id=p.editorid)
+        onerole["editor"] = theeditor.username
+        onerole["editdatetime"] = therole.editdatetime
+        roledata.append(onerole)
+    return render_to_response('roleview.html', {'username': user.username, 'data': roledata})
 
+
+@login_required
 def operate_role(request):
     theid = request.GET.get("id")
     if theid:
-        roledata = dict()
-        therole = k_role.objects.filter(id=theid)
-        therole = therole[0]
+        roledata = {}
+        therole = k_role.objects.get(id=theid)
         roledata["id"] = therole.id
         roledata["name"] = therole.name
 
@@ -531,11 +535,11 @@ def operate_role(request):
         for q in therolepurviews:
             purview_ids.append(q.id)
         roledata["memo"] = therole.memo
-        thecreator = k_user.objects.filter(id=therole.creatorid)
-        roledata["creator"] = thecreator[0].username
+        thecreator = k_user.objects.get(id=therole.creatorid)
+        roledata["creator"] = thecreator.username
         roledata["createdatetime"] = get_current_time()
-        theeditor = k_user.objects.filter(id=therole.editorid)
-        roledata["editor"] = theeditor[0].username
+        theeditor = k_user.objects.get(id=therole.editorid)
+        roledata["editor"] = theeditor.username
         roledata["editdatetime"] = get_current_time()
 
         all_purview = k_purview.objects.all()
@@ -566,27 +570,30 @@ def operate_role(request):
         return render_to_response('roleoperate.html', {'isNew': True, 'data': data})
 
 
+@login_required
 def delete_role(request):
     _id = request.GET.get('id')
     if _id:
-        _role = k_role.objects.filter(id=_id)
+        _role = k_role.objects.get(id=_id)
         _role.delete()
-        pass
     return HttpResponseRedirect('/view_role/')
 
 
+@login_required
 def submit_role(request, _id):
     _name = request.GET.get('name')
-    _editdatetime =get_current_time()
-    _editor = 1
+    _editdatetime = get_current_date()
+    # 编辑者
+    _user = k_user.objects.get(username=request.user.username)
+    _editor = _user.id
     _purviews = request.GET.getlist('duallistbox')
     _memo = request.GET.get('memo')
 
     if _id:
-        _role = k_role.objects.filter(id=_id)[0]
+        _role = k_role.objects.get(id=_id)
     else:
-        _role = k_role.objects.create(classid=k_class.objects.all()[0])
-        _role.creatorid = 1
+        _role = k_role.objects.create(classid=_user.classid)
+        _role.creatorid = _editor
     _role.name = _name
     _role.editdatetime = _editdatetime
     _role.editorid = _editor
@@ -595,5 +602,60 @@ def submit_role(request, _id):
 
     _role.save()
     return HttpResponseRedirect('/view_role/')
+
+
+@login_required
+def view_route(request):
+    routes = k_route.objects.all()
+    data = []
+    for r in routes:
+        route = {}
+        _class = k_class.objects.get(id=r.classid_id)
+        route['id'] = r.id
+        route['class'] = _class.name
+        route['forms'] = ', '.join('form' + _form_id for _form_id in r.formid.split(','))
+        route['creator'] = k_user.objects.get(id=r.creatorid).username
+        route['createTime'] = r.createdatetime
+        route['editor'] = k_user.objects.get(id=r.editorid).username
+        route['editTime'] = r.editdatetime
+        route['auditor'] = k_user.objects.get(id=r.auditorid).username
+        route['auditTime'] = r.auditdatetime
+        route['status'] = r.status
+        data.append(route)
+    return render_to_response('routeview.html', {'routes': data})
+
+
+@login_required
+def operate_route(request):
+    _id = request.GET.get('id')
+    data = {}
+    if _id:
+        # 修改路线
+        _route = k_route.objects.get(id=_id)
+        data['id'] = _route.id
+        data['forms'] = _route.formid.split(',')
+        data['creator'] = k_user.objects.get(id=_route.creatorid).username
+        data['createTime'] = _route.createdatetime
+        data['editor'] = k_user.objects.get(id=_route.editorid).username
+        data['editTime'] = _route.editdatetime
+        return render_to_response('routeoperate.html', {'isNew': False, 'data': data})
+    else:
+        # 添加路线
+        return render_to_response('routeoperate.html', {'isNew': True, 'data': data})
+
+
+@login_required
+def submit_route(request, _id):
+
+    return HttpResponseRedirect('/view_route/')
+
+
+@login_required
+def delete_route(request):
+    _id = request.GET.get('id')
+    if _id:
+        _route = k_route.objects.get(id=_id)
+        _route.delete()
+    return HttpResponseRedirect('/view_route/')
 
 

@@ -2,15 +2,15 @@
 {% block title %}设备管理系统{% endblock %}
 
 {% block js %}
-    <script src="../static/assets/js/ace-extra.min.js"></script>
-    <!--[if lte IE 8]>
-    <script src="assets/js/html5shiv.min.js"></script>
-    <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
+	<script src="../static/assets/js/ace-extra.min.js"></script>
+	<!--[if lte IE 8]>
+	<script src="assets/js/html5shiv.min.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
 {% endblock %}
 
 {% block frame %}
-    {% include 'header.html' %}
+	{% include 'header.html' %}
 		<div id="navbar" class="navbar navbar-default">
 			<script type="text/javascript">
 				try{ace.settings.check('navbar' , 'fixed')}catch(e){}
@@ -296,10 +296,8 @@
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-users"></i>
 							<span class="menu-text"> 用户管理 </span>
-
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
-
 						<b class="arrow"></b>
 
 						<ul class="submenu">
@@ -317,25 +315,22 @@
 									<i class="menu-icon fa fa-caret-right"></i>
 									添加用户
 								</a>
-
 								<b class="arrow"></b>
 							</li>
 
-                            <li class="">
+							<li class="">
 								<a href="/view_role">
 									<i class="menu-icon fa fa-caret-right"></i>
 									角色管理
 								</a>
-
 								<b class="arrow"></b>
 							</li>
 
-                            <li class="">
+							<li class="">
 								<a href="/operate_role">
 									<i class="menu-icon fa fa-caret-right"></i>
 									添加角色
 								</a>
-
 								<b class="arrow"></b>
 							</li>
 						</ul>
@@ -453,12 +448,38 @@
 					</li>
 
 					<li class="">
-						<a href="/front">
-							<i class="menu-icon fa fa-cog"></i>
-							<span class="menu-text"> 移动端设置 </span>
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-users"></i>
+							<span class="menu-text"> 用户管理 </span>
+							<b class="arrow fa fa-angle-down"></b>
 						</a>
-
 						<b class="arrow"></b>
+
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-mobile"></i>
+							<span class="menu-text"> 路线设置 </span>
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="/view_route">
+									<i class="menu-icon fa fa-caret-right"></i>
+									查看路线
+								</a>
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="/operate_route">
+									<i class="menu-icon fa fa-caret-right"></i>
+									添加路线
+								</a>
+								<b class="arrow"></b>
+							</li>
+						</ul>
 					</li>
 
 					<li class="">
@@ -466,7 +487,6 @@
 							<i class="menu-icon fa fa-flag"></i>
 							<span class="menu-text"> 系统设置 </span>
 						</a>
-
 						<b class="arrow"></b>
 					</li>
 				</ul><!-- /.nav-list -->
@@ -510,15 +530,15 @@
 						</div><!-- /.ace-settings-container -->
 
 						<div class="page-header">
-                            <h1>
-                            {% block pageheader %}
-                            {% endblock %}
-                            </h1>
+							<h1>
+							{% block pageheader %}
+							{% endblock %}
+							</h1>
 						</div>
 
-                                    <div id="container">
-                                        {% block content %}{% endblock %}
-                                    </div>
+									<div id="container">
+										{% block content %}{% endblock %}
+									</div>
 
 								<!-- PAGE CONTENT ENDS -->
 							</div><!-- /.col -->
@@ -533,7 +553,7 @@
 		</div><!-- /.main-container -->
 
 		<!-- footer -->
-        {% include 'footer.html' %}
+		{% include 'footer.html' %}
 
 		<!--[if !IE]> -->
 		<script type="text/javascript">
@@ -543,10 +563,10 @@
 		<!-- <![endif]-->
 
 		<!--[if IE]>
-        <script type="text/javascript">
-         window.jQuery || document.write("<script src='../static/assets/js/jquery1x.min.js'>"+"<"+"/script>");
-        </script>
-        <![endif]-->
+		<script type="text/javascript">
+		 window.jQuery || document.write("<script src='../static/assets/js/jquery1x.min.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
 
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='../static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
@@ -558,5 +578,5 @@
 		<script src="../static/assets/js/ace-elements.min.js"></script>
 		<script src="../static/assets/js/ace.min.js"></script>
 
-        {% block tailjs %}{% endblock %}
+		{% block tailjs %}{% endblock %}
 {% endblock %}
