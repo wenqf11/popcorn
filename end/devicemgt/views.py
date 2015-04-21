@@ -1,5 +1,6 @@
+#-*- encoding=UTF-8 -*-
 __author__ = 'LY'
-# -*- coding: utf-8 -*-
+
 
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
@@ -8,7 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
 from models import *
 from forms import *
-from helper import handle_uploaded_file, get_current_time
+from helper import handle_uploaded_file, get_current_time, get_current_date
 import json
 
 
@@ -25,29 +26,89 @@ def index(request):
         return HttpResponseRedirect('/login/')
 
 
-#用户管理
+'''用户管理开始
+'''
 def usermgt(request):
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user'})
+        userdata1 = "[" \
+          "{"\
+            "\'text\': \'Parent 2\',"\
+            "\'href\': \'#parent2\',"\
+            "\'tags\': [\'0\']"\
+          "},"\
+        "]"
+        userdatas = list()
+        userdata = dict()
+        userdata["text"] = "Parent 2"
+        userdata["href"] = "#parent2"
+        userdatas.append({"text":"Pa2","href":"k2"})
+        userdata = dict()
+        userdata["text"] = "Parent 4"
+        userdata["href"] = "#parent4"
+        userdatas.append(userdata)
+        userdata = json.dumps(userdata)
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdatas})
         return render_to_response('user.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
 
+def user_operate(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        _id = request.GET.get('id')
+        userdata = dict()
+        class_list = ['class1', 'class2']
+        role_list = ['tmp1', 'tmp2']
+        userdata['class_list'] = class_list
+        userdata['role_list'] = role_list
+        if _id:
+            theuser = k_user.objects.filter(id = _id)[0]
+            userdata['username'] = theuser.username
+            userdata['name'] = theuser.name
+            userdata['face'] = theuser.face
+            userdata['mobile'] = theuser.mobile
+            userdata['email'] = theuser.email
+            userdata['address'] = theuser.address
+            userdata['zipcode'] = theuser.zipcode
+            userdata['birthday'] = theuser.birthday
+            userdata['idcard'] = theuser.idcard
+            userdata['idcardtype'] = theuser.idcardtype
+            userdata['contact'] = theuser.contact
+            userdata['contactmobile'] = theuser.contactmobile
+            userdata['content'] = theuser.content
+            userdata['memo'] = theuser.memo
+        else:
+            userdata['isNew'] = True
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
+        return render_to_response('useradd.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+# 提交表单，添加用户
 def useradd(request):
+    print "useradd"
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
         if request.method == 'POST':
-            face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
-            print face
+            #face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
+            face = "../static/images/user.png"
+            #print face
             #如果错误，要把已经填写的信息给返回回去
+            #排除用户名相同的情况
             #总共要有26项信息
+            classid = k_class.objects.filter(id=1)[0]
             user = k_user.objects.create_user(username = request.POST['username'],
+                classid=classid,
+                state=1,
                 password=request.POST['password'],
                 name=request.POST['name'],
                 face=face,
@@ -57,20 +118,30 @@ def useradd(request):
                 zipcode=request.POST['zipcode'],
                 birthday=request.POST['birthday'],
                 idcard=request.POST['idcard'],
+                idcardtype=0,
                 content=request.POST['content'],
                 memo=request.POST['memo'],
                 contact=request.POST['contact'],
-                contactmobile=request.POST['contactmobile']
+                contactmobile=request.POST['contactmobile'],
+                creatorid=0,
+                createdatetime="2014-04-21",
+                editorid=0,
+                editdatetime="2014-04-21",
+                auditorid=0,
+                auditdatetime="2014-04-21",
+                status=0,
             )
+            #给roles和user也增加一条记录
+            #user.roles.add(1)
             #保存
-            #user.save()
+            user.save()
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         class_list = ['class1', 'class2']
         role_list = ['tmp1', 'tmp2']
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user',
                                           'class_list':class_list, 'role_list':role_list})
-        return render_to_response('useradd.html',variables)
+        return HttpResponseRedirect('/user_operate/')
     else:
         return HttpResponseRedirect('/login/')
 
@@ -98,6 +169,8 @@ def userset(request):
     else:
         return HttpResponseRedirect('/login/')
 
+'''用户管理结束
+'''
 
 #设备管理
 def devicemgt(request):
