@@ -21,10 +21,11 @@
                     <input type="text" name="name" value="{{ data.name }}">
                 </div>
             </div>
+            {% if not isNew %}
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">创建时间</label>
                 <div class="col-sm-9">
-                    {{ data.createdatetime }}
+                    {{ data.createdatetime | date:"Y年m月d日" }}
                 </div>
             </div>
             <div class="form-group">
@@ -36,7 +37,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">编辑时间</label>
                 <div class="col-sm-9">
-                    {{ data.editdatetime }}
+                    {{ data.editdatetime | date:"Y年m月d日" }}
                 </div>
             </div>
             <div class="form-group">
@@ -45,6 +46,7 @@
                     {{ data.editor }}
                 </div>
             </div>
+            {% endif %}
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">备注</label>
                 <div class="col-sm-9">
