@@ -37,7 +37,7 @@ class UserManager(models.Manager):
             email = '@'.join([email_name, domain_part.lower()])
         return email
 
-    def create_user(self, classid, roles, state, username, password, name, face, mobile, email, address, zipcode, birthday,
+    def create_user(self, classid, state, username, password, name, face, mobile, email, address, zipcode, birthday,
                     idcard, idcardtype, content, memo, contact, contactmobile, creatorid, createdatetime, editorid,
                     editdatetime, auditorid, auditdatetime, status ):
         """
@@ -47,9 +47,9 @@ class UserManager(models.Manager):
         if not username:
             raise ValueError('The given username must be set')
         email = UserManager.normalize_email(email)
-        user = self.model(class_id=classid, roles=roles, state=state, username=username,
+        user = self.model(classid=classid, state=state, username=username,
             password=password, name=name, face=face, mobile = mobile, email=email, address=address, zipcode=zipcode,
-            birthday=birthday, idcard=idcard, idcardtype=idcardtype, content=content, memo=memo, contact=contact,
+            birthday=birthday, idcard=idcard, idcardtype=idcardtype, content=content, memo=memo, contact=contact, contactmobile=contactmobile,
             creatorid=creatorid, createdatetime=createdatetime, editorid=editorid, editdatetime=editdatetime,
             auditorid=auditorid, auditdatetime=auditdatetime, status=status)
         user.set_password(password)
@@ -102,11 +102,11 @@ class k_class(models.Model):
     content = models.CharField(max_length=200)
     memo = models.CharField(max_length=100)
     creatorid = models.PositiveIntegerField(default=0)
-    createdatetime = models.DateField(blank=True, default=date.today)
+    createdatetime = models.DateField()
     editorid = models.PositiveIntegerField(default=0)
-    editdatetime = models.DateField(blank=True, default=date.today)
+    editdatetime = models.DateField()
     auditorid = models.PositiveIntegerField(default=0)
-    auditdatetime = models.DateField(blank=True, default=date.today)
+    auditdatetime = models.DateField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_purview(models.Model):
