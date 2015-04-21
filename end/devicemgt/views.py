@@ -534,10 +534,10 @@ def operate_role(request):
         roledata["memo"] = therole.memo
         thecreator = k_user.objects.get(id=therole.creatorid)
         roledata["creator"] = thecreator.username
-        roledata["createdatetime"] = get_current_time()
+        roledata["createdatetime"] = therole.createdatetime
         theeditor = k_user.objects.get(id=therole.editorid)
         roledata["editor"] = theeditor.username
-        roledata["editdatetime"] = get_current_time()
+        roledata["editdatetime"] = therole.editdatetime
 
         all_purview = k_purview.objects.all()
         roledata["purviews"] = []
@@ -550,10 +550,6 @@ def operate_role(request):
         return render_to_response('roleoperate.html', {'isNew': False, 'data': roledata})
     else:
         data = {}
-        data['creator'] = 'current username'
-        data['createdatetime'] = get_current_time()
-        data['editor'] = 'none(maybe current user)'
-        data['editdatetime'] = get_current_time()
 
         data['purviews'] = []
         purviews = k_purview.objects.all()
