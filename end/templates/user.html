@@ -16,7 +16,6 @@
     <!--画文件树-->
 <div class="col-xs-5">
     <div id="treeview6"></div>
-
 </div>
 <div class="col-xs-7">
     <div class="profile-users clearfix">
@@ -78,11 +77,11 @@
         </h5>
     </div>
     <hr style="margin: 10px"/>
-    <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/delete_user?id={{userid}}">
+    <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/userdel?id={{userid}}">
         <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
     </a>
     <span style="float:right">&nbsp;&nbsp;</span>
-    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/useradd">
+    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/user_operate/?id=1">
         <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
     </a>
 </div>
@@ -92,109 +91,21 @@
 <script>
   		$(function() {
 
-        var defaultData = [
-          {
-            text: 'Parent 1',
-            href: '#parent1',
-            tags: ['4'],
-            nodes: [
-              {
-                text: 'Child 1',
-                href: '#child1',
-                tags: ['2'],
-                nodes: [
-                  {
-                    text: 'Grandchild 1',
-                    href: '#grandchild1',
-                    tags: ['0']
-                  },
-                  {
-                    text: 'Grandchild 2',
-                    href: '#grandchild2',
-                    tags: ['0']
-                  }
-                ]
-              },
-              {
-                text: 'Child 2',
-                href: '#child2',
-                tags: ['0']
-              }
-            ]
-          },
-          {
-            text: 'Parent 2',
-            href: '#parent2',
-            tags: ['0']
-          },
-          {
-            text: 'Parent 3',
-            href: '#parent3',
-             tags: ['0']
-          },
-          {
-            text: 'Parent 4',
-            href: '#parent4',
-            tags: ['0']
-          },
-          {
-            text: 'Parent 5',
-            href: '#parent5'  ,
-            tags: ['0']
-          }
-        ];
-
-        var alternateData = [
-          {
-            text: 'Parent 1',
-            tags: ['2'],
-            nodes: [
-              {
-                text: 'Child 1',
-                tags: ['3'],
-                nodes: [
-                  {
-                    text: 'Grandchild 1',
-                    tags: ['6']
-                  },
-                  {
-                    text: 'Grandchild 2',
-                    tags: ['3']
-                  }
-                ]
-              },
-              {
-                text: 'Child 2',
-                tags: ['3']
-              }
-            ]
-          },
-          {
-            text: 'Parent 2',
-            tags: ['7']
-          },
-          {
-            text: 'Parent 3',
-            icon: 'glyphicon glyphicon-earphone',
-            href: '#demo',
-            tags: ['11']
-          },
-          {
-            text: 'Parent 4',
-            icon: 'glyphicon glyphicon-cloud-download',
-            href: '/demo.html',
-            tags: ['19'],
-            selected: true
-          },
-          {
-            text: 'Parent 5',
-            icon: 'glyphicon glyphicon-certificate',
-            color: 'pink',
-            backColor: 'red',
-            href: 'http://www.tesco.com',
-            tags: ['available','0']
-          }
-        ];
+        var reg1=new RegExp("&quot;","g");
+        var reg2=new RegExp("&#39;","g");
+        var defaultData = '[';
+        {% for d in data %}
+            var tmpdata = '{{ d }}';
+            tmpdata = tmpdata.replace(reg1,"\'");
+            tmpdata = tmpdata.replace(reg2,"\"");
+            defaultData += tmpdata + ',';
+        {% endfor %}
+        defaultData = defaultData.substr(0,defaultData.length-1);
+        defaultData += ']';
+        //defaultData = '[{"text": "Parent 2", "href": "#parent2"}]';
+        console.log(defaultData);
+        //var tmp = '[{"text":"parent 1", "href":"hi"}]';
+        //var defaultData = eval('(' + tmp + ')');
 
         var json = '[' +
           '{' +
@@ -289,22 +200,6 @@
           data: defaultData
         });
 
-        $('#treeview9').treeview({
-          expandIcon: "glyphicon glyphicon-stop",
-          collapseIcon: "glyphicon glyphicon-unchecked",
-          nodeIcon: "glyphicon glyphicon-user",
-          color: "yellow",
-          backColor: "purple",
-          onhoverColor: "orange",
-          borderColor: "red",
-          showBorder: false,
-          showTags: true,
-          highlightSelected: true,
-          selectedColor: "yellow",
-          selectedBackColor: "darkorange",
-          data: alternateData
-        });
-
         $('#treeview10').treeview({
           color: "#428bca",
           enableLinks: true,
@@ -322,11 +217,6 @@
         // $('#treeview11').on('nodeSelected', function (event, node) {
         //   $('#event_output').prepend('<p>You clicked ' + node.text + '</p>');
         // });
-
-
-        $('#treeview12').treeview({
-          data: json
-        });
 
   		});
 </script>

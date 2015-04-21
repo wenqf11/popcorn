@@ -12,23 +12,35 @@
     <link href="../static/datepicker/datepicker.css" rel="stylesheet" media="screen">
 {% endblock %}
 {% block pageheader %}
-    添加用户
+    {% if data.isNew %}
+        添加用户
+    {% else %}
+        编辑用户
+    {% endif %}
 {% endblock %}
 {% block maincontent %}
          <!-- validation -->
-        <div class="row-fluid">
+        <div class="row-fluid well" style="width: 75%;margin: auto;">
              <!-- block -->
             <div class="block">
                 <div class="block-content collapse in">
                     <div class="span12">
+                        <div class="center">
+                        {% if not data.isNew %}
+                            <img src="{{ data.face }}">
+                        {% endif %}
+                        </div>
+
         <!-- BEGIN FORM-->
-        <form action="#" id="form_sample_1" class="form-horizontal" enctype="multipart/form-data" method="POST">
+        <form action="/useradd/" class="form-horizontal col-sm-12" enctype="multipart/form-data" method="POST">
             <fieldset>
+
+                <h4 class="header blue bolder smaller">基本信息</h4>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">分类编号<span class="required">*</span></label>
                     <div class="col-sm-9">
                         <select class="span6 m-wrap" name="state">
-                            {% for class in class_list %}
+                            {% for class in data.class_list %}
                             <option value="{{ class }}">{{ class }}</option>
                             {% endfor %}
                         </select>
@@ -38,7 +50,7 @@
                     <label class="col-sm-3 control-label no-padding-right">权限集合<span class="required">*</span></label>
                     <div class="col-sm-9">
                         <select class="span6 m-wrap" name="state">
-                            {% for role in role_list %}
+                            {% for role in data.role_list %}
                             <option value="{{ role }}">{{ role }}</option>
                             {% endfor %}
                         </select>
@@ -58,7 +70,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">用户名<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="username" type="text" class="span6 m-wrap"/>
+                        <input name="username" type="text" class="span6 m-wrap" value="{{ data.username }}" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -76,50 +88,55 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">真实姓名<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="name" type="text" class="span6 m-wrap"/>
+                        <input name="name" type="text" class="span6 m-wrap" value="{{ data.name }}"/>
                     </div>
                 </div>
+            <!--
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">图像</label>
                     <div class="col-sm-9">
                         <div id="imgdiv"><img id="imgShow" width="100" height="100" /></div>
-                        <input type="file" class="file-uploader" name="face" id="up_img">
+                        <input type="file" class="file-uploader " name="face" id="up_img" placeholder="../static/images/user.png">
                     </div>
                 </div>
+            -->
+
+                <h4 class="header blue bolder smaller">联系信息</h4>
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">手机<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="mobile" type="text" class="span6 m-wrap"/>
+                        <input name="mobile" type="text" class="span6 m-wrap" value="{{ data.mobile }}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">电子邮箱<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="email" type="text" class="span6 m-wrap"/>
+                        <input name="email" type="text" class="span6 m-wrap" value="{{ data.email }}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">联系地址</label>
                     <div class="col-sm-9">
-                        <input name="address" type="text" class="span6 m-wrap"/>
+                        <input name="address" type="text" class="span6 m-wrap" value="{{ data.address }}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">邮政编码</label>
                     <div class="col-sm-9">
-                        <input name="zipcode" type="text" class="span6 m-wrap"/>
+                        <input name="zipcode" type="text" class="span6 m-wrap" value = "{{ data.zipcode }}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">出生年月日<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="birthday" id="birthday" type="text" class="span6 m-wrap"/>
+                        <input name="birthday" id="birthday" type="text" class="span6 m-wrap" value="{{ data.birthday |date:"Y年m月d日" }}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">证件号码<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="idcard" type="text" class="span6 m-wrap"/>
+                        <input name="idcard" type="text" class="span6 m-wrap" value="{{ data.idcard }}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -133,15 +150,18 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">紧急联系人<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="contact" type="text" class="span6 m-wrap"/>
+                        <input name="contact" type="text" class="span6 m-wrap" value="{{ data.contact }}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">紧急联系人手机<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="contactmobile" type="text" class="span6 m-wrap"/>
+                        <input name="contactmobile" type="text" class="span6 m-wrap" value="{{ data.contactmobile }}"/>
                     </div>
                 </div>
+
+                <h4 class="header blue bolder smaller">其它信息</h4>
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">内容</label>
                     <div class="col-sm-9">

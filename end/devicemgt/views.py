@@ -54,8 +54,6 @@ def usermgt(request):
         userdata = json.dumps(userdata)
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdatas})
         return render_to_response('user.html',variables)
-        variables = RequestContext(request,{'username': user.username, 'clicked_item': 'user'})
-        return render_to_response('user.html', variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -109,7 +107,6 @@ def useradd(request):
             #排除用户名相同的情况
             #总共要有26项信息
             classid = k_class.objects.filter(id=1)[0]
-            user = k_user.objects.create_user(username = request.POST['username'],
             user = k_user.objects.create_user(username=request.POST['username'],
                 classid=classid,
                 state=1,
