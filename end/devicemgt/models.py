@@ -102,11 +102,11 @@ class k_class(models.Model):
     content = models.CharField(max_length=200)
     memo = models.CharField(max_length=100)
     creatorid = models.PositiveIntegerField(default=0)
-    createdatetime = models.DateField()
+    createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)
-    editdatetime = models.DateField()
+    editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
-    auditdatetime = models.DateField()
+    auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_purview(models.Model):

@@ -46,12 +46,19 @@ def usermgt(request):
         userdata = dict()
         userdata["text"] = "Parent 2"
         userdata["href"] = "#parent2"
-        userdatas.append({"text":"Pa2","href":"k2"})
+        userdatas.append(userdata)
         userdata = dict()
         userdata["text"] = "Parent 4"
         userdata["href"] = "#parent4"
         userdatas.append(userdata)
-        userdata = json.dumps(userdata)
+        userdata1 = dict()
+        tmp = list()
+        tmp.append(userdata)
+        userdata1["text"] = "Parent 3"
+        userdata1["nodes"] = tmp
+        userdata1["href"] = "#"
+        userdatas.append(userdata1)
+        #userdata = json.dumps(userdata)
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdatas})
         return render_to_response('user.html',variables)
     else:
@@ -82,7 +89,6 @@ def user_operate(request):
             userdata['birthday'] = theuser.birthday
             userdata['idcard'] = theuser.idcard
             userdata['idcardtype'] = theuser.idcardtype
-            userdata['contact'] = theuser.contact
             userdata['contactmobile'] = theuser.contactmobile
             userdata['content'] = theuser.content
             userdata['memo'] = theuser.memo
@@ -95,7 +101,6 @@ def user_operate(request):
 
 # 提交表单，添加用户
 def useradd(request):
-    print "useradd"
     if request.user.is_authenticated():
         #登陆成功
         #user = k_user.objects.get(username=request.user.username)
@@ -117,7 +122,8 @@ def useradd(request):
                 email=request.POST['email'],
                 address=request.POST['address'],
                 zipcode=request.POST['zipcode'],
-                birthday=request.POST['birthday'],
+                #birthday=request.POST['birthday'],
+                birthday="1993-05-28",
                 idcard=request.POST['idcard'],
                 idcardtype=0,
                 content=request.POST['content'],
@@ -125,17 +131,24 @@ def useradd(request):
                 contact=request.POST['contact'],
                 contactmobile=request.POST['contactmobile'],
                 creatorid=0,
-                createdatetime="2014-04-21",
+                createdatetime=get_current_date(),
                 editorid=0,
-                editdatetime="2014-04-21",
+                editdatetime=get_current_date(),
                 auditorid=0,
-                auditdatetime="2014-04-21",
+                auditdatetime=get_current_date(),
                 status=0,
             )
             #给roles和user也增加一条记录
-            #user.roles.add(1)
+            olduser = User.objects.create_user(
+                username=user.username,
+                email=user.email,
+                password=user.password
+            )
             #保存
             user.save()
+            olduser.save()
+            #建立user和role的关系
+            user.roles.add(1)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         class_list = ['class1', 'class2']
@@ -200,7 +213,6 @@ def deviceadd(request):
 
 #个人信息
 def profile(request):
-    print "profile"
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
@@ -521,6 +533,7 @@ def view_role(request):
 @login_required
 def operate_role(request):
     theid = request.GET.get("id")
+    user = k_user.objects.get(username=request.user.username)
     if theid:
         roledata = {}
         therole = k_role.objects.get(id=theid)
@@ -547,12 +560,12 @@ def operate_role(request):
                 'name': _purview.name + ', ' + _purview.item,
                 'selected': _purview.id in purview_ids
             })
-        return render_to_response('roleoperate.html', {'isNew': False, 'data': roledata})
+        return render_to_response('roleoperate.html', {'username':user.username,'isNew': False, 'data': roledata})
     else:
         data = {}
-        data['creator'] = 'current username'
+        data['creator'] = user.username
         data['createdatetime'] = get_current_time()
-        data['editor'] = 'none(maybe current user)'
+        data['editor'] = user.username
         data['editdatetime'] = get_current_time()
 
         data['purviews'] = []
@@ -564,7 +577,7 @@ def operate_role(request):
                 'selected': False
             })
 
-        return render_to_response('roleoperate.html', {'isNew': True, 'data': data})
+        return render_to_response('roleoperate.html', {'username':user.username,'isNew': True, 'data': data})
 
 
 @login_required

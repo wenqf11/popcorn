@@ -4,6 +4,10 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 IMG_DIR = os.getcwd() + '/data/user_avatar/'
 
 ADMINS = (
