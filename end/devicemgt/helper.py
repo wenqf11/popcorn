@@ -4,6 +4,7 @@ __author__ = 'LY'
 import settings
 import time
 
+
 #用户上传文件
 def handle_uploaded_file(username, f):
     print f.name.split('.')[-1]
@@ -18,6 +19,7 @@ def handle_uploaded_file(username, f):
 # 获取系统当前时间
 def get_current_time():
     return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+
 
 # 获取系统当前日期
 def get_current_date():

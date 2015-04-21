@@ -1,0 +1,50 @@
+{% extends 'frame.html' %}
+{% block css %}
+
+{% endblock %}
+
+{% block pageheader %}
+    路线管理
+{% endblock %}
+
+{% block content %}
+<div class="panel-group span6" id="accordion" role="tablist" aria-multiselectable="true">
+    {% for route in routes %}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="route-{{ route.id }}">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ route.id }}" aria-expanded="true" aria-controls={{ route.id }}>
+                route{{ route.id }}&nbsp;&nbsp;创建者：{{ route.creator }}&nbsp;&nbsp;创建时间：{{ route.createTime | date:"Y年m月d日" }}
+                </a>
+            </h4>
+        </div>
+        <div id=collapse-{{ route.id }} class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/delete_route?id={{ route.id }}">
+                    <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
+                </a>
+                <span style="float:right">&nbsp;&nbsp;</span>
+                <a class="btn btn-white btn-info btn-bold" style="float:right" href="/operate_route?id={{ route.id }}">
+                    <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+                </a>
+                <p>编辑者：{{ route.editor }}</p>
+                <p>编辑时间：{{ route.editTime | date:"Y年m月d日" }}</p>
+                <p>路线：
+                    {{ route.forms }}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>当前没有路线</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block tailjs %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            
+        });
+    </script>
+{% endblock %}

@@ -38,5 +38,9 @@ urlpatterns = patterns('',
     url(r'^view_role/$', view_role),
     url(r'^operate_role/$', operate_role),
     url(r'^submit_role/(\d*)/$', submit_role),
-    url(r'^delete_role/$', delete_role)
+    url(r'^delete_role/$', delete_role),
+    url(r'^view_route/$', view_route),
+    url(r'^operate_route/$', operate_route),
+    url(r'^submit_route/(\d*)/$', submit_route),
+    url(r'^delete_route/$', delete_route)
 )
