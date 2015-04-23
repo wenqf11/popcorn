@@ -14,7 +14,7 @@
         <div class="panel-heading" role="tab" id="route-{{ route.id }}">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ route.id }}" aria-expanded="true" aria-controls={{ route.id }}>
-                route{{ route.id }}&nbsp;&nbsp;创建者：{{ route.creator }}&nbsp;&nbsp;创建时间：{{ route.createTime | date:"Y年m月d日" }}
+                路线名称：{{ route.name }}　　抄表周期：{{ route.period }}小时　　起始时间：{{ route.startTime }}
                 </a>
             </h4>
         </div>
@@ -27,6 +27,8 @@
                 <a class="btn btn-white btn-info btn-bold" style="float:right" href="/operate_route?id={{ route.id }}">
                     <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
                 </a>
+                <p>创建者：{{ route.creator }}</p>
+                <p>创建时间：{{ route.createTime | date:"Y年m月d日" }}</p>
                 <p>编辑者：{{ route.editor }}</p>
                 <p>编辑时间：{{ route.editTime | date:"Y年m月d日" }}</p>
                 <p>路线：

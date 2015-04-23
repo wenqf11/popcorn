@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
+from datetime import datetime
 from helper import handle_uploaded_file, get_current_time, get_current_date
 import json
 
@@ -563,11 +564,6 @@ def operate_role(request):
         return render_to_response('roleoperate.html', {'username':user.username,'isNew': False, 'data': roledata})
     else:
         data = {}
-        data['creator'] = user.username
-        data['createdatetime'] = get_current_time()
-        data['editor'] = user.username
-        data['editdatetime'] = get_current_time()
-
         data['purviews'] = []
         purviews = k_purview.objects.all()
         for p in purviews:
@@ -624,6 +620,9 @@ def view_route(request):
         route['id'] = r.id
         route['class'] = _class.name
         route['forms'] = ', '.join('form' + _form_id for _form_id in r.formid.split(','))
+        route['name'] = r.name
+        route['startTime'] = r.starttime
+        route['period'] = r.period
         route['creator'] = k_user.objects.get(id=r.creatorid).username
         route['createTime'] = r.createdatetime
         route['editor'] = k_user.objects.get(id=r.editorid).username
@@ -637,25 +636,73 @@ def view_route(request):
 
 @login_required
 def operate_route(request):
-    _id = request.GET.get('id')
     data = {}
+    _id = request.GET.get('id')
+
     if _id:
         # 修改路线
         _route = k_route.objects.get(id=_id)
         data['id'] = _route.id
-        data['forms'] = _route.formid.split(',')
+        _forms = _route.formid.split(',')
+        data['name'] = _route.name
+        data['startTime'] = _route.starttime
+        data['period'] = _route.period
         data['creator'] = k_user.objects.get(id=_route.creatorid).username
         data['createTime'] = _route.createdatetime
         data['editor'] = k_user.objects.get(id=_route.editorid).username
         data['editTime'] = _route.editdatetime
+
+        all_form = k_form.objects.all()
+        data['forms'] = []
+        for _form in all_form:
+            data['forms'].append({
+                'id': _form.id,
+                'brief': _form.brief,
+                'selected': str(_form.id) in _forms
+            })
+
         return render_to_response('routeoperate.html', {'isNew': False, 'data': data})
     else:
         # 添加路线
+        data['forms'] = []
+        all_form = k_form.objects.all()
+        for _form in all_form:
+            data['forms'].append({
+                'id': _form.id,
+                'brief': _form.brief,
+                'selected': False
+            })
         return render_to_response('routeoperate.html', {'isNew': True, 'data': data})
 
 
 @login_required
 def submit_route(request, _id):
+    _user = k_user.objects.get(username=request.user.username)
+    _editor = _user.id
+    _forms = request.GET.getlist('duallistbox')
+    _name = request.GET.get('name')
+    _period = request.GET.get('period')
+    _start_time = request.GET.get('startTime')
+    _edit_time = get_current_date()
+    if _id:
+        route = k_route.objects.get(id=_id)
+    else:
+        route = k_route.objects.create(
+            classid=_user.classid,
+            starttime=datetime.strptime('08:00', '%H:%M').time(),
+            period=0,
+            # audition not discussed
+            auditorid=1
+        )
+        route.creatorid = _editor
+    route.name = _name
+    route.formid = ','.join(_forms)
+    route.starttime = datetime.strptime(_start_time, '%H:%M').time()
+    route.period = _period
+    route.editorid = _editor
+    route.editdatetime = _edit_time
+
+    route.save()
 
     return HttpResponseRedirect('/view_route/')
 
@@ -667,5 +714,4 @@ def delete_route(request):
         _route = k_route.objects.get(id=_id)
         _route.delete()
     return HttpResponseRedirect('/view_route/')
-
 
