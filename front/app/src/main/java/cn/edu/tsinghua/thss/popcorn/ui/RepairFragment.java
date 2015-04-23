@@ -1,5 +1,6 @@
-package cn.edu.tsinghua.thss.popcorn;
+package cn.edu.tsinghua.thss.popcorn.ui;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,23 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+
+import cn.edu.tsinghua.thss.popcorn.R;
+
+/**
+ * @author wenqingfu
+ * @date 2015.04.12
+ * @email thssvince@163.com
+ */
 
 public class RepairFragment extends Fragment {
     Button open_camera_btn;
+    Button browse_btn;
     ImageView  image_view;
 
     private static final int TAKE_PICTURE = 1;
+    private static final int BROWSE = 2;
 
     // 获取sd卡根目录地址,并创建图片父目录文件对象和文件的对象;
     String file_str = Environment.getExternalStorageDirectory().getPath();
@@ -34,6 +47,7 @@ public class RepairFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View repairView = inflater.inflate(R.layout.activity_tab_repair, container,false);
         open_camera_btn = (Button) repairView.findViewById(R.id.id_tab_repair_camera);
+        browse_btn = (Button) repairView.findViewById(R.id.id_tab_repair_browse);
 
         image_view = (ImageView) repairView.findViewById(R.id.id_tab_repair_img);
 
@@ -62,7 +76,22 @@ public class RepairFragment extends Fragment {
             }
         });
 
-		return repairView;
+        // 读取本地图片
+        browse_btn.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                /* 开启Pictures画面Type设定为image */
+                intent.setType("image/*");
+                /* 使用Intent.ACTION_GET_CONTENT这个Action */
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                /* 取得相片后返回本画面 */
+                startActivityForResult(intent, BROWSE);
+            }
+
+        });
+
+        return repairView;
 	}
 
 
@@ -70,11 +99,22 @@ public class RepairFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // 判断请求码和结果码是否正确，如果正确的话就显示刚刚所拍照的图片;
-        if (requestCode == TAKE_PICTURE && resultCode == getActivity().RESULT_OK) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2;
-            Bitmap bmpDefaultPic = BitmapFactory.decodeFile(file_go.getPath(), options);
-            image_view.setImageBitmap(bmpDefaultPic);
+        if (resultCode == getActivity().RESULT_OK){
+            if(requestCode == TAKE_PICTURE){
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 2;
+                Bitmap bmpDefaultPic = BitmapFactory.decodeFile(file_go.getPath(), options);
+                image_view.setImageBitmap(bmpDefaultPic);
+            }else if(requestCode == BROWSE) {
+                Uri uri = data.getData();
+                ContentResolver cr = getActivity().getContentResolver();
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+                    image_view.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    Log.e("Exception", e.getMessage(),e);
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

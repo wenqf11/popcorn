@@ -9,14 +9,16 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/id_apps_record_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
-            android:saveEnabled="false" >
+            android:saveEnabled="false">
 
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:layout_width="wrap_content"
@@ -32,13 +34,15 @@
                 android:gravity="center"
                 android:text="抄表"
                 android:textColor="#000"
-                android:textSize="15dip" />
+                android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/id_apps_repair_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
@@ -58,13 +62,14 @@
                 android:gravity="center"
                 android:text="报修"
                 android:textColor="#000"
-                android:textSize="15dip" />
+                android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
@@ -84,13 +89,14 @@
                 android:gravity="center"
                 android:text="保养"
                 android:textColor="#000"
-                android:textSize="15dip" />
+                android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
@@ -110,7 +116,7 @@
                 android:gravity="center"
                 android:text="设备资料"
                 android:textColor="#000"
-                android:textSize="15dip" />
+                android:textSize="14sp" />
         </LinearLayout>
 
     </TableRow>
@@ -123,6 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
@@ -142,13 +149,15 @@
                 android:gravity="center"
                 android:text="维修"
                 android:textColor="#000"
-                android:textSize="15dip" />
+                android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/id_apps_attendance_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
@@ -166,15 +175,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="时间轴"
+                android:text="考勤打卡"
                 android:textColor="#000"
-                android:textSize="15dip" />
+                android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
@@ -192,19 +202,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="在线"
+                android:text="公司排名"
                 android:textColor="#000"
-                android:textSize="15dip" />
+                android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@drawable/layout_selector2"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp"
-            android:saveEnabled="false" >
+            android:saveEnabled="false">
+            <com.beardedhen.androidbootstrap.FontAwesomeText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fontawesometext:fa_icon="fa-diamond"
+                android:textSize="48sp"
+                android:textColor="#CC3300"
+                android:layout_gravity="center|center_vertical"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="积分彩蛋"
+                android:textColor="#000"
+                android:textSize="14sp" />
         </LinearLayout>
     </TableRow>
 </TableLayout>

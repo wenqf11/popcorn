@@ -101,6 +101,7 @@
                 android:text="拍照上传"/>
 
             <Button
+                android:id="@+id/id_tab_repair_browse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="本地上传"/>
@@ -112,7 +113,6 @@
         android:layout_height="wrap_content"
         android:gravity="center">
         <ImageView android:id="@+id/id_tab_repair_img"
-            android:scaleType="centerInside"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@drawable/ic_launcher"
