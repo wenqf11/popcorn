@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.11 (64 bit)
-MySQL - 5.6.10 : Database - devicemgtdb
+SQLyog Trial v12.08 (64 bit)
+MySQL - 5.6.23-log : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.6.10 : Database - devicemgtdb
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `devicemgtdb`;
 
@@ -88,7 +88,7 @@ CREATE TABLE `auth_user` (
 
 /*Data for the table `auth_user` */
 
-insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$zye9t9QdSEaG$M8Fni5SGTy5+XB+u3H/eJwwlb3CCHZzw7ZdfuPeX9kE=','2015-04-21 13:31:24',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28');
+insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$15000$oXyEFaasov1U$ZthQvXctMjmB1Sy0Ostsv3sZXWzVo67gDexKZd6xAKo=','2015-04-21 13:47:54',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28');
 
 /*Table structure for table `auth_user_groups` */
 
@@ -301,9 +301,11 @@ CREATE TABLE `devicemgt_k_form` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_form_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_5ea6c07b` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_form` */
+
+insert  into `devicemgt_k_form`(`id`,`classid_id`,`content`,`brief`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'{data: 1}','kz084732',1,'2015-04-01',1,'2015-04-01',1,'2015-04-01','3'),(2,1,'{data: 2}','tx029412',1,'2015-04-02',1,'2015-04-02',1,'2015-04-02','3'),(3,1,'{data: 3}','kx098472',1,'2015-04-03',1,'2015-04-03',1,'2015-04-03','3'),(4,1,'{data: 4}','tx330032',1,'2015-04-04',1,'2015-04-04',1,'2015-04-04','3'),(5,1,'{data: 5}','tt333333',1,'2015-04-05',1,'2015-04-05',1,'2015-04-05','3'),(6,1,'{data: 6}','tx222222',1,'2015-04-06',1,'2015-04-06',1,'2015-04-06','3'),(7,1,'{data: 7}','ke222222',1,'2015-04-07',1,'2015-04-07',1,'2015-04-07','3'),(8,1,'{data: 8}','he428421',1,'2015-04-08',1,'2015-04-08',1,'2015-04-08','3');
 
 /*Table structure for table `devicemgt_k_formitem` */
 
@@ -386,8 +388,8 @@ CREATE TABLE `devicemgt_k_meter` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_meter_72537f95` (`deviceid_id`),
   KEY `routeid_id` (`routeid_id`),
-  CONSTRAINT `devicemgt_k_meter_ibfk_1` FOREIGN KEY (`routeid_id`) REFERENCES `devicemgt_k_route` (`id`),
-  CONSTRAINT `deviceid_id_refs_id_ff1ae68d` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
+  CONSTRAINT `deviceid_id_refs_id_ff1ae68d` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`),
+  CONSTRAINT `devicemgt_k_meter_ibfk_1` FOREIGN KEY (`routeid_id`) REFERENCES `devicemgt_k_route` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_meter` */
@@ -524,9 +526,11 @@ CREATE TABLE `devicemgt_k_route` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_route_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_baa2a870` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_route` */
+
+insert  into `devicemgt_k_route`(`id`,`classid_id`,`name`,`formid`,`starttime`,`period`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'route1','2,5,6,7','08:00:00',2,1,'2015-04-01',1,'2015-04-23',1,'2015-04-01','3'),(2,1,'route2','1,5,8','10:00:00',3,1,'2015-04-01',1,'2015-04-01',1,'2015-04-01','3');
 
 /*Table structure for table `devicemgt_k_schedule` */
 
@@ -957,6 +961,22 @@ CREATE TABLE `django_content_type` (
 
 insert  into `django_content_type`(`id`,`name`,`app_label`,`model`) values (1,'permission','auth','permission'),(2,'group','auth','group'),(3,'user','auth','user'),(4,'content type','contenttypes','contenttype'),(5,'session','sessions','session'),(6,'site','sites','site'),(7,'log entry','admin','logentry'),(8,'k_class','devicemgt','k_class'),(9,'k_purview','devicemgt','k_purview'),(10,'k_role','devicemgt','k_role'),(11,'k_classrole','devicemgt','k_classrole'),(12,'k_user','devicemgt','k_user'),(13,'k_devicetype','devicemgt','k_devicetype'),(14,'k_supplier','devicemgt','k_supplier'),(15,'k_producer','devicemgt','k_producer'),(16,'k_spare','devicemgt','k_spare'),(17,'k_device','devicemgt','k_device'),(18,'k_form','devicemgt','k_form'),(19,'k_formitem','devicemgt','k_formitem'),(20,'k_route','devicemgt','k_route'),(21,'k_meter','devicemgt','k_meter'),(22,'k_maintenance','devicemgt','k_maintenance'),(23,'k_task','devicemgt','k_task'),(24,'k_taskitem','devicemgt','k_taskitem'),(25,'k_sparebill','devicemgt','k_sparebill'),(26,'k_sparecount','devicemgt','k_sparecount'),(27,'k_tool','devicemgt','k_tool'),(28,'k_tooluse','devicemgt','k_tooluse'),(29,'k_toolcount','devicemgt','k_toolcount'),(30,'k_project','devicemgt','k_project'),(31,'k_schedule','devicemgt','k_schedule'),(32,'k_staffworkinfo','devicemgt','k_staffworkinfo'),(33,'k_staffscoreinfo','devicemgt','k_staffscoreinfo'),(34,'k_staffegginfo','devicemgt','k_staffegginfo'),(35,'k_feedback','devicemgt','k_feedback');
 
+/*Table structure for table `django_migrations` */
+
+DROP TABLE IF EXISTS `django_migrations`;
+
+CREATE TABLE `django_migrations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `applied` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+/*Data for the table `django_migrations` */
+
+insert  into `django_migrations`(`id`,`app`,`name`,`applied`) values (1,'contenttypes','0001_initial','2015-04-12 13:17:18'),(2,'auth','0001_initial','2015-04-12 13:17:26'),(3,'admin','0001_initial','2015-04-12 13:17:30'),(4,'sessions','0001_initial','2015-04-12 13:17:30'),(5,'sites','0001_initial','2015-04-12 13:17:31');
+
 /*Table structure for table `django_session` */
 
 DROP TABLE IF EXISTS `django_session`;
@@ -971,7 +991,7 @@ CREATE TABLE `django_session` (
 
 /*Data for the table `django_session` */
 
-insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24');
+insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24');
 
 /*Table structure for table `django_site` */
 
