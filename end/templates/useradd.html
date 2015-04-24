@@ -1,15 +1,10 @@
 {% extends 'userframe.html' %}
 {% block js %}
     <script src="../static/datepicker/bootstrap-datepicker.js"></script>
-    <script src="../static/js/uploadPreview.min.js" type="text/javascript"></script>
-    <script>
-       window.onload = function () {
-            new uploadPreview({ UpBtn: "up_img", DivShow: "imgdiv", ImgShow: "imgShow" });
-        }
-    </script>
 {% endblock %}
 {% block css %}
     <link href="../static/datepicker/datepicker.css" rel="stylesheet" media="screen">
+    <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 {% block pageheader %}
     {% if data.isNew %}
@@ -42,16 +37,6 @@
                         <select class="span6 m-wrap" name="state">
                             {% for class in data.class_list %}
                             <option value="{{ class }}">{{ class }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">权限集合<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="state">
-                            {% for role in data.role_list %}
-                            <option value="{{ role }}">{{ role }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -115,6 +100,21 @@
                     </div>
                 </div>
             -->
+                <h4 class="header blue bolder smaller">角色信息</h4>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">用户角色<span class="required">*</span></label>
+
+                    <div class="col-sm-9">
+                        <div class="col-sm-6">
+                            <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="选择用户角色">
+                                {% for role in data.role_list %}
+                                <option value="{{ role }}">{{ role }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
                 <h4 class="header blue bolder smaller">联系信息</h4>
 
@@ -221,9 +221,44 @@
 {% endblock %}
 
 {% block tailjs %}
+    <script src="../static/assets/js/bootstrap-tag.min.js"></script>
+    <script src="../static/assets/js/chosen.jquery.min.js"></script>
     <script>
     $(function(){
         $('#birthday').datepicker();
     })
+    </script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
+
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                });
+
+
+                $('#chosen-multiple-style .btn').on('click', function(e){
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                     else $('#form-field-select-4').removeClass('tag-input-style');
+                });
+            }
+        });
     </script>
 {% endblock %}
