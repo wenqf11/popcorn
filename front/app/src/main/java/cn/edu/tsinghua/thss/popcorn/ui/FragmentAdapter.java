@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.thss.popcorn;
+package cn.edu.tsinghua.thss.popcorn.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,14 @@ import java.util.List;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import cn.edu.tsinghua.thss.popcorn.R;
+
+/**
+ * @author wenqingfu
+ * @date 2015.04.12
+ * @email thssvince@163.com
+ */
 
 public class FragmentAdapter extends FragmentPagerAdapter {
 

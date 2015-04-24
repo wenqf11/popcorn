@@ -1,10 +1,18 @@
-package cn.edu.tsinghua.thss.popcorn;
+package cn.edu.tsinghua.thss.popcorn.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import cn.edu.tsinghua.thss.popcorn.R;
+
+/**
+ * @author wenqingfu
+ * @date 2015.04.12
+ * @email thssvince@163.com
+ */
 
 public class MineFragment extends Fragment {
 
@@ -13,8 +21,6 @@ public class MineFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View mineView = inflater.inflate(R.layout.activity_tab_mine, container,false);
         return mineView;
-
-
     }
 
 

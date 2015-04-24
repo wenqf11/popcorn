@@ -16,9 +16,16 @@
     <div class="col-xs-12">
         <form class="form-horizontal" action="/submit_route/{{ data.id }}/" role="form" id="roleform">
             <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">路线名称</label>
+                <div class="col-sm-9">
+                    <input type="text" name="name" value="{{ data.name }}">
+                </div>
+            </div>
+            {% if not isNew %}
+            <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">创建时间</label>
                 <div class="col-sm-9">
-                    {{ data.createTime | date:"Y年m月d日" }}
+                    {{ data.createTime }}
                 </div>
             </div>
             <div class="form-group">
@@ -30,13 +37,26 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">编辑时间</label>
                 <div class="col-sm-9">
-                    {{ data.editTime | date:"Y年m月d日" }}
+                    {{ data.editTime }}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">编辑者</label>
                 <div class="col-sm-9">
                     {{ data.editor }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">抄表周期</label>
+                <div class="col-sm-9">
+                    <input type="text" name="period" value="{{ data.period }}">小时
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">起始时间</label>
+                <div class="col-sm-9">
+                    <input type="text" name="startTime" value="{{ data.startTime }}">
                 </div>
             </div>
             <div class="hr hr-16 hr-dotted"></div>
@@ -49,9 +69,9 @@
                     <select id="duallistbox" multiple="multiple" size="10" name="duallistbox" form="roleform">
                         {% for form in data.forms %}
                             {% if form.selected %}
-                            <option value="{{ form.id }}" selected="selected">{{ form }}</option>
+                            <option value="{{ form.id }}" selected="selected">{{ form.brief }}</option>
                             {% else %}
-                            <option value="{{ form.id }}">{{ form }}</option>
+                            <option value="{{ form.id }}">{{ form.brief }}</option>
                             {% endif %}
                         {% endfor %}
                     </select>

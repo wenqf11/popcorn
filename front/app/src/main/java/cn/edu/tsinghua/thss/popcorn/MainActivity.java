@@ -11,11 +11,25 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
+
+import cn.edu.tsinghua.thss.popcorn.R;
+import cn.edu.tsinghua.thss.popcorn.ui.AppsFragment;
+import cn.edu.tsinghua.thss.popcorn.ui.FragmentAdapter;
+import cn.edu.tsinghua.thss.popcorn.ui.MineFragment;
+import cn.edu.tsinghua.thss.popcorn.ui.RecordFragment;
+import cn.edu.tsinghua.thss.popcorn.ui.RepairFragment;
+
+/**
+ * @author wenqingfu
+ * @date 2015.04.12
+ * @email thssvince@163.com
+ */
 
 public class MainActivity extends FragmentActivity {
 
@@ -59,11 +73,10 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 		findById();
 		init();
 		initTabLineWidth();
-
 	}
 
 	private void findById() {
@@ -92,48 +105,36 @@ public class MainActivity extends FragmentActivity {
         mAppsFg = new AppsFragment();
         mMineFg = new MineFragment();
 
+        mFragmentList.add(mAppsFg);
 		mFragmentList.add(mRecordFg);
 		mFragmentList.add(mRepairFg);
-        mFragmentList.add(mAppsFg);
         mFragmentList.add(mMineFg);
 
 		mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
 		mPageVp.setAdapter(mFragmentAdapter);
 		mPageVp.setCurrentItem(0);
 
+        mTabAppsLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mPageVp.setCurrentItem(0, false);
+            }
+        });
+
         mTabRecordLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                resetTabColor();
-                mTabRecordTv.setTextColor(Color.parseColor("#33B5E5"));
-                mTabRecordFat.setTextColor(Color.parseColor("#33B5E5"));
-                mPageVp.setCurrentItem(0);
+                mPageVp.setCurrentItem(1, false);
             }
         });
 
         mTabRepairLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                resetTabColor();
-                mTabRepairTv.setTextColor(Color.parseColor("#33B5E5"));
-                mTabRepairFat.setTextColor(Color.parseColor("#33B5E5"));
-                mPageVp.setCurrentItem(1);
-            }
-        });
-
-        mTabAppsLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                resetTabColor();
-                mTabAppsTv.setTextColor(Color.parseColor("#33B5E5"));
-                mTabAppsFat.setTextColor(Color.parseColor("#33B5E5"));
-                mPageVp.setCurrentItem(2);
+                mPageVp.setCurrentItem(2, false);
             }
         });
 
         mTabMineLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                resetTabColor();
-                mTabMineTv.setTextColor(Color.parseColor("#33B5E5"));
-                mTabMineFat.setTextColor(Color.parseColor("#33B5E5"));
-                mPageVp.setCurrentItem(3);
+                mPageVp.setCurrentItem(3, false);
             }
         });
 
@@ -195,8 +196,12 @@ public class MainActivity extends FragmentActivity {
                     lp.leftMargin = (int) (-(1 - offset)
                             * (screenWidth * 1.0 / numOfTabs) + currentIndex
                             * (screenWidth / numOfTabs));
+                }else if (currentIndex == 3 && position == 3) // 3->3
+                {
+                    lp.leftMargin = (int) (offset * (screenWidth * 1.0 / numOfTabs) + currentIndex
+                            * (screenWidth / numOfTabs));
                 }
-				mTabLineIv.setLayoutParams(lp);
+                mTabLineIv.setLayoutParams(lp);
 			}
 
 
@@ -206,16 +211,17 @@ public class MainActivity extends FragmentActivity {
 				resetTabColor();
 				switch (position) {
                     case 0:
+                        mTabAppsTv.setTextColor(Color.parseColor("#33B5E5"));
+                        mTabAppsFat.setTextColor(Color.parseColor("#33B5E5"));
+                        break;
+                    case 1:
+
                         mTabRecordTv.setTextColor(Color.parseColor("#33B5E5"));
                         mTabRecordFat.setTextColor(Color.parseColor("#33B5E5"));
                         break;
-                    case 1:
+                    case 2:
                         mTabRepairTv.setTextColor(Color.parseColor("#33B5E5"));
                         mTabRepairFat.setTextColor(Color.parseColor("#33B5E5"));
-                        break;
-                    case 2:
-                        mTabAppsTv.setTextColor(Color.parseColor("#33B5E5"));
-                        mTabAppsFat.setTextColor(Color.parseColor("#33B5E5"));
                         break;
                     case 3:
                         mTabMineTv.setTextColor(Color.parseColor("#33B5E5"));
