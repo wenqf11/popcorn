@@ -1,6 +1,6 @@
 /*
-SQLyog Trial v12.08 (64 bit)
-MySQL - 5.6.23-log : Database - devicemgtdb
+SQLyog Ultimate v11.28 (64 bit)
+MySQL - 5.5.25a : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.6.23-log : Database - devicemgtdb
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `devicemgtdb`;
 
@@ -88,7 +88,7 @@ CREATE TABLE `auth_user` (
 
 /*Data for the table `auth_user` */
 
-insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$15000$oXyEFaasov1U$ZthQvXctMjmB1Sy0Ostsv3sZXWzVo67gDexKZd6xAKo=','2015-04-21 13:47:54',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28');
+insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$15000$oXyEFaasov1U$ZthQvXctMjmB1Sy0Ostsv3sZXWzVo67gDexKZd6xAKo=','2015-04-24 14:33:28',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28');
 
 /*Table structure for table `auth_user_groups` */
 
@@ -153,11 +153,11 @@ CREATE TABLE `devicemgt_k_class` (
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_class` */
 
-insert  into `devicemgt_k_class`(`id`,`parentid`,`depth`,`depthname`,`name`,`code`,`logo`,`address`,`zipcode`,`phone`,`license`,`licensetype`,`content`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,0,0,'WDYK company','WDYK company','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00','');
+insert  into `devicemgt_k_class`(`id`,`parentid`,`depth`,`depthname`,`name`,`code`,`logo`,`address`,`zipcode`,`phone`,`license`,`licensetype`,`content`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,0,1,'company','WDYK company','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(2,1,2,'department','north dept','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(3,1,2,'department','south dept','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(4,1,2,'department','east_dept','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(5,2,3,'group','north_leader','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(6,2,3,'group','north_leader2','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(7,3,3,'group','south_leader','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(8,3,3,'group','south_leader2','','','','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00','');
 
 /*Table structure for table `devicemgt_k_classrole` */
 
@@ -526,7 +526,7 @@ CREATE TABLE `devicemgt_k_route` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_route_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_baa2a870` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_route` */
 
@@ -991,7 +991,7 @@ CREATE TABLE `django_session` (
 
 /*Data for the table `django_session` */
 
-insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24');
+insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('p3uo1lg5ave4shjekcmxhekwnto4a49g','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-05-08 14:33:28'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24');
 
 /*Table structure for table `django_site` */
 
