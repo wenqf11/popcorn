@@ -400,55 +400,6 @@ def login(request):
         return render_to_response('login.html')
 
 
-def form(request):
-    if request.method == 'POST':
-        response = {
-            "data": [
-                {
-                    "table_item": "row_1",
-                    "unit": "Tiger",
-                    "lower_shreshold": "Nixon",
-                    "upper_threshold": "System Architect"
-                },
-                {
-                    "table_item": "row_1",
-                    "unit": "Tiger",
-                    "lower_shreshold": "Nixon",
-                    "upper_threshold": "System Architect"
-                },
-                {
-                    "table_item": "row_1",
-                    "unit": "Tiger",
-                    "lower_shreshold": "Nixon",
-                    "upper_threshold": "System Architect"
-                }
-            ],
-            "options": []
-        };
-        response['Access-Control-Allow-Origin'] = '*'
-        return HttpResponse(json.dumps(response))
-    else:
-        response = {
-        "data": [
-        {
-        "table_item": "row_1",
-        "unit": "Tiger",
-        "lower_shreshold": "Nixon",
-        "upper_threshold": "System Architect"
-        },
-        {
-        "table_item": "row_1",
-        "unit": "Tiger",
-        "lower_shreshold": "Nixon",
-        "upper_threshold": "System Architect"
-        }
-        ],
-        "options": []
-        };
-        response['Access-Control-Allow-Origin'] = '*'
-        return HttpResponse(json.dumps(response))
-
-
 def deviceall(request):
     if request.method == 'POST':
         response = HttpResponse()
@@ -751,3 +702,63 @@ def delete_route(request):
         _route.delete()
     return HttpResponseRedirect('/view_route/')
 
+
+@login_required
+def view_form(request):
+    _brief = request.GET.get('brief')
+    _form = k_form.objects.get(brief=_brief)
+    _formitems = k_formitem.objects.filter(formid_id=_form.id)
+    return render_to_response('formview.html', {'brief': _brief, 'formid': _form.id, 'data': _formitems})
+
+
+@login_required
+def delete_form(request):
+    _id = request.GET.get('id')
+    _brief = request.GET.get('brief')
+    if _id:
+        _formitem = k_formitem.objects.get(id=_id)
+        _formitem.delete()
+    return HttpResponseRedirect('/view_form/?brief='+_brief)
+
+
+@login_required
+def submit_form(request):
+    _brief = request.GET.get('brief')
+
+    _name = request.GET.get('name')
+    _datatype = request.GET.get('datatype')
+    _unit = request.GET.get('unit')
+    _lowerthreshold = request.GET.get('lowerthreshold')
+    _upperthreshold = request.GET.get('upperthreshold')
+    _choices = request.GET.get('choices')
+    _memo = request.GET.get('memo')
+
+    _id = request.GET.get('id')
+    _formid = request.GET.get('formid')
+    _user = k_user.objects.get(username=request.user.username)
+
+    if _formid == "":
+        _formitem = k_formitem.objects.get(id=_id)
+        _formitem.editorid = _user.id
+        _formitem.editdatetime = get_current_date()
+    else:
+        _formitem = k_formitem.objects.create(classid=_user.classid, formid_id=_formid)
+        _formitem.creatorid = _user.id
+        _formitem.createdatetime = get_current_date()
+    _formitem.name = _name
+    if _datatype == 'numeric':
+        _formitem.datatype = 0
+        _formitem.unit = _unit
+        _formitem.lowerthreshold = _lowerthreshold
+        _formitem.upperthreshold = _upperthreshold
+        _formitem.choices = '-'
+    if _datatype == 'optional':
+        _formitem.datatype = 1
+        _formitem.unit = '-'
+        _formitem.lowerthreshold = '-'
+        _formitem.upperthreshold = '-'
+        _formitem.choices = _choices
+    _formitem.memo = _memo
+
+    _formitem.save()
+    return HttpResponseRedirect('/view_form/?brief='+_brief)

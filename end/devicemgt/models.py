@@ -300,10 +300,19 @@ class k_form(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_formitem(models.Model):
+    FORM_DATATYPE = (
+        ('0', '数值'),
+        ('1', '选择'),
+    )
     classid = models.ForeignKey(k_class, related_name='formitem_set')
     formid = models.ForeignKey(k_form, related_name='formitem_set')
     name = models.CharField(max_length=30)
-    threshold = models.CharField(max_length=30)
+    datatype = models.CharField(max_length=1, choices=FORM_DATATYPE, default='0')
+    unit = models.CharField(max_length=20)
+    lowerthreshold = models.CharField(max_length=30)
+    upperthreshold = models.CharField(max_length=30)
+    choices = models.CharField(max_length=100)
+    memo = models.CharField(max_length=100)
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)

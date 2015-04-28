@@ -33,7 +33,6 @@ urlpatterns = patterns('',
     url(r'^sparetype/$', sparetype),
     url(r'^sparebrand/$', sparebrand),
     url(r'^sparehist/$', sparehist),
-    url(r'^form/$', form),
     url(r'^deviceall/$', deviceall),
     url(r'^purview/$', purview),
     url(r'^view_role/$', view_role),
@@ -43,5 +42,8 @@ urlpatterns = patterns('',
     url(r'^view_route/$', view_route),
     url(r'^operate_route/$', operate_route),
     url(r'^submit_route/(\d*)/$', submit_route),
-    url(r'^delete_route/$', delete_route)
+    url(r'^delete_route/$', delete_route),
+    url(r'^view_form/$', view_form),
+    url(r'^submit_form/$', submit_form),
+    url(r'^delete_form/$', delete_form)
 )
