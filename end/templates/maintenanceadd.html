@@ -1,0 +1,83 @@
+{% extends 'userframe.html' %}
+{% block css %}
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
+    <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+{% endblock %}
+
+{% block pageheader %}
+    添加维修计划
+{% endblock %}
+
+{% block maincontent %}
+<div class="row">
+    <div class="col-xs-12">
+        <form class="form-horizontal" action="/submit_maintenance/" role="form" id="maintenanceform">
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">维修标题</label>
+                <div class="col-sm-9">
+                    <input type="text" name="title" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">设备简称</label>
+                <div class="col-sm-9">
+                    <input type="text" name="brief" value="">
+                    <span style="color:red">{{ warning }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
+                <div class="col-sm-9">
+                    <select id="editor" name="editor" form="maintenanceform">
+                        <option value="nopersonchosen" selected="selected"></option>
+                        {% for maintainer in maintainers %}
+                        <option value="{{ maintainer }}">{{ maintainer }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">故障描述</label>
+                <div class="col-sm-9">
+                    <input type="text" name="createcontent" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">优先级</label>
+                <div class="col-sm-9">
+                    <select id="priority" name="priority" form="maintenanceform">
+                        <option value="1" selected="selected">一般</option>
+                        <option value="2">重要</option>
+                        <option value="3">紧急</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">备注</label>
+                <div class="col-sm-9">
+                    <input type="text" name="memo" value="">
+                </div>
+            </div>
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-info" type="submit">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        保存
+                    </button>
+                    &nbsp; &nbsp; &nbsp;
+                    <button class="btn" type="reset">
+                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                        重置
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block tailjs %}
+{% endblock %}

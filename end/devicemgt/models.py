@@ -364,9 +364,9 @@ class k_meter(models.Model):
 
 class k_maintenance(models.Model):
     MAINTENANCE_STATUS = (
-        ('1', '计划'),
-        ('2', '维修中'),
-        ('3', '维修完成'),
+        ('1', '未指派执行者'),
+        ('2', '已指派执行者'),
+        ('3', '执行完成'),
         ('4', '审核完成'),
     )
     MAINTENANCE_TYPE = (
@@ -382,21 +382,21 @@ class k_maintenance(models.Model):
     state = models.CharField(max_length=1, choices=MAINTENANCE_STATUS, default='1')
     title = models.CharField(max_length=50)
     createcontent = models.CharField(max_length=100)
-    editcontent = models.CharField(max_length=100)
-    auditcontent = models.CharField(max_length=100)
     image = models.CharField(max_length=30)
-    factor = models.PositiveIntegerField()
+    editcontent = models.CharField(max_length=100)
+    factor = models.PositiveIntegerField(default=1)
     memo = models.CharField(max_length=100)
     mtype = models.CharField(max_length=1, choices=MAINTENANCE_TYPE, default='1')
     priority = models.CharField(max_length=1, choices=MAINTENANCE_PRIORITY, default='1')
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
+    assignorid = models.PositiveIntegerField(default=0)
+    assigndatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    #? statelog = models.CharField(max_length=100)
 
 class k_task(models.Model):
     TASK_STATUS = (

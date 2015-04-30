@@ -83,7 +83,7 @@
             <form class="form-horizontal" action="/submit_form/" role="form" id="formform">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 class="smaller lighter blue no-margin">添加表项</h3>
+                    <h3 class="smaller lighter blue no-margin formtitle"></h3>
                 </div>
 
                 <div class="modal-body">
@@ -209,11 +209,12 @@
             divs[8].childNodes[3].childNodes[1].value = "";
             divs[9].childNodes[3].childNodes[1].value = "";
             var formid = document.getElementsByName("formid");
-            console.log(document.getElementsByName("formid"));
             formid[0].value = {{ formid }};
+            $(".formtitle").text("添加表项");
         };
         $(".fa-pencil").click(function() {
             var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+            var datatype = document.getElementById("datatype");
             var divs = datatype.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
             for(var i = 0; i <= 6; i++) {
                 if(i != 1) {
@@ -236,6 +237,7 @@
             }
             divs[8].childNodes[3].childNodes[1].value = "";
             divs[9].childNodes[3].childNodes[1].value = this.parentNode.id;
+            $(".formtitle").text("修改表项");
         });
     });
     </script>

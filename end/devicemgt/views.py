@@ -285,30 +285,6 @@ def setting(request):
         return HttpResponseRedirect('/login/')
 
 
-def unmain(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'maintenance'})
-        return render_to_response('unmain.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def mainhist(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'maintenance'})
-        return render_to_response('mainhist.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
 def spare(request):
     if request.user.is_authenticated():
         #登陆成功
@@ -712,16 +688,6 @@ def view_form(request):
 
 
 @login_required
-def delete_form(request):
-    _id = request.GET.get('id')
-    _brief = request.GET.get('brief')
-    if _id:
-        _formitem = k_formitem.objects.get(id=_id)
-        _formitem.delete()
-    return HttpResponseRedirect('/view_form/?brief='+_brief)
-
-
-@login_required
 def submit_form(request):
     _brief = request.GET.get('brief')
 
@@ -762,3 +728,155 @@ def submit_form(request):
 
     _formitem.save()
     return HttpResponseRedirect('/view_form/?brief='+_brief)
+
+
+@login_required
+def delete_form(request):
+    _id = request.GET.get('id')
+    _brief = request.GET.get('brief')
+    if _id:
+        _formitem = k_formitem.objects.get(id=_id)
+        _formitem.delete()
+    return HttpResponseRedirect('/view_form/?brief='+_brief)
+
+
+@login_required
+def view_maintaining(request):
+    _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=2)
+    data = []
+    for _maintaining in _maintainings:
+        _device = _maintaining.deviceid
+        _creator = k_user.objects.get(id=_maintaining.creatorid)
+        if _maintaining.assignorid == 0:
+            data.append({
+                'id': _maintaining.id,
+                'title': _maintaining.title,
+                'brief': _device.brief,
+                'name': _device.name,
+                'position': _device.position,
+                'creator': _creator.name,
+                'createdatetime': _maintaining.createdatetime,
+                'createcontent': _maintaining.createcontent,
+                'memo': _maintaining.memo,
+                'priority': _maintaining.get_priority_display()
+            })
+        else:
+            _assignor = k_user.objects.get(id=_maintaining.assignorid)
+            _editor = k_user.objects.get(id=_maintaining.editorid)
+            data.append({
+                'id': _maintaining.id,
+                'title': _maintaining.title,
+                'brief': _device.brief,
+                'name': _device.name,
+                'position': _device.position,
+                'creator': _creator.name,
+                'createdatetime': _maintaining.createdatetime,
+                'assignor': _assignor.name,
+                'assigndatetime': _maintaining.assigndatetime,
+                'editor': _editor.name,
+                'createcontent': _maintaining.createcontent,
+                'memo': _maintaining.memo,
+                'priority': _maintaining.get_priority_display()
+            })
+    _users = k_user.objects.all()
+    _maintainers = []
+    for _user in _users:
+        _maintainers.append(_user.name)
+    return render_to_response('maintainingview.html', {'data': data, 'maintainers': _maintainers})
+
+
+@login_required
+def view_maintained(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'maintenance'})
+        return render_to_response('maintainedview.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+@login_required
+def add_maintenance(request):
+    _users = k_user.objects.all()
+    _maintainers = []
+    for _user in _users:
+        _maintainers.append(_user.name)
+    return render_to_response('maintenanceadd.html', {'maintainers': _maintainers})
+
+
+@login_required
+def submit_maintenance(request):
+    _title = request.GET.get('title')
+    _brief = request.GET.get('brief')
+    _editor = request.GET.get('editor')
+    _createcontent = request.GET.get('createcontent')
+    _priority = request.GET.get('priority')
+    _memo = request.GET.get('memo')
+    _id = request.GET.get('id')
+
+    _user = k_user.objects.get(username=request.user.username)
+    if _id:
+        _maintenance = k_maintenance.objects.get(id=_id)
+        _maintainer = {}
+        if _editor != 'nopersonchosen':
+            _maintainer["id"] = k_user.objects.get(name=_editor).id
+        else:
+            _maintainer["id"] = 0
+        if _title == _maintenance.title and _maintainer["id"] == _maintenance.editorid and \
+        _createcontent == _maintenance.createcontent and _priority == _maintenance.priority and \
+        _memo == _maintenance.memo:
+            return HttpResponseRedirect('/view_maintaining/')
+        _maintenance.title = _title
+        _maintenance.createcontent = _createcontent
+        _maintenance.priority = _priority
+        _maintenance.memo = _memo
+        if _editor != 'nopersonchosen':
+            _maintenance.assignorid = _user.id
+            _maintenance.assigndatetime=get_current_date()
+            _maintenance.editorid = _maintainer["id"]
+            _maintenance.state=2
+        else:
+            _maintenance.assignorid = 0
+            _maintenance.editorid = 0
+            _maintenance.state=1
+    else:
+        _device = k_device.objects.filter(brief=_brief)
+        
+        if not _device:
+            _users = k_user.objects.all()
+            _maintainers = []
+            for _user in _users:
+                _maintainers.append(_user.name)
+            return render_to_response('maintenanceadd.html', {'maintainers': _maintainers, 'warning': '请输入正确的设备简称'})
+        
+        _maintenance = k_maintenance.objects.create(
+            title=_title,
+            deviceid=_device[0],
+            createcontent=_createcontent,
+            priority=_priority,
+            memo=_memo,
+            creatorid=_user.id,
+            createdatetime=get_current_date(),
+            state=1,
+            mtype=2
+        )
+        if _editor != 'nopersonchosen':
+            _maintenance.assignorid = _user.id
+            _maintenance.assigndatetime=get_current_date()
+            _maintainer = k_user.objects.get(name=_editor)
+            _maintenance.editorid = _maintainer.id
+            _maintenance.state=2
+    _maintenance.save()
+    return HttpResponseRedirect('/view_maintaining/')
+
+
+@login_required
+def delete_maintenance(request):
+    _id = request.GET.get('id')
+    if _id:
+        _maintenance = k_maintenance.objects.get(id=_id)
+        _maintenance.delete()
+    return HttpResponseRedirect('/view_maintaining/')
