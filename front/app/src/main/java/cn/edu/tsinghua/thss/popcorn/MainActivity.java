@@ -3,6 +3,7 @@ package cn.edu.tsinghua.thss.popcorn;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,15 +11,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
 
-import cn.edu.tsinghua.thss.popcorn.R;
+import cn.edu.tsinghua.thss.popcorn.QRcode.QRcodeActivity;
 import cn.edu.tsinghua.thss.popcorn.ui.AppsFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.FragmentAdapter;
 import cn.edu.tsinghua.thss.popcorn.ui.MineFragment;
@@ -263,4 +265,28 @@ public class MainActivity extends FragmentActivity {
         mTabMineFat.setTextColor(Color.parseColor("#D3D3D3"));
 	}
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()){
+            case R.id.scan_btn:
+                Intent intent=new Intent(this, QRcodeActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

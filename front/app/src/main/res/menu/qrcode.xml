@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cn.edu.tsinghua.thss.popcorn.AttendanceActivity" >
+    tools:context="cn.edu.tsinghua.thss.popcorn.QRcode.QRcodeActivity" >
     <item
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:id="@+id/close_btn"

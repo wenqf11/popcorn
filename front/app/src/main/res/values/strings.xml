@@ -7,5 +7,6 @@
     <string name="title_activity_attendance">考勤打卡</string>
     <string name="title_activity_record">线路</string>
     <string name="title_activity_table">设备</string>
+    <string name="title_activity_qrcode">扫描二维码</string>
 
 </resources>
