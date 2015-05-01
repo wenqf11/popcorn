@@ -31,14 +31,29 @@ def index(request):
 '''用户管理开始
 '''
 
-def get_node(child_list):
+def get_leaf(leaf_list):
     result = list()
-    for c in child_list:
+    for leaf in leaf_list:
+        userdata = dict()
+        userdata["text"] = leaf.username.encode('utf8')
+        result.append(userdata)
+    return result
+
+def get_node(child_leaf_list, child_node_list):
+    result = list()
+    for leaf in child_leaf_list:
+        userdata = dict()
+        userdata["text"] = leaf.username.encode('utf8')
+        result.append(userdata)
+    for c in child_node_list:
         userdata = dict()
         userdata["text"] = c.name.encode('utf8')
         sub_child_list = k_class.objects.filter(parentid = c.id)
+        sub_leaf_list = k_user.objects.filter(classid_id=c.id)
         if sub_child_list:
-            userdata["node"] = get_node(sub_child_list)
+            userdata["nodes"] = get_node(sub_leaf_list, sub_child_list)
+        elif sub_leaf_list:
+            userdata["nodes"] = get_leaf(sub_leaf_list)
         result.append(userdata)
     return result
 
@@ -54,14 +69,21 @@ def usermgt(request):
 
         if current_class:
             userdatas = list()
-
             class_set = k_class.objects.filter(parentid = current_class_id)
+            leaf_list = k_user.objects.filter(classid_id=current_class_id)
+            for leaf in leaf_list:
+                userdata = dict()
+                userdata["text"] = leaf.username.encode('utf8')
+                userdatas.append(userdata)
             for c in class_set:
                 userdata = dict()
                 userdata["text"] = c.name.encode('utf8')
                 child_list = k_class.objects.filter(parentid = c.id)
+                leaf_list = k_user.objects.filter(classid_id=c.id)
                 if child_list:
-                    userdata["nodes"] = get_node(child_list)
+                    userdata["nodes"] = get_node(leaf_list, child_list)
+                #elif leaf_list:
+                #    userdata["nodes"] = get_leaf(leaf_list)
                 userdatas.append(userdata)
 
             cur_datas = dict()
@@ -148,7 +170,7 @@ def useradd(request):
             #如果错误，要把已经填写的信息给返回回去
             #排除用户名相同的情况
             #总共要有26项信息
-            classid = k_class.objects.filter(id=1)[0]
+            classid = k_class.objects.filter(name=request.POST['classname'])[0]
             user = k_user.objects.create_user(username=request.POST['username'],
                 classid=classid,
                 state=1,
@@ -159,6 +181,7 @@ def useradd(request):
                 email=request.POST['email'],
                 address=request.POST['address'],
                 zipcode=request.POST['zipcode'],
+                gender =request.POST['gender'],
                 #birthday=request.POST['birthday'],
                 birthday="1993-05-28",
                 idcard=request.POST['idcard'],
@@ -187,12 +210,9 @@ def useradd(request):
             #建立user和role的关系
             user.roles.add(1)
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        class_list = ['class1', 'class2']
-        role_list = ['tmp1', 'tmp2']
-        variables=RequestContext(request, {'username': user.username, 'clicked_item': 'user',
-                                          'class_list': class_list, 'role_list': role_list})
-        return HttpResponseRedirect('/user_operate/')
+        #return HttpResponseRedirect('/user_operate/')
+        variables=RequestContext(request,{'username':user.username, 'server_msg':'添加用户成功！'})
+        return render_to_response('useradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -880,3 +900,12 @@ def delete_maintenance(request):
         _maintenance = k_maintenance.objects.get(id=_id)
         _maintenance.delete()
     return HttpResponseRedirect('/view_maintaining/')
+
+@login_required
+def department(request):
+    return render_to_response('department.html', {})
+
+
+@login_required
+def score(request):
+    return render_to_response('score.html', {})

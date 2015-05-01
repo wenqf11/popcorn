@@ -48,5 +48,7 @@ urlpatterns = patterns('',
     url(r'^view_maintained/$', view_maintained),
     url(r'^add_maintenance/$', add_maintenance),
     url(r'^submit_maintenance/$', submit_maintenance),
-    url(r'^delete_maintenance/$', delete_maintenance)
+    url(r'^delete_maintenance/$', delete_maintenance),
+    url(r'^department/$', department),
+    url(r'^score/$', score),
 )

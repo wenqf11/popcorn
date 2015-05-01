@@ -34,7 +34,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">分类编号<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="state">
+                        <select class="span6 m-wrap" name="classname">
                             {% for class in data.class_list %}
                             <option value="{{ class }}">{{ class }}</option>
                             {% endfor %}
@@ -80,13 +80,13 @@
                     <label class="col-sm-3 control-label no-padding-right">性别<span class="required">*</span></label>
                     <div class="col-sm-9">
                             <label class="inline">
-                                <input name="form-field-radio" type="radio" class="ace">
+                                <input name="gender" type="radio" class="ace" value="1" checked>
                                 <span class="lbl middle"> 男</span>
                             </label>
 
                             &nbsp; &nbsp; &nbsp;
                             <label class="inline">
-                                <input name="form-field-radio" type="radio" class="ace">
+                                <input name="gender" type="radio" class="ace" value="0">
                                 <span class="lbl middle"> 女</span>
                             </label>
                     </div>
@@ -107,7 +107,7 @@
 
                     <div class="col-sm-9">
                         <div class="col-sm-6">
-                            <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="选择用户角色">
+                            <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="选择用户角色" name="role">
                                 {% for role in data.role_list %}
                                 <option value="{{ role }}">{{ role }}</option>
                                 {% endfor %}
@@ -205,7 +205,7 @@
                 -->
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
-                        <button type="submit" class="btn btn-primary">确定</button>
+                        <button type="submit" class="btn btn-primary" onclick="return checkvalid();">确定</button>
                         <button type="button" class="btn">取消</button>
                     </div>
                 </div>
@@ -226,6 +226,14 @@
     <script>
     $(function(){
         $('#birthday').datepicker();
+        var server_msg="{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '系统消息',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
     })
     </script>
     <script>
@@ -260,5 +268,43 @@
                 });
             }
         });
+    </script>
+    <script>
+        function checkvalid() {
+           var username = $("[name='username']").val();
+           var password = $("[name='password']").val();
+           var role = $("[name='role']").val();
+           console.log(username);
+           console.log(password);
+           console.log(role);
+           if(username.length < 1 || username.length > 20) {
+                $("[name='username']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '请填写用户名！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+           }
+           else if(password.length < 1 || password.length > 20) {
+                $("[name='password']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '请填写密码！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+           }
+           else if(!role) {
+               $("[name='role']").select();
+               $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '请为用户添加角色！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+           }
+            return true;
+        }
     </script>
 {% endblock %}
