@@ -281,18 +281,6 @@ def profile(request):
         return HttpResponseRedirect('/login/')
 
 
-def front(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user = User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'front'})
-        return render_to_response('front.html', variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
 def setting(request):
     if request.user.is_authenticated():
         #登陆成功
@@ -468,6 +456,12 @@ def purview(request):
     response["options"] = []
     response['Access-Control-Allow-Origin'] = '*'
     return HttpResponse(json.dumps(response))
+
+
+@login_required
+def schedule(request):
+
+    return render_to_response('schedule.html', locals())
 
 
 @login_required
