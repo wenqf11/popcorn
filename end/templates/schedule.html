@@ -1,0 +1,79 @@
+{% extends 'userframe.html' %}
+{% block js %}
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="../static/fullcalendar/css/fullcalendar.css">
+{% endblock %}
+{% block pageheader %}
+	排班表
+{% endblock %}
+{% block maincontent %}
+	<div class="row-fluid">
+		<div class="col-xs-9">
+			<div id="calendar"></div>
+		</div>
+		<div class="col-xs-3">
+			<div id="external-events">
+				<div class="external-event label-grey ui-draggable ui-draggable-handle" data-class="label-grey" style="position: relative;">
+					<i class="ace-icon fa fa-arrows"></i>
+					工人1
+				</div>
+				<div class="external-event label-success ui-draggable ui-draggable-handle" data-class="label-success" style="position: relative;">
+					<i class="ace-icon fa fa-arrows"></i>
+					工人2
+				</div>
+				<div class="external-event label-danger ui-draggable ui-draggable-handle" data-class="label-danger" style="position: relative;">
+					<i class="ace-icon fa fa-arrows"></i>
+					工人3
+				</div>
+				<div class="external-event label-purple ui-draggable ui-draggable-handle" data-class="label-purple" style="position: relative;">
+					<i class="ace-icon fa fa-arrows"></i>
+					工人4
+				</div>
+				<div class="external-event label-yellow ui-draggable ui-draggable-handle" data-class="label-yellow" style="position: relative;">
+					<i class="ace-icon fa fa-arrows"></i>
+					工人5
+				</div>
+				<label>
+					<input type="checkbox" class="ace ace-checkbox" id="drop-remove">
+					<span class="lbl"> Remove after drop</span>
+				</label>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block tailjs %}
+<script type="text/javascript" src="../static/fullcalendar/lib/moment.min.js"></script>
+<script type="text/javascript" src="../static/fullcalendar/js/fullcalendar.js"></script>
+<script type="text/javascript" src="../static/fullcalendar/lang/zh-cn.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#calendar').fullCalendar({
+			height: 650,
+			aspectRatio: 1.2,
+			weekends: false,
+			eventSources: {
+				events: [
+					{
+						title: '张三',
+						start: '2015-05-04T08:00:00'
+					},
+					{
+						title: '李四',
+						start: '2015-05-07T10:00:00'
+					},
+					{
+						title: '王五',
+						start: '2015-05-05T12:30:00'
+					}
+				],
+				color: 'lightblue',
+				textColor: 'black',
+			},
+			eventStartEditable: true,
+			droppable: true
+		});
+	});
+</script>
+{% endblock %}
