@@ -88,7 +88,7 @@ CREATE TABLE `auth_user` (
 
 /*Data for the table `auth_user` */
 
-insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$ln3ukwiANbdn$VuXcNEexlSj14R2IomJTnxVXQtj3yK9m2uBPi1iRh/A=','2015-04-27 07:52:20',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28');
+insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$ln3ukwiANbdn$VuXcNEexlSj14R2IomJTnxVXQtj3yK9m2uBPi1iRh/A=','2015-04-30 07:58:01',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28');
 
 /*Table structure for table `auth_user_groups` */
 
@@ -224,7 +224,7 @@ CREATE TABLE `devicemgt_k_device` (
 
 /*Data for the table `devicemgt_k_device` */
 
-insert  into `devicemgt_k_device`(`id`,`classid_id`,`brand`,`producerid_id`,`typeid_id`,`supplierid_id`,`state`,`name`,`brief`,`serial`,`model`,`buytime`,`content`,`qrcode`,`position`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`lastmaintenance`,`nextmaintenance`,`maintenanceperiod`,`lastrepaire`,`lastmeter`,`notice`,`ownerid`) values (1,1,'',1,1,1,'0','111','111','11111','','0000-00-00','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00','','0000-00-00','0000-00-00',0,'0000-00-00','0000-00-00','',0);
+insert  into `devicemgt_k_device`(`id`,`classid_id`,`brand`,`producerid_id`,`typeid_id`,`supplierid_id`,`state`,`name`,`brief`,`serial`,`model`,`buytime`,`content`,`qrcode`,`position`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`lastmaintenance`,`nextmaintenance`,`maintenanceperiod`,`lastrepaire`,`lastmeter`,`notice`,`ownerid`) values (1,1,'',1,1,1,'0','boiler','kz084732','10086-10000-4008823823','','0000-00-00','','','c#310','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00','','0000-00-00','0000-00-00',0,'0000-00-00','0000-00-00','',0);
 
 /*Table structure for table `devicemgt_k_device_spare` */
 
@@ -332,9 +332,9 @@ CREATE TABLE `devicemgt_k_formitem` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_formitem_432947aa` (`classid_id`),
   KEY `devicemgt_k_formitem_a6f496e6` (`formid_id`),
-  CONSTRAINT `formid_id_refs_id_a81e9254` FOREIGN KEY (`formid_id`) REFERENCES `devicemgt_k_form` (`id`),
-  CONSTRAINT `classid_id_refs_id_35b3b5fc` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+  CONSTRAINT `classid_id_refs_id_35b3b5fc` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
+  CONSTRAINT `formid_id_refs_id_a81e9254` FOREIGN KEY (`formid_id`) REFERENCES `devicemgt_k_form` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_formitem` */
 
@@ -350,15 +350,16 @@ CREATE TABLE `devicemgt_k_maintenance` (
   `state` varchar(1) NOT NULL,
   `title` varchar(50) NOT NULL,
   `createcontent` varchar(100) NOT NULL,
-  `editcontent` varchar(100) NOT NULL,
-  `auditcontent` varchar(100) NOT NULL,
   `image` varchar(30) NOT NULL,
+  `editcontent` varchar(100) NOT NULL,
   `factor` int(10) unsigned NOT NULL,
   `memo` varchar(100) NOT NULL,
   `mtype` varchar(1) NOT NULL,
   `priority` varchar(1) NOT NULL,
   `creatorid` int(10) unsigned NOT NULL,
   `createdatetime` date NOT NULL,
+  `assignorid` int(10) unsigned NOT NULL,
+  `assigndatetime` date NOT NULL,
   `editorid` int(10) unsigned NOT NULL,
   `editdatetime` date NOT NULL,
   `auditorid` int(10) unsigned NOT NULL,
@@ -367,9 +368,11 @@ CREATE TABLE `devicemgt_k_maintenance` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_maintenance_72537f95` (`deviceid_id`),
   CONSTRAINT `deviceid_id_refs_id_e790c6dd` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_maintenance` */
+
+insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (25,1,'2','m1','broken','','',1,'quickly','2','3',1,'2015-04-29',1,'2015-04-30',3,'2015-04-29',0,'2015-04-29','0'),(26,1,'2','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(27,1,'1','m3','get rusty','','',1,'quickly','2','3',1,'2015-04-29',0,'2015-04-30',0,'2015-04-29',0,'2015-04-29','0'),(29,1,'3','m5','broken','','done!',1,'234','2','1',1,'2015-05-01',1,'2015-05-01',2,'2015-05-01',0,'2015-05-01','0'),(30,1,'3','m6','leaking','','ok!',1,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',0,'2015-05-01','0'),(31,1,'4','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',1,'2015-05-01','0');
 
 /*Table structure for table `devicemgt_k_meter` */
 
@@ -905,11 +908,11 @@ CREATE TABLE `devicemgt_k_user` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_user_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_6b588af6` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_user` */
 
-insert  into `devicemgt_k_user`(`id`,`classid_id`,`state`,`username`,`password`,`name`,`gender`,`face`,`mobile`,`email`,`address`,`zipcode`,`birthday`,`idcard`,`idcardtype`,`content`,`memo`,`contact`,`contactmobile`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`todo`,`onlinetime`) values (1,1,'','hahehi','hhy','','1','','','','','','0000-00-00','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00','',0,0);
+insert  into `devicemgt_k_user`(`id`,`classid_id`,`state`,`username`,`password`,`name`,`gender`,`face`,`mobile`,`email`,`address`,`zipcode`,`birthday`,`idcard`,`idcardtype`,`content`,`memo`,`contact`,`contactmobile`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`todo`,`onlinetime`) values (1,1,'','hahehi','hhy','zhangsan','1','','','','','','0000-00-00','','','','','','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00','',0,0),(2,1,'','syb1001','syb','lisi','1','','','','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(3,1,'','yl-1993','yl','wangwu','1','','','','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(4,1,'','wenqf11','wqf','chenliu','1','','','','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0);
 
 /*Table structure for table `devicemgt_k_user_roles` */
 
@@ -998,7 +1001,7 @@ CREATE TABLE `django_session` (
 
 /*Data for the table `django_session` */
 
-insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('p3uo1lg5ave4shjekcmxhekwnto4a49g','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-05-08 14:33:28'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24'),('un4cbhq8i8zup2egzqtflzuuwhomxzy6','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-11 07:52:20');
+insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('8lhsh9oulqek6tpblczdm5occoug3mqf','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-14 07:58:02'),('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('p3uo1lg5ave4shjekcmxhekwnto4a49g','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-05-08 14:33:28'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24'),('un4cbhq8i8zup2egzqtflzuuwhomxzy6','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-11 07:52:20');
 
 /*Table structure for table `django_site` */
 
