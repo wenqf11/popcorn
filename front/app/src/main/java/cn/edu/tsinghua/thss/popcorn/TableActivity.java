@@ -1,6 +1,7 @@
 package cn.edu.tsinghua.thss.popcorn;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +29,8 @@ public class TableActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.close_btn) {
+            TableActivity.this.finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

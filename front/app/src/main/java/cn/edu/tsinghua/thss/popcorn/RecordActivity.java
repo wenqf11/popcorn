@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -38,10 +40,8 @@ public class RecordActivity extends ListActivity {
         Intent intent=new Intent(this, TableActivity.class);
         Bundle bundle=new Bundle();
         intent.putExtras(bundle);
-        //执行意图
         startActivity(intent);
 
-        Log.v("MyListView4-click", (String) mData.get(position).get("title"));
         super.onListItemClick(l, v, position, id);
     }
 
@@ -109,5 +109,27 @@ public class RecordActivity extends ListActivity {
            }
            return convertView;
         }
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.record, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.close_btn) {
+            RecordActivity.this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
