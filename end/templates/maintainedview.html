@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block pageheader %}
-    尚未维修
+    维修记录
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
             <form class="form-horizontal" action="/submit_maintenance/" role="form" id="maintenanceform">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 class="smaller lighter blue no-margin">修改维修计划</h3>
+                    <h3 class="smaller lighter blue no-margin">审核维修任务</h3>
                 </div>
 
                 <div class="modal-body">
@@ -29,42 +29,17 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">维修标题</label>
+                        <label class="col-sm-3 control-label no-padding-top">给分系数</label>
                         <div class="col-sm-9">
-                            <input type="text" name="title" value="" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
-                        <div class="col-sm-9">
-                            <select id="editor" name="editor" form="maintenanceform">
-                                <option value="nopersonchosen" selected="selected"></option>
-                                {% for maintainer in maintainers %}
-                                <option value="{{ maintainer }}">{{ maintainer }}</option>
-                                {% endfor %}
+                            <select id="factor" name="factor" form="maintenanceform">
+                                <option value="noscorechosen" selected="selected"></option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
                             </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">故障描述</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="createcontent" value="" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">优先级</label>
-                        <div class="col-sm-9">
-                            <select id="priority" name="priority" form="maintenanceform">
-                                <option value="1" selected="selected">一般</option>
-                                <option value="2">重要</option>
-                                <option value="3">紧急</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">备注</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="memo" value="" />
                         </div>
                     </div>
                     <div class="form-group" style="display:none">
@@ -111,9 +86,14 @@
                             <th>负责人</th>
                             <th>指派时间</th>
                             <th>维修人</th>
+                            <th>维修时间</th>
                             <th>故障原因</th>
                             <th>优先级</th>
                             <th>备注</th>
+                            <th>维修结论</th>
+                            <th>审核人</th>
+                            <th>审核时间</th>
+                            <th>给分系数</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -129,9 +109,14 @@
                             <td>{{ dataitem.assignor }}</td>
                             <td>{{ dataitem.assigndatetime }}</td>
                             <td>{{ dataitem.editor }}</td>
+                            <td>{{ dataitem.editdatetime }}</td>
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.priority }}</td>
                             <td>{{ dataitem.memo }}</td>
+                            <td>{{ dataitem.editcontent }}</td>
+                            <td>{{ dataitem.auditor }}</td>
+                            <td>{{ dataitem.auditdatetime }}</td>
+                            <td>{{ dataitem.factor }}</td>
                             <td>
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
@@ -184,40 +169,23 @@
         });
         $(".fa-pencil").click(function() {
             var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-            var editor = document.getElementById("editor");
-            var divs = editor.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
+            var factor = document.getElementById("factor");
 
-            divs[1].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
-            var maintainers = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
-            var mlength = maintainers.length;
-            var themaintainer = dataline[8].innerHTML;
-            maintainers[0].setAttribute("selected", "selected");
-            for(var i = 1; i < mlength; i++) {
-                if(maintainers[i].value == themaintainer) {
-                    maintainers[i].setAttribute("selected", "selected");
-                    maintainers[0].removeAttribute("selected");
+            var factors = factor.getElementsByTagName("option");
+            var flength = factors.length;
+            var thefactor = dataline[16].innerHTML;
+            factors[0].setAttribute("selected", "selected");
+            for(var i = 1; i < flength; i++) {
+                if(factors[i].value == thefactor) {
+                    factors[i].setAttribute("selected", "selected");
+                    factors[0].removeAttribute("selected");
                 }
                 else {
-                    maintainers[i].removeAttribute("selected");
+                    factors[i].removeAttribute("selected");
                 }
             }
 
-            divs[3].childNodes[3].childNodes[1].value = dataline[9].innerHTML;
-
-            var priorities = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
-            var plength = priorities.length;
-            var thepriority = dataline[10].innerHTML;
-            for(var i = 0; i < plength; i++) {
-                if(priorities[i].innerHTML == thepriority) {
-                    priorities[i].setAttribute("selected", "selected");
-                }
-                else {
-                    priorities[i].removeAttribute("selected");
-                }
-            }
-            divs[5].childNodes[3].childNodes[1].value = dataline[11].innerHTML;
-
-            divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
+            factor.parentNode.parentNode.nextSibling.nextSibling.childNodes[3].childNodes[1].value = this.parentNode.id;
         });
     });
     </script>
