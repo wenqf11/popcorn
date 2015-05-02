@@ -756,7 +756,7 @@ def delete_form(request):
 
 @login_required
 def view_maintaining(request):
-    _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=2)
+    _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=3)
     data = []
     for _maintaining in _maintainings:
         _device = _maintaining.deviceid
@@ -772,7 +772,8 @@ def view_maintaining(request):
                 'createdatetime': _maintaining.createdatetime,
                 'createcontent': _maintaining.createcontent,
                 'memo': _maintaining.memo,
-                'priority': _maintaining.get_priority_display()
+                'priority': _maintaining.get_priority_display(),
+                'state': _maintaining.state
             })
         else:
             _assignor = k_user.objects.get(id=_maintaining.assignorid)
@@ -790,7 +791,8 @@ def view_maintaining(request):
                 'editor': _editor.name,
                 'createcontent': _maintaining.createcontent,
                 'memo': _maintaining.memo,
-                'priority': _maintaining.get_priority_display()
+                'priority': _maintaining.get_priority_display(),
+                'state': _maintaining.state
             })
     _users = k_user.objects.all()
     _maintainers = []
@@ -801,7 +803,7 @@ def view_maintaining(request):
 
 @login_required
 def view_maintained(request):
-    _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=3)
+    _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=4)
     data = []
     for _maintained in _maintaineds:
         _device = _maintained.deviceid
@@ -824,7 +826,8 @@ def view_maintained(request):
                 'createcontent': _maintained.createcontent,
                 'memo': _maintained.memo,
                 'priority': _maintained.get_priority_display(),
-                'editcontent': _maintained.editcontent
+                'editcontent': _maintained.editcontent,
+                'state': _maintained.state
             })
         else:
             _auditor = k_user.objects.get(id=_maintained.auditorid)
@@ -846,7 +849,8 @@ def view_maintained(request):
                 'editcontent': _maintained.editcontent,
                 'auditor': _auditor.name,
                 'auditdatetime': _maintained.auditdatetime,
-                'factor': _maintained.factor
+                'factor': _maintained.factor,
+                'state': _maintained.state
             })
     return render_to_response('maintainedview.html', {'data': data})
 
@@ -857,7 +861,11 @@ def add_maintenance(request):
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
-    return render_to_response('maintenanceadd.html', {'maintainers': _maintainers})
+    _devices = k_device.objects.all()
+    _briefs = []
+    for _device in _devices:
+        _briefs.append(_device.brief)
+    return render_to_response('maintenanceadd.html', {'maintainers': _maintainers, 'briefs': _briefs})
 
 
 @login_required
@@ -873,60 +881,29 @@ def submit_maintenance(request):
 
     _factor = request.GET.get('factor')
 
-    print "fdsafadsffffffffffffffffffffffff"
-    print _factor
-
     _user = k_user.objects.get(username=request.user.username)
     if _factor:
         _maintenance = k_maintenance.objects.get(id=_id)
-        if _factor == 'noscorechosen':
-            _maintenance.auditorid = 0
-            _maintenance.state = 3
-        elif _maintenance.auditorid == 0:
-            _maintenance.auditorid = _user.id
-            _maintenance.auditdatetime = get_current_date()
-            _maintenance.factor = _factor
-            _maintenance.state = 4
-        else:
-            if _maintenance.factor != _factor:
-                _maintenance.auditorid = _user.id
-                _maintenance.auditdatetime = get_current_date()
-                _maintenance.factor = _factor
+        _maintenance.auditorid = _user.id
+        _maintenance.auditdatetime = get_current_date()
+        _maintenance.factor = _factor
+        _maintenance.state = 5
+        _maintenance.save()
         return HttpResponseRedirect('/view_maintained/')
     elif _id:
         _maintenance = k_maintenance.objects.get(id=_id)
-        _maintainer = {}
-        if _editor != 'nopersonchosen':
-            _maintainer["id"] = k_user.objects.get(name=_editor).id
-        else:
-            _maintainer["id"] = 0
-        if _title == _maintenance.title and _maintainer["id"] == _maintenance.editorid and \
-        _createcontent == _maintenance.createcontent and _priority == _maintenance.priority and \
-        _memo == _maintenance.memo:
-            return HttpResponseRedirect('/view_maintaining/')
+        _maintainer = k_user.objects.get(name=_editor)
         _maintenance.title = _title
         _maintenance.createcontent = _createcontent
         _maintenance.priority = _priority
         _maintenance.memo = _memo
-        if _editor != 'nopersonchosen':
-            _maintenance.assignorid = _user.id
-            _maintenance.assigndatetime = get_current_date()
-            _maintenance.editorid = _maintainer["id"]
-            _maintenance.state=2
-        else:
-            _maintenance.assignorid = 0
-            _maintenance.editorid = 0
-            _maintenance.state=1
+        _maintenance.assignorid = _user.id
+        _maintenance.assigndatetime = get_current_date()
+        _maintenance.editorid = _maintainer.id
+        _maintenance.state = 2
     else:
         _device = k_device.objects.filter(brief=_brief)
-        
-        if not _device:
-            _users = k_user.objects.all()
-            _maintainers = []
-            for _user in _users:
-                _maintainers.append(_user.name)
-            return render_to_response('maintenanceadd.html', {'maintainers': _maintainers, 'warning': '请输入正确的设备简称'})
-        
+
         _maintenance = k_maintenance.objects.create(
             title=_title,
             deviceid=_device[0],
@@ -943,7 +920,7 @@ def submit_maintenance(request):
             _maintenance.assigndatetime = get_current_date()
             _maintainer = k_user.objects.get(name=_editor)
             _maintenance.editorid = _maintainer.id
-            _maintenance.state=2
+            _maintenance.state = 2
     _maintenance.save()
     return HttpResponseRedirect('/view_maintaining/')
 

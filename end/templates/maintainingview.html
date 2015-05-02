@@ -38,7 +38,6 @@
                         <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
                         <div class="col-sm-9">
                             <select id="editor" name="editor" form="maintenanceform">
-                                <option value="nopersonchosen" selected="selected"></option>
                                 {% for maintainer in maintainers %}
                                 <option value="{{ maintainer }}">{{ maintainer }}</option>
                                 {% endfor %}
@@ -104,14 +103,14 @@
                         <tr>
                             <th>维修标题</th>
                             <th>设备编号</th>
-                            <th>设备名称</th>
-                            <th>设备地点</th>
+                            <th>名称</th>
+                            <th>地点</th>
                             <th>上报人</th>
                             <th>上报时间</th>
                             <th>负责人</th>
                             <th>指派时间</th>
                             <th>维修人</th>
-                            <th>故障原因</th>
+                            <th>故障描述</th>
                             <th>优先级</th>
                             <th>备注</th>
                             <th></th>
@@ -134,12 +133,15 @@
                             <td>{{ dataitem.memo }}</td>
                             <td>
                                 <div class="hidden-sm hidden-xs action-buttons">
+                                    {% ifequal dataitem.state '3' %}
+                                    {% else %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
                                     <a class="red" href="/delete_maintenance?id={{ dataitem.id }}">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
+                                    {% endifequal %}
                                     <a class="red" href="">
                                         <i class="ace-icon fa fa-search bigger-130"></i>
                                     </a>
