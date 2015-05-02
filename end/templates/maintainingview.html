@@ -181,8 +181,8 @@
             ]
         });
         $('td').click(function(){
-            $('input').val($(this).html());
-            $('input').select();
+            $('[aria-controls="maintenance"]').val($(this).html());
+            $('[aria-controls="maintenance"]').select();
         });
         $(".fa-pencil").click(function() {
             var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
