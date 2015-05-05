@@ -33,26 +33,38 @@ urlpatterns = patterns('',
     url(r'^deviceall/$', deviceall),
     url(r'^purview/$', purview),
     url(r'^schedule/$', schedule),
+
     url(r'^view_role/$', view_role),
     url(r'^operate_role/$', operate_role),
     url(r'^submit_role/(\d*)/$', submit_role),
     url(r'^delete_role/$', delete_role),
+
     url(r'^view_route/$', view_route),
     url(r'^operate_route/$', operate_route),
     url(r'^submit_route/(\d*)/$', submit_route),
     url(r'^delete_route/$', delete_route),
+
     url(r'^view_form/$', view_form),
     url(r'^submit_form/$', submit_form),
     url(r'^delete_form/$', delete_form),
+
     url(r'^view_maintaining/$', view_maintaining),
     url(r'^view_maintained/$', view_maintained),
     url(r'^add_maintenance/$', add_maintenance),
     url(r'^submit_maintenance/$', submit_maintenance),
     url(r'^delete_maintenance/$', delete_maintenance),
+
     url(r'^view_upkeeping/$', view_upkeeping),
     url(r'^view_upkeeped/$', view_upkeeped),
     url(r'^submit_upkeep/$', submit_upkeep),
     url(r'^delete_upkeep/$', delete_upkeep),
+
+    url(r'^view_tasking/$', view_tasking),
+    url(r'^view_tasked/$', view_tasked),
+    url(r'^add_task/$', add_task),
+    url(r'^submit_task/$', submit_task),
+    url(r'^delete_task/$', delete_task),
+
     url(r'^department/$', department),
     url(r'^score/$', score),
 )

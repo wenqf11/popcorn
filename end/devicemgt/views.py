@@ -1049,6 +1049,94 @@ def delete_upkeep(request):
 
 
 @login_required
+def view_tasking(request):
+    _maintainings = k_task.objects.filter(state__lte=3)
+    data = []
+    for _maintaining in _maintainings:
+        _creator = k_user.objects.get(id=_maintaining.creatorid)
+        data.append({
+            'id': _maintaining.id,
+            'title': _maintaining.title,
+            'creator': _creator.name,
+            'createdatetime': _maintaining.createdatetime,
+            'createcontent': _maintaining.createcontent,
+            'memo': _maintaining.memo,
+            'priority': _maintaining.get_priority_display(),
+            'state': _maintaining.state
+        })
+    return render_to_response('taskingview.html', {'data': data})
+
+
+@login_required
+def view_tasked(request):
+    _maintaineds = k_task.objects.filter(state__gte=4)
+    data = []
+    for _maintained in _maintaineds:
+        _creator = k_user.objects.get(id=_maintained.creatorid)
+        data.append({
+            'id': _maintained.id,
+            'title': _maintained.title,
+            'creator': _creator.name,
+            'createdatetime': _maintained.createdatetime,
+            'createcontent': _maintained.createcontent,
+            'memo': _maintained.memo,
+            'priority': _maintained.get_priority_display(),
+            'state': _maintained.state
+        })
+    return render_to_response('taskedview.html', {'data': data})
+
+
+@login_required
+def add_task(request):
+    return render_to_response('taskadd.html')
+
+
+@login_required
+def submit_task(request):
+    _title = request.GET.get('title')
+    _createcontent = request.GET.get('createcontent')
+    _priority = request.GET.get('priority')
+    _memo = request.GET.get('memo')
+
+    _id = request.GET.get('id')
+
+    _user = k_user.objects.get(username=request.user.username)
+    if _id:
+        _maintenance = k_task.objects.get(id=_id)
+        _maintenance.title = _title
+        _maintenance.createcontent = _createcontent
+        _maintenance.priority = _priority
+        _maintenance.memo = _memo
+        _maintenance.creatorid = _user.id
+        _maintenance.createdatetime = get_current_date()
+    else:
+        _maintenance = k_task.objects.create(
+            title=_title,
+            createcontent=_createcontent,
+            priority=_priority,
+            memo=_memo,
+            creatorid=_user.id,
+            createdatetime=get_current_date(),
+            state=1
+        )
+    _maintenance.save()
+    return HttpResponseRedirect('/view_tasking/')
+
+
+@login_required
+def delete_task(request):
+    _id = request.GET.get('id')
+    _type = request.GET.get('type')
+    if _id:
+        _maintenance = k_task.objects.get(id=_id)
+        _maintenance.delete()
+    if _type == "1":
+        return HttpResponseRedirect('/view_tasked/')
+    else:
+        return HttpResponseRedirect('/view_tasking/')
+
+
+@login_required
 def department(request):
     return render_to_response('department.html', {})
 

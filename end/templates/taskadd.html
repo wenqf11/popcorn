@@ -1,0 +1,91 @@
+{% extends 'userframe.html' %}
+{% block css %}
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
+    <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+{% endblock %}
+
+{% block pageheader %}
+    添加任务
+{% endblock %}
+
+{% block maincontent %}
+<div class="row">
+    <div class="col-xs-12">
+        <form class="form-horizontal" action="/submit_task/" role="form" id="maintenanceform">
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">任务标题</label>
+                <div class="col-sm-9">
+                    <input type="text" name="title" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">任务描述</label>
+                <div class="col-sm-9">
+                    <input type="text" name="createcontent" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">优先级</label>
+                <div class="col-sm-9">
+                    <select id="priority" name="priority" form="maintenanceform">
+                        <option value="1" selected="selected">一般</option>
+                        <option value="2">重要</option>
+                        <option value="3">紧急</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">备注</label>
+                <div class="col-sm-9">
+                    <input type="text" name="memo" value="">
+                </div>
+            </div>
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-info" type="submit" onclick="return checkvalid();">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        保存
+                    </button>
+                    &nbsp; &nbsp; &nbsp;
+                    <button class="btn" type="reset">
+                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                        重置
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block tailjs %}
+    <script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>
+    <script type="text/javascript">
+        function checkvalid() {
+            var title = $("[name='title']").val();
+            var createcontent = $("[name='createcontent']").val();
+            if(title.length < 1 || title.length > 40) {
+                $("[name='title']").select();
+                $.gritter.add({
+                title: '添加任务失败！',
+                text: '任务标题长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            if(createcontent.length < 1 || createcontent.length > 80) {
+                $("[name='createcontent']").select();
+                $.gritter.add({
+                title: '添加任务失败！',
+                text: '任务描述长度为1-80！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock %}

@@ -755,9 +755,11 @@ CREATE TABLE `devicemgt_k_task` (
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_task` */
+
+insert  into `devicemgt_k_task`(`id`,`state`,`title`,`createcontent`,`editcontent`,`auditcontent`,`memo`,`priority`,`creatorid`,`createdatetime`,`auditorid`,`auditdatetime`,`status`) values (6,'1','123','333','','','333','1',1,'2015-05-05',0,'2015-05-05','0'),(7,'2','456','777','','','32','2',1,'2015-05-05',0,'2015-05-05','0'),(8,'3','111','22','','','3','3',1,'2015-05-05',0,'2015-05-05','0'),(9,'4','ew','ewew','','','','2',1,'2015-05-05',0,'2015-05-05','0'),(10,'5','gg','hh','','','jj','1',1,'2015-05-05',0,'2015-05-05','0'),(11,'1','ff','fff','','','ffff','1',1,'2015-05-05',0,'2015-05-05','0');
 
 /*Table structure for table `devicemgt_k_taskitem` */
 
