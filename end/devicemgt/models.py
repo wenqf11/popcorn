@@ -442,7 +442,7 @@ class k_taskitem(models.Model):
     createcontent = models.CharField(max_length=100)
     editcontent = models.CharField(max_length=100)
     auditcontent = models.CharField(max_length=100)
-    factor = models.PositiveIntegerField()
+    factor = models.PositiveIntegerField(default=1)
     memo = models.CharField(max_length=100)
     priority = models.CharField(max_length=1, choices=TASK_PRIORITY, default='1')
     creatorid = models.PositiveIntegerField(default=0)

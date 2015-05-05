@@ -928,10 +928,125 @@ def submit_maintenance(request):
 @login_required
 def delete_maintenance(request):
     _id = request.GET.get('id')
+    _type = request.GET.get('type')
     if _id:
         _maintenance = k_maintenance.objects.get(id=_id)
         _maintenance.delete()
-    return HttpResponseRedirect('/view_maintaining/')
+    if _type == 1:
+        return HttpResponseRedirect('/view_maintained/')
+    else:
+        return HttpResponseRedirect('/view_maintaining/')
+
+
+@login_required
+def view_upkeeping(request):
+    _maintainings = k_maintenance.objects.filter(mtype=1, state__lte=3)
+    data = []
+    for _maintaining in _maintainings:
+        _device = _maintaining.deviceid
+        _assignor = k_user.objects.get(id=_maintaining.assignorid)
+        _editor = k_user.objects.get(id=_maintaining.editorid)
+        data.append({
+            'id': _maintaining.id,
+            'title': _maintaining.title,
+            'brief': _device.brief,
+            'name': _device.name,
+            'position': _device.position,
+            'assignor': _assignor.name,
+            'assigndatetime': _maintaining.assigndatetime,
+            #
+            'deadline': get_current_date(),
+            'editor': _editor.name,
+            'createcontent': _maintaining.createcontent,
+            'memo': _maintaining.memo,
+            'state': _maintaining.state
+        })
+    _users = k_user.objects.all()
+    _maintainers = []
+    for _user in _users:
+        _maintainers.append(_user.name)
+    return render_to_response('upkeepingview.html', {'data': data, 'maintainers': _maintainers})
+
+@login_required
+def view_upkeeped(request):
+    _maintaineds = k_maintenance.objects.filter(mtype=1, state__gte=4)
+    data = []
+    for _maintained in _maintaineds:
+        _device = _maintained.deviceid
+        #_creator = k_user.objects.get(id=_maintained.creatorid)
+        _assignor = k_user.objects.get(id=_maintained.assignorid)
+        _editor = k_user.objects.get(id=_maintained.editorid)
+        if _maintained.auditorid == 0:
+            data.append({
+                'id': _maintained.id,
+                'title': _maintained.title,
+                'brief': _device.brief,
+                'name': _device.name,
+                'position': _device.position,
+                #'creator': _creator.name,
+                #'createdatetime': _maintained.createdatetime,
+                'assignor': _assignor.name,
+                'assigndatetime': _maintained.assigndatetime,
+                #
+                'deadline': get_current_date(),
+                'editor': _editor.name,
+                'editdatetime': _maintained.editdatetime,
+                'createcontent': _maintained.createcontent,
+                'memo': _maintained.memo,
+                #'priority': _maintained.get_priority_display(),
+                'editcontent': _maintained.editcontent,
+                'state': _maintained.state
+            })
+        else:
+            _auditor = k_user.objects.get(id=_maintained.auditorid)
+            data.append({
+                'id': _maintained.id,
+                'title': _maintained.title,
+                'brief': _device.brief,
+                'name': _device.name,
+                'position': _device.position,
+                #'creator': _creator.name,
+                #'createdatetime': _maintained.createdatetime,
+                'assignor': _assignor.name,
+                'assigndatetime': _maintained.assigndatetime,
+                #
+                'deadline': get_current_date(),
+                'editor': _editor.name,
+                'editdatetime': _maintained.editdatetime,
+                'createcontent': _maintained.createcontent,
+                'memo': _maintained.memo,
+                #'priority': _maintained.get_priority_display(),
+                'editcontent': _maintained.editcontent,
+                'auditor': _auditor.name,
+                'auditdatetime': _maintained.auditdatetime,
+                'factor': _maintained.factor,
+                'state': _maintained.state
+            })
+    return render_to_response('upkeepedview.html', {'data': data})
+
+
+@login_required
+def submit_upkeep(request):
+    _id = request.GET.get('id')
+    _factor = request.GET.get('factor')
+    _user = k_user.objects.get(username=request.user.username)
+    _maintenance = k_maintenance.objects.get(id=_id)
+    _maintenance.auditorid = _user.id
+    _maintenance.auditdatetime = get_current_date()
+    _maintenance.factor = _factor
+    _maintenance.state = 5
+    _maintenance.save()
+    return HttpResponseRedirect('/view_upkeeped/')
+
+
+@login_required
+def delete_upkeep(request):
+    _id = request.GET.get('id')
+    if _id:
+        _maintenance = k_maintenance.objects.get(id=_id)
+        _maintenance.delete()
+    return HttpResponseRedirect('/view_upkeeped/')
+
 
 @login_required
 def department(request):

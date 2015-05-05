@@ -220,7 +220,7 @@ CREATE TABLE `devicemgt_k_device` (
   CONSTRAINT `producerid_id_refs_id_0ca0a6d9` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_b397bc4d` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`),
   CONSTRAINT `typeid_id_refs_id_33dcc1e6` FOREIGN KEY (`typeid_id`) REFERENCES `devicemgt_k_devicetype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_device` */
 
@@ -368,11 +368,11 @@ CREATE TABLE `devicemgt_k_maintenance` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_maintenance_72537f95` (`deviceid_id`),
   CONSTRAINT `deviceid_id_refs_id_e790c6dd` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_maintenance` */
 
-insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (25,2,'2','m1','broken seriously','','',1,'quickly','2','2',1,'2015-04-29',1,'2015-05-02',3,'2015-04-29',0,'2015-04-29','0'),(26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(27,2,'1','m3','get rusty','','',1,'quickly','2','3',1,'2015-04-29',0,'2015-04-30',0,'2015-04-29',0,'2015-04-29','0'),(29,2,'5','m5','broken','','done!',2,'234','2','1',1,'2015-05-01',1,'2015-05-01',2,'2015-05-01',1,'2015-05-02','0'),(30,2,'4','m6','leaking','','ok!',1,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',0,'2015-05-01','0'),(31,2,'5','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',1,'2015-05-01','0'),(33,2,'2','123','create','','',1,'','2','2',1,'2015-05-02',1,'2015-05-02',6,'2015-05-02',0,'2015-05-02','0');
+insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(27,2,'1','m3','get rusty','','',1,'quickly','2','3',1,'2015-04-29',0,'2015-04-30',0,'2015-04-29',0,'2015-04-29','0'),(29,2,'5','m5','broken','','done!',2,'234','2','1',1,'2015-05-01',1,'2015-05-01',2,'2015-05-01',1,'2015-05-02','0'),(30,2,'4','m6','leaking','','ok!',1,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',0,'2015-05-01','0'),(31,2,'5','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',1,'2015-05-01','0'),(33,2,'2','123','create','','',1,'','2','2',1,'2015-05-02',1,'2015-05-02',6,'2015-05-02',0,'2015-05-02','0'),(34,2,'2','k1','c1','','',1,'x','1','',0,'2015-05-05',1,'2015-05-05',3,'2015-05-05',0,'2015-05-05','0'),(35,2,'3','k2','c2','','',1,'x','1','',0,'2015-05-05',1,'2015-04-30',4,'2015-05-01',0,'2015-05-05','0'),(36,2,'5','k3','c3','','ok',3,'x','1','',0,'2015-05-05',1,'2015-04-30',5,'2015-05-01',1,'2015-05-05','0'),(37,2,'5','k4','c4','','ok',2,'x','1','',0,'2015-05-05',1,'2015-04-30',6,'2015-05-01',1,'2015-05-05','0'),(38,2,'2','k5','c5','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',7,'2015-05-02',0,'2015-05-05','0'),(39,2,'3','k6','c6','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',6,'2015-05-02',0,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',0,'2015-05-05',1,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0');
 
 /*Table structure for table `devicemgt_k_meter` */
 

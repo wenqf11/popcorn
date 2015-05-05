@@ -116,13 +116,13 @@
                             <td>{{ dataitem.auditor }}</td>
                             <td>{{ dataitem.auditdatetime }}</td>
                             <td>{{ dataitem.factor }}</td>
-                            <td>
+                            <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '4' %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
-                                    <a class="red" href="/delete_maintenance?id={{ dataitem.id }}">
+                                    <a class="red" href="/delete_maintenance?id={{ dataitem.id }}&type=1">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
                                     {% endifequal %}
@@ -164,9 +164,9 @@
                 { data: null, orderable: false }
             ]
         });
-        $('td').click(function(){
-            $('[aria-controls="maintenance"]').val($(this).html());
-            $('[aria-controls="maintenance"]').select();
+        $('td:not(.unsearchable)').click(function(){
+            $('#maintenance_filter input').val($(this).html());
+            $('#maintenance_filter input').select();
         });
         $(".fa-pencil").click(function() {
             var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
