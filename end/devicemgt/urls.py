@@ -65,6 +65,10 @@ urlpatterns = patterns('',
     url(r'^submit_task/$', submit_task),
     url(r'^delete_task/$', delete_task),
 
+    url(r'^view_taskitem/$', view_taskitem),
+    url(r'^submit_taskitem/$', submit_taskitem),
+    url(r'^delete_taskitem/$', delete_taskitem),
+
     url(r'^department/$', department),
     url(r'^score/$', score),
 )

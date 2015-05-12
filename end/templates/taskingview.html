@@ -97,7 +97,7 @@
                             <th>编辑时间</th>
                             <th>优先级</th>
                             <th>备注</th>
-                            <th>是否指派完成</th>
+                            <th>任务状态</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -110,15 +110,10 @@
                             <td>{{ dataitem.createdatetime }}</td>
                             <td>{{ dataitem.priority }}</td>
                             <td>{{ dataitem.memo }}</td>
-                            {% ifequal dataitem.state '1' %}
-                            <td>否</td>
-                            {% else %}
-                            <td>是</td>
-                            {% endifequal %}
+                            <td>{{ dataitem.state}}</td>
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
-                                    {% ifequal dataitem.state '3' %}
-                                    {% else %}
+                                    {% ifequal dataitem.state '计划' %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
@@ -126,7 +121,7 @@
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
                                     {% endifequal %}
-                                    <a class="red" href="">
+                                    <a class="red" href="/view_taskitem?id={{ dataitem.id }}">
                                         <i class="ace-icon fa fa-search bigger-130"></i>
                                     </a>
                                 </div>

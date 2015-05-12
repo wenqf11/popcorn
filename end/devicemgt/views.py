@@ -1050,7 +1050,7 @@ def delete_upkeep(request):
 
 @login_required
 def view_tasking(request):
-    _maintainings = k_task.objects.filter(state__lte=3)
+    _maintainings = k_task.objects.filter(state__lte=2)
     data = []
     for _maintaining in _maintainings:
         _creator = k_user.objects.get(id=_maintaining.creatorid)
@@ -1062,14 +1062,14 @@ def view_tasking(request):
             'createcontent': _maintaining.createcontent,
             'memo': _maintaining.memo,
             'priority': _maintaining.get_priority_display(),
-            'state': _maintaining.state
+            'state': _maintaining.get_state_display()
         })
     return render_to_response('taskingview.html', {'data': data})
 
 
 @login_required
 def view_tasked(request):
-    _maintaineds = k_task.objects.filter(state__gte=4)
+    _maintaineds = k_task.objects.filter(state__gte=3)
     data = []
     for _maintained in _maintaineds:
         _creator = k_user.objects.get(id=_maintained.creatorid)
@@ -1081,7 +1081,7 @@ def view_tasked(request):
             'createcontent': _maintained.createcontent,
             'memo': _maintained.memo,
             'priority': _maintained.get_priority_display(),
-            'state': _maintained.state
+            'state': _maintained.get_state_display()
         })
     return render_to_response('taskedview.html', {'data': data})
 
@@ -1134,6 +1134,117 @@ def delete_task(request):
         return HttpResponseRedirect('/view_tasked/')
     else:
         return HttpResponseRedirect('/view_tasking/')
+
+
+@login_required
+def view_taskitem(request):
+    _id = request.GET.get('id')
+    _task = k_task.objects.get(id=_id)
+    _taskitems = k_taskitem.objects.filter(taskid_id=_task.id)
+    data = []
+    for _taskitem in _taskitems:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_taskitem.creatorid)
+        _editor = k_user.objects.get(id=_taskitem.editorid)
+        dataitem['id'] = _taskitem.id
+        dataitem['title'] = _taskitem.title
+        dataitem['createcontent'] = _taskitem.createcontent
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _taskitem.createdatetime
+        dataitem['priority'] = _taskitem.get_priority_display()
+        dataitem['memo'] = _taskitem.memo
+        dataitem['editor'] = _editor.name
+        dataitem['state'] = _taskitem.get_state_display()
+
+        if _taskitem.state == "3" or _taskitem.state == "4":
+            dataitem['editdatetime'] = _taskitem.editdatetime
+            dataitem['editcontent'] = _taskitem.editcontent
+
+        if _taskitem.state == "4":
+            _auditor = k_user.objects.get(id=_taskitem.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _taskitem.auditdatetime
+            dataitem['factor'] = _taskitem.factor
+        data.append(dataitem)
+
+    _taskers = []
+    _users = k_user.objects.all()
+    for _user in _users:
+        _taskers.append(_user.name)
+    return render_to_response('taskitemview.html', {'title': _task.title, 'taskers': _taskers, 'taskid': _task.id, 'data': data})
+
+
+@login_required
+def submit_taskitem(request):
+    _title = request.GET.get('title')
+    _createcontent = request.GET.get('createcontent')
+    _priority = request.GET.get('priority')
+    _memo = request.GET.get('memo')
+    _editor = request.GET.get('editor')
+
+    _factor = request.GET.get('factor')
+
+    _id = request.GET.get('id')
+    _taskid = request.GET.get('taskid')
+    _user = k_user.objects.get(username=request.user.username)
+
+    _submittype = request.GET.get('submittype')
+
+    if _submittype == "1":
+        _taskitem = k_taskitem.objects.get(id=_id)
+        _taskitem.auditorid = _user.id
+        _taskitem.auditdatetime = get_current_date()
+        _taskitem.factor = _factor
+        _taskitem.state = 4
+        _taskitem.save()
+        _taskitems = k_taskitem.objects.filter(taskid_id=_taskitem.taskid_id)
+        _auditcomplete = True
+        for _one in _taskitems:
+            if _one.state != "4":
+                _auditcomplete = False
+        if _auditcomplete == True:
+            _task = k_task.objects.get(id=_taskitem.taskid_id)
+            _task.state = 4
+            _task.save()
+        return HttpResponseRedirect('/view_taskitem?id=%i' % _taskitem.taskid_id)
+    
+    if _submittype == "2":
+        _taskitem = k_taskitem.objects.get(id=_id)
+    else:
+        _taskitem = k_taskitem.objects.create(taskid_id=_taskid, state=1)
+        _task = k_task.objects.get(id=_taskid)
+        _task.state = 1
+        _task.save()
+    _taskitem.creatorid = _user.id
+    _taskitem.createdatetime = get_current_date()
+    _taskitem.title = _title
+    _taskitem.createcontent = _createcontent
+    _taskitem.priority = _priority
+    _taskitem.memo = _memo
+    _tasker = k_user.objects.get(name=_editor)
+    _taskitem.editorid = _tasker.id
+
+    _taskitem.save()
+    return HttpResponseRedirect('/view_taskitem?id='+_taskid)
+
+
+@login_required
+def delete_taskitem(request):
+    _id = request.GET.get('id')
+    if _id:
+        _taskitem = k_taskitem.objects.get(id=_id)
+        _taskitem.delete()
+        _taskitems = k_taskitem.objects.filter(taskid_id=_taskitem.taskid_id)
+        _states = []
+        for _one in _taskitems:
+            _states.append(_one.state)
+        _task = k_task.objects.get(id=_taskitem.taskid_id)
+        if _states != []:
+            _states.sort()
+            _task.state = _states[0]
+            _task.save()
+    return HttpResponseRedirect('/view_taskitem?id=%i' % _taskitem.taskid_id)
 
 
 @login_required
