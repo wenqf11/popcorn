@@ -33,6 +33,8 @@ urlpatterns = patterns('',
     url(r'^deviceall/$', deviceall),
     url(r'^purview/$', purview),
     url(r'^schedule/$', schedule),
+    url(r'^get_schedule/$', get_schedule),
+    url(r'^save_schedule/$', save_schedule),
 
     url(r'^view_role/$', view_role),
     url(r'^operate_role/$', operate_role),
