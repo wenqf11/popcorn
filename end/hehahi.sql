@@ -549,14 +549,16 @@ DROP TABLE IF EXISTS `devicemgt_k_schedule`;
 CREATE TABLE `devicemgt_k_schedule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `classid_id` int(11) NOT NULL,
-  `range` varchar(30) NOT NULL,
-  `content` varchar(500) NOT NULL,
-  `memo` varchar(100) NOT NULL,
-  `creatorid` int(10) unsigned NOT NULL,
-  `createdatetime` date NOT NULL,
+  `route_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `date` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_schedule_432947aa` (`classid_id`),
-  CONSTRAINT `classid_id_refs_id_4dc8fa60` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
+  KEY `devicemgt_k_schedule_854631fb` (`route_id`),
+  KEY `devicemgt_k_schedule_6340c63c` (`user_id`),
+  CONSTRAINT `route_id_refs_id_bcf0225a` FOREIGN KEY (`route_id`) REFERENCES `devicemgt_k_route` (`id`),
+  CONSTRAINT `classid_id_refs_id_4dc8fa60` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
+  CONSTRAINT `user_id_refs_id_af05aa4f` FOREIGN KEY (`user_id`) REFERENCES `devicemgt_k_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_schedule` */
