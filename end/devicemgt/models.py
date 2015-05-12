@@ -562,11 +562,9 @@ class k_project(models.Model):
 
 class k_schedule(models.Model):
     classid = models.ForeignKey(k_class, related_name='schedule_set')
-    range = models.CharField(max_length=30)
-    content = models.CharField(max_length=500)
-    memo = models.CharField(max_length=100)
-    creatorid = models.PositiveIntegerField(default=0)
-    createdatetime = models.DateField(blank=True, default=date.today)
+    route = models.ForeignKey(k_route, related_name='schedule_set')
+    user = models.ForeignKey(k_user, related_name='schedule_set')
+    date = models.DateField()
 
 class k_staffworkinfo(models.Model):
     userid = models.ForeignKey(k_user, related_name='staffworkinfo_set')

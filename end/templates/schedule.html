@@ -3,6 +3,7 @@
 {% endblock %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="../static/fullcalendar/css/fullcalendar.css">
+<link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.custom.min.css">
 {% endblock %}
 {% block pageheader %}
 	排班表
@@ -13,32 +14,20 @@
 			<div id="calendar"></div>
 		</div>
 		<div class="col-xs-3">
-			<div id="external-events">
-				<div class="external-event label-grey ui-draggable ui-draggable-handle" data-class="label-grey" style="position: relative;">
-					<i class="ace-icon fa fa-arrows"></i>
-					工人1
-				</div>
-				<div class="external-event label-success ui-draggable ui-draggable-handle" data-class="label-success" style="position: relative;">
-					<i class="ace-icon fa fa-arrows"></i>
-					工人2
-				</div>
-				<div class="external-event label-danger ui-draggable ui-draggable-handle" data-class="label-danger" style="position: relative;">
-					<i class="ace-icon fa fa-arrows"></i>
-					工人3
-				</div>
-				<div class="external-event label-purple ui-draggable ui-draggable-handle" data-class="label-purple" style="position: relative;">
-					<i class="ace-icon fa fa-arrows"></i>
-					工人4
-				</div>
-				<div class="external-event label-yellow ui-draggable ui-draggable-handle" data-class="label-yellow" style="position: relative;">
-					<i class="ace-icon fa fa-arrows"></i>
-					工人5
-				</div>
-				<label>
-					<input type="checkbox" class="ace ace-checkbox" id="drop-remove">
-					<span class="lbl"> Remove after drop</span>
-				</label>
+			<div class="fc-toolbar">
+				<h2>班组抄表路线</h2>
 			</div>
+			<div id="routes">
+				{% for route in routes %}
+				<div class="external-event label-success" data-id="{{ route.id }}" data-start="{{ route.startTime | date:"c" }}" data-name="{{ route.name }}">
+					<i class="ace-icon fa fa-arrows"></i>
+					{{ route.name }}
+				</div>
+				{% endfor %}
+			</div>
+            <div>
+                <button class="btn btn-sm btn-success" onclick="saveShifts()">保存</button>
+            </div>
 		</div>
 	</div>
 {% endblock %}
@@ -46,34 +35,141 @@
 <script type="text/javascript" src="../static/fullcalendar/lib/moment.min.js"></script>
 <script type="text/javascript" src="../static/fullcalendar/js/fullcalendar.js"></script>
 <script type="text/javascript" src="../static/fullcalendar/lang/zh-cn.js"></script>
+<script type="text/javascript" src="../static/js/jquery-ui.custom.min.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#routes div.external-event').each(function() {
+			$(this).draggable({
+				zIndex: 999,
+				revert: true,
+				revertDuration: 0
+			});
+		});
+
 		$('#calendar').fullCalendar({
+			
 			height: 650,
 			aspectRatio: 1.2,
-			weekends: false,
-			eventSources: {
-				events: [
-					{
-						title: '张三',
-						start: '2015-05-04T08:00:00'
-					},
-					{
-						title: '李四',
-						start: '2015-05-07T10:00:00'
-					},
-					{
-						title: '王五',
-						start: '2015-05-05T12:30:00'
-					}
-				],
-				color: 'lightblue',
-				textColor: 'black',
+			weekends: true,
+			eventStartEditable: false,
+			droppable: true,
+			defaultView: 'month',
+			allDaySlot: false,
+			fixedWeekCount: false,
+
+			buttonHtml: {
+				prev: '<i class="ace-icon fa fa-chevron-left"></i>',
+				next: '<i class="ace-icon fa fa-chevron-right"></i>'
 			},
-			eventStartEditable: true,
-			droppable: true
+			header: {
+				left: 'today',
+				center: 'title',
+				right: 'prev,next'
+			},
+
+			drop: function(date) {
+				$('#calendar').fullCalendar('renderEvent', {
+					data_id: $(this).attr('data-id'),
+                    users: [],
+					title: $(this).attr('data-name'),
+					start: date,
+					color: '#82af6f',
+					textColor: 'white'
+				}, true);
+			},
+			eventClick: function(calEvent, jsEvent, view) {
+                $('#modal').attr('event-id', calEvent._id);
+                $("input[name='user-checkbox']").prop('checked', false);
+                $('#modal').modal('show');
+
+                for (var userindex in calEvent.users){
+                    var user_id = calEvent.users[userindex];
+                    $("input[data-id="+user_id+"]").prop('checked', true);
+                }
+                console.log(calEvent._id);
+			}
 		});
+
+        $('#modal').find('form').on('submit', function(ev){
+            ev.preventDefault();
+            var event = $('#calendar').fullCalendar('clientEvents', $('#modal').attr('event-id'))[0];
+            var users = []
+            $("input[name='user-checkbox']:checked").each(function(){
+                users.push($(this).attr('data-id'));
+            });
+            event.users = users;
+            $('#calendar').fullCalendar('updateEvent', event);
+            $('#modal').modal('hide');
+        });
+
+        $('#modal').find('button[data-action=delete]').on('click', function() {
+            var event = $('#calendar').fullCalendar('removeEvents', $('#modal').attr('event-id'));
+            $('#modal').modal('hide');
+        });
+        console.log('start post');
+            url= '/get_schedule/'
+        $.post(url, function(json){
+            for (var day in json.shifts){
+                dayinfo = json.shifts[day];
+                for(var routeindex in dayinfo){
+                    routeinfo = dayinfo[routeindex];
+                    $('#calendar').fullCalendar('renderEvent', {
+                        title: routeinfo['name'],
+                        start: day+' '+routeinfo['startTime'],
+                        color: 'blue',
+                        textColor: 'white',
+                        data_id: routeinfo['id'],
+                        users: routeinfo['users']
+                    }, true);
+                }
+            }
+
+        },'json');
+
 	});
+    function saveShifts(){
+        var event = $('#calendar').fullCalendar('clientEvents');
+        var url = '/save_schedule/';
+        var shifts = []
+        for (var shiftindex in event){
+            var shift = event[shiftindex];
+            shifts.push({'time': shift.start.format('YYYY-MM-DD'), 'route': shift.data_id, 'users': shift.users})
+        }
+        var data = JSON.stringify(shifts);
+        $.post(url, {"shifts" :data}, function(json){
+            alert("保存成功");
+        }, 'json');
+    }
 </script>
+
+<div class="modal fade" id="modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+				<h4 class="modal-title">路线设置</h4>
+			</div>
+			<div class="modal-body">
+				<form class="no-margin">
+					<label>抄表人：</label>
+                    {% for user in users %}
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="user-checkbox" data-id={{ user.id }}>{{ user.name }}</label>
+                        </div>
+                    {% endfor %}
+					<button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i> 暂存</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i>删除路线</button>
+				<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i>取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 {% endblock %}
+
