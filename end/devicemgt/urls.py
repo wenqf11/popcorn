@@ -1,10 +1,12 @@
 from django.conf.urls import patterns, include, url
 from views import *
+from appdata import *
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     # Examples:
     # url(r'^$', 'devicemgt.views.home', name='home'),
     # url(r'^devicemgt/', include('devicemgt.foo.urls')),
@@ -12,8 +14,14 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
+    url(r'^app/route/$', app_route),
+    url(r'^app/form/$', app_form),
+    url(r'^app/login/$', app_login),
+
+    url(r'app_test/$', app_test),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+
     url(r'^$', index),
     url(r'^login/$', login),
     url(r'^register/$', register),
