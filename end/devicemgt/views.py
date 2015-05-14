@@ -36,6 +36,7 @@ def get_leaf(leaf_list):
     for leaf in leaf_list:
         userdata = dict()
         userdata["text"] = leaf.username.encode('utf8')
+        userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     return result
 
@@ -44,6 +45,7 @@ def get_node(child_leaf_list, child_node_list):
     for leaf in child_leaf_list:
         userdata = dict()
         userdata["text"] = leaf.username.encode('utf8')
+        userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     for c in child_node_list:
         userdata = dict()
@@ -74,6 +76,7 @@ def usermgt(request):
             for leaf in leaf_list:
                 userdata = dict()
                 userdata["text"] = leaf.username.encode('utf8')
+                userdata["href"] = "/user?id=" + str(leaf.id)
                 userdatas.append(userdata)
             for c in class_set:
                 userdata = dict()
@@ -92,27 +95,14 @@ def usermgt(request):
             cur_datas['nodes'] = userdatas
             datas.append(cur_datas)
 
-            '''
-        userdatas1 = list()
-        userdata = dict()
-        userdata["text"] = "Parent 2"
-        userdata["href"] = "./?id=1"
-        userdatas1.append(userdata)
-        userdata = dict()
-        userdata["text"] = "Parent 4"
-        userdata["href"] = "#parent4"
-        userdatas1.append(userdata)
-        userdata1 = dict()
-        tmp = list()
-        tmp.append(userdata)
-        userdata1["text"] = "Parent 3"
-        userdata1["nodes"] = tmp
-        userdata1["href"] = "#"
-        userdatas1.append(userdata1)
-        '''
-
         #userdata = json.dumps(userdata)
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas})
+        _id = request.GET.get('id')
+        if (_id):
+            user_info = k_user.objects.get(id=_id)
+            print user_info
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas, 'userinfo':user_info})
+        else:
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas})
         return render_to_response('user.html',variables)
     else:
         return HttpResponseRedirect('/login/')

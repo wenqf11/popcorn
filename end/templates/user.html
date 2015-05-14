@@ -17,6 +17,8 @@
 <div class="col-xs-5">
     <div id="treeview6"></div>
 </div>
+
+{% if userinfo %}
 <div class="col-xs-7">
     <div class="profile-users clearfix">
         <div class="itemdiv memberdiv">
@@ -37,7 +39,7 @@
             </div>
         </div>
         <h2>
-            {{ username }}
+            {{ userinfo.username }}
         </h2>
     </div>
     <hr style="margin: 10px"/>
@@ -46,7 +48,7 @@
             <i class="ace-icon fa fa-phone info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              手机：18810305382
+              手机：{{ userinfo.mobile }}
         </h5>
     </div>
     <hr style="margin: 10px"/>
@@ -55,7 +57,7 @@
             <i class="ace-icon fa fa-envelope info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              邮箱：yanglei11@mails.tsinghua.edu.cn
+              邮箱：{{ userinfo.email }}
         </h5>
     </div>
     <hr style="margin: 10px" />
@@ -86,6 +88,7 @@
         <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
     </a>
 </div>
+    {% endif %}
 {% endblock %}
 
 {% block tailjs %}
@@ -176,6 +179,7 @@
           collapseIcon: "glyphicon glyphicon-unchecked",
           nodeIcon: "glyphicon glyphicon-user",
           showTags: true,
+          enableLinks: true,
           data: defaultData
         });
 
