@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block frame %}
+<div class="test" style="font-size: 20px; text-align: center;">
+    <button id="btn-test">测试按钮</button>
+    <div id="div-status">status</div>
+    <div id="div-data">data</div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#btn-test').click(function() {
+            $.get('/app/form/', {
+                username: 'syb1001',
+                access_token: 'hello_world',
+                timestamp: 1383712332,
+                route_id: 2
+            }, function(data) {
+                console.log(data);
+                $('#div-status').text(data.status);
+                $('#div-data').text(data.data);
+            }, 'json');
+        });
+    });
+</script>
+{% endblock %}
