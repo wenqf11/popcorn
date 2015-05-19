@@ -36,6 +36,8 @@ def post_required(func):
 
 
 # wrapper that require correct token
+# passing 'para'
+# passing 'user'
 def token_required(request_type):
     def wrapper(func):
         def checker(request):
@@ -66,7 +68,7 @@ def token_required(request_type):
                     'data': 'unauthorized user'
                 }))
 
-            return func(request)
+            return func(request, user=user, para=para)
         return checker
     return wrapper
 
@@ -109,11 +111,80 @@ def app_login(request):
         }))
 
 
+@post_required
+@token_required('POST')
+def app_password(request, para, user):
+    para['password'] = request.POST.get('password')
+    para['new_password'] = request.POST.get('new_password')
+
+    if not user.password == para['password']:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'wrong password'
+        }))
+
+    if not para['new_password']:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'new password required'
+        }))
+
+    user.password = para['new_password']
+    user.save()
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'password changed'
+    }))
+
+
 @get_required
 @token_required('GET')
-def app_route(request):
-    user = k_user.objects.get(username=request.GET.get('username'))
+def app_userinfo(request, para, user):
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': {
+            'username': user.username,
+            'name': user.name,
+            'department': user.classid.name,
+            'state': user.state,
+            'gender': user.gender,
+            'mobile': user.mobile,
+            'email': user.email,
+            'address': user.address,
+            'zipcode': user.zipcode,
+            'birthday': user.birthday.strftime('%Y-%m-%d'),
+            'id_card': user.idcard,
+            'card_type': user.idcardtype,
+            'content': user.content,
+            'memo': user.memo,
+            'contact': user.contact,
+            'contact_mobile': user.contactmobile,
+            'status': user.status,
+            'todo': user.todo
+        }
+    }))
 
+
+@get_required
+@token_required('GET')
+def app_score(request, para, user):
+    try:
+        score = k_staffscoreinfo.objects.get(userid=user.id)
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'score not exist for this user'
+        }))
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': int(score.score)
+    }))
+
+
+@get_required
+@token_required('GET')
+def app_route(request, para, user):
     schedules = k_schedule.objects.filter(user=user.id, date=date.today())
     if not schedules.exists():
         return HttpResponse(json.dumps({
@@ -131,7 +202,7 @@ def app_route(request):
 
 @get_required
 @token_required('GET')
-def app_form(request):
+def app_form(request, para, user):
     try:
         route = k_route.objects.get(id=int(request.GET.get('route_id')))
     except Exception:

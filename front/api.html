@@ -294,7 +294,7 @@ img {
 <h2>用户模块</h2>
 <h3>用户登录</h3>
 <ul>
-<li>请求地址：http://domain.com/app/login</li>
+<li>请求地址：http://domain.com/app/login/</li>
 <li>请求方式：GET</li>
 <li>
 请求参数：
@@ -313,7 +313,7 @@ img {
 }
 </code></pre>
 
-<p>或 </p>
+<p>或</p>
 <pre><code>{
     status: &quot;error&quot;,
     data: &quot;user not exists&quot;
@@ -323,15 +323,116 @@ img {
 </li>
 </ul>
 <h3>修改密码</h3>
+<ul>
+<li>请求地址：http://domain.com/app/password/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>password</strong>，<code>string</code>，密码</li>
+<li><strong>new_password</strong>，<code>string</code>，新密码</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：status返回是否修改成功，失败则data返回错误信息</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;password changed&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;wrong password&quot;
+}
+</code></pre>
+
+</li>
+</ul>
 <h3>获取用户信息</h3>
+<ul>
+<li>请求地址：http://domain.com/app/userinfo/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：该用户的用户信息</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: {
+        username: &quot;yl-1993&quot;,
+        name: &quot;杨磊&quot;,
+        department: &quot;空调组&quot;,
+        state: &quot;在岗&quot;,
+        gender: &quot;男&quot;,
+        mobile: &quot;18810651000&quot;,
+        email: &quot;yanglei11@mails.tsinghua.edu.cn&quot;,
+        address: &quot;紫荆1#404A&quot;,
+        zipcode: &quot;100084&quot;,
+        birthday: &quot;1993-05-28&quot;,
+        id_card: &quot;110104199305283421&quot;,
+        card_type: &quot;身份证&quot;,
+        content: &quot;what?&quot;,
+        memo: &quot;hahahahaha&quot;,
+        contact: &quot;某个人&quot;,
+        contact_mobile: &quot;13012348765&quot;,
+        status: &quot;审核通过&quot;,
+        todo: 5
+    }
+}
+</code></pre>
+
+</li>
+</ul>
 <h3>获取积分</h3>
+<ul>
+<li>请求地址：http://domain.com/app/score/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：该用户的积分</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: 10
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;score not exist for this user&quot;
+}
+</code></pre>
+
+</li>
+</ul>
 <h2>考勤模块</h2>
 <h3>获取上下班数据</h3>
 <h3>更新上下班数据</h3>
 <h2>抄表模块</h2>
 <h3>获取当日巡视路线列表</h3>
 <ul>
-<li>请求地址：http://domain.com/app/route</li>
+<li>请求地址：http://domain.com/app/route/</li>
 <li>请求方式：GET</li>
 <li>
 请求参数：
@@ -376,7 +477,7 @@ img {
 </ul>
 <h3>获取路线上的设备列表</h3>
 <ul>
-<li>请求地址：http://domain.com/app/form</li>
+<li>请求地址：http://domain.com/app/form/</li>
 <li>请求方式：GET</li>
 <li>
 请求参数：

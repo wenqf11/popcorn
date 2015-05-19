@@ -17,6 +17,9 @@ urlpatterns = patterns(
     url(r'^app/route/$', app_route),
     url(r'^app/form/$', app_form),
     url(r'^app/login/$', app_login),
+    url(r'^app/password/$', app_password),
+    url(r'app/userinfo/$', app_userinfo),
+    url(r'app/score/$', app_score),
 
     url(r'app_test/$', app_test),
     # Uncomment the next line to enable the admin:
