@@ -27,7 +27,7 @@ urlpatterns = patterns(
     url(r'^register/$', register),
     url(r'^user/$', usermgt),
     url(r'^useradd/$', useradd),
-    url(r'^user_operate/$', user_operate),
+    url(r'^user_operate/$', operate_user),
     url(r'^userdel/$', userdel),
     url(r'^userset/$', userset),
     url(r'^device/$', devicemgt),

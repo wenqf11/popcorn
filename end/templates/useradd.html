@@ -22,7 +22,7 @@
                     <div class="span12">
                         <div class="center">
                         {% if not data.isNew %}
-                            <img src="{{ data.face }}">
+                            <img src="{{ data.face }}" title="只有用户自己能修改头像">
                         {% endif %}
                         </div>
 
@@ -61,13 +61,13 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">密码<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="password" type="password" class="span6 m-wrap"/>
+                        <input name="password" type="password" class="span6 m-wrap" value="{{ data.password }}" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">确认密码<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="confirmpassword" type="password" class="span6 m-wrap"/>
+                        <input name="confirmpassword" type="password" class="span6 m-wrap" value="{{ data.password }}" />
                     </div>
                 </div>
                 <div class="form-group">

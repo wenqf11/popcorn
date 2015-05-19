@@ -23,7 +23,7 @@
         </div>
         <div id="{{ dataitem.id }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
-                <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/delete_role?id={{ dataitem.id }}">
+                <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/delete_role?id={{ dataitem.id }}" onclick="delcfm()">
                     <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
                 </a>
                 <span style="float:right">&nbsp;&nbsp;</span>
@@ -50,4 +50,11 @@
 {% endblock %}
 
 {% block tailjs %}
+<script>
+function delcfm() {
+        if (!confirm("确认要删除？")) {
+            window.event.returnValue = false;
+        }
+    }
+</script>
 {% endblock %}

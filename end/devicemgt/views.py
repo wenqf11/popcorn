@@ -68,7 +68,12 @@ def usermgt(request):
         #读取权限，显示内容
         current_class_id = user.classid_id
         current_class = k_class.objects.get(id=current_class_id)
-
+        server_msg = request.GET.get('msg')
+        if server_msg != None:
+            if server_msg == "1":
+                server_msg = '不能删除用户本身!'
+        else:
+            server_msg = ''
         if current_class:
             userdatas = list()
             class_set = k_class.objects.filter(parentid = current_class_id)
@@ -97,18 +102,36 @@ def usermgt(request):
 
         #userdata = json.dumps(userdata)
         _id = request.GET.get('id')
+        # 如果访问某个用户的信息
         if (_id):
+            # 根据用户id取出用户
             user_info = k_user.objects.get(id=_id)
-            print user_info
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas, 'userinfo':user_info})
+            # 根据用户id取出用户角色
+            user_role = k_role.objects.filter(k_user=_id)
+            # 根据用户的classid取出层级关系
+            user_class_list = []
+            tmp_class = k_class.objects.filter(id=user_info.classid_id)
+            while tmp_class:
+                if len(tmp_class) == 1:
+                    user_class_list.append(tmp_class[0].name)
+                    tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
+                else:
+                    print "error!"
+            user_class = ""
+            user_class_len = len(user_class_list)
+            for i in xrange(0,user_class_len):
+                user_class += user_class_list[user_class_len - i - 1] + "-"
+            user_class = user_class[0:len(user_class) - 1]
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas, 'userinfo':user_info,
+                                              'user_role':user_role, 'user_class': user_class, 'server_msg':server_msg})
         else:
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas})
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas, 'server_msg':server_msg})
         return render_to_response('user.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
 
-def user_operate(request):
+def operate_user(request):
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
@@ -124,23 +147,17 @@ def user_operate(request):
         roles = k_role.objects.all()
         for role in roles:
             role_list.append(role.name)
+
         userdata['class_list'] = class_list
         userdata['role_list'] = role_list
         if _id:
             theuser = k_user.objects.filter(id = _id)[0]
-            userdata['username'] = theuser.username
-            userdata['name'] = theuser.name
-            userdata['face'] = theuser.face
-            userdata['mobile'] = theuser.mobile
-            userdata['email'] = theuser.email
-            userdata['address'] = theuser.address
-            userdata['zipcode'] = theuser.zipcode
-            userdata['birthday'] = theuser.birthday
-            userdata['idcard'] = theuser.idcard
-            userdata['idcardtype'] = theuser.idcardtype
-            userdata['contactmobile'] = theuser.contactmobile
-            userdata['content'] = theuser.content
-            userdata['memo'] = theuser.memo
+            key_list = ['username', 'password', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
+                        'idcard', 'idcardtype','contactmobile', 'content', 'memo','birthday']
+            for key in key_list:
+                userdata[key] = eval('theuser.'+key)
+
+            userdata['chosen_role'] = ''
         else:
             userdata['isNew'] = True
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
@@ -156,52 +173,80 @@ def useradd(request):
         if request.method == 'POST':
             #face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
             face = "../static/images/user.png"
-            #print face
-            #如果错误，要把已经填写的信息给返回回去
-            #排除用户名相同的情况
-            #总共要有26项信息
-            classid = k_class.objects.filter(name=request.POST['classname'])[0]
-            user = k_user.objects.create_user(username=request.POST['username'],
-                classid=classid,
-                state=1,
-                password=request.POST['password'],
-                name=request.POST['name'],
-                face=face,
-                mobile=request.POST['mobile'],
-                email=request.POST['email'],
-                address=request.POST['address'],
-                zipcode=request.POST['zipcode'],
-                gender =request.POST['gender'],
-                #birthday=request.POST['birthday'],
-                birthday="1993-05-28",
-                idcard=request.POST['idcard'],
-                idcardtype=0,
-                content=request.POST['content'],
-                memo=request.POST['memo'],
-                contact=request.POST['contact'],
-                contactmobile=request.POST['contactmobile'],
-                creatorid=0,
-                createdatetime=get_current_date(),
-                editorid=0,
-                editdatetime=get_current_date(),
-                auditorid=0,
-                auditdatetime=get_current_date(),
-                status=0,
-            )
-            #给roles和user也增加一条记录
-            olduser = User.objects.create_user(
-                username=user.username,
-                email=user.email,
-                password=user.password
-            )
-            #保存
-            user.save()
-            olduser.save()
-            #建立user和role的关系
-            user.roles.add(1)
+            #如果用户名相同，修改已有的用户
+            server_msg = ''
+            user = k_user.objects.filter(username=request.POST['username'])
+            if not user:
+                #总共要有26项信息
+                classid = k_class.objects.filter(name=request.POST['classname'])[0]
+                user = k_user.objects.create_user(username=request.POST['username'],
+                    classid=classid,
+                    state=1,
+                    password=request.POST['password'],
+                    name=request.POST['name'],
+                    face=face,
+                    mobile=request.POST['mobile'],
+                    email=request.POST['email'],
+                    address=request.POST['address'],
+                    zipcode=request.POST['zipcode'],
+                    gender =request.POST['gender'],
+                    #birthday=request.POST['birthday'],
+                    birthday="1993-05-28",
+                    idcard=request.POST['idcard'],
+                    idcardtype=0,
+                    content=request.POST['content'],
+                    memo=request.POST['memo'],
+                    contact=request.POST['contact'],
+                    contactmobile=request.POST['contactmobile'],
+                    creatorid=0,
+                    createdatetime=get_current_date(),
+                    editorid=0,
+                    editdatetime=get_current_date(),
+                    auditorid=0,
+                    auditdatetime=get_current_date(),
+                    status=0,
+                )
+                #给roles和user也增加一条记录
+                olduser = User.objects.create_user(
+                    username=user.username,
+                    email=user.email,
+                    password=user.password
+                )
+                #保存
+                user.save()
+                olduser.save()
+                #建立user和role的关系
+                roles = k_role.objects.filter(name=request.POST['role'])
+                for role in roles:
+                    user.roles.add(role.id)
+                server_msg = '添加用户成功！'
+            elif len(user) == 1:
+                user = user[0]
+                user.password = request.POST['password']
+                user.email = request.POST['email']
+                user.name = request.POST['name']
+                user.face = request.POST['face']
+                #user.birthday = request.POST['birthday']
+                user.memo = request.POST['memo']
+                tmp_urs = user.roles.filter(k_user = user.id)
+                for ur in tmp_urs:
+                    user.roles.remove(ur)
+                #建立user和role的关系
+                roles_name = request.POST.getlist('role')
+                for r_name in roles_name:
+                    roles = k_role.objects.filter(name=r_name)
+                    for role in roles:
+                        user.roles.add(role.id)
+                user.editorid = request.user.id
+                user.editdatetime=get_current_date()
+                user.save()
+                server_msg = '修改用户资料成功！'
+                # 更新用户成功
+            else:
+                server_msg = "Error: user with the same username!"
         user=User.objects.get(username=request.user.username)
         #return HttpResponseRedirect('/user_operate/')
-        variables=RequestContext(request,{'username':user.username, 'server_msg':'添加用户成功！'})
+        variables=RequestContext(request,{'username':user.username, 'server_msg':server_msg})
         return render_to_response('useradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -209,12 +254,13 @@ def useradd(request):
 
 def userdel(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user = k_user.objects.get(username=request.user.username)
-        user = User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user'})
-        return render_to_response('userdel.html', variables)
+        _id = request.GET.get('id')
+        if int(_id) == request.user.id:
+            return HttpResponseRedirect('/user/?msg=1')
+        if _id:
+            users = k_user.objects.get(id=_id)
+            users.delete()
+        return HttpResponseRedirect('/user/')
     else:
         return HttpResponseRedirect('/login/')
 

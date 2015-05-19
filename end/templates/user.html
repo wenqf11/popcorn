@@ -28,14 +28,6 @@
                         <img src="../static/images/user.png" >
                     </a>
                 </div>
-                <!--
-                <div class="body">
-                    <div class="name">
-                            <span class="user-status status-online"></span>
-                            昵称
-                    </div>
-                </div>
-                -->
             </div>
         </div>
         <h2>
@@ -66,7 +58,12 @@
             <i class="ace-icon fa fa-trophy info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              职务：天坛项目部-空调组
+              职务：
+            {% if user_class %}
+                {{ user_class }}
+            {% else %}
+                层级关系未知
+            {% endif %}
         </h5>
     </div>
     <hr style="margin: 10px"/>
@@ -75,16 +72,25 @@
             <i class="ace-icon fa fa-child info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              角色：<div class="tags"><span class="tag">查看</span><span class="tag">添加</span></div>
+              角色：
+            <div class="tags" style="width:75%">
+            {% if user_role %}
+                {% for role in user_role %}
+                    <span class="tag">{{ role.name }}</span>
+                {% endfor %}
+            {% else %}
+                <span>当前用户尚无角色</span>
+            {% endif %}
+            </div>
         </h5>
     </div>
 
     <hr style="margin: 10px"/>
-    <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/userdel?id={{userid}}">
+    <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/userdel?id={{userinfo.id}}">
         <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
     </a>
     <span style="float:right">&nbsp;&nbsp;</span>
-    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/user_operate/?id=1">
+    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/user_operate/?id={{userinfo.id}}">
         <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
     </a>
 </div>
@@ -111,68 +117,6 @@
         //var tmp = '[{"text":"parent 1", "href":"hi"}]';
         //var defaultData = eval('(' + tmp + ')');
 
-        var json = '[' +
-          '{' +
-            '"text": "Parent 1",' +
-            '"nodes": [' +
-              '{' +
-                '"text": "Child 1",' +
-                '"nodes": [' +
-                  '{' +
-                    '"text": "Grandchild 1"' +
-                  '},' +
-                  '{' +
-                    '"text": "Grandchild 2"' +
-                  '}' +
-                ']' +
-              '},' +
-              '{' +
-                '"text": "Child 2"' +
-              '}' +
-            ']' +
-          '},' +
-          '{' +
-            '"text": "Parent 2"' +
-          '},' +
-          '{' +
-            '"text": "Parent 3"' +
-          '},' +
-          '{' +
-            '"text": "Parent 4"' +
-          '},' +
-          '{' +
-            '"text": "Parent 5"' +
-          '}' +
-        ']';
-
-
-        $('#treeview1').treeview({
-          data: defaultData
-        });
-
-        $('#treeview2').treeview({
-          levels: 1,
-          data: defaultData
-        });
-
-        $('#treeview3').treeview({
-          levels: 99,
-          data: defaultData
-        });
-
-        $('#treeview4').treeview({
-          color: "#428bca",
-          data: defaultData
-        });
-
-        $('#treeview5').treeview({
-          color: "#428bca",
-          expandIcon: 'glyphicon glyphicon-chevron-right',
-          collapseIcon: 'glyphicon glyphicon-chevron-down',
-          nodeIcon: 'glyphicon glyphicon-bookmark',
-          data: defaultData
-        });
-
         $('#treeview6').treeview({
           color: "#428bca",
           expandIcon: "glyphicon glyphicon-stop",
@@ -183,47 +127,26 @@
           data: defaultData
         });
 
-        $('#treeview7').treeview({
-          color: "#428bca",
-          showBorder: false,
-          data: defaultData
-        });
-
-        $('#treeview8').treeview({
-          expandIcon: "glyphicon glyphicon-stop",
-          collapseIcon: "glyphicon glyphicon-unchecked",
-          nodeIcon: "glyphicon glyphicon-user",
-          color: "yellow",
-          backColor: "purple",
-          onhoverColor: "orange",
-          borderColor: "red",
-          showBorder: false,
-          showTags: true,
-          highlightSelected: true,
-          selectedColor: "yellow",
-          selectedBackColor: "darkorange",
-          data: defaultData
-        });
-
-        $('#treeview10').treeview({
-          color: "#428bca",
-          enableLinks: true,
-          data: defaultData
-        });
-
-        $('#treeview11').treeview({
-          color: "#428bca",
-          data: defaultData,
-          onNodeSelected: function(event, node) {
-            $('#event_output').prepend('<p>You clicked ' + node.text + '</p>');
-          }
-        });
-
-        // $('#treeview11').on('nodeSelected', function (event, node) {
-        //   $('#event_output').prepend('<p>You clicked ' + node.text + '</p>');
-        // });
-
   		});
+</script>
+<script>
+$(function(){
+    var server_msg="{{ server_msg }}";
+    if (server_msg) {
+        $.gritter.add({
+            title: '系统消息',
+            text: server_msg,
+            class_name: 'gritter-error gritter-center'
+        });
+    }
+})
+</script>
+<script>
+function delcfm() {
+        if (!confirm("确认要删除？")) {
+            window.event.returnValue = false;
+        }
+    }
 </script>
 <script src="../static/assets/js/bootstrap-tag.min.js"></script>
 {% endblock %}
