@@ -33,9 +33,17 @@ urlpatterns = patterns(
     url(r'^user_operate/$', operate_user),
     url(r'^userdel/$', userdel),
     url(r'^userset/$', userset),
+    url(r'^profile/$', profile),
+
     url(r'^device/$', devicemgt),
     url(r'^deviceadd/$', deviceadd),
-    url(r'^profile/$', profile),
+    url(r'^device_type/$', device_type),
+    url(r'^device_type_add/$', device_type_add),
+    url(r'^operate_device/$', operate_device),
+
+    url(r'^supplier/$', supplier),
+    url(r'^producer/$', producer),
+
     url(r'^setting/$', setting),
     url(r'^spare/$', spare),
     url(r'^sparetype/$', sparetype),

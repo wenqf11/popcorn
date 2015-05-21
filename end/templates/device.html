@@ -1,66 +1,152 @@
-{% extends 'frame.html' %}
+{% extends 'userframe.html' %}
+{% block js %}
+    <script src="../static/treeview/js/bootstrap-treeview.js"></script>
+{% endblock %}
 {% block css %}
-    <link href="../static/datatables/css/jquery.dataTables.min.css" rel="stylesheet" media="screen">
-    <link href="../static/Editor/css/dataTables.tableTools.css" rel="stylesheet" media="screen">
-    <link href="../static/Editor/css/dataTables.editor.min.css" rel="stylesheet" media="screen">
-    <link href="../static/Editor/css/font-awesome.css" rel="stylesheet" media="screen">
-    <style type="text/css">
-    table.dataTable tr td:first-child {
-        text-align: center;
-    }
- 
-    table.dataTable tr td:first-child:before {
-        content: "\f096"; /* fa-square-o */
-        font-family: FontAwesome;
-    }
- 
-    table.dataTable tr.selected td:first-child:before {
-        content: "\f046"; /* fa-check-square-o */
-    }
- 
-    table.dataTable tr td.dataTables_empty:first-child:before {
-        content: "";
-    }
-    </style>
+    <link href="../static/treeview/css/bootstrap-treeview.css" rel="stylesheet" media="screen">
+    <link href="../static/css/filetree.css" rel="stylesheet" media="screen">
+    <link href="../static/css/user.css" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block pageheader %}
-    所有设备
+    查看设备
 {% endblock %}
 
-{% block content %}
-<div class="row-fluid">
-    <!-- block -->
-    <div class="block">
-        <div class="block-content collapse in">
-            <div class="span12">
-                <table id="deviceshow" class="display" cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                        	<th>分类编号</th>
-							<th>设备全称</th>
-							<th>设备编号</th>
-							<th>品牌</th>
-							<th>生产厂家</th>
-							<th>供应商</th>
-							<th>设备分类编号</th>
-							<th>设备状态</th>
-							<th>产品序列号</th>
-							<th>型号</th>
-							<th>购买时间</th>
-							<th>机器说明</th>
-							<th>备注</th>
-                        </tr>
-                    </thead>
-                </table>
+{% block maincontent %}
+    <!--画文件树-->
+<div class="col-xs-5">
+    <div id="treeview6"></div>
+</div>
+
+{% if userinfo %}
+<div class="col-xs-7">
+    <div class="profile-users clearfix">
+        <div class="itemdiv memberdiv">
+            <div class="inline pos-rel">
+                <div class="user">
+                    <a href="#">
+                        <img src="../static/images/user.png" >
+                    </a>
+                </div>
             </div>
         </div>
+        <h2>
+            {{ userinfo.username }}
+        </h2>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-phone info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              手机：{{ userinfo.mobile }}
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-envelope info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              邮箱：{{ userinfo.email }}
+        </h5>
+    </div>
+    <hr style="margin: 10px" />
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-trophy info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              职务：
+            {% if user_class %}
+                {{ user_class }}
+            {% else %}
+                层级关系未知
+            {% endif %}
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-child info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              角色：
+            <div class="tags" style="width:75%">
+            {% if user_role %}
+                {% for role in user_role %}
+                    <span class="tag">{{ role.name }}</span>
+                {% endfor %}
+            {% else %}
+                <span>当前用户尚无角色</span>
+            {% endif %}
+            </div>
+        </h5>
     </div>
 
+    <hr style="margin: 10px"/>
+    <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/userdel?id={{userinfo.id}}">
+        <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
+    </a>
+    <span style="float:right">&nbsp;&nbsp;</span>
+    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/user_operate/?id={{userinfo.id}}">
+        <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+    </a>
 </div>
+    {% endif %}
 {% endblock %}
 
 {% block tailjs %}
+<script>
+  		$(function() {
 
+        var reg1=new RegExp("&quot;","g");
+        var reg2=new RegExp("&#39;","g");
+        var defaultData = '[';
+        {% for d in data %}
+            var tmpdata = '{{ d }}';
+            tmpdata = tmpdata.replace(reg1,"\'");
+            tmpdata = tmpdata.replace(reg2,"\"");
+            defaultData += tmpdata + ',';
+        {% endfor %}
+        defaultData = defaultData.substr(0,defaultData.length-1);
+        defaultData += ']';
+        //defaultData = '[{"text": "Parent 2", "href": "#parent2"}]';
+        //console.log(defaultData);
+        //var tmp = '[{"text":"parent 1", "href":"hi"}]';
+        //var defaultData = eval('(' + tmp + ')');
+
+        $('#treeview6').treeview({
+          color: "#428bca",
+          expandIcon: "glyphicon glyphicon-stop",
+          collapseIcon: "glyphicon glyphicon-unchecked",
+          nodeIcon: "glyphicon glyphicon-user",
+          showTags: true,
+          enableLinks: true,
+          data: defaultData
+        });
+
+  		});
+</script>
+<script>
+$(function(){
+    var server_msg="{{ server_msg }}";
+    if (server_msg) {
+        $.gritter.add({
+            title: '系统消息',
+            text: server_msg,
+            class_name: 'gritter-error gritter-center'
+        });
+    }
+})
+</script>
+<script>
+function delcfm() {
+        if (!confirm("确认要删除？")) {
+            window.event.returnValue = false;
+        }
+    }
+</script>
+<script src="../static/assets/js/bootstrap-tag.min.js"></script>
 {% endblock %}

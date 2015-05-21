@@ -292,6 +292,34 @@ def devicemgt(request):
         return HttpResponseRedirect('/login/')
 
 
+def operate_device(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        _id = request.GET.get('id')
+        userdata = dict()
+        class_list = list()
+        classes = k_class.objects.all()
+        for c in classes:
+            class_list.append(c.name)
+
+        userdata['class_list'] = class_list
+        if _id:
+            theuser = k_user.objects.filter(id = _id)[0]
+            key_list = ['username', 'password', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
+                        'idcard', 'idcardtype','contactmobile', 'content', 'memo','birthday']
+            for key in key_list:
+                userdata[key] = eval('theuser.'+key)
+        else:
+            userdata['isNew'] = True
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
+        return render_to_response('deviceadd.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
 def deviceadd(request):
     if request.user.is_authenticated():
         #登陆成功
@@ -300,6 +328,51 @@ def deviceadd(request):
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
         return render_to_response('deviceadd.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+def device_type(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        return render_to_response('devicetype.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def device_type_add(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        return render_to_response('devicetypeadd.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+def supplier(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        return render_to_response('supplier.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+def producer(request):
+    if request.user.is_authenticated():
+        #登陆成功
+        #user=k_user.objects.get(username=request.user.username)
+        user=User.objects.get(username=request.user.username)
+        #读取权限，显示内容
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        return render_to_response('producer.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 

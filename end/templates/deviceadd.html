@@ -1,9 +1,311 @@
-{% extends 'frame.html' %}
+{% extends 'userframe.html' %}
 
+{% block js %}
+    <script src="../static/datepicker/bootstrap-datepicker.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="../static/datepicker/datepicker.css" rel="stylesheet" media="screen">
+    <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
+{% endblock %}
 {% block pageheader %}
-    添加设备
+    {% if data.isNew %}
+        添加设备
+    {% else %}
+        编辑设备
+    {% endif %}
+{% endblock %}
+{% block maincontent %}
+         <!-- validation -->
+        <div class="row-fluid well" style="width: 75%;margin: auto;">
+             <!-- block -->
+            <div class="block">
+                <div class="block-content collapse in">
+                    <div class="span12">
+
+        <!-- BEGIN FORM-->
+        <form action="/useradd/" class="form-horizontal col-sm-12" enctype="multipart/form-data" method="POST">
+            <fieldset>
+
+                <h4 class="header blue bolder smaller">分类信息</h4>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">分类编号<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <select class="span6 m-wrap" name="classname">
+                            {% for class in data.class_list %}
+                            <option value="{{ class }}">{{ class }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">设备分类编号<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <select class="span6 m-wrap" name="dtype">
+                            {% for dtype in data.dtype_list %}
+                            <option value="{{ dtype }}">{{ dtype }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <h4 class="header blue bolder smaller">厂家信息</h4>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">品牌<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="brand" type="text" class="span6 m-wrap" value="{{ data.brand }}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">生产厂家<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="producer" type="text" class="span6 m-wrap" value="{{ data.producer }}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">供应商<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="supplier" type="text" class="span6 m-wrap" value="{{ data.supplier }}" />
+                    </div>
+                </div>
+
+                <h4 class="header blue bolder smaller">基本信息</h4>
+
+               <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">设备状态<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <select class="span6 m-wrap" name="state">
+                            <option value="0">锁定</option>
+                            <option value="1">正常</option>
+                            <option value="2">停用</option>
+                            <option value="3">故障</option>
+                            <option value="4">维修</option>
+                            <option value="5">保养</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">设备全称<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="name" type="text" class="span6 m-wrap" value="{{ data.name }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">设备简称(编号)<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="brief" type="text" class="span6 m-wrap" value="{{ data.brief }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">产品序列号<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="serial" type="text" class="span6 m-wrap" value="{{ data.serial }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">型号<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="model" type="text" class="span6 m-wrap" value="{{ data.model }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">购买时间<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="buytime" id="buytime" type="text" class="span6 m-wrap" value="{{ data.buytime |date:"Y年m月d日" }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">设备安装位置<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="position" type="text" class="span6 m-wrap" value="{{ data.position }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">责任人<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="owner" type="text" class="span6 m-wrap" value="{{ data.owner }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">保养周期<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="maintenanceperiod" type="text" class="span6 m-wrap" value="{{ data.maintenanceperiod }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">备件列表<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="spare" type="text" class="span6 m-wrap" value="{{ data.spare }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">二维码<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="qrcode" type="text" class="span6 m-wrap" value="{{ data.qrcode }}"/>
+                    </div>
+                </div>
+
+                <h4 class="header blue bolder smaller">保养信息</h4>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">上次保养时间<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="lastmaintenance" id="buytime" type="text" class="span6 m-wrap" value="{{ data.lastmaintenance |date:"Y年m月d日" }}" disabled/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">下次保养时间<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="nextmaintenance" id="buytime" type="text" class="span6 m-wrap" value="{{ data.nextmaintenance |date:"Y年m月d日" }}" disabled/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">上次维修时间<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="lastrepaire" id="buytime" type="text" class="span6 m-wrap" value="{{ data.lastrepaire |date:"Y年m月d日" }}" disabled/>
+                    </div>
+                </div>
+
+                <h4 class="header blue bolder smaller">抄表信息</h4>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">最后抄表时间<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="lastmeter" id="buytime" type="text" class="span6 m-wrap" value="{{ data.lastmeter |date:"Y年m月d日" }}" disabled/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">状态日志<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="statelog" type="text" class="span6 m-wrap" value="{{ data.statelog }}" disabled/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">备注<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="memo" type="text" class="span6 m-wrap" value="{{ data.memo }}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">备注<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="memo" type="text" class="span6 m-wrap" value="{{ data.memo }}"/>
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn btn-primary" onclick="return checkvalid();">确定</button>
+                        <button type="button" class="btn">取消</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <!-- END FORM-->
+    </div>
+    </div>
+</div>
+            <!-- /block -->
+</div>
+         <!-- /validation -->
 {% endblock %}
 
-{% block maincontent %}
+{% block tailjs %}
+    <script src="../static/assets/js/bootstrap-tag.min.js"></script>
+    <script src="../static/assets/js/chosen.jquery.min.js"></script>
+    <script>
+    $(function(){
+        $('#birthday').datepicker();
+        var server_msg="{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '系统消息',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    })
+    </script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
 
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                });
+
+
+                $('#chosen-multiple-style .btn').on('click', function(e){
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                     else $('#form-field-select-4').removeClass('tag-input-style');
+                });
+            }
+        });
+    </script>
+    <script>
+        function checkvalid() {
+           var username = $("[name='username']").val();
+           var password = $("[name='password']").val();
+           var role = $("[name='role']").val();
+           console.log(username);
+           console.log(password);
+           console.log(role);
+           if(username.length < 1 || username.length > 20) {
+                $("[name='username']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '请填写用户名！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+           }
+           else if(password.length < 1 || password.length > 20) {
+                $("[name='password']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '请填写密码！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+           }
+           else if(!role) {
+               $("[name='role']").select();
+               $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '请为用户添加角色！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+           }
+            return true;
+        }
+    </script>
 {% endblock %}
