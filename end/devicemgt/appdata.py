@@ -219,3 +219,118 @@ def app_form(request, para, user):
     return HttpResponse(json.dumps(response))
 
 
+@get_required
+@token_required('GET')
+def app_checkinfo(request, para, user):
+    para['date'] = request.GET.get('date')
+    d = datetime.strptime(para['date'], '%Y-%m-%d').date()
+
+    info = k_staffworkinfo.objects.filter(
+        userid=user,
+        date=d
+    )
+
+    if len(info) == 0:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'work info not exist'
+        }))
+    elif not len(info) == 1:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'server db internal error'
+        }))
+    else:
+        _info = info[0]
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': {
+                'checkin': _info.checkin,
+                'checkout': _info.checkout
+            }
+        }))
+
+
+@post_required
+@token_required('POST')
+def app_check(request, para, user):
+    para['date'] = request.POST.get('date')
+    para['checkin'] = request.POST.get('checkin')
+    para['checkout'] = request.POST.get('checkout')
+
+    info = k_staffworkinfo.objects.filter(
+        userid=user.id,
+        date=para['date']
+    )
+
+    if len(info) == 1:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'check info existed'
+        }))
+    else:
+        _info = k_staffworkinfo.objects.create(userid=user)
+        _info.date = datetime.strptime(para['date'], '%Y-%m-%d').date()
+        _info.checkin = para['checkin']
+        _info.checkout = para['checkout']
+        _info.save()
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': 'check in success'
+        }))
+
+
+@get_required
+@token_required('GET')
+def app_maintain1_list(request, para, user):
+    pass
+
+
+@post_required
+@token_required('POST')
+def app_maintain1_confirm(request, para, user):
+    pass
+
+
+@post_required
+@token_required('POST')
+def app_maintain1_update(request, para, user):
+    pass
+
+
+@post_required
+@token_required('POST')
+def app_maintain1_submit(request, para, user):
+    pass
+
+
+@post_required
+@token_required('POST')
+def app_maintain2_add(request, para, user):
+    pass
+
+
+@get_required
+@token_required('GET')
+def app_maintain2_list(request, para, user):
+    pass
+
+
+@post_required
+@token_required('POST')
+def app_maintain2_confirm(request, para, user):
+    pass
+
+
+@post_required
+@token_required('POST')
+def app_maintain2_update(request, para, user):
+    pass
+
+
+@post_required
+@token_required('POST')
+def app_maintain2_submit(request, para, user):
+    pass
+
+

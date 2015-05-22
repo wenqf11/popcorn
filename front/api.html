@@ -428,7 +428,72 @@ img {
 </ul>
 <h2>考勤模块</h2>
 <h3>获取上下班数据</h3>
+<ul>
+<li>请求地址：http://domain.com/app/checkinfo/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>date</strong>，<code>string</code>，要查询的日期</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：该日期该用户签到签退的时间，如果是晚班则签退日期是下一天</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: {
+        checkin: &quot;2015-05-13 08:32:59&quot;,
+        checkout: &quot;2015-05-13 18:35:11&quot;
+    }
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;work info not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
 <h3>更新上下班数据</h3>
+<ul>
+<li>请求地址：http://domain.com/app/check/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>date</strong>，<code>string</code>，上下班日期，夜班的话以上班日期为准</li>
+<li><strong>checkin</strong>，<code>string</code>，上班时间以及地点</li>
+<li><strong>checkout</strong>，<code>string</code>，下班时间以及地点</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：是否签到成功</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;check info update success&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;check info existed&quot;
+}
+</code></pre>
+
+</li>
+</ul>
 <h2>抄表模块</h2>
 <h3>获取当日巡视路线列表</h3>
 <ul>
@@ -484,8 +549,8 @@ img {
 <ul>
 <li>username，<code>string</code>，用户名</li>
 <li>access_token，<code>string</code>，用户认证用的token</li>
-<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 <li><strong>route_id</strong>，<code>int</code>，要查询的路线id，获取此路线上的所有设备</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
 <li>返回结果：指定id路线上的所有设备信息（包括json格式的抄表表单）</li>
@@ -510,13 +575,337 @@ img {
 
 </li>
 </ul>
-<h2>维修模块</h2>
-<h3>获取维修任务列表</h3>
-<h3>更新维修结果</h3>
-<h3>新建维修任务</h3>
 <h2>保养模块</h2>
 <h3>获取保养任务列表</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain1/list/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: [
+        {
+            id: 24,
+            title: &quot;空调每月保养计划&quot;,
+            device_name: &quot;空调05&quot;,
+            device_breif: &quot;kt028462&quot;,
+            description: &quot;积灰过多，需清灰&quot;,
+            image: &quot;http://domain.com/static/05.jpg&quot;,
+            memo: &quot;较重要，需优先处理&quot;,
+            confirmed: false,
+            note: &quot;&quot;
+        },
+        {
+            id: 36,
+            title: &quot;锅炉每周保养计划&quot;,
+            device_name: &quot;锅炉2&quot;,
+            device_breif: &quot;gt135212&quot;,
+            description: &quot;需进行某项操作&quot;,
+            image: &quot;http://domain.com/static/23.jpg&quot;,
+            memo: &quot;一般重要&quot;,
+            confirmed: true,
+            note: &quot;保养还未结束，目前状况良好&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: []
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>确认接受保养任务</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain1/confirm/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>maintain_id</strong>，<code>int</code>，要接受的保养任务id</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;maintain task confirmed&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
 <h3>更新保养计划</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain1/update/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>maintain_id</strong>，<code>int</code>，要更新的保养任务id</li>
+<li><strong>note</strong>，<code>string</code>，更新的保养记录</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;maintain task updated&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>完成保养任务</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain1/submit/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>maintain_id</strong>，<code>int</code>，要提交的保养任务id</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;maintain task submitted&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h2>维修模块</h2>
+<h3>新建维修任务</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain2/add/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>device_id</strong>，<code>int</code>，报修的设备id，可以扫二维码获得</li>
+<li><strong>title</strong>，<code>string</code>，报修标题</li>
+<li><strong>description</strong>，<code>string</code>，情况描述</li>
+<li><strong>image</strong>，<code>string</code>，图片URL，先传好图片再新建报修</li>
+<li><strong>memo</strong>，<code>string</code>，备注</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;maintain task added&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;device not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>获取维修任务列表</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain2/list/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: [
+        {
+            id: 18,
+            title: &quot;空调04进风管报修&quot;,
+            device_name: &quot;空调04&quot;,
+            device_brief: &quot;kt273311&quot;,
+            description: &quot;进风管损坏，需更换&quot;,
+            image: &quot;http://domain.com/static/12.jpg&quot;,
+            memo: &quot;需携带配件&quot;,
+            confirmed: false,
+            note: &quot;&quot;
+        },
+        {
+            id: 20,
+            title: &quot;空调04损坏&quot;,
+            device_name: &quot;空调04&quot;,
+            device_brief: &quot;kt999283&quot;，
+            description: &quot;空调损坏，原因不明&quot;,
+            image: &quot;http://domain.com/static/30.jpg&quot;,
+            memo: &quot;&quot;,
+            confirmed: true,
+            note: &quot;初步检修完毕，等待下一步继续维修&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: []
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>确认接受维修任务</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain2/confirm/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>maintain_id</strong>，<code>int</code>，要接受的维修任务id</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;maintain task confirmed&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>更新维修进度</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain2/update/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>maintain_id</strong>，<code>int</code>，要更新的维修任务id</li>
+<li><strong>note</strong>，<code>string</code>，更新的维修记录</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;maintain task updated&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>完成维修任务</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain2/submit/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>maintain_id</strong>，<code>int</code>，要提交的维修任务id</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;maintain task submitted&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
 
 </body>
 </html>
