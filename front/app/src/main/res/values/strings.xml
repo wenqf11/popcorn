@@ -8,5 +8,25 @@
     <string name="title_activity_record">线路</string>
     <string name="title_activity_table">设备</string>
     <string name="title_activity_qrcode">扫描二维码</string>
-
+    <string name="title_activity_repair_list">维修任务</string>
+    <string name="title_activity_repair">维修</string>
+    <string name="title_activity_maintain_list">保养任务</string>
+    <string name="title_activity_maintain">保养</string>
+    <string name="on_work_activity_attendance">上班：</string>
+    <string name="off_work_activity_attendance">下班：</string>
+    <string name="sign_in_activity_attendance">签到</string>
+    <string name="sign_out_activity_attendance">签退</string>
+    <string name="device_id">设备编号：</string>
+    <string name="report_datetime">上报时间：</string>
+    <string name="reporter">上报人：</string>
+    <string name="fault_description">故障描述：</string>
+    <string name="picture">照片：</string>
+    <string name="repair_result">维修结论：</string>
+    <string name="maintain_name">保养名称：</string>
+    <string name="device_place">设备位置：</string>
+    <string name="maintain_description">保养描述：</string>
+    <string name="maintain_result">保养结论：</string>
+    <string name="fault_place">故障地点：</string>
+    <string name="tabDescription">tab描述</string>
+    <string name="submit">提交</string>
 </resources>

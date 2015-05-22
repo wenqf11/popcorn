@@ -28,7 +28,7 @@ import cn.edu.tsinghua.thss.popcorn.R;
  * @email thssvince@163.com
  */
 
-public class RepairFragment extends Fragment {
+public class ReportFragment extends Fragment {
     Button open_camera_btn;
     Button browse_btn;
     ImageView  image_view;
@@ -45,7 +45,7 @@ public class RepairFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
-		View repairView = inflater.inflate(R.layout.activity_tab_repair, container,false);
+		View repairView = inflater.inflate(R.layout.activity_tab_report, container,false);
         open_camera_btn = (Button) repairView.findViewById(R.id.id_tab_repair_camera);
         browse_btn = (Button) repairView.findViewById(R.id.id_tab_repair_browse);
 
@@ -71,7 +71,7 @@ public class RepairFragment extends Fragment {
                     //跳转到拍照界面;
                     startActivityForResult(intent, TAKE_PICTURE);
                 } else {
-                    Toast.makeText(getActivity(), "请先安装好sd卡",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "请先安装好SD卡",Toast.LENGTH_LONG).show();
                 }
             }
         });

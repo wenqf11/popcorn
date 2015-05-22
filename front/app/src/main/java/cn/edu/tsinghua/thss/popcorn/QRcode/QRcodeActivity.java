@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -147,8 +148,11 @@ public class QRcodeActivity extends Activity {
                 mCamera.setPreviewCallback(null);
                 mCamera.stopPreview();
 
-                scanResult.setText("barcode result " + result);
                 barcodeScanned = true;
+                Intent intent = QRcodeActivity.this.getIntent();
+                intent.putExtra("result", result);
+                QRcodeActivity.this.setResult(Activity.RESULT_OK, intent);
+                QRcodeActivity.this.finish();
             }
         }
     };

@@ -25,7 +25,7 @@ import cn.edu.tsinghua.thss.popcorn.ui.AppsFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.FragmentAdapter;
 import cn.edu.tsinghua.thss.popcorn.ui.MineFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.RecordFragment;
-import cn.edu.tsinghua.thss.popcorn.ui.RepairFragment;
+import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
 
 /**
  * @author wenqingfu
@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity {
 	 * Fragment
 	 */
 	private RecordFragment mRecordFg;
-	private RepairFragment mRepairFg;
+	private ReportFragment mRepairFg;
     private AppsFragment mAppsFg;
     private MineFragment mMineFg;
 	/**
@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity {
 
 	private void init() {
 		mRecordFg = new RecordFragment();
-		mRepairFg = new RepairFragment();
+		mRepairFg = new ReportFragment();
         mAppsFg = new AppsFragment();
         mMineFg = new MineFragment();
 

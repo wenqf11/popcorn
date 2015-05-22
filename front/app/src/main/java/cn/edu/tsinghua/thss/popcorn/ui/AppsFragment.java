@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cn.edu.tsinghua.thss.popcorn.AttendanceActivity;
+import cn.edu.tsinghua.thss.popcorn.MaintainListActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
+import cn.edu.tsinghua.thss.popcorn.RepairListActivity;
 
 /**
  * @author wenqingfu
@@ -46,9 +48,9 @@ public class AppsFragment extends Fragment {
         });
 
 
-        //维修
-        View mAppsRepairLayout = appsView.findViewById(R.id.id_apps_repair_ll);
-        mAppsRepairLayout.setOnClickListener(new View.OnClickListener(){
+        //报修
+        View mAppsReportLayout = appsView.findViewById(R.id.id_apps_report_ll);
+        mAppsReportLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 ViewPager vg = (ViewPager) getActivity()
                         .findViewById(R.id.id_page_vp);
@@ -56,6 +58,29 @@ public class AppsFragment extends Fragment {
             }
         });
 
+        //保养
+        View mAppsMaintainLayout = appsView.findViewById(R.id.id_apps_maintain_ll);
+        mAppsMaintainLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), MaintainListActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                //执行意图
+                startActivity(intent);
+            }
+        });
+
+        //维修
+        View mAppsRepairLayout = appsView.findViewById(R.id.id_apps_repair_ll);
+        mAppsRepairLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), RepairListActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                //执行意图
+                startActivity(intent);
+            }
+        });
 
         return appsView;
     }
