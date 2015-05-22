@@ -1,0 +1,42 @@
+{
+    "meta": {
+        "type": "meta",
+        "name": "Music Album"
+    },
+    "冷供水温度  ℃": {
+        "type": "integer",
+        "id": "0",
+        "default": "",
+        "priority": "0",
+        "hint":"7-12"
+    },
+    "冷供水压力  Mpa": {
+        "type": "integer",
+        "id": "1",
+        "default": "",
+        "priority": "1"
+    },
+    "冷回水压力  Mpa": {
+        "type": "integer",
+        "id": "2",
+        "default": "",
+        "priority": "2"
+    },
+    "热供水温度  ℃": {
+        "type": "integer",
+        "id": "3",
+        "default": "",
+        "priority": "3"
+    },
+    "水位": {
+        "type": "integer",
+        "id": "4",
+        "default": "0",
+        "priority": "4",
+        "options": {
+            "0": "偏高",
+            "1": "中等",
+            "2": "偏低"
+        }
+    }
+}

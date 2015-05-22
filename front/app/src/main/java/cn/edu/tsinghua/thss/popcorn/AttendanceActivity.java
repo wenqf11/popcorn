@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.DatePicker.OnDateChangedListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -23,7 +24,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -37,13 +37,13 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
     private Button mButtonOnWork;
     private Button mButtonOffWork;
 
-    private EditText mEditTextOnWork;
-    private EditText mEditTextOffWork;
+    private TextView mTextViewOnWork;
+    private TextView mTextViewOffWork;
 
     private DatePicker datePicker;
 
     private boolean mStatus = false;
-    private String mAddress = "无法定位";;
+    private String mAddress = "无法定位";
 
     private LocationManager locationManager;
     private String provider = LocationManager.NETWORK_PROVIDER;
@@ -53,6 +53,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
             case R.id.id_btn_attend_on_work:
                 mStatus = false;
                 getTimeAndLocation();
+                findViewById(R.id.id_btn_attend_off_work).setVisibility(View.VISIBLE);
                 break;
             case R.id.id_btn_attend_off_work:
                 mStatus = true;
@@ -61,13 +62,13 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
             default:
                 break;
         }
+        v.setVisibility(View.GONE);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLayout();
-
 
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(provider, 0, 0, this);
@@ -98,8 +99,8 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
 
         mButtonOnWork  = (Button)findViewById(R.id.id_btn_attend_on_work);
         mButtonOffWork = (Button)findViewById(R.id.id_btn_attend_off_work);
-        mEditTextOnWork = (EditText)findViewById(R.id.id_text_attend_on_work);
-        mEditTextOffWork = (EditText)findViewById(R.id.id_text_attend_off_work);
+        mTextViewOnWork = (TextView)findViewById(R.id.id_text_attend_on_work);
+        mTextViewOffWork = (TextView)findViewById(R.id.id_text_attend_off_work);
         datePicker = (DatePicker)findViewById(R.id.datePicker);
 
         Calendar calendar=Calendar.getInstance();
@@ -133,8 +134,6 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                 return null;
             }
 
-            URL myURL = null;
-            URLConnection httpsConn = null;
 
             String latitude = Double.toString(location.getLatitude());
             String longitude = Double.toString(location.getLongitude());
@@ -143,8 +142,8 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                     latitude, longitude);
 
             try {
-                myURL = new URL(url);
-                httpsConn =  myURL.openConnection();
+                URL myURL = new URL(url);
+                URLConnection httpsConn =  myURL.openConnection();
 
                 if (httpsConn != null) {
                     InputStreamReader insr = new InputStreamReader(
@@ -181,9 +180,9 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
         protected void onPostExecute(Object o) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             if(mStatus){
-                mEditTextOffWork.setText(sdf.format(new Date()) +'\n'+ mAddress);
+                mTextViewOffWork.setText(sdf.format(new Date()) +'\n'+ mAddress);
             }else{
-                mEditTextOnWork.setText(sdf.format(new Date()) +'\n'+ mAddress);
+                mTextViewOnWork.setText(sdf.format(new Date()) +'\n'+ mAddress);
             }
             super.onPostExecute(o);
         }
