@@ -282,55 +282,161 @@ def app_check(request, para, user):
 
 @get_required
 @token_required('GET')
-def app_maintain1_list(request, para, user):
-    pass
+def app_maintain_list_1(request, para, user):
+    tasks = k_maintenance.objects.filter(
+        mtype=1,
+        assignorid=user.id,
+        state__range=(2, 3)
+    )
 
-
-@post_required
-@token_required('POST')
-def app_maintain1_confirm(request, para, user):
-    pass
-
-
-@post_required
-@token_required('POST')
-def app_maintain1_update(request, para, user):
-    pass
-
-
-@post_required
-@token_required('POST')
-def app_maintain1_submit(request, para, user):
-    pass
-
-
-@post_required
-@token_required('POST')
-def app_maintain2_add(request, para, user):
-    pass
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': [{
+            'id': task.id,
+            'title': task.title,
+            'device_name': task.deviceid.name,
+            'device_brief': task.deviceid.brief,
+            'description': task.createcontent,
+            'image': task.image,
+            'memo': task.memo,
+            'confirmed': (task.state == 3),
+            'note': task.editcontent
+        } for task in tasks]
+    }))
 
 
 @get_required
 @token_required('GET')
-def app_maintain2_list(request, para, user):
-    pass
+def app_maintain_list_2(request, para, user):
+    tasks = k_maintenance.objects.filter(
+        mtype=2,
+        assignorid=user.id,
+        state__range=(2, 3)
+    )
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': [{
+            'id': task.id,
+            'title': task.title,
+            'device_name': task.deviceid.name,
+            'device_brief': task.deviceid.brief,
+            'description': task.createcontent,
+            'image': task.image,
+            'memo': task.memo,
+            'confirmed': (task.state == 3),
+            'note': task.editcontent
+        } for task in tasks]
+    }))
 
 
 @post_required
 @token_required('POST')
-def app_maintain2_confirm(request, para, user):
-    pass
+def app_maintain_add(request, para, user):
+    para['device_id'] = int(request.POST.get('device_id'))
+    para['title'] = request.POST.get('title')
+    para['description'] = request.POST.get('description')
+    para['image'] = request.POST.get('image')
+    para['memo'] = request.POST.get('memo')
+
+    try:
+        device = k_device.objects.get(id=para['device_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'device not exist'
+        }))
+
+    task = k_maintenance.objects.create(deviceid=device)
+    task.state = 1
+    task.title = para['title']
+    task.createcontent = para['description']
+    task.image = para['image']
+    task.memo = para['memo']
+    task.mtype = 2
+    task.creatorid = user.id
+    task.createdatetime = datetime.now()
+
+    task.save()
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'maintain task added'
+    }))
 
 
 @post_required
 @token_required('POST')
-def app_maintain2_update(request, para, user):
-    pass
+def app_maintain_confirm(request, para, user):
+    para['maintain_id'] = int(request.POST.get('maintain_id'))
+
+    try:
+        task = k_maintenance.objects.get(id=para['maintain_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'maintain task not exist'
+        }))
+
+    if task.state == 3:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'already confirmed'
+        }))
+    else:
+        task.state = 3
+        task.save()
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': 'maintain task confirmed'
+        }))
 
 
 @post_required
 @token_required('POST')
-def app_maintain2_submit(request, para, user):
-    pass
+def app_maintain_update(request, para, user):
+    para['maintain_id'] = int(request.POST.get('maintain_id'))
+    para['note'] = request.POST.get('note')
+
+    try:
+        task = k_maintenance.objects.get(id=para['maintain_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'maintain task not exist'
+        }))
+
+    if task.state == 2:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'maintain task not confirmed yet'
+        }))
+    else:
+        task.note = para['note']
+        task.save()
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': 'maintain task updated'
+        }))
+
+
+@post_required
+@token_required('POST')
+def app_maintain_submit(request, para, user):
+    para['maintain_id'] = int(request.POST.get('maintain_id'))
+
+    try:
+        task = k_maintenance.objects.get(id=para['maintain_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'maintain task not exist'
+        }))
+
+    task.state = 4
+    task.save()
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'maintain task submitted'
+    }))
 
 

@@ -228,7 +228,7 @@
 
 ### 获取保养任务列表
 
-- 请求地址：http://domain.com/app/maintain1/list/
+- 请求地址：http://domain.com/app/maintain/list/1/
 - 请求方式：GET
 - 请求参数：
 	- username，`string`，用户名
@@ -273,7 +273,7 @@
 
 ### 确认接受保养任务
 
-- 请求地址：http://domain.com/app/maintain1/confirm/
+- 请求地址：http://domain.com/app/maintain/confirm/
 - 请求方式：POST
 - 请求参数：
 	- username，`string`，用户名
@@ -296,7 +296,7 @@
 
 ### 更新保养计划
 
-- 请求地址：http://domain.com/app/maintain1/update/
+- 请求地址：http://domain.com/app/maintain/update/
 - 请求方式：POST
 - 请求参数：
 	- username，`string`，用户名
@@ -320,7 +320,7 @@
 
 ### 完成保养任务
 
-- 请求地址：http://domain.com/app/maintain1/submit/
+- 请求地址：http://domain.com/app/maintain/submit/
 - 请求方式：POST
 - 请求参数：
 	- username，`string`，用户名
@@ -345,7 +345,7 @@
 
 ### 新建维修任务
 
-- 请求地址：http://domain.com/app/maintain2/add/
+- 请求地址：http://domain.com/app/maintain/add/
 - 请求方式：POST
 - 请求参数：
 	- username，`string`，用户名
@@ -372,7 +372,7 @@
 
 ### 获取维修任务列表
 
-- 请求地址：http://domain.com/app/maintain2/list/
+- 请求地址：http://domain.com/app/maintain/list/2/
 - 请求方式：GET
 - 请求参数：
 	- username，`string`，用户名
@@ -417,7 +417,7 @@
 
 ### 确认接受维修任务
 
-- 请求地址：http://domain.com/app/maintain2/confirm/
+- 请求地址：http://domain.com/app/maintain/confirm/
 - 请求方式：POST
 - 请求参数：
 	- username，`string`，用户名
@@ -440,7 +440,7 @@
 
 ### 更新维修进度
 
-- 请求地址：http://domain.com/app/maintain2/update/
+- 请求地址：http://domain.com/app/maintain/update/
 - 请求方式：POST
 - 请求参数：
 	- username，`string`，用户名
@@ -464,7 +464,7 @@
 
 ### 完成维修任务
 
-- 请求地址：http://domain.com/app/maintain2/submit/
+- 请求地址：http://domain.com/app/maintain/submit/
 - 请求方式：POST
 - 请求参数：
 	- username，`string`，用户名

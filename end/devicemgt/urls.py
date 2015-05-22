@@ -25,16 +25,12 @@ urlpatterns = patterns(
     url(r'app/checkinfo/$', app_checkinfo),
     url(r'app/check/$', app_check),
 
-    url(r'app/maintain1/list/$', app_maintain1_list),
-    url(r'app/maintain1/confirm/$', app_maintain1_confirm),
-    url(r'app/maintain1/update/$', app_maintain1_update),
-    url(r'app/maintain1/submit/$', app_maintain1_submit),
-
-    url(r'app/maintain2/add/$', app_maintain2_add),
-    url(r'app/maintain2/list/$', app_maintain2_list),
-    url(r'app/maintain2/confirm/$', app_maintain2_confirm),
-    url(r'app/maintain2/update/$', app_maintain2_update),
-    url(r'app/maintain2/submit/$', app_maintain2_submit),
+    url(r'app/maintain/list/1/$', app_maintain_list_1),
+    url(r'app/maintain/list/2/$', app_maintain_list_2),
+    url(r'app/maintain/add/$', app_maintain_add),
+    url(r'app/maintain1/confirm/$', app_maintain_confirm),
+    url(r'app/maintain1/update/$', app_maintain_update),
+    url(r'app/maintain1/submit/$', app_maintain_submit),
 
     url(r'app_test/$', app_test),
     # Uncomment the next line to enable the admin:
