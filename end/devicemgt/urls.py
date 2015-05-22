@@ -42,7 +42,11 @@ urlpatterns = patterns(
     url(r'^operate_device/$', operate_device),
 
     url(r'^supplier/$', supplier),
+    url(r'^add_supplier/$', add_supplier),
+    url(r'^submit_supplier/$', submit_supplier),
     url(r'^producer/$', producer),
+    url(r'^add_producer/$', add_producer),
+    url(r'^submit_producer/$', submit_producer),
 
     url(r'^setting/$', setting),
     url(r'^spare/$', spare),

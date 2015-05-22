@@ -372,7 +372,7 @@ CREATE TABLE `devicemgt_k_maintenance` (
 
 /*Data for the table `devicemgt_k_maintenance` */
 
-insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(27,2,'1','m3','get rusty','','',1,'quickly','2','3',1,'2015-04-29',0,'2015-04-30',0,'2015-04-29',0,'2015-04-29','0'),(29,2,'5','m5','broken','','done!',2,'234','2','1',1,'2015-05-01',1,'2015-05-01',2,'2015-05-01',1,'2015-05-02','0'),(30,2,'5','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',1,'2015-05-08','0'),(31,2,'5','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',1,'2015-05-01','0'),(33,2,'2','54353','create..','','',1,'','2','1',1,'2015-05-02',1,'2015-05-08',4,'2015-05-02',0,'2015-05-02','0'),(34,2,'2','k1','c1','','',1,'x','1','',0,'2015-05-05',1,'2015-05-05',3,'2015-05-05',0,'2015-05-05','0'),(35,2,'3','k2','c2','','',1,'x','1','',0,'2015-05-05',1,'2015-04-30',4,'2015-05-01',0,'2015-05-05','0'),(36,2,'5','k3','c3','','ok',3,'x','1','',0,'2015-05-05',1,'2015-04-30',5,'2015-05-01',1,'2015-05-05','0'),(37,2,'5','k4','c4','','ok',2,'x','1','',0,'2015-05-05',1,'2015-04-30',6,'2015-05-01',1,'2015-05-05','0'),(38,2,'2','k5','c5','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',7,'2015-05-02',0,'2015-05-05','0'),(39,2,'3','k6','c6','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',6,'2015-05-02',0,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',0,'2015-05-05',1,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,'2','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',1,'2015-05-08',5,'2015-05-08',0,'2015-05-08','0');
+insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(29,2,'5','m5','broken','','done!',2,'234','2','1',1,'2015-05-01',1,'2015-05-01',2,'2015-05-01',1,'2015-05-02','0'),(30,2,'5','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',1,'2015-05-08','0'),(31,2,'5','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',1,'2015-05-01','0'),(33,2,'2','54353','create..','','',1,'','2','1',1,'2015-05-02',1,'2015-05-08',4,'2015-05-02',0,'2015-05-02','0'),(34,2,'2','k1','c1','','',1,'x','1','',0,'2015-05-05',1,'2015-05-05',3,'2015-05-05',0,'2015-05-05','0'),(35,2,'3','k2','c2','','',1,'x','1','',0,'2015-05-05',1,'2015-04-30',4,'2015-05-01',0,'2015-05-05','0'),(36,2,'5','k3','c3','','ok',3,'x','1','',0,'2015-05-05',1,'2015-04-30',5,'2015-05-01',1,'2015-05-05','0'),(37,2,'5','k4','c4','','ok',2,'x','1','',0,'2015-05-05',1,'2015-04-30',6,'2015-05-01',1,'2015-05-05','0'),(38,2,'2','k5','c5','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',7,'2015-05-02',0,'2015-05-05','0'),(39,2,'3','k6','c6','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',6,'2015-05-02',0,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',0,'2015-05-05',1,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,'2','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',1,'2015-05-08',5,'2015-05-08',0,'2015-05-08','0');
 
 /*Table structure for table `devicemgt_k_meter` */
 
@@ -419,11 +419,11 @@ CREATE TABLE `devicemgt_k_producer` (
   `editorid` int(10) unsigned NOT NULL,
   `editdatetime` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_producer` */
 
-insert  into `devicemgt_k_producer`(`id`,`name`,`contact`,`addr`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`) values (1,'','','','',0,'0000-00-00',0,'0000-00-00');
+insert  into `devicemgt_k_producer`(`id`,`name`,`contact`,`addr`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`) values (1,'TSINGH','18810305382','DHHH','s',0,'2015-05-04',1,'2015-05-22'),(2,'PKEING','18060198885','HDDD1','11111',0,'2015-05-22',1,'2015-05-22'),(3,'test1','test','test','112',0,'2015-05-22',1,'2015-05-22');
 
 /*Table structure for table `devicemgt_k_project` */
 
@@ -556,8 +556,8 @@ CREATE TABLE `devicemgt_k_schedule` (
   KEY `devicemgt_k_schedule_432947aa` (`classid_id`),
   KEY `devicemgt_k_schedule_854631fb` (`route_id`),
   KEY `devicemgt_k_schedule_6340c63c` (`user_id`),
-  CONSTRAINT `route_id_refs_id_bcf0225a` FOREIGN KEY (`route_id`) REFERENCES `devicemgt_k_route` (`id`),
   CONSTRAINT `classid_id_refs_id_4dc8fa60` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
+  CONSTRAINT `route_id_refs_id_bcf0225a` FOREIGN KEY (`route_id`) REFERENCES `devicemgt_k_route` (`id`),
   CONSTRAINT `user_id_refs_id_af05aa4f` FOREIGN KEY (`user_id`) REFERENCES `devicemgt_k_user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -732,11 +732,11 @@ CREATE TABLE `devicemgt_k_supplier` (
   `editorid` int(10) unsigned NOT NULL,
   `editdatetime` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_supplier` */
 
-insert  into `devicemgt_k_supplier`(`id`,`name`,`contact`,`addr`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`) values (1,'','','','',0,'0000-00-00',0,'0000-00-00');
+insert  into `devicemgt_k_supplier`(`id`,`name`,`contact`,`addr`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`) values (1,'RENMING','15459541233','HUAQING','notice',0,'2015-05-12',0,'0000-00-00'),(2,'JIAOTONG','13950801816','HAIDIAN','HIGH',1,'2015-05-22',1,'2015-05-22'),(3,'test2','12','222','',1,'2015-05-22',1,'2015-05-22'),(4,'12323','12','1222','11',1,'2015-05-22',1,'2015-05-22');
 
 /*Table structure for table `devicemgt_k_task` */
 
