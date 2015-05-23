@@ -45,10 +45,6 @@ urlpatterns = patterns(
     url(r'^producer/$', producer),
 
     url(r'^setting/$', setting),
-    url(r'^spare/$', spare),
-    url(r'^sparetype/$', sparetype),
-    url(r'^sparebrand/$', sparebrand),
-    url(r'^sparehist/$', sparehist),
     url(r'^deviceall/$', deviceall),
     url(r'^purview/$', purview),
     url(r'^schedule/$', schedule),
@@ -89,6 +85,20 @@ urlpatterns = patterns(
     url(r'^view_taskitem/$', view_taskitem),
     url(r'^submit_taskitem/$', submit_taskitem),
     url(r'^delete_taskitem/$', delete_taskitem),
+
+    url(r'^view_spare/$', view_spare),
+    url(r'^submit_spare/$', submit_spare),
+    url(r'^delete_spare/$', delete_spare),
+    url(r'^view_sparecount/$', view_sparecount),
+    url(r'^submit_sparecount/$', submit_sparecount),
+    url(r'^delete_sparecount/$', delete_sparecount),
+    
+    url(r'^view_tool/$', view_tool),
+    url(r'^submit_tool/$', submit_tool),
+    url(r'^delete_tool/$', delete_tool),
+    url(r'^view_toolcount/$', view_toolcount),
+    url(r'^submit_toolcount/$', submit_toolcount),
+    url(r'^delete_toolcount/$', delete_toolcount),
 
     url(r'^department/$', department),
     url(r'^score/$', score),

@@ -402,54 +402,6 @@ def setting(request):
         return HttpResponseRedirect('/login/')
 
 
-def spare(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('spare.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def sparetype(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('sparetype.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def sparebrand(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('sparebrand.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def sparehist(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('sparehist.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
 #注册, 创建一个新用户
 def register(req):
     if req.method == 'POST':
@@ -1421,6 +1373,133 @@ def delete_taskitem(request):
             _task.state = _states[0]
             _task.save()
     return HttpResponseRedirect('/view_taskitem?id=%i' % _taskitem.taskid_id)
+
+
+@login_required
+def view_spare(request):
+    return render_to_response('spare.html', {})
+
+def submit_spare(request):
+    return render_to_response('spare.html', {})
+
+def delete_spare(request):
+    return render_to_response('spare.html', {})
+
+def view_sparecount(request):
+    _sparecounts = k_sparecount.objects.all()
+    data = []
+    for _sparecount in _sparecounts:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_sparecount.creatorid)
+        _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+        dataitem['id'] = _sparecount.id
+        dataitem['sparebillid'] = _sparecount.sparebillid
+        dataitem['brief'] = _spare.brief
+        dataitem['count'] = _sparecount.count
+        dataitem['state'] = _sparecount.get_state_display()
+        dataitem['iseligible'] = _sparecount.get_iseligible_display()
+        dataitem['memo'] = _sparecount.memo
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _sparecount.createdatetime
+
+        if _sparecount.editorid != 0:
+            _editor = k_user.objects.get(id=_sparecount.editorid)
+            dataitem['editor'] = _editor.name
+            dataitem['editdatetime'] = _sparecount.editdatetime
+
+        if _sparecount.auditorid != 0:
+            _auditor = k_user.objects.get(id=_sparecount.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _sparecount.auditdatetime
+        """
+        if _sparecount.sparebillid != 0:
+            _sparebill = k_sparebill.objects.get(id=_sparecount.sparebillid)
+            dataitem['using'] = _sparebill.using
+            dataitem['returned'] = _sparebill.returned
+            dataitem['depleted'] = _sparebill.depleted
+            dataitem['damaged'] = _sparebill.damaged
+            dataitem['rejected'] = _sparebill.rejected
+            dataitem['user'] = _sparebill.user
+            dataitem['memobill'] = _sparebill.memo
+        """
+        data.append(dataitem)
+
+    _spares = k_spare.objects.all()
+    _briefs = []
+    for _spare in _spares:
+        _briefs.append(_spare.brief)
+
+    return render_to_response('sparecount.html', {'data': data, 'briefs': _briefs})
+
+def submit_sparecount(request):
+    _brief = request.GET.get('brief')
+    _state = request.GET.get('state')
+    _iseligible = request.GET.get('iseligible')
+    _count = request.GET.get('count')
+    _memo = request.GET.get('memo')
+    _name = request.GET.get('user')
+
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    _user = k_user.objects.get(username=request.user.username)
+    if _audit:
+        _sparecount = k_sparecount.objects.get(id=_id)
+        _sparecount.auditorid = _user.id
+        _sparecount.auditdatetime = get_current_date()
+        _sparecount.save()
+        return HttpResponseRedirect('/view_sparecount')
+    if _id != '':
+        _sparecount = k_sparecount.objects.get(id=_id)
+        _sparecount.editorid = _user.id
+        _sparecount.editdatetime = get_current_date()
+    else:
+        _spare = k_spare.objects.get(brief=_brief)
+        _sparecount = k_sparecount.objects.create(classid=_user.classid, spareid=_spare)
+        _sparecount.creatorid = _user.id
+        _sparecount.createdatetime = get_current_date()
+        if _state == "5":
+            _sparebill = k_sparebill.objects.create(classid=_user.classid, spareid=_spare)
+            _sparebill.using = int(_count)
+            _sparebill.user = _name
+            _sparebill.memo = _memo
+            _sparebill.creatorid = _user.id
+            _sparebill.createdatetime = get_current_date()
+            _sparebill.save()
+            _sparecount.sparebillid = _sparebill.id
+    _sparecount.state = _state
+    _sparecount.iseligible = _iseligible
+    _sparecount.count = int(_count)
+    _sparecount.memo = _memo
+
+    _sparecount.save()
+    return HttpResponseRedirect('/view_sparecount')
+
+def delete_sparecount(request):
+    _id = request.GET.get('id')
+    if _id:
+        _sparecount = k_sparecount.objects.get(id=_id)
+        _sparecount.delete()
+    return HttpResponseRedirect('/view_sparecount')
+
+
+def view_tool(request):
+    return render_to_response('tool.html', {})
+
+def submit_tool(request):
+    return render_to_response('tool.html', {})
+
+def delete_tool(request):
+    return render_to_response('tool.html', {})
+
+def view_toolcount(request):
+    return render_to_response('toolcount.html', {})
+
+def submit_toolcount(request):
+    return render_to_response('toolcount.html', {})
+
+def delete_toolcount(request):
+    return render_to_response('toolcount.html', {})
 
 
 @login_required

@@ -230,13 +230,13 @@ class k_spare(models.Model):
     brief = models.CharField(max_length=30) #编号，项目内本级唯一
     brand = models.CharField(max_length=30)
     producerid = models.ForeignKey(k_producer, related_name='spare_set')
-    typeid = models.ForeignKey(k_devicetype, related_name='spare_set')
     model = models.CharField(max_length=30)
     supplierid = models.ForeignKey(k_supplier, related_name='spare_set')
     content = models.CharField(max_length=200)
     memo = models.CharField(max_length=100)
-    minimum = models.PositiveIntegerField()
-    stock = models.PositiveIntegerField()
+    minimum = models.PositiveIntegerField(default=0)
+    eligiblestock = models.PositiveIntegerField(default=0)
+    ineligiblestock = models.PositiveIntegerField(default=0)
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)
@@ -244,7 +244,6 @@ class k_spare(models.Model):
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    ownerid = models.PositiveIntegerField()
 
 class k_device(models.Model):
     DEVICE_STATUS = (
@@ -281,7 +280,7 @@ class k_device(models.Model):
     nextmaintenance = models.DateField(blank=True, default=date.today)
     maintenanceperiod = models.PositiveIntegerField()
     lastrepaire = models.DateField(blank=True, default=date.today)
-    spare = models.ManyToManyField(k_spare)
+    # spare = models.ManyToManyField(k_spare)
     lastmeter = models.DateField(blank=True, default=date.today)
     notice = models.CharField(max_length=100)
     #? statelog = models.CharField(max_length=100)
@@ -459,19 +458,19 @@ class k_taskitem(models.Model):
 Stock Management
 """
 class k_sparebill(models.Model):
-    BILL_STATUS = (
-        ('1', '采购入库'),
-        ('2', '领用退回'),
-        ('3', '对账入库'),
-        ('4', '采购退货'),
-        ('5', '领用出库'),
-        ('6', '对账出库'),
-    )
     classid = models.ForeignKey(k_class, related_name='sparebill_set')
-    state = models.CharField(max_length=1, choices=BILL_STATUS, default='1')
+    spareid = models.ForeignKey(k_spare, related_name='sparebill_set')
+    using = models.PositiveIntegerField(default=0)
+    returned = models.PositiveIntegerField(default=0)
+    depleted = models.PositiveIntegerField(default=0)
+    damaged = models.PositiveIntegerField(default=0)
+    rejected = models.PositiveIntegerField(default=0)
+    user = models.CharField(max_length=10)
     memo = models.CharField(max_length=100)
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
@@ -485,30 +484,17 @@ class k_sparecount(models.Model):
         ('5', '领用出库'),
         ('6', '对账出库'),
     )
-    billid = models.ForeignKey(k_sparebill)
-    maintenanceid = models.ManyToManyField(k_maintenance)
-    deviceid = models.ForeignKey(k_device)
+    ELIGIBLE_STATUS = (
+        ('1', '合格'),
+        ('2', '不合格'),
+    )
+    classid = models.ForeignKey(k_class, related_name='sparecount_set')
+    sparebillid = models.PositiveIntegerField(default=0)
     spareid = models.ForeignKey(k_spare)
-    count = models.IntegerField()
+    count = models.IntegerField(default=0)
     state = models.CharField(max_length=1, choices=SPARECOUNT_STATUS, default='1')
+    iseligible = models.CharField(max_length=1, choices=ELIGIBLE_STATUS, default='1')
     memo = models.CharField(max_length=100)
-    creatorid = models.PositiveIntegerField(default=0)
-    createdatetime = models.DateField(blank=True, default=date.today)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-
-class k_tool(models.Model):
-    classid = models.ForeignKey(k_class, related_name='tool_set')
-    name = models.CharField(max_length=30) #项目本级内唯一
-    brief = models.CharField(max_length=30) #编号，项目内本级唯一
-    brand = models.CharField(max_length=30)
-    producerid = models.ForeignKey(k_producer, related_name='tool_set')
-    typeid = models.ForeignKey(k_devicetype, related_name='tool_set')
-    model = models.CharField(max_length=30)
-    supplierid = models.ForeignKey(k_supplier, related_name='tool_set')
-    content = models.CharField(max_length=200)
-    memo = models.CharField(max_length=100)
-    minimum = models.PositiveIntegerField()
-    stock = models.PositiveIntegerField()
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)
@@ -517,12 +503,45 @@ class k_tool(models.Model):
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
+class k_tool(models.Model):
+    classid = models.ForeignKey(k_class, related_name='tool_set')
+    name = models.CharField(max_length=30) #项目本级内唯一
+    brief = models.CharField(max_length=30) #编号，项目内本级唯一
+    brand = models.CharField(max_length=30)
+    producerid = models.ForeignKey(k_producer, related_name='tool_set')
+    model = models.CharField(max_length=30)
+    supplierid = models.ForeignKey(k_supplier, related_name='tool_set')
+    content = models.CharField(max_length=200)
+    memo = models.CharField(max_length=100)
+    minimum = models.PositiveIntegerField(default=0)
+    eligiblestock = models.PositiveIntegerField(default=0)
+    ineligiblestock = models.PositiveIntegerField(default=0)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    ownerid = models.PositiveIntegerField(default=0)
+
 class k_tooluse(models.Model):
-    parentid = models.PositiveIntegerField() #领用0，归还大于0
+    classid = models.ForeignKey(k_class, related_name='tooluse_set')
     toolid = models.ForeignKey(k_tool, related_name='tooluse_set')
-    number = models.PositiveIntegerField()
-    ownerid = models.PositiveIntegerField()
-    stock = models.PositiveIntegerField()
+    using = models.PositiveIntegerField(default=0)
+    returned = models.PositiveIntegerField(default=0)
+    depleted = models.PositiveIntegerField(default=0)
+    damaged = models.PositiveIntegerField(default=0)
+    rejected = models.PositiveIntegerField(default=0)
+    user = models.CharField(max_length=10)
+    memo = models.CharField(max_length=100)
+    creatorid = models.PositiveIntegerField(default=0)
+    createdatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_toolcount(models.Model):
     TOOLCOUNT_STATUS = (
@@ -533,12 +552,17 @@ class k_toolcount(models.Model):
         ('5', '领用出库'),
         ('6', '对账出库'),
     )
-    toolid = models.ForeignKey(k_tool, related_name='toolcount_set')
-    tooluseid = models.ForeignKey(k_tooluse, related_name='toolcount_set') #不是领用或归还为0
-    count = models.IntegerField()
+    ELIGIBLE_STATUS = (
+        ('1', '合格'),
+        ('2', '不合格'),
+    )
+    classid = models.ForeignKey(k_class, related_name='toolcount_set')
+    tooluseid = models.PositiveIntegerField(default=0)
+    toolid = models.ForeignKey(k_tool)
+    count = models.IntegerField(default=0)
     state = models.CharField(max_length=1, choices=TOOLCOUNT_STATUS, default='1')
+    iseligible = models.CharField(max_length=1, choices=ELIGIBLE_STATUS, default='1')
     memo = models.CharField(max_length=100)
-    stock = models.PositiveIntegerField()
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
     editorid = models.PositiveIntegerField(default=0)
