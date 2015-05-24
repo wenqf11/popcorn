@@ -24,7 +24,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".RecordActivity"
+            android:name=".RecordListActivity"
             android:label="@string/title_activity_record"
             android:screenOrientation="portrait" >
         </activity>
@@ -35,7 +35,28 @@
         </activity>
         <activity
             android:name=".QRcode.QRcodeActivity"
-            android:label="@string/title_activity_qrcode" >
+            android:label="@string/title_activity_qrcode"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".RepairListActivity"
+            android:label="@string/title_activity_repair_list"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".RepairActivity"
+            android:label="@string/title_activity_repair"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".MaintainListActivity"
+            android:label="@string/title_activity_maintain_list"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".MaintainActivity"
+            android:label="@string/title_activity_maintain"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

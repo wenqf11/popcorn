@@ -19,6 +19,8 @@
         android:orientation="horizontal" 
         android:baselineAligned="false"
         >
+
+
         <LinearLayout
             android:id="@+id/id_tab_apps_ll"
             android:layout_width="match_parent"
@@ -28,17 +30,39 @@
             android:focusable="false"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp" >
+            android:padding="2dp" >
 
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:id="@+id/id_apps_fat"
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fontawesometext:fa_icon="fa-th-large"
-                android:layout_margin="1dp"
-                android:textSize="32sp"
-                android:textColor="#33B5E5"
-                />
+                android:layout_height="wrap_content" >
+
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:id="@+id/id_apps_fat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    fontawesometext:fa_icon="fa-th-large"
+                    android:textSize="32sp"
+                    android:textColor="@color/light_blue"
+                    />
+                <FrameLayout
+                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                    <TextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/tips_circle"
+                        android:gravity="center"
+                        android:text="8"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white" />
+                </FrameLayout>
+            </FrameLayout>
+
 
             <TextView
                 android:id="@+id/id_apps_tv"
@@ -46,8 +70,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="应用"
-                android:textColor="#33B5E5"
+                android:textColor="@color/light_blue"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -59,18 +84,39 @@
             android:clickable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp"
+            android:padding="2dp"
             android:saveEnabled="false" >
 
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:id="@+id/id_record_fat"
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fontawesometext:fa_icon="fa-table"
-                android:layout_margin="1dp"
-                android:textSize="32sp"
-                android:textColor="#D3D3D3"
-                />
+                android:layout_height="wrap_content" >
+
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:id="@+id/id_record_fat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    fontawesometext:fa_icon="fa-table"
+                    android:textSize="32sp"
+                    android:textColor="#D3D3D3"
+                    />
+                <FrameLayout
+                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                    <TextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/tips_circle"
+                        android:gravity="center"
+                        android:text="5"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white" />
+                </FrameLayout>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/id_record_tv"
@@ -91,14 +137,16 @@
             android:focusable="false"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp" >
+            android:padding="2dp" >
 
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:id="@+id/id_repair_fat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-asterisk"
-                android:layout_margin="1dp"
                 android:textSize="32sp"
                 android:textColor="#D3D3D3"
                 />
@@ -122,14 +170,16 @@
             android:focusable="false"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="5dp" >
+            android:padding="2dp" >
 
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:id="@+id/id_mine_fat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-user"
-                android:layout_margin="1dp"
                 android:textSize="32sp"
                 android:textColor="#D3D3D3"
                 />
@@ -149,7 +199,7 @@
         android:id="@+id/id_tab_line_iv"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:contentDescription="tab"
+        android:contentDescription="@string/tabDescription"
         android:background="@drawable/tab_selected_pressed_holo" >
     </ImageView>
 </LinearLayout>

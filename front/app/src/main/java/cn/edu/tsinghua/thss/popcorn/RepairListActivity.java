@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,22 +21,22 @@ import java.util.Map;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
 
-public class RecordActivity extends ListActivity {
+public class RepairListActivity extends ListActivity {
 
     private List<Map<String, Object>> mData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String[] str_title = {"设备一","设备二","设备三","设备四","设备五"};
+        String[] str_title = {"维修任务一","维修任务二","维修任务三"};
         mData = getData(str_title);
-        AnimalListAdapter adapter = new AnimalListAdapter (this);
+        DeviceListAdapter adapter = new DeviceListAdapter (this);
         setListAdapter(adapter);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent=new Intent(this, TableActivity.class);
+        Intent intent=new Intent(this, RepairActivity.class);
         Bundle bundle=new Bundle();
         intent.putExtras(bundle);
         startActivity(intent);
@@ -63,10 +62,10 @@ public class RecordActivity extends ListActivity {
         public FontAwesomeText faText;
     }
 
-    public class AnimalListAdapter extends BaseAdapter {
+    public class DeviceListAdapter extends BaseAdapter {
         private LayoutInflater mInflater = null;
 
-        public AnimalListAdapter(Context context) {
+        public DeviceListAdapter(Context context) {
             super();
             mInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -95,7 +94,7 @@ public class RecordActivity extends ListActivity {
             ViewHolder holder = null;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = mInflater.inflate(R.layout.listview_record, null);
+                convertView = mInflater.inflate(R.layout.listview_repair, null);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.faText = (FontAwesomeText) convertView.findViewById(R.id.front_icon);
                 convertView.setTag(holder);
@@ -104,10 +103,10 @@ public class RecordActivity extends ListActivity {
             }
 
             holder.title.setText((String)mData.get(position).get("title"));
-           if(position == 1) {
-               holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
-           }
-           return convertView;
+            if(position == 1) {
+                holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
+            }
+            return convertView;
         }
     }
 
@@ -127,7 +126,7 @@ public class RecordActivity extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.close_btn) {
-            RecordActivity.this.finish();
+            RepairListActivity.this.finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

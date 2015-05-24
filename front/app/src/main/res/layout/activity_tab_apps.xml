@@ -19,15 +19,39 @@
             android:orientation="vertical"
             android:padding="5dp"
             android:saveEnabled="false">
-
-            <com.beardedhen.androidbootstrap.FontAwesomeText
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fontawesometext:fa_icon="fa-table"
-                android:textSize="48sp"
-                android:textColor="#33B5E5"
-                android:layout_gravity="center|center_vertical"
-                />
+                android:layout_height="wrap_content" >
+
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    fontawesometext:fa_icon="fa-table"
+                    android:textSize="48sp"
+                    android:textColor="#33B5E5"
+                    android:layout_gravity="center|center_vertical"
+                    />
+                <FrameLayout
+                    android:layout_gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/tips_circle"
+                        android:gravity="center"
+                        android:text="5"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white" />
+                </FrameLayout>
+            </FrameLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,7 +61,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/id_apps_repair_ll"
+            android:id="@+id/id_apps_report_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -51,6 +75,9 @@
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-asterisk"
                 android:textSize="48sp"
                 android:textColor="#CC3300"
@@ -65,6 +92,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/id_apps_maintain_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -75,14 +103,39 @@
             android:padding="5dp"
             android:saveEnabled="false" >
 
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fontawesometext:fa_icon="fa-table"
-                android:textSize="48sp"
-                android:textColor="#66CC33"
-                android:layout_gravity="center|center_vertical"
-                />
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    fontawesometext:fa_icon="fa-table"
+                    android:textSize="48sp"
+                    android:textColor="#66CC33"
+                    android:layout_gravity="center|center_vertical"
+                    />
+                <FrameLayout
+                    android:visibility="invisible"
+                    android:layout_gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/tips_circle"
+                        android:gravity="center"
+                        android:text="5"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white" />
+                </FrameLayout>
+            </FrameLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,6 +143,8 @@
                 android:text="保养"
                 android:textColor="#000"
                 android:textSize="14sp" />
+
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -105,6 +160,9 @@
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-file"
                 android:textSize="48sp"
                 android:textColor="#339999"
@@ -125,6 +183,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/id_apps_repair_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -134,15 +193,36 @@
             android:orientation="vertical"
             android:padding="5dp"
             android:saveEnabled="false" >
-
-            <com.beardedhen.androidbootstrap.FontAwesomeText
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fontawesometext:fa_icon="fa-wrench"
-                android:textSize="48sp"
-                android:textColor="#CC9966"
-                android:layout_gravity="center|center_vertical"
-                />
+                android:layout_height="wrap_content" >
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    fontawesometext:fa_icon="fa-wrench"
+                    android:textSize="48sp"
+                    android:textColor="#CC9966"
+                    android:layout_gravity="center|center_vertical"
+                    />
+                <FrameLayout
+                android:layout_gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+                    <TextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/tips_circle"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white" />
+                </FrameLayout>
+            </FrameLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -166,6 +246,9 @@
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-bars"
                 android:textSize="48sp"
                 android:textColor="#33CC66"
@@ -193,6 +276,9 @@
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-users"
                 android:textSize="48sp"
                 android:textColor="#CC3300"
@@ -219,6 +305,9 @@
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-diamond"
                 android:textSize="48sp"
                 android:textColor="#CC3300"

@@ -208,6 +208,8 @@ class k_supplier(models.Model):
     name = models.CharField(max_length=30)
     contact = models.CharField(max_length=30)
     addr = models.CharField(max_length=80)
+    linkman = models.CharField(max_length=30)
+    mobile = models.CharField(max_length=30)
     memo = models.CharField(max_length=100)
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
@@ -218,6 +220,8 @@ class k_producer(models.Model):
     name = models.CharField(max_length=30)
     contact = models.CharField(max_length=30)
     addr = models.CharField(max_length=80)
+    linkman = models.CharField(max_length=30)
+    mobile = models.CharField(max_length=30)
     memo = models.CharField(max_length=100)
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
@@ -592,8 +596,9 @@ class k_schedule(models.Model):
 
 class k_staffworkinfo(models.Model):
     userid = models.ForeignKey(k_user, related_name='staffworkinfo_set')
-    checkin = models.DateField(blank=True, default=date.today)
-    checkout = models.DateField(blank=True, default=date.today)
+    date = models.DateField(blank=True, default=date.today)
+    checkin = models.CharField(max_length=80)
+    checkout = models.CharField(max_length=80)
     shifting = models.CharField(max_length=1) #1 yes, 0 no
 
 class k_staffscoreinfo(models.Model):

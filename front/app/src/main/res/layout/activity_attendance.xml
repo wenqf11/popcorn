@@ -3,10 +3,10 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:stretchColumns="*"
+        android:shrinkColumns="*"
         tools:context="cn.edu.tsinghua.thss.popcorn.AttendanceActivity">
 
         <LinearLayout
-            android:id="@+id/tableRow0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center">
@@ -18,60 +18,73 @@
         </LinearLayout>
 
         <TableRow
-            android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/username_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:text="上班："/>
-
-            <EditText
-                android:id="@+id/id_text_attend_on_work"
-                android:layout_height="fill_parent"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:background="@drawable/bg_edittext"
-                android:editable="false"
-                android:lines="3"
-                android:ems="10"
-                android:textSize="12sp"
-                android:padding="2dp"
-                android:hint=""/>
-
-            <Button
-                android:id="@+id/id_btn_attend_on_work"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="签到"/>
+                android:padding="10dp"
+                android:background="@drawable/layout_selector"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:text="@string/on_work_activity_attendance"/>
+
+                <TextView
+                    android:id="@+id/id_text_attend_on_work"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:ems="8"/>
+
+                <Button
+                    android:id="@+id/id_btn_attend_on_work"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:textSize="14sp"
+                    android:background="@drawable/round_button"
+                    android:text="@string/sign_in_activity_attendance"/>
+            </LinearLayout>
         </TableRow>
 
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:text="下班："/>
-            <EditText
-                android:id="@+id/id_text_attend_off_work"
-                android:layout_height="fill_parent"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:background="@drawable/bg_edittext"
-                android:lines="3"
-                android:ems="12"
-                android:textSize="12sp"
-                android:padding="2dp"
-                android:editable="false"/>
-
-            <Button
-                android:id="@+id/id_btn_attend_off_work"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="签退"/>
+                android:padding="10dp"
+                android:background="@drawable/layout_selector"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:text="@string/off_work_activity_attendance"/>
+                <TextView
+                    android:id="@+id/id_text_attend_off_work"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:ems="8" />
+
+                <Button
+                    android:id="@+id/id_btn_attend_off_work"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:textSize="14sp"
+                    android:background="@drawable/round_button"
+                    android:visibility="invisible"
+                    android:text="@string/sign_out_activity_attendance"
+                    />
+            </LinearLayout>
         </TableRow>
 </TableLayout>
 

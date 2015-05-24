@@ -2,4 +2,6 @@
 <resources>
     <color name="gray">#f1f1f1</color>
     <color name="transparent">#ffffff</color>
+    <color name="light_blue">#33B5E5</color>
+    <color name="light_blue_pressed">#33A5E5</color>
 </resources>  

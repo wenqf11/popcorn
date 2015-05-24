@@ -279,7 +279,7 @@ def userset(request):
 '''用户管理结束
 '''
 
-#设备管理
+'''设备管理'''
 def devicemgt(request):
     if request.user.is_authenticated():
         #登陆成功
@@ -355,27 +355,115 @@ def device_type_add(request):
         return HttpResponseRedirect('/login/')
 
 def supplier(request):
+    _suppliers = k_supplier.objects.all()
+    data = []
+    for _supplier in _suppliers:
+        data.append({
+            'name': _supplier.name,
+            'contact': _supplier.contact,
+            'address': _supplier.addr,
+            'memo': _supplier.memo,
+        })
+    return render_to_response('supplier.html', {'data': data})
+
+def add_supplier(request):
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
-        return render_to_response('supplier.html',variables)
+        return render_to_response('supplieradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
+@login_required
+def submit_supplier(request):
+    if request.method == 'POST':
+        #修改供应商
+        _supplier = k_supplier.objects.filter(name = request.POST.get('name'))
+        if _supplier:
+            _supplier = _supplier[0]
+            _supplier.contact = request.POST.get('contact')
+            _supplier.addr = request.POST.get('address')
+            _supplier.memo = request.POST.get('memo')
+            _supplier.editorid = request.user.id
+            _supplier.editdatetime = get_current_date()
+            _supplier.save()
+            return HttpResponseRedirect('/supplier/')
+    else:
+        #添加供应商
+        if not k_supplier.objects.filter(name = request.GET.get('name')):
+            _name = request.GET.get('name')
+            _contact = request.GET.get('contact')
+            _address = request.GET.get('address')
+            _memo = request.GET.get('memo')
+            _supplier = k_supplier.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,
+                                                  creatorid = request.user.id, createdatetime=get_current_date(),
+                                                  editorid=request.user.id, editdatetime=get_current_date())
+
+            _supplier.save()
+            return HttpResponseRedirect('/supplier/')
+        else:
+            return HttpResponseRedirect('/supplier/?msg="error1"')
+    return HttpResponseRedirect('/supplier/')
+
+@login_required
 def producer(request):
+    _producers = k_producer.objects.all()
+    data = []
+    for _producer in _producers:
+        data.append({
+            'name': _producer.name,
+            'contact': _producer.contact,
+            'address': _producer.addr,
+            'memo': _producer.memo,
+        })
+    return render_to_response('producer.html', {'data': data})
+
+def add_producer(request):
     if request.user.is_authenticated():
         #登陆成功
         #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
-        return render_to_response('producer.html',variables)
+        return render_to_response('produceradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
+@login_required
+def submit_producer(request):
+    if request.method == 'POST':
+        #修改供应商
+        _producer = k_producer.objects.filter(name = request.POST.get('name'))
+        if _producer:
+            _producer = _producer[0]
+            _producer.contact = request.POST.get('contact')
+            _producer.addr = request.POST.get('address')
+            _producer.memo = request.POST.get('memo')
+            _producer.editorid = request.user.id
+            _producer.editdatetime = get_current_date()
+            _producer.save()
+            return HttpResponseRedirect('/producer/')
+    else:
+        #添加供应商
+        if not k_producer.objects.filter(name = request.GET.get('name')):
+            _name = request.GET.get('name')
+            _contact = request.GET.get('contact')
+            _address = request.GET.get('address')
+            _memo = request.GET.get('memo')
+            _producer = k_producer.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,
+                                                  creatorid = request.user.id, createdatetime=get_current_date(),
+                                                  editorid=request.user.id, editdatetime=get_current_date())
+
+            _producer.save()
+            return HttpResponseRedirect('/producer/')
+        else:
+            return HttpResponseRedirect('/producer/?msg="error1"')
+    return HttpResponseRedirect('/producer/')
+
+'''设备管理结束'''
 
 #个人信息
 def profile(request):
