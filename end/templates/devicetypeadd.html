@@ -7,29 +7,27 @@
 {% endblock %}
 
 {% block pageheader %}
-    添加供应商
+    添加设备类型
 {% endblock %}
 
 {% block maincontent %}
 <div class="row well" style="width: 60%;margin: auto;">
     <div class="col-xs-12">
-        <form class="form-horizontal" action="/submit_supplier/" role="form" id="supplierform">
+        <form class="form-horizontal" action="/submit_supplier/" role="form" id="devicetypeform">
             <div class="form-group">
-                <label class="col-sm-5 control-label no-padding-top">公司名称</label>
+                <label class="col-sm-5 control-label no-padding-top">上级分类名称</label>
+                <div class="col-sm-7">
+                <select class="span2 m-wrap" name="parentname">
+                    {% for type in devicetypes %}
+                    <option value="{{ type }}">{{ type }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label no-padding-top">分类名称</label>
                 <div class="col-sm-7">
                     <input type="text" name="name" value="">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label no-padding-top">公司联系方式</label>
-                <div class="col-sm-7">
-                    <input id="brief" name="contact" type="text" data-provide="typeahead">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label no-padding-top">公司地址</label>
-                <div class="col-sm-7">
-                    <input type="text" name="address" value="">
                 </div>
             </div>
             <div class="form-group">
@@ -77,28 +75,18 @@
             if(name.length < 1 || name.length > 40) {
                 $("[name='name']").select();
                 $.gritter.add({
-                title: '添加维修计划失败！',
-                text: '公司名称长度为1-40！',
+                title: '添加设备类型失败！',
+                text: '类别名称长度为1-40！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;
             }
-            var contact = $("[name='contact']").val();
-            if(contact.length < 1 || contact.length > 40) {
-                $("[name='contact']").select();
+            var parentname = $("[name='parentname']").val();
+            if(parentname.length < 1 || parentname.length > 40) {
+                $("[name='parentname']").select();
                 $.gritter.add({
-                title: '添加维修计划失败！',
-                text: '公司联系方式的长度为1-40！',
-                class_name: 'gritter-error gritter-center'
-                });
-                return false;
-            }
-            var address = $("[name='address']").val();
-            if(address.length < 1 || address.length > 40) {
-                $("[name='address']").select();
-                $.gritter.add({
-                title: '添加维修计划失败！',
-                text: '公司地址长度为1-40！',
+                title: '添加设备类型失败！',
+                text: '上级类别名称的长度为1-40！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;

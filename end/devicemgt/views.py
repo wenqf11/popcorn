@@ -69,9 +69,8 @@ def usermgt(request):
         current_class_id = user.classid_id
         current_class = k_class.objects.get(id=current_class_id)
         server_msg = request.GET.get('msg')
-        if server_msg != None:
-            if server_msg == "1":
-                server_msg = '不能删除用户本身!'
+        if server_msg == None:
+           server_msg = ''
         else:
             server_msg = ''
         if current_class:
@@ -157,10 +156,19 @@ def operate_user(request):
             for key in key_list:
                 userdata[key] = eval('theuser.'+key)
 
-            userdata['chosen_role'] = ''
+            k_chosed_roles = k_role.objects.filter(k_user=_id)
+            chosed_roles = []
+            for k_chosed_role in k_chosed_roles:
+                chosed_roles.append(k_chosed_role.name)
+            userdata['chosen_roles'] = chosed_roles
         else:
             userdata['isNew'] = True
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
+
+        server_msg = request.GET.get('msg')
+        if server_msg:
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata,'server_msg':server_msg})
+        else:
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
         return render_to_response('useradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -175,6 +183,7 @@ def useradd(request):
             face = "../static/images/user.png"
             #如果用户名相同，修改已有的用户
             server_msg = ''
+            cur_user_id = 0
             user = k_user.objects.filter(username=request.POST['username'])
             if not user:
                 #总共要有26项信息
@@ -206,6 +215,7 @@ def useradd(request):
                     auditdatetime=get_current_date(),
                     status=0,
                 )
+                cur_user_id = user.id
                 #给roles和user也增加一条记录
                 olduser = User.objects.create_user(
                     username=user.username,
@@ -222,12 +232,21 @@ def useradd(request):
                 server_msg = '添加用户成功！'
             elif len(user) == 1:
                 user = user[0]
+                cur_user_id = user.id
                 user.password = request.POST['password']
                 user.email = request.POST['email']
                 user.name = request.POST['name']
-                user.face = request.POST['face']
+                user.mobile = request.POST['mobile']
+                user.gender = request.POST['gender']
+                user.zipcode = request.POST['zipcode']
+                user.address = request.POST['address']
                 #user.birthday = request.POST['birthday']
+                user.idcard = request.POST['idcard']
+                user.idcardtype = request.POST['idcardtype']
+                user.content = request.POST['content']
                 user.memo = request.POST['memo']
+                user.editorid = request.user.id
+                user.editdatetime = get_current_date()
                 tmp_urs = user.roles.filter(k_user = user.id)
                 for ur in tmp_urs:
                     user.roles.remove(ur)
@@ -244,10 +263,7 @@ def useradd(request):
                 # 更新用户成功
             else:
                 server_msg = "Error: user with the same username!"
-        user=User.objects.get(username=request.user.username)
-        #return HttpResponseRedirect('/user_operate/')
-        variables=RequestContext(request,{'username':user.username, 'server_msg':server_msg})
-        return render_to_response('useradd.html',variables)
+        return HttpResponseRedirect('/user_operate/?id='+str(cur_user_id)+'&msg='+server_msg)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -256,7 +272,7 @@ def userdel(request):
     if request.user.is_authenticated():
         _id = request.GET.get('id')
         if int(_id) == request.user.id:
-            return HttpResponseRedirect('/user/?msg=1')
+            return HttpResponseRedirect('/user/?msg="不能删除用户本身"')
         if _id:
             users = k_user.objects.get(id=_id)
             users.delete()
@@ -322,22 +338,38 @@ def operate_device(request):
 
 def deviceadd(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
+        #返回class的信息
+        #返回type的信息
+        #生产厂商
+        #供应商
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
         return render_to_response('deviceadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
+
+def get_type_node(devicetypes, parent):
+    datas = list()
+    for type in devicetypes:
+        if type.parentid == parent:
+            cur_data = dict()
+            cur_data['text'] = type.name
+            tmp = get_type_node(devicetypes, type.name)
+            if len(tmp) > 0:
+                cur_data['nodes'] = tmp
+            datas.append(cur_data)
+
+    return datas
+
 def device_type(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        devicetypes = k_devicetype.objects.all()
+        parents = 0
+        datas = get_type_node(devicetypes, parents)
+
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas})
         return render_to_response('devicetype.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -345,11 +377,13 @@ def device_type(request):
 
 def device_type_add(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        k_devicetypes = k_devicetype.objects.all()
+        devicetypes = list()
+        for k_type in k_devicetypes:
+            devicetypes.append(k_type.name)
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'devicetypes':devicetypes})
         return render_to_response('devicetypeadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -376,6 +410,7 @@ def add_supplier(request):
         return render_to_response('supplieradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
+
 
 @login_required
 def submit_supplier(request):
@@ -467,10 +502,6 @@ def submit_producer(request):
             return HttpResponseRedirect('/producer/')
         else:
             return HttpResponseRedirect('/producer/?msg="error1"')
-    return HttpResponseRedirect('/producer/')
-
-'''设备管理结束'''
-
 #个人信息
 def profile(request):
     if request.user.is_authenticated():
@@ -492,54 +523,6 @@ def setting(request):
         #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'setting'})
         return render_to_response('setting.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def spare(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('spare.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def sparetype(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('sparetype.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def sparebrand(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('sparebrand.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def sparehist(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'stock'})
-        return render_to_response('sparehist.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -1515,6 +1498,406 @@ def delete_taskitem(request):
             _task.state = _states[0]
             _task.save()
     return HttpResponseRedirect('/view_taskitem?id=%i' % _taskitem.taskid_id)
+
+
+@login_required
+def view_spare(request):
+    _spares = k_spare.objects.all()
+    data = []
+    for _spare in _spares:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_spare.creatorid)
+        dataitem['id'] = _spare.id
+        dataitem['brand'] = _spare.brand
+        dataitem['producer'] = _spare.producerid.name
+        dataitem['supplier'] = _spare.supplierid.name
+        dataitem['name'] = _spare.name
+        dataitem['brief'] = _spare.brief
+        dataitem['model'] = _spare.model
+        dataitem['minimum'] = _spare.minimum
+        dataitem['eligiblestock'] = _spare.eligiblestock
+        dataitem['ineligiblestock'] = _spare.ineligiblestock
+        dataitem['content'] = _spare.content
+        dataitem['memo'] = _spare.memo
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _spare.createdatetime
+
+        if _spare.editorid != 0:
+            _editor = k_user.objects.get(id=_spare.editorid)
+            dataitem['editor'] = _editor.name
+            dataitem['editdatetime'] = _spare.editdatetime
+
+        if _spare.auditorid != 0:
+            _auditor = k_user.objects.get(id=_spare.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _spare.auditdatetime
+
+        data.append(dataitem)
+
+    return render_to_response('spare.html', {"data": data})
+
+def operate_spare(request):
+    _id = request.GET.get('id')
+    _data = {}
+    if _id:
+        _spare = k_spare.objects.get(id=_id)
+        _data["id"] = _id
+        _data["isNew"] = False
+        _data["brand"] = _spare.brand
+        _data["producer"] = _spare.producerid.name
+        _data["supplier"] = _spare.supplierid.name
+        _data["name"] = _spare.name
+        _data["brief"] = _spare.brief
+        _data["model"] = _spare.model
+        _data["minimum"] = _spare.minimum
+        _data["content"] = _spare.content
+        _data["memo"] = _spare.memo
+    else:
+        _data["isNew"] = True
+    _producers = []
+    _allproducers = k_producer.objects.all()
+    for _producer in _allproducers:
+        _producers.append(_producer.name)
+    _suppliers = []
+    _allsuppliers = k_supplier.objects.all()
+    for _supplier in _allsuppliers:
+        _suppliers.append(_supplier.name)
+    return render_to_response('spareoperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers})
+
+def submit_spare(request):
+    _brand = request.GET.get('brand')
+    _producer = request.GET.get('producer')
+    _supplier = request.GET.get('supplier')
+    _name = request.GET.get('name')
+    _brief = request.GET.get('brief')
+    _model = request.GET.get('model')
+    _minimum = request.GET.get('minimum')
+    _content = request.GET.get('content')
+    _memo = request.GET.get('memo')
+
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    _user = k_user.objects.get(username=request.user.username)
+    if _audit:
+        _spare = k_spare.objects.get(id=_id)
+        _spare.auditorid = _user.id
+        _spare.auditdatetime = get_current_date()
+        _spare.save()
+        return HttpResponseRedirect('/view_spare')
+    if _id:
+        _spare = k_spare.objects.get(id=_id)
+        _spare.editorid = _user.id
+        _spare.editdatetime = get_current_date()
+        _spare.auditorid = 0
+        _producer = k_producer.objects.get(name=_producer)
+        _supplier = k_supplier.objects.get(name=_supplier)
+        _spare.producerid = _producer
+        _spare.supplierid = _supplier
+    else:
+        _producer = k_producer.objects.get(name=_producer)
+        _supplier = k_supplier.objects.get(name=_supplier)
+        _spare = k_spare.objects.create(classid=_user.classid, producerid=_producer, supplierid=_supplier)
+        _spare.creatorid = _user.id
+        _spare.createdatetime = get_current_date()
+    _spare.brand = _brand
+    _spare.name = _name
+    _spare.brief = _brief
+    _spare.model = _model
+    _spare.minimum = int(_minimum)
+    _spare.content = _content
+    _spare.memo = _memo
+    _spare.save()
+
+    return HttpResponseRedirect('/view_spare')
+
+def delete_spare(request):
+    _id = request.GET.get('id')
+    if _id:
+        _spare = k_spare.objects.get(id=_id)
+        _sparebills = k_sparebill.objects.filter(spareid=_spare)
+        _sparecounts = k_sparecount.objects.filter(spareid=_spare)
+        _spare.delete()
+        _sparebills.delete()
+        _sparecounts.delete()
+    return HttpResponseRedirect('/view_spare')
+
+def view_sparebill(request):
+    _sparebills = k_sparebill.objects.all()
+    data = []
+    for _sparebill in _sparebills:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_sparebill.creatorid)
+        _spare = k_spare.objects.get(id=_sparebill.spareid_id)
+        dataitem['id'] = _sparebill.id
+        dataitem['brief'] = _spare.brief
+        dataitem['using'] = _sparebill.using
+        dataitem['returned'] = _sparebill.returned
+        dataitem['depleted'] = _sparebill.depleted
+        dataitem['damaged'] = _sparebill.damaged
+        dataitem['rejected'] = _sparebill.rejected
+        dataitem['user'] = _sparebill.user
+        dataitem['memo'] = _sparebill.memo
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _sparebill.createdatetime
+
+        if _sparebill.editorid != 0:
+            _editor = k_user.objects.get(id=_sparebill.editorid)
+            dataitem['editor'] = _editor.name
+            dataitem['editdatetime'] = _sparebill.editdatetime
+
+        if _sparebill.auditorid != 0:
+            _auditor = k_user.objects.get(id=_sparebill.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _sparebill.auditdatetime
+        elif _sparebill.using == _sparebill.returned + _sparebill.depleted + _sparebill.damaged + _sparebill.rejected:
+            dataitem['audit'] = 'audit'
+        data.append(dataitem)
+
+    return render_to_response('sparebill.html', {'data': data})
+
+def submit_sparebill(request):
+    _using = request.GET.get('using')
+    _returned = request.GET.get('returned')
+    _depleted = request.GET.get('depleted')
+    _damaged = request.GET.get('damaged')
+    _rejected = request.GET.get('rejected')
+    _memo = request.GET.get('memo')
+    _name = request.GET.get('user')
+
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    _user = k_user.objects.get(username=request.user.username)
+    if _audit:
+        _sparebill = k_sparebill.objects.get(id=_id)
+        _sparebill.auditorid = _user.id
+        _sparebill.auditdatetime = get_current_date()
+        _sparebill.save()
+        return HttpResponseRedirect('/view_sparebill')
+    _sparebill = k_sparebill.objects.get(id=_id)
+    _sparebill.editorid = _user.id
+    _sparebill.editdatetime = get_current_date()
+
+    if _sparebill.using != int(_using):
+        _sparecount = k_sparecount.objects.get(sparebillid=_id, state="5")
+        _sparecount.count = -int(_using)
+        _sparecount.editorid = _user.id
+        _sparecount.editdatetime = get_current_date()
+        _sparecount.auditorid = 0
+        _spare = k_spare.objects.get(id=_sparebill.spareid_id)
+        _spare.eligiblestock = _spare.eligiblestock + _sparebill.using - int(_using)
+        _spare.save()
+        _sparecount.save()
+
+    if _sparebill.returned != int(_returned):
+        _spare = k_spare.objects.get(id=_sparebill.spareid_id)
+        _spare.eligiblestock = _spare.eligiblestock - _sparebill.returned + int(_returned)
+        _sparecount = k_sparecount.objects.create(classid=_user.classid, sparebillid=_id, spareid=_spare)
+        _sparecount.count = int(_returned) - _sparebill.returned
+        _sparecount.state = "2"
+        _sparecount.iseligible = "1"
+        _sparecount.memo = _sparebill.memo
+        _sparecount.creatorid = _user.id
+        _sparecount.createdatetime = get_current_date()
+        _spare.save()
+        _sparecount.save()
+
+    if _sparebill.rejected != int(_rejected):
+        _spare = k_spare.objects.get(id=_sparebill.spareid_id)
+        _spare.ineligiblestock = _spare.ineligiblestock - _sparebill.rejected + int(_rejected)
+        _sparecount = k_sparecount.objects.create(classid=_user.classid, sparebillid=_id, spareid=_spare)
+        _sparecount.count = int(_rejected) - _sparebill.rejected
+        _sparecount.state = "2"
+        _sparecount.iseligible = "2"
+        _sparecount.memo = _sparebill.memo
+        _sparecount.creatorid = _user.id
+        _sparecount.createdatetime = get_current_date()
+        _spare.save()
+        _sparecount.save()
+
+    _sparebill.using = int(_using)
+    _sparebill.returned = int(_returned)
+    _sparebill.depleted = int(_depleted)
+    _sparebill.damaged = int(_damaged)
+    _sparebill.rejected = int(_rejected)
+    _sparebill.user = _name
+    _sparebill.memo = _memo
+
+    _sparebill.save()
+    return HttpResponseRedirect('/view_sparebill')
+
+def delete_sparebill(request):
+    _id = request.GET.get('id')
+    if _id:
+        _sparebill = k_sparebill.objects.get(id=_id)
+
+        _spare = k_spare.objects.get(id=_sparebill.spareid_id)
+        _spare.eligiblestock = _spare.eligiblestock + _sparebill.using - _sparebill.returned
+        _spare.ineligiblestock = _spare.ineligiblestock - _sparebill.rejected
+
+        _spare.save()
+
+        _sparecount = k_sparecount.objects.filter(sparebillid=_id)
+        _sparecount.delete()
+
+        _sparebill.delete()
+    return HttpResponseRedirect('/view_sparebill')
+
+def view_sparecount(request):
+    _sparecounts = k_sparecount.objects.all()
+    data = []
+    for _sparecount in _sparecounts:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_sparecount.creatorid)
+        _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+        dataitem['id'] = _sparecount.id
+        dataitem['sparebillid'] = _sparecount.sparebillid
+        dataitem['brief'] = _spare.brief
+        dataitem['count'] = _sparecount.count
+        dataitem['state'] = _sparecount.get_state_display()
+        dataitem['iseligible'] = _sparecount.get_iseligible_display()
+        dataitem['memo'] = _sparecount.memo
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _sparecount.createdatetime
+
+        if _sparecount.editorid != 0:
+            _editor = k_user.objects.get(id=_sparecount.editorid)
+            dataitem['editor'] = _editor.name
+            dataitem['editdatetime'] = _sparecount.editdatetime
+
+        if _sparecount.auditorid != 0:
+            _auditor = k_user.objects.get(id=_sparecount.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _sparecount.auditdatetime
+        """
+        if _sparecount.sparebillid != 0:
+            _sparebill = k_sparebill.objects.get(id=_sparecount.sparebillid)
+            dataitem['using'] = _sparebill.using
+            dataitem['returned'] = _sparebill.returned
+            dataitem['depleted'] = _sparebill.depleted
+            dataitem['damaged'] = _sparebill.damaged
+            dataitem['rejected'] = _sparebill.rejected
+            dataitem['user'] = _sparebill.user
+            dataitem['memobill'] = _sparebill.memo
+        """
+        data.append(dataitem)
+
+    _spares = k_spare.objects.all()
+    _briefs = []
+    for _spare in _spares:
+        _briefs.append(_spare.brief)
+
+    return render_to_response('sparecount.html', {'data': data, 'briefs': _briefs})
+
+def submit_sparecount(request):
+    _brief = request.GET.get('brief')
+    _state = request.GET.get('state')
+    _iseligible = request.GET.get('iseligible')
+    _count = request.GET.get('count')
+    _memo = request.GET.get('memo')
+    _name = request.GET.get('user')
+
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    _user = k_user.objects.get(username=request.user.username)
+    if _audit:
+        _sparecount = k_sparecount.objects.get(id=_id)
+        _sparecount.auditorid = _user.id
+        _sparecount.auditdatetime = get_current_date()
+        _sparecount.save()
+        return HttpResponseRedirect('/view_sparecount')
+    if _id != '':
+        _sparecount = k_sparecount.objects.get(id=_id)
+        _sparecount.editorid = _user.id
+        _sparecount.editdatetime = get_current_date()
+    else:
+        _spare = k_spare.objects.get(brief=_brief)
+        _sparecount = k_sparecount.objects.create(classid=_user.classid, spareid=_spare)
+        _sparecount.creatorid = _user.id
+        _sparecount.createdatetime = get_current_date()
+        if _state == "5":
+            _sparebill = k_sparebill.objects.create(classid=_user.classid, spareid=_spare)
+            _sparebill.using = -int(_count)
+            _sparebill.user = _name
+            _sparebill.memo = _memo
+            _sparebill.creatorid = _user.id
+            _sparebill.createdatetime = get_current_date()
+            _sparecount.sparebillid = _sparebill.id
+
+    _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+    if _iseligible == _sparecount.iseligible:
+        if _iseligible == "1":
+            _spare.eligiblestock = _spare.eligiblestock - _sparecount.count + int(_count)
+        else:
+            _spare.ineligiblestock = _spare.ineligiblestock - _sparecount.count + int(_count)
+    else:
+        if _iseligible == "1":
+            _spare.ineligiblestock = _spare.ineligiblestock - _sparecount.count
+            _spare.eligiblestock = _spare.eligiblestock + int(_count)
+        else:
+            _spare.eligiblestock = _spare.eligiblestock - _sparecount.count
+            _spare.ineligiblestock = _spare.ineligiblestock + int(_count)
+
+    _spare.save()
+
+    _sparecount.state = _state
+    _sparecount.iseligible = _iseligible
+    _sparecount.count = int(_count)
+    _sparecount.memo = _memo
+
+    _sparecount.save()
+    
+    _sparebill.save()
+    return HttpResponseRedirect('/view_sparecount')
+
+def delete_sparecount(request):
+    _id = request.GET.get('id')
+    if _id:
+        _sparecount = k_sparecount.objects.get(id=_id)
+
+        _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+        if _sparecount.iseligible == "1":
+            _spare.eligiblestock = _spare.eligiblestock - _sparecount.count
+        else:
+            _spare.ineligiblestock = _spare.ineligiblestock - _sparecount.count
+
+        _spare.save()
+
+        _sparecount.delete()
+    return HttpResponseRedirect('/view_sparecount')
+
+
+def view_tool(request):
+    return render_to_response('tool.html', {})
+
+def operate_tool(request):
+    return render_to_response('tooloperate.html', {})
+
+def submit_tool(request):
+    return render_to_response('tool.html', {})
+
+def delete_tool(request):
+    return render_to_response('tool.html', {})
+
+def view_tooluse(request):
+    return render_to_response('tooluse.html', {})
+
+def submit_tooluse(request):
+    return render_to_response('tooluse.html', {})
+
+def delete_tooluse(request):
+    return render_to_response('tooluse.html', {})
+
+def view_toolcount(request):
+    return render_to_response('toolcount.html', {})
+
+def submit_toolcount(request):
+    return render_to_response('toolcount.html', {})
+
+def delete_toolcount(request):
+    return render_to_response('toolcount.html', {})
 
 
 @login_required
