@@ -52,6 +52,7 @@ urlpatterns = patterns(
     url(r'^device_type_add/$', device_type_add),
     url(r'^operate_device/$', operate_device),
 
+
     url(r'^supplier/$', supplier),
     url(r'^add_supplier/$', add_supplier),
     url(r'^submit_supplier/$', submit_supplier),

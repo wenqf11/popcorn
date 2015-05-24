@@ -69,9 +69,8 @@ def usermgt(request):
         current_class_id = user.classid_id
         current_class = k_class.objects.get(id=current_class_id)
         server_msg = request.GET.get('msg')
-        if server_msg != None:
-            if server_msg == "1":
-                server_msg = '不能删除用户本身!'
+        if server_msg == None:
+            server_msg = ''
         else:
             server_msg = ''
         if current_class:
@@ -157,10 +156,19 @@ def operate_user(request):
             for key in key_list:
                 userdata[key] = eval('theuser.'+key)
 
-            userdata['chosen_role'] = ''
+            k_chosed_roles = k_role.objects.filter(k_user=_id)
+            chosed_roles = []
+            for k_chosed_role in k_chosed_roles:
+                chosed_roles.append(k_chosed_role.name)
+            userdata['chosen_roles'] = chosed_roles
         else:
             userdata['isNew'] = True
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
+
+        server_msg = request.GET.get('msg')
+        if server_msg:
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata,'server_msg':server_msg})
+        else:
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
         return render_to_response('useradd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -175,6 +183,7 @@ def useradd(request):
             face = "../static/images/user.png"
             #如果用户名相同，修改已有的用户
             server_msg = ''
+            cur_user_id = 0
             user = k_user.objects.filter(username=request.POST['username'])
             if not user:
                 #总共要有26项信息
@@ -206,6 +215,7 @@ def useradd(request):
                     auditdatetime=get_current_date(),
                     status=0,
                 )
+                cur_user_id = user.id
                 #给roles和user也增加一条记录
                 olduser = User.objects.create_user(
                     username=user.username,
@@ -222,12 +232,21 @@ def useradd(request):
                 server_msg = '添加用户成功！'
             elif len(user) == 1:
                 user = user[0]
+                cur_user_id = user.id
                 user.password = request.POST['password']
                 user.email = request.POST['email']
                 user.name = request.POST['name']
-                user.face = request.POST['face']
+                user.mobile = request.POST['mobile']
+                user.gender = request.POST['gender']
+                user.zipcode = request.POST['zipcode']
+                user.address = request.POST['address']
                 #user.birthday = request.POST['birthday']
+                user.idcard = request.POST['idcard']
+                user.idcardtype = request.POST['idcardtype']
+                user.content = request.POST['content']
                 user.memo = request.POST['memo']
+                user.editorid = request.user.id
+                user.editdatetime = get_current_date()
                 tmp_urs = user.roles.filter(k_user = user.id)
                 for ur in tmp_urs:
                     user.roles.remove(ur)
@@ -244,10 +263,7 @@ def useradd(request):
                 # 更新用户成功
             else:
                 server_msg = "Error: user with the same username!"
-        user=User.objects.get(username=request.user.username)
-        #return HttpResponseRedirect('/user_operate/')
-        variables=RequestContext(request,{'username':user.username, 'server_msg':server_msg})
-        return render_to_response('useradd.html',variables)
+        return HttpResponseRedirect('/user_operate/?id='+str(cur_user_id)+'&msg='+server_msg)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -256,7 +272,7 @@ def userdel(request):
     if request.user.is_authenticated():
         _id = request.GET.get('id')
         if int(_id) == request.user.id:
-            return HttpResponseRedirect('/user/?msg=1')
+            return HttpResponseRedirect('/user/?msg="不能删除用户本身"')
         if _id:
             users = k_user.objects.get(id=_id)
             users.delete()
@@ -322,22 +338,38 @@ def operate_device(request):
 
 def deviceadd(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
+        #返回class的信息
+        #返回type的信息
+        #生产厂商
+        #供应商
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
         return render_to_response('deviceadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
+
+def get_type_node(devicetypes, parent):
+    datas = list()
+    for type in devicetypes:
+        if type.parentid == parent:
+            cur_data = dict()
+            cur_data['text'] = type.name
+            tmp = get_type_node(devicetypes, type.name)
+            if len(tmp) > 0:
+                cur_data['nodes'] = tmp
+            datas.append(cur_data)
+
+    return datas
+
 def device_type(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        devicetypes = k_devicetype.objects.all()
+        parents = 0
+        datas = get_type_node(devicetypes, parents)
+
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas})
         return render_to_response('devicetype.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -345,11 +377,13 @@ def device_type(request):
 
 def device_type_add(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        k_devicetypes = k_devicetype.objects.all()
+        devicetypes = list()
+        for k_type in k_devicetypes:
+            devicetypes.append(k_type.name)
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'devicetypes':devicetypes})
         return render_to_response('devicetypeadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
