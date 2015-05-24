@@ -47,6 +47,18 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司联系人</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="linkman" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">联系人电话</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="mobile" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">备注</label>
                         <div class="col-sm-9">
                             <input type="text" name="memo" value="" />
@@ -93,6 +105,8 @@
                             <th>公司名称</th>
                             <th>公司联系方式</th>
                             <th>公司地址</th>
+                            <th>公司联系人</th>
+                            <th>联系人电话</th>
                             <th>备注</th>
                             <th></th>
                         </tr>
@@ -103,6 +117,8 @@
                             <td>{{ dataitem.name }}</td>
                             <td>{{ dataitem.contact }}</td>
                             <td>{{ dataitem.address }}</td>
+                            <td>{{ dataitem.linkman }}</td>
+                            <td>{{ dataitem.mobile }}</td>
                             <td>{{ dataitem.memo }}</td>
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
@@ -141,7 +157,10 @@
                 ,
                 ,
                 ,
-                ,,
+                ,
+                ,
+                ,
+                ,
                 { data: null, orderable: false }
             ]
         });
@@ -158,6 +177,8 @@
             divs[2].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
             divs[3].childNodes[3].childNodes[1].value = dataline[2].innerHTML;
             divs[4].childNodes[3].childNodes[1].value = dataline[3].innerHTML;
+            divs[5].childNodes[3].childNodes[1].value = dataline[4].innerHTML;
+            divs[6].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
         });
     });
     </script>

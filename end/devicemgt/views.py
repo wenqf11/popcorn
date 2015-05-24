@@ -388,6 +388,24 @@ def device_type_add(request):
     else:
         return HttpResponseRedirect('/login/')
 
+@login_required
+def device_type_submit(request):
+    if not k_devicetype.objects.filter(name = request.GET.get('name')):
+        _parentname = request.GET.get('parentname')
+        _parent = k_devicetype.objects.filter(name=_parentname)
+        if len(_parent) == 1:
+            _name = request.GET.get('name')
+            _memo = request.GET.get('memo')
+            _type = k_devicetype.objects.create(name=_name, parentid=_parent[0].id,depth=_parent[0].depth+1,memo=_memo,
+                                                  creatorid = request.user.id, createdatetime=get_current_date(),
+                                                  editorid=request.user.id, editdatetime=get_current_date())
+            _type.save()
+            return HttpResponseRedirect('/device_type/')
+        else:
+            return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
+    else:
+        return HttpResponseRedirect('/device_type/?msg="该供应商已存在！"')
+
 def supplier(request):
     _suppliers = k_supplier.objects.all()
     data = []
@@ -443,7 +461,7 @@ def submit_supplier(request):
             _supplier.save()
             return HttpResponseRedirect('/supplier/')
         else:
-            return HttpResponseRedirect('/supplier/?msg="error1"')
+            return HttpResponseRedirect('/supplier/?msg="该供应商已存在！"')
     return HttpResponseRedirect('/supplier/')
 
 @login_required
