@@ -1,0 +1,85 @@
+{% extends 'userframe.html' %}
+{% block css %}
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
+    <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+{% endblock %}
+
+{% block pageheader %}
+    添加设备类型
+{% endblock %}
+
+{% block maincontent %}
+<div class="row well" style="width: 60%;margin: auto;">
+    <div class="col-xs-12">
+        <form class="form-horizontal" action="/submit_supplier/" role="form" id="devicetypeform">
+            <div class="form-group">
+                <label class="col-sm-5 control-label no-padding-top">上级分类名称</label>
+                <div class="col-sm-7">
+                <select class="span2 m-wrap" name="parentname">
+                    {% for type in devicetypes %}
+                    <option value="{{ type }}">{{ type }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label no-padding-top">分类名称</label>
+                <div class="col-sm-7">
+                    <input type="text" name="name" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label no-padding-top">备注</label>
+                <div class="col-sm-7">
+                    <input type="text" name="memo" value="">
+                </div>
+            </div>
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-info" type="submit" onclick="return checkvalid();">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        保存
+                    </button>
+                    &nbsp; &nbsp; &nbsp;
+                    <button class="btn" type="reset">
+                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                        重置
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block tailjs %}
+    <script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>
+    <script type="text/javascript">
+        function checkvalid() {
+            var name = $("[name='name']").val();
+            if(name.length < 1 || name.length > 40) {
+                $("[name='name']").select();
+                $.gritter.add({
+                title: '添加设备类型失败！',
+                text: '类别名称长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            var parentname = $("[name='parentname']").val();
+            if(parentname.length < 1 || parentname.length > 40) {
+                $("[name='parentname']").select();
+                $.gritter.add({
+                title: '添加设备类型失败！',
+                text: '上级类别名称的长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock %}

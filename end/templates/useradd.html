@@ -270,6 +270,21 @@
         });
     </script>
     <script>
+        $(document).ready(function() {
+        /*
+            var str_chosen_role = '';
+            var i = 0;
+            {% for chosen_role in data.chosen_roles %}
+                var chosen_role="{{ chosen_role }}";
+                str_chosen_role = '<li class="search-choice"><span>'+ chosen_role+'</span><a class="search-choice-close" data-option-array-index="'+i+'"></a></li>';
+                i = i + 1;
+                $('.chosen-choices').prepend(str_chosen_role);
+            {% endfor %}
+            */
+
+        });
+    </script>
+    <script>
         function checkvalid() {
            var username = $("[name='username']").val();
            var password = $("[name='password']").val();
