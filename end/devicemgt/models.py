@@ -592,8 +592,9 @@ class k_schedule(models.Model):
 
 class k_staffworkinfo(models.Model):
     userid = models.ForeignKey(k_user, related_name='staffworkinfo_set')
-    checkin = models.DateField(blank=True, default=date.today)
-    checkout = models.DateField(blank=True, default=date.today)
+    date = models.DateField(blank=True, default=date.today)
+    checkin = models.CharField(max_length=80)
+    checkout = models.CharField(max_length=80)
     shifting = models.CharField(max_length=1) #1 yes, 0 no
 
 class k_staffscoreinfo(models.Model):
