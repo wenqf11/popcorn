@@ -138,7 +138,7 @@
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
-                                    <a class="red" href="/delete_maintenance?id={{ dataitem.id }}&type=2" onclick="delcfm()">
+                                    <a class="red" href="/delete_maintenance?id={{ dataitem.id }}&type=2">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
                                     {% endifequal %}
@@ -223,11 +223,4 @@
         });
     });
     </script>
-<script>
-function delcfm() {
-        if (!confirm("确认要删除？")) {
-            window.event.returnValue = false;
-        }
-    }
-</script>
 {% endblock %}

@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block pageheader %}
-    备件出入库
+    备件使用
 {% endblock %}
 
 {% block content %}
@@ -22,9 +22,12 @@
                     <thead>
                         <tr>
                             <th>备件简称</th>
-                            <th>出入库状态</th>
-                            <th>合格或不合格品</th>
-                            <th>数量</th>
+                            <th>借出总数</th>
+                            <th>已归还</th>
+                            <th>消耗</th>
+                            <th>损坏</th>
+                            <th>不合格品处置</th>
+                            <th>领用人</th>
                             <th>备注</th>
                             <th>创建人</th>
                             <th>创建时间</th>
@@ -39,9 +42,12 @@
                         {% for dataitem in data %}
                         <tr>
                             <td>{{ dataitem.brief }}</td>
-                            <td>{{ dataitem.state }}</td>
-                            <td>{{ dataitem.iseligible }}</td>
-                            <td>{{ dataitem.count }}</td>
+                            <td>{{ dataitem.using }}</td>
+                            <td>{{ dataitem.returned }}</td>
+                            <td>{{ dataitem.depleted }}</td>
+                            <td>{{ dataitem.damaged }}</td>
+                            <td>{{ dataitem.rejected }}</td>
+                            <td>{{ dataitem.user }}</td>
                             <td>{{ dataitem.memo }}</td>
                             <td>{{ dataitem.creator }}</td>
                             <td>{{ dataitem.createdatetime }}</td>
@@ -53,17 +59,17 @@
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% if dataitem.auditor %}
                                     {% else %}
-                                    {% if dataitem.state != "领用退回" and dataitem.state != "领用出库" %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
-                                    <a class="red" href="/delete_sparecount?id={{ dataitem.id }}">
+                                    <a class="red" href="/delete_sparebill?id={{ dataitem.id }}">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
-                                    {% endif %}
-                                    <a class="blue" href="/submit_sparecount?id={{ dataitem.id }}&audit=true">
+                                    {% if dataitem.audit %}
+                                    <a class="blue" href="/submit_sparebill?id={{ dataitem.id }}&audit=true">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
+                                    {% endif %}
                                     {% endif %}
                                 </div>
                             </td>
@@ -85,10 +91,10 @@
 <div id="my-modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="form-horizontal" action="/submit_sparecount/" role="form" id="countform">
+            <form class="form-horizontal" action="/submit_sparebill/" role="form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 class="smaller lighter blue no-margin countitemtitle"></h3>
+                    <h3 class="smaller lighter blue no-margin">修改使用记录</h3>
                 </div>
 
                 <div class="modal-body">
@@ -101,35 +107,43 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">备件简称</label>
                         <div class="col-sm-9">
-                    		<input id="brief" name="brief" type="text" data-provide="typeahead" oninput="setIndex()">
+                    		<input id="brief" name="brief" type="text" value="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">出入库状态</label>
+                        <label class="col-sm-3 control-label no-padding-top">借出总数</label>
                         <div class="col-sm-9">
-                            <select id="state" name="state" form="countform">
-                                <option value="1" selected="selected">采购入库</option>
-                                <!--<option value="2">领用退回</option>-->
-                                <option value="3">对账入库</option>
-                                <option value="4">采购退货</option>
-                                <option value="5">领用出库</option>
-                                <option value="6">对账出库</option>
-                            </select>
+                            <input type="number" name="using" value="" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">合格或不合格品</label>
+                        <label class="col-sm-3 control-label no-padding-top">已归还</label>
                         <div class="col-sm-9">
-                            <select id="iseligible" name="iseligible" form="countform">
-                                <option value="1" selected="selected">合格</option>
-                                <option value="2">不合格</option>
-                            </select>
+                            <input type="number" name="returned" value="" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">数量</label>
+                        <label class="col-sm-3 control-label no-padding-top">消耗</label>
                         <div class="col-sm-9">
-                            <input type="text" name="count" value="" />
+                            <input type="number" name="depleted" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">损坏</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="damaged" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">不合格品处置</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="rejected" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">领用人</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="user" value="" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -142,12 +156,6 @@
                         <label class="col-sm-3 control-label no-padding-top">id</label>
                         <div class="col-sm-9">
                             <input type="text" name="id" value="" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">领用人（领用出库需填）</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="user" value="" />
                         </div>
                     </div>
                 </div>
@@ -181,71 +189,17 @@
             $('#count_filter input').val($(this).html());
             $('#count_filter input').select();
         });
-        setData = function(){
-            var state = document.getElementById("state");
-            var divs = state.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
-            divs[1].childNodes[3].childNodes[1].value = "";
-            divs[1].childNodes[3].childNodes[1].removeAttribute("disabled");
-            divs[2].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
-            divs[3].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
-            divs[4].childNodes[3].childNodes[1].value = "";
-            divs[5].childNodes[3].childNodes[1].value = "";
-            divs[6].childNodes[3].childNodes[1].value = "";
-            divs[7].childNodes[3].childNodes[1].value = "";
-            divs[7].setAttribute("style","display:block");
-            $(".countitemtitle").text("添加出入库记录");
-        };
-        setIndex = function(){
-        	$(".special-for-modal").css("z-index","9999");
-        };
         $(".fa-pencil").click(function() {
             var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-            var state = document.getElementById("state");
-            var divs = state.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
+            var brief = document.getElementById("brief");
+            var divs = brief.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
+            for(var i = 0; i < 8; i++)
+                divs[i+1].childNodes[3].childNodes[1].value = dataline[i].innerHTML;
             divs[1].childNodes[3].childNodes[1].setAttribute("disabled", "");
-            divs[1].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
 
-            var states = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
-            var plength = states.length;
-            var thestate = dataline[1].innerHTML;
-            for(var i = 0; i < plength; i++) {
-                if(states[i].innerHTML == thestate) {
-                    states[i].setAttribute("selected", "selected");
-                }
-                else {
-                    states[i].removeAttribute("selected");
-                }
-            }
-
-            var iseligibles = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
-            var plength = iseligibles.length;
-            var theiseligible = dataline[2].innerHTML;
-            for(var i = 0; i < plength; i++) {
-                if(iseligibles[i].innerHTML == theiseligible) {
-                    iseligibles[i].setAttribute("selected", "selected");
-                }
-                else {
-                    iseligibles[i].removeAttribute("selected");
-                }
-            }
-
-            divs[4].childNodes[3].childNodes[1].value = dataline[3].innerHTML;
-            divs[5].childNodes[3].childNodes[1].value = dataline[4].innerHTML;
-            divs[7].setAttribute("style", "display:none");
-
-            divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
-            $(".countitemtitle").text("修改出入库记录");
+            divs[9].childNodes[3].childNodes[1].value = this.parentNode.id;
         });
     });
     </script>
-    <script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>
-    <script type="text/javascript">
-	    var subjects = new Array();
-	    var x = 0;
-	    {% for brief in briefs %}
-	        subjects[x++] = "{{ brief }}"; 
-	    {% endfor %}
-	    $('#brief').typeahead({source: subjects});
-	</script>
 {% endblock %}
