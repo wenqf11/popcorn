@@ -362,16 +362,16 @@ def supplier(request):
             'name': _supplier.name,
             'contact': _supplier.contact,
             'address': _supplier.addr,
+            'linkman':_supplier.linkman,
+            'mobile': _supplier.mobile,
             'memo': _supplier.memo,
         })
+
     return render_to_response('supplier.html', {'data': data})
 
 def add_supplier(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
         return render_to_response('supplieradd.html',variables)
     else:
@@ -386,6 +386,8 @@ def submit_supplier(request):
             _supplier = _supplier[0]
             _supplier.contact = request.POST.get('contact')
             _supplier.addr = request.POST.get('address')
+            _supplier.linkman = request.POST.get('linkman')
+            _supplier.mobile = request.POST.get('mobile')
             _supplier.memo = request.POST.get('memo')
             _supplier.editorid = request.user.id
             _supplier.editdatetime = get_current_date()
@@ -397,11 +399,12 @@ def submit_supplier(request):
             _name = request.GET.get('name')
             _contact = request.GET.get('contact')
             _address = request.GET.get('address')
+            _linkman = request.GET.get('linkman')
+            _mobile = request.GET.get('mobile')
             _memo = request.GET.get('memo')
-            _supplier = k_supplier.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,
+            _supplier = k_supplier.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman=_linkman,mobile=_mobile,
                                                   creatorid = request.user.id, createdatetime=get_current_date(),
                                                   editorid=request.user.id, editdatetime=get_current_date())
-
             _supplier.save()
             return HttpResponseRedirect('/supplier/')
         else:
@@ -417,16 +420,16 @@ def producer(request):
             'name': _producer.name,
             'contact': _producer.contact,
             'address': _producer.addr,
+            'linkman':_producer.linkman,
+            'mobile': _producer.mobile,
             'memo': _producer.memo,
         })
+
     return render_to_response('producer.html', {'data': data})
 
 def add_producer(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
         return render_to_response('produceradd.html',variables)
     else:
@@ -441,6 +444,8 @@ def submit_producer(request):
             _producer = _producer[0]
             _producer.contact = request.POST.get('contact')
             _producer.addr = request.POST.get('address')
+            _producer.linkman = request.POST.get('linkman')
+            _producer.mobile = request.POST.get('mobile')
             _producer.memo = request.POST.get('memo')
             _producer.editorid = request.user.id
             _producer.editdatetime = get_current_date()
@@ -452,11 +457,12 @@ def submit_producer(request):
             _name = request.GET.get('name')
             _contact = request.GET.get('contact')
             _address = request.GET.get('address')
+            _linkman = request.GET.get('linkman')
+            _mobile = request.GET.get('mobile')
             _memo = request.GET.get('memo')
-            _producer = k_producer.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,
+            _producer = k_producer.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman = _linkman,mobile=_mobile,
                                                   creatorid = request.user.id, createdatetime=get_current_date(),
                                                   editorid=request.user.id, editdatetime=get_current_date())
-
             _producer.save()
             return HttpResponseRedirect('/producer/')
         else:
