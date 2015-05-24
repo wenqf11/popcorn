@@ -1,0 +1,182 @@
+{% extends 'userframe.html' %}
+
+{% block js %}
+    <script src="../static/datepicker/bootstrap-datepicker.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="../static/datepicker/datepicker.css" rel="stylesheet" media="screen">
+    <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
+{% endblock %}
+{% block pageheader %}
+    {% if data.isNew %}
+        添加备件
+    {% else %}
+        编辑备件
+    {% endif %}
+{% endblock %}
+{% block maincontent %}
+         <!-- validation -->
+        <div class="row-fluid well" style="width: 75%;margin: auto;">
+             <!-- block -->
+            <div class="block">
+                <div class="block-content collapse in">
+                    <div class="span12">
+
+        <!-- BEGIN FORM-->
+        <form action="/submit_spare/" class="form-horizontal col-sm-12" enctype="multipart/form-data">
+            <fieldset>
+                <div class="form-group" style="display:none">
+                    <label class="col-sm-3 control-label no-padding-right">id<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="id" type="text" class="span6 m-wrap" value="{{ data.id }}" />
+                    </div>
+                </div>
+
+                <h4 class="header blue bolder smaller">厂家信息</h4>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">品牌<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="brand" type="text" class="span6 m-wrap" value="{{ data.brand }}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">生产厂家<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <select id="producer" name="producer">
+                            {% for producer in producers %}
+                                {% ifequal producer data.producer %}
+                            <option value="{{ producer }}" selected="selected">{{ producer }}</option>
+                                {% else %}
+                            <option value="{{ producer }}">{{ producer }}</option>
+                                {% endifequal %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">供应商<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <select id="supplier" name="supplier">
+                            {% for supplier in suppliers %}
+                                {% ifequal supplier data.supplier %}
+                            <option value="{{ supplier }}" selected="selected">{{ supplier }}</option>
+                                {% else %}
+                            <option value="{{ supplier }}">{{ supplier }}</option>
+                                {% endifequal %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <h4 class="header blue bolder smaller">基本信息</h4>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">备件全称<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="name" type="text" class="span6 m-wrap" value="{{ data.name }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">备件简称(编号)<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="brief" type="text" class="span6 m-wrap" value="{{ data.brief }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">型号<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="model" type="text" class="span6 m-wrap" value="{{ data.model }}"/>
+                    </div>
+                </div>
+                <!--
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">责任人<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="owner" type="text" class="span6 m-wrap" value="{{ data.owner }}"/>
+                    </div>
+                </div>
+                -->
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">内容<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="content" type="text" class="span6 m-wrap" value="{{ data.content }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">最小库存<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="minimum" type="number" class="span6 m-wrap" value="{{ data.minimum }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">备注<span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <input name="memo" type="text" class="span6 m-wrap" value="{{ data.memo }}"/>
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn btn-primary" onclick="return checkvalid();">确定</button>
+                        <button type="button" class="btn">取消</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <!-- END FORM-->
+    </div>
+    </div>
+</div>
+            <!-- /block -->
+</div>
+         <!-- /validation -->
+{% endblock %}
+
+{% block tailjs %}
+    <script src="../static/assets/js/bootstrap-tag.min.js"></script>
+    <script src="../static/assets/js/chosen.jquery.min.js"></script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
+
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                });
+
+
+                $('#chosen-multiple-style .btn').on('click', function(e){
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                     else $('#form-field-select-4').removeClass('tag-input-style');
+                });
+            }
+        });
+    </script>
+    <script>
+        function checkvalid() {
+            return true;
+        }
+    </script>
+{% endblock %}

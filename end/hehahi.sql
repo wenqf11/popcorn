@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.28 (64 bit)
-MySQL - 5.5.25a : Database - devicemgtdb
+SQLyog Ultimate v11.11 (64 bit)
+MySQL - 5.6.10 : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -576,13 +576,13 @@ CREATE TABLE `devicemgt_k_spare` (
   `brief` varchar(30) NOT NULL,
   `brand` varchar(30) NOT NULL,
   `producerid_id` int(11) NOT NULL,
-  `typeid_id` int(11) NOT NULL,
   `model` varchar(30) NOT NULL,
   `supplierid_id` int(11) NOT NULL,
   `content` varchar(200) NOT NULL,
   `memo` varchar(100) NOT NULL,
   `minimum` int(10) unsigned NOT NULL,
-  `stock` int(10) unsigned NOT NULL,
+  `eligiblestock` int(10) unsigned NOT NULL,
+  `ineligiblestock` int(10) unsigned NOT NULL,
   `creatorid` int(10) unsigned NOT NULL,
   `createdatetime` date NOT NULL,
   `editorid` int(10) unsigned NOT NULL,
@@ -590,19 +590,18 @@ CREATE TABLE `devicemgt_k_spare` (
   `auditorid` int(10) unsigned NOT NULL,
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
-  `ownerid` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_spare_432947aa` (`classid_id`),
   KEY `devicemgt_k_spare_5c5fdea6` (`producerid_id`),
-  KEY `devicemgt_k_spare_3f5d477e` (`typeid_id`),
   KEY `devicemgt_k_spare_69308dea` (`supplierid_id`),
   CONSTRAINT `classid_id_refs_id_0b558ac8` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_9fd74a5a` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
-  CONSTRAINT `supplierid_id_refs_id_b2e6caa3` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`),
-  CONSTRAINT `typeid_id_refs_id_a440dc6f` FOREIGN KEY (`typeid_id`) REFERENCES `devicemgt_k_devicetype` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `supplierid_id_refs_id_b2e6caa3` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_spare` */
+
+insert  into `devicemgt_k_spare`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (11,1,'spare1','s1_1','b1',1,'mo1',1,'c1','me1',20,30,0,1,'2015-05-24',0,'2015-05-24',0,'2015-05-24','0');
 
 /*Table structure for table `devicemgt_k_sparebill` */
 
@@ -611,16 +610,26 @@ DROP TABLE IF EXISTS `devicemgt_k_sparebill`;
 CREATE TABLE `devicemgt_k_sparebill` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `classid_id` int(11) NOT NULL,
-  `state` varchar(1) NOT NULL,
+  `spareid_id` int(11) NOT NULL,
+  `using` int(10) unsigned NOT NULL,
+  `returned` int(10) unsigned NOT NULL,
+  `depleted` int(10) unsigned NOT NULL,
+  `damaged` int(10) unsigned NOT NULL,
+  `rejected` int(10) unsigned NOT NULL,
+  `user` varchar(10) NOT NULL,
   `memo` varchar(100) NOT NULL,
   `creatorid` int(10) unsigned NOT NULL,
   `createdatetime` date NOT NULL,
+  `editorid` int(10) unsigned NOT NULL,
+  `editdatetime` date NOT NULL,
   `auditorid` int(10) unsigned NOT NULL,
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_sparebill_432947aa` (`classid_id`),
-  CONSTRAINT `classid_id_refs_id_4ffbefc7` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
+  KEY `devicemgt_k_sparebill_12fc9209` (`spareid_id`),
+  CONSTRAINT `classid_id_refs_id_4ffbefc7` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
+  CONSTRAINT `spareid_id_refs_id_8eee649a` FOREIGN KEY (`spareid_id`) REFERENCES `devicemgt_k_spare` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_sparebill` */
@@ -631,21 +640,24 @@ DROP TABLE IF EXISTS `devicemgt_k_sparecount`;
 
 CREATE TABLE `devicemgt_k_sparecount` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `billid_id` int(11) NOT NULL,
-  `deviceid_id` int(11) NOT NULL,
+  `classid_id` int(11) NOT NULL,
+  `sparebillid` int(10) unsigned NOT NULL,
   `spareid_id` int(11) NOT NULL,
   `count` int(11) NOT NULL,
   `state` varchar(1) NOT NULL,
+  `iseligible` varchar(1) NOT NULL,
   `memo` varchar(100) NOT NULL,
   `creatorid` int(10) unsigned NOT NULL,
   `createdatetime` date NOT NULL,
+  `editorid` int(10) unsigned NOT NULL,
+  `editdatetime` date NOT NULL,
+  `auditorid` int(10) unsigned NOT NULL,
+  `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `devicemgt_k_sparecount_fffd73c7` (`billid_id`),
-  KEY `devicemgt_k_sparecount_72537f95` (`deviceid_id`),
+  KEY `devicemgt_k_sparecount_432947aa` (`classid_id`),
   KEY `devicemgt_k_sparecount_12fc9209` (`spareid_id`),
-  CONSTRAINT `billid_id_refs_id_175e7a4d` FOREIGN KEY (`billid_id`) REFERENCES `devicemgt_k_sparebill` (`id`),
-  CONSTRAINT `deviceid_id_refs_id_26f51343` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`),
+  CONSTRAINT `classid_id_refs_id_9a8f3ea4` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `spareid_id_refs_id_c63e4168` FOREIGN KEY (`spareid_id`) REFERENCES `devicemgt_k_spare` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -654,18 +666,6 @@ CREATE TABLE `devicemgt_k_sparecount` (
 /*Table structure for table `devicemgt_k_sparecount_maintenanceid` */
 
 DROP TABLE IF EXISTS `devicemgt_k_sparecount_maintenanceid`;
-
-CREATE TABLE `devicemgt_k_sparecount_maintenanceid` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `k_sparecount_id` int(11) NOT NULL,
-  `k_maintenance_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `k_sparecount_id` (`k_sparecount_id`,`k_maintenance_id`),
-  KEY `devicemgt_k_sparecount_maintenanceid_7f95069c` (`k_sparecount_id`),
-  KEY `devicemgt_k_sparecount_maintenanceid_a0433d4b` (`k_maintenance_id`),
-  CONSTRAINT `k_maintenance_id_refs_id_d186555a` FOREIGN KEY (`k_maintenance_id`) REFERENCES `devicemgt_k_maintenance` (`id`),
-  CONSTRAINT `k_sparecount_id_refs_id_ed63e7e8` FOREIGN KEY (`k_sparecount_id`) REFERENCES `devicemgt_k_sparecount` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_sparecount_maintenanceid` */
 
@@ -809,13 +809,13 @@ CREATE TABLE `devicemgt_k_tool` (
   `brief` varchar(30) NOT NULL,
   `brand` varchar(30) NOT NULL,
   `producerid_id` int(11) NOT NULL,
-  `typeid_id` int(11) NOT NULL,
   `model` varchar(30) NOT NULL,
   `supplierid_id` int(11) NOT NULL,
   `content` varchar(200) NOT NULL,
   `memo` varchar(100) NOT NULL,
   `minimum` int(10) unsigned NOT NULL,
-  `stock` int(10) unsigned NOT NULL,
+  `eligiblestock` int(10) unsigned NOT NULL,
+  `ineligiblestock` int(10) unsigned NOT NULL,
   `creatorid` int(10) unsigned NOT NULL,
   `createdatetime` date NOT NULL,
   `editorid` int(10) unsigned NOT NULL,
@@ -823,15 +823,14 @@ CREATE TABLE `devicemgt_k_tool` (
   `auditorid` int(10) unsigned NOT NULL,
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
+  `ownerid` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_tool_432947aa` (`classid_id`),
   KEY `devicemgt_k_tool_5c5fdea6` (`producerid_id`),
-  KEY `devicemgt_k_tool_3f5d477e` (`typeid_id`),
   KEY `devicemgt_k_tool_69308dea` (`supplierid_id`),
   CONSTRAINT `classid_id_refs_id_67fdcf25` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_1d6747ec` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
-  CONSTRAINT `supplierid_id_refs_id_ea0efb3f` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`),
-  CONSTRAINT `typeid_id_refs_id_3635e9d5` FOREIGN KEY (`typeid_id`) REFERENCES `devicemgt_k_devicetype` (`id`)
+  CONSTRAINT `supplierid_id_refs_id_ea0efb3f` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_tool` */
@@ -842,12 +841,13 @@ DROP TABLE IF EXISTS `devicemgt_k_toolcount`;
 
 CREATE TABLE `devicemgt_k_toolcount` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `classid_id` int(11) NOT NULL,
+  `tooluseid` int(10) unsigned NOT NULL,
   `toolid_id` int(11) NOT NULL,
-  `tooluseid_id` int(11) NOT NULL,
   `count` int(11) NOT NULL,
   `state` varchar(1) NOT NULL,
+  `iseligible` varchar(1) NOT NULL,
   `memo` varchar(100) NOT NULL,
-  `stock` int(10) unsigned NOT NULL,
   `creatorid` int(10) unsigned NOT NULL,
   `createdatetime` date NOT NULL,
   `editorid` int(10) unsigned NOT NULL,
@@ -856,10 +856,10 @@ CREATE TABLE `devicemgt_k_toolcount` (
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `devicemgt_k_toolcount_432947aa` (`classid_id`),
   KEY `devicemgt_k_toolcount_9e808b4a` (`toolid_id`),
-  KEY `devicemgt_k_toolcount_b20c4629` (`tooluseid_id`),
-  CONSTRAINT `toolid_id_refs_id_bf3b36c6` FOREIGN KEY (`toolid_id`) REFERENCES `devicemgt_k_tool` (`id`),
-  CONSTRAINT `tooluseid_id_refs_id_b9a6ae2c` FOREIGN KEY (`tooluseid_id`) REFERENCES `devicemgt_k_tooluse` (`id`)
+  CONSTRAINT `classid_id_refs_id_639b3160` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
+  CONSTRAINT `toolid_id_refs_id_bf3b36c6` FOREIGN KEY (`toolid_id`) REFERENCES `devicemgt_k_tool` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_toolcount` */
@@ -870,13 +870,26 @@ DROP TABLE IF EXISTS `devicemgt_k_tooluse`;
 
 CREATE TABLE `devicemgt_k_tooluse` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parentid` int(10) unsigned NOT NULL,
+  `classid_id` int(11) NOT NULL,
   `toolid_id` int(11) NOT NULL,
-  `number` int(10) unsigned NOT NULL,
-  `ownerid` int(10) unsigned NOT NULL,
-  `stock` int(10) unsigned NOT NULL,
+  `using` int(10) unsigned NOT NULL,
+  `returned` int(10) unsigned NOT NULL,
+  `depleted` int(10) unsigned NOT NULL,
+  `damaged` int(10) unsigned NOT NULL,
+  `rejected` int(10) unsigned NOT NULL,
+  `user` varchar(10) NOT NULL,
+  `memo` varchar(100) NOT NULL,
+  `creatorid` int(10) unsigned NOT NULL,
+  `createdatetime` date NOT NULL,
+  `editorid` int(10) unsigned NOT NULL,
+  `editdatetime` date NOT NULL,
+  `auditorid` int(10) unsigned NOT NULL,
+  `auditdatetime` date NOT NULL,
+  `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `devicemgt_k_tooluse_432947aa` (`classid_id`),
   KEY `devicemgt_k_tooluse_9e808b4a` (`toolid_id`),
+  CONSTRAINT `classid_id_refs_id_b7701519` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `toolid_id_refs_id_28000472` FOREIGN KEY (`toolid_id`) REFERENCES `devicemgt_k_tool` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
