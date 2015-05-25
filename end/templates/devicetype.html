@@ -30,6 +30,7 @@
         var reg1=new RegExp("&quot;","g");
         var reg2=new RegExp("&#39;","g");
         var defaultData = '[';
+
         {% for d in data %}
             var tmpdata = '{{ d }}';
             tmpdata = tmpdata.replace(reg1,"\'");
@@ -38,6 +39,8 @@
         {% endfor %}
         defaultData = defaultData.substr(0,defaultData.length-1);
         defaultData += ']';
+
+        console.log(defaultData);
 
         $('#treeview6').treeview({
           color: "#428bca",

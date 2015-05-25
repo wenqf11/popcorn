@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.11 (64 bit)
-MySQL - 5.6.10 : Database - devicemgtdb
+SQLyog Ultimate v11.28 (64 bit)
+MySQL - 5.5.25a : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -262,11 +262,11 @@ CREATE TABLE `devicemgt_k_devicetype` (
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_devicetype` */
 
-insert  into `devicemgt_k_devicetype`(`id`,`parentid`,`depth`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,0,0,'','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00','');
+insert  into `devicemgt_k_devicetype`(`id`,`parentid`,`depth`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,0,0,'kernel','',0,'0000-00-00',0,'0000-00-00',0,'0000-00-00',''),(2,1,1,'sub_kernel1','',1,'2015-05-25',1,'2015-05-25',0,'2015-05-25','0'),(3,1,1,'sub_kernel2','',1,'2015-05-25',1,'2015-05-25',0,'2015-05-25','0'),(4,0,0,'kernel2','',1,'2015-05-25',1,'2015-05-25',0,'2015-05-25','0'),(5,2,2,'ssub_kernel1','',1,'2015-05-25',1,'2015-05-25',0,'2015-05-25','0');
 
 /*Table structure for table `devicemgt_k_feedback` */
 
@@ -421,11 +421,11 @@ CREATE TABLE `devicemgt_k_producer` (
   `linkman` varchar(30) NOT NULL,
   `mobile` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_producer` */
 
-insert  into `devicemgt_k_producer`(`id`,`name`,`contact`,`addr`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`linkman`,`mobile`) values (1,'TSINGH','18810305382','DHHH','s',0,'2015-05-04',1,'2015-05-22','',''),(2,'PKEING','18060198885','HDDD1','11111',0,'2015-05-22',1,'2015-05-22','',''),(3,'test1','test','test','112',0,'2015-05-22',1,'2015-05-22','','');
+insert  into `devicemgt_k_producer`(`id`,`name`,`contact`,`addr`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`linkman`,`mobile`) values (1,'TSINGH','18810305382','DHHH','s',0,'2015-05-04',1,'2015-05-22','',''),(2,'PKEING','18060198885','HDDD1','11111',0,'2015-05-22',1,'2015-05-22','',''),(3,'test1','test','test','112',0,'2015-05-22',1,'2015-05-22','',''),(4,'changjia1','email','188','',1,'2015-05-25',1,'2015-05-25','hahaha','100');
 
 /*Table structure for table `devicemgt_k_project` */
 
@@ -662,12 +662,6 @@ CREATE TABLE `devicemgt_k_sparecount` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_sparecount` */
-
-/*Table structure for table `devicemgt_k_sparecount_maintenanceid` */
-
-DROP TABLE IF EXISTS `devicemgt_k_sparecount_maintenanceid`;
-
-/*Data for the table `devicemgt_k_sparecount_maintenanceid` */
 
 /*Table structure for table `devicemgt_k_staffegginfo` */
 

@@ -354,8 +354,8 @@ def get_type_node(devicetypes, parent):
     for type in devicetypes:
         if type.parentid == parent:
             cur_data = dict()
-            cur_data['text'] = type.name
-            tmp = get_type_node(devicetypes, type.name)
+            cur_data['text'] = type.name.encode('utf8')
+            tmp = get_type_node(devicetypes, type.id)
             if len(tmp) > 0:
                 cur_data['nodes'] = tmp
             datas.append(cur_data)
@@ -367,9 +367,11 @@ def device_type(request):
         user=User.objects.get(username=request.user.username)
         devicetypes = k_devicetype.objects.all()
         parents = 0
-        datas = get_type_node(devicetypes, parents)
-
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas})
+        datas = get_type_node(devicetypes, parents) #获取节点树
+        server_msg = request.GET.get("msg")
+        if server_msg == None:
+            server_msg = ""
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
         return render_to_response('devicetype.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -378,7 +380,6 @@ def device_type(request):
 def device_type_add(request):
     if request.user.is_authenticated():
         user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
         k_devicetypes = k_devicetype.objects.all()
         devicetypes = list()
         for k_type in k_devicetypes:
@@ -392,17 +393,28 @@ def device_type_add(request):
 def device_type_submit(request):
     if not k_devicetype.objects.filter(name = request.GET.get('name')):
         _parentname = request.GET.get('parentname')
-        _parent = k_devicetype.objects.filter(name=_parentname)
-        if len(_parent) == 1:
-            _name = request.GET.get('name')
-            _memo = request.GET.get('memo')
-            _type = k_devicetype.objects.create(name=_name, parentid=_parent[0].id,depth=_parent[0].depth+1,memo=_memo,
+        _name = request.GET.get('name')
+        _memo = request.GET.get('memo')
+        if len(_parentname) == 0:
+            _id = 0
+            _depth = 0
+            _type = k_devicetype.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo,
                                                   creatorid = request.user.id, createdatetime=get_current_date(),
                                                   editorid=request.user.id, editdatetime=get_current_date())
             _type.save()
             return HttpResponseRedirect('/device_type/')
         else:
-            return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
+            _parent = k_devicetype.objects.filter(name=_parentname)
+            if len(_parent) == 1:
+                _id = _parent[0].id
+                _depth = _parent[0].depth+1
+                _type = k_devicetype.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo,
+                                                      creatorid = request.user.id, createdatetime=get_current_date(),
+                                                      editorid=request.user.id, editdatetime=get_current_date())
+                _type.save()
+                return HttpResponseRedirect('/device_type/')
+            else:
+                return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
     else:
         return HttpResponseRedirect('/device_type/?msg="该供应商已存在！"')
 

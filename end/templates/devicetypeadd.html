@@ -70,16 +70,7 @@
                 });
                 return false;
             }
-            var parentname = $("[name='parentname']").val();
-            if(parentname.length < 1 || parentname.length > 40) {
-                $("[name='parentname']").select();
-                $.gritter.add({
-                title: '添加设备类型失败！',
-                text: '上级类别名称的长度为1-40！',
-                class_name: 'gritter-error gritter-center'
-                });
-                return false;
-            }
+
             return true;
         }
     </script>
