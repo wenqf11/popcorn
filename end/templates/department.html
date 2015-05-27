@@ -1,9 +1,76 @@
-{% extends 'frame.html' %}
+{% extends 'userframe.html' %}
+{% block js %}
+    <script src="../static/treeview/js/bootstrap-treeview.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="../static/treeview/css/bootstrap-treeview.css" rel="stylesheet" media="screen">
+    <link href="../static/css/filetree.css" rel="stylesheet" media="screen">
+    <link href="../static/css/user.css" rel="stylesheet" media="screen">
+{% endblock %}
 
 {% block pageheader %}
-    部门设置
+    所有部门
 {% endblock %}
 
 {% block maincontent %}
+ <div class="row-fluid">
+    <p>
+        <a class="btn btn-success" href="/departmentadd">+新部门</a>
+    </p>
+ </div>
+<div class="col-xs-5">
+    <div id="treeview6"></div>
+</div>
+{% endblock %}
 
+{% block tailjs %}
+<script>
+  		$(function() {
+
+        var reg1=new RegExp("&quot;","g");
+        var reg2=new RegExp("&#39;","g");
+        var defaultData = '[';
+
+        {% for d in data %}
+            var tmpdata = '{{ d }}';
+            tmpdata = tmpdata.replace(reg1,"\'");
+            tmpdata = tmpdata.replace(reg2,"\"");
+            defaultData += tmpdata + ',';
+        {% endfor %}
+        defaultData = defaultData.substr(0,defaultData.length-1);
+        defaultData += ']';
+
+        console.log(defaultData);
+
+        $('#treeview6').treeview({
+          color: "#428bca",
+          expandIcon: "glyphicon glyphicon-stop",
+          collapseIcon: "glyphicon glyphicon-unchecked",
+          nodeIcon: "glyphicon glyphicon-user",
+          showTags: true,
+          enableLinks: true,
+          data: defaultData
+        });
+
+  		});
+</script>
+<script>
+$(function(){
+    var server_msg="{{ server_msg }}";
+    if (server_msg) {
+        $.gritter.add({
+            title: '系统消息',
+            text: server_msg,
+            class_name: 'gritter-error gritter-center'
+        });
+    }
+})
+</script>
+<script>
+function delcfm() {
+        if (!confirm("确认要删除？")) {
+            window.event.returnValue = false;
+        }
+    }
+</script>
 {% endblock %}

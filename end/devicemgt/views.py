@@ -317,11 +317,25 @@ def operate_device(request):
         _id = request.GET.get('id')
         userdata = dict()
         class_list = list()
+        type_list = list()
+        supplier_list = list()
+        producer_list = list()
         classes = k_class.objects.all()
         for c in classes:
             class_list.append(c.name)
-
+        types = k_devicetype.objects.all()
+        for t in types:
+            type_list.append(t.name)
+        suppliers = k_supplier.objects.all()
+        for s in suppliers:
+            supplier_list.append(s.name)
+        producers = k_producer.objects.all()
+        for p in producers:
+            producer_list.append(p.name)
         userdata['class_list'] = class_list
+        userdata['dtype_list'] = type_list
+        userdata['supplier_list'] = supplier_list
+        userdata['producer_list'] = producer_list
         if _id:
             theuser = k_user.objects.filter(id = _id)[0]
             key_list = ['username', 'password', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
@@ -376,7 +390,7 @@ def device_type(request):
     else:
         return HttpResponseRedirect('/login/')
 
-
+@login_required
 def device_type_add(request):
     if request.user.is_authenticated():
         user=User.objects.get(username=request.user.username)
@@ -416,7 +430,7 @@ def device_type_submit(request):
             else:
                 return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
     else:
-        return HttpResponseRedirect('/device_type/?msg="该供应商已存在！"')
+        return HttpResponseRedirect('/device_type/?msg="该设备名称已存在！"')
 
 def supplier(request):
     _suppliers = k_supplier.objects.all()
@@ -1929,10 +1943,76 @@ def submit_toolcount(request):
 def delete_toolcount(request):
     return render_to_response('toolcount.html', {})
 
+'''部门设置开始'''
+def department(request):
+    if request.user.is_authenticated():
+        user=User.objects.get(username=request.user.username)
+        classes = k_class.objects.all()
+        parents = 0
+        datas = get_type_node(classes, parents) #获取节点树
+        server_msg = request.GET.get("msg")
+        if server_msg == None:
+            server_msg = ""
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
+        return render_to_response('department.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
 
 @login_required
-def department(request):
-    return render_to_response('department.html', {})
+def departmentadd(request):
+    if request.user.is_authenticated():
+        user=User.objects.get(username=request.user.username)
+        datas = dict()
+        k_classes = k_class.objects.all()
+        class_list = list()
+        for c in k_classes:
+            class_list.append(c.name)
+        k_roles = k_role.objects.all()
+        role_list = list()
+        for r in k_roles:
+            role_list.append(r.name)
+        datas['class_list'] = class_list
+        datas['role_list'] = role_list
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'depatment', 'data':datas})
+        return render_to_response('departmentadd.html',variables)
+    else:
+        return HttpResponseRedirect('/login/')
+
+@login_required
+def department_submit(request):
+    if not k_class.objects.filter(name = request.GET.get('name')):
+        _parentname = request.GET.get('parentname')
+        _name = request.GET.get('name')
+        _license = request.GET.get('license')
+        _logo = request.GET.get('logo')
+        _address = request.GET.get('address')
+        _zipcode = request.GET.get('zipcode')
+        _phone = request.GET.get('phone')
+        _license = request.GET.get('license')
+        _licensetype = request.GET.get('licensetype')
+        _content = request.GET.get('content')
+        _memo = request.GET.get('memo')
+        _id = 0
+        _depth = 0
+        if len(_parentname) > 0:
+            _parent = k_class.objects.filter(name=_parentname)
+            if len(_parent) == 1:
+                _id = _parent[0].id
+                _depth = _parent[0].depth+1
+            else:
+                return HttpResponseRedirect('/department/?msg="父级类别有误！"')
+
+            _class = k_class.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo,
+                                            license=_license, logo=_logo, address=_address, zipcode=_zipcode,
+                                            phone=_phone, licensetype=_licensetype,content=_content,
+                                            creatorid = request.user.id, createdatetime=get_current_date(),
+                                            editorid=request.user.id, editdatetime=get_current_date())
+            _class.save()
+            return HttpResponseRedirect('/department/')
+    else:
+        return HttpResponseRedirect('/department/?msg="该部门名称已存在！"')
+
+'''部门设置结束'''
 
 
 @login_required

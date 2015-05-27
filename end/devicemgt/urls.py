@@ -125,5 +125,8 @@ urlpatterns = patterns(
     url(r'^delete_toolcount/$', delete_toolcount),
 
     url(r'^department/$', department),
+    url(r'^departmentadd/$', departmentadd),
+    url(r'^department_submit/$', department_submit),
+
     url(r'^score/$', score),
 )

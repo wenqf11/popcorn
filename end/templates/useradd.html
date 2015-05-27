@@ -109,7 +109,11 @@
                         <div class="col-sm-6">
                             <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="选择用户角色" name="role">
                                 {% for role in data.role_list %}
-                                <option value="{{ role }}">{{ role }}</option>
+                                    {% if role in data.chosen_roles %}
+                                        <option value="{{ role }}" selected="selected">{{ role }}</option>
+                                    {% else %}
+                                        <option value="{{ role }}">{{ role }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -157,7 +161,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">有效证件类型<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="status">
+                        <select class="span6 m-wrap" name="idcardtype">
                             <option value="">身份证</option>
                         </select>
                     </div>
@@ -289,9 +293,6 @@
            var username = $("[name='username']").val();
            var password = $("[name='password']").val();
            var role = $("[name='role']").val();
-           console.log(username);
-           console.log(password);
-           console.log(role);
            if(username.length < 1 || username.length > 20) {
                 $("[name='username']").select();
                 $.gritter.add({
