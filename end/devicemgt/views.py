@@ -320,6 +320,7 @@ def operate_device(request):
         type_list = list()
         supplier_list = list()
         producer_list = list()
+        people_list = list()
         classes = k_class.objects.all()
         for c in classes:
             class_list.append(c.name)
@@ -332,10 +333,18 @@ def operate_device(request):
         producers = k_producer.objects.all()
         for p in producers:
             producer_list.append(p.name)
+        people = k_user.objects.all()
+        for p in people:
+            person = dict()
+            person["name"] = p.name
+            _c = k_class.objects.get(id=p.classid_id)
+            person["position"] = _c.name
+            people_list.append(person)
         userdata['class_list'] = class_list
         userdata['dtype_list'] = type_list
         userdata['supplier_list'] = supplier_list
         userdata['producer_list'] = producer_list
+        userdata['people'] = people_list
         if _id:
             theuser = k_user.objects.filter(id = _id)[0]
             key_list = ['username', 'password', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',

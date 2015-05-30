@@ -1,10 +1,10 @@
 {% extends 'userframe.html' %}
 
 {% block js %}
-    <script src="../static/datepicker/bootstrap-datepicker.js"></script>
+    <script src="../static/assets/js/bootstrap-datepicker.min.js"></script>
 {% endblock %}
 {% block css %}
-    <link href="../static/datepicker/datepicker.css" rel="stylesheet" media="screen">
+    <link href="../static/assets/css/datepicker.css" rel="stylesheet" media="screen">
     <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 {% block pageheader %}
@@ -29,8 +29,8 @@
                 <h4 class="header blue bolder smaller">分类信息</h4>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">分类编号<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="classname">
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="classname">
                             {% for class in data.class_list %}
                             <option value="{{ class }}">{{ class }}</option>
                             {% endfor %}
@@ -39,8 +39,8 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">设备分类编号<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="dtype">
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="dtype">
                             {% for dtype in data.dtype_list %}
                             <option value="{{ dtype }}">{{ dtype }}</option>
                             {% endfor %}
@@ -58,8 +58,8 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">生产厂家<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="supplier">
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="supplier">
                             {% for supplier in data.supplier_list %}
                             <option value="{{ supplier }}">{{ supplier }}</option>
                             {% endfor %}
@@ -68,8 +68,8 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">供应商<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="producer">
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="producer">
                             {% for producer in data.producer_list %}
                             <option value="{{ producer }}">{{ producer }}</option>
                             {% endfor %}
@@ -81,8 +81,8 @@
 
                <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">设备状态<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <select class="span6 m-wrap" name="state">
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="state">
                             <option value="0">锁定</option>
                             <option value="1">正常</option>
                             <option value="2">停用</option>
@@ -137,9 +137,18 @@
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">责任人<span class="required">*</span></label>
+                    <div class="col-sm-5">
+                        <select class="chosen-select" data-placeholder="请选择责任人">
+                            {% for p in data.people %}
+                                <option value="{{ p.name }}">{{ p.name }}({{ p.position }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!--
                     <div class="col-sm-9">
                         <input name="owner" type="text" class="span6 m-wrap" value="{{ data.owner }}"/>
                     </div>
+                    -->
                 </div>
 
                 <div class="form-group">
@@ -157,56 +166,56 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">二维码<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">二维码</label>
                     <div class="col-sm-9">
-                        <input name="qrcode" type="text" class="span6 m-wrap" value="{{ data.qrcode }}"/>
+                        <input name="qrcode" type="text" class="span6 m-wrap" value="{{ data.qrcode }}" placeholder="根据设备编号自动生成" readonly/>
                     </div>
                 </div>
 
                 <h4 class="header blue bolder smaller">保养信息</h4>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">上次保养时间<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">上次保养时间</label>
                     <div class="col-sm-9">
-                        <input name="lastmaintenance" id="buytime" type="text" class="span6 m-wrap" value="{{ data.lastmaintenance |date:"Y年m月d日" }}" disabled/>
+                        <input name="lastmaintenance" id="lastmaintenance" type="text" class="span6 m-wrap" value="{{ data.lastmaintenance |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">下次保养时间<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">下次保养时间</label>
                     <div class="col-sm-9">
-                        <input name="nextmaintenance" id="buytime" type="text" class="span6 m-wrap" value="{{ data.nextmaintenance |date:"Y年m月d日" }}" disabled/>
+                        <input name="nextmaintenance" id="nextmaintenance" type="text" class="span6 m-wrap" value="{{ data.nextmaintenance |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">上次维修时间<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">上次维修时间</label>
                     <div class="col-sm-9">
-                        <input name="lastrepaire" id="buytime" type="text" class="span6 m-wrap" value="{{ data.lastrepaire |date:"Y年m月d日" }}" disabled/>
+                        <input name="lastrepaire" id="lastrepaire" type="text" class="span6 m-wrap" value="{{ data.lastrepaire |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
 
                 <h4 class="header blue bolder smaller">抄表信息</h4>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">最后抄表时间<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">最后抄表时间</label>
                     <div class="col-sm-9">
-                        <input name="lastmeter" id="buytime" type="text" class="span6 m-wrap" value="{{ data.lastmeter |date:"Y年m月d日" }}" disabled/>
+                        <input name="lastmeter" id="lastmeter" type="text" class="span6 m-wrap" value="{{ data.lastmeter |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">状态日志<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">状态日志</label>
                     <div class="col-sm-9">
-                        <input name="statelog" type="text" class="span6 m-wrap" value="{{ data.statelog }}" disabled/>
+                        <input name="statelog" type="text" class="span6 m-wrap" value="{{ data.statelog }}" readonly/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">备注<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">注意事项</label>
                     <div class="col-sm-9">
-                        <input name="memo" type="text" class="span6 m-wrap" value="{{ data.memo }}"/>
+                        <input name="memo" type="text" class="span6 m-wrap" value="{{ data.notice }}"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">备注<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">备注</label>
                     <div class="col-sm-9">
                         <input name="memo" type="text" class="span6 m-wrap" value="{{ data.memo }}"/>
                     </div>
@@ -234,7 +243,7 @@
     <script src="../static/assets/js/chosen.jquery.min.js"></script>
     <script>
     $(function(){
-        $('#birthday').datepicker();
+        $('#buytime').datepicker();
         var server_msg="{{ server_msg }}";
         if (server_msg) {
             $.gritter.add({
@@ -280,35 +289,42 @@
     </script>
     <script>
         function checkvalid() {
-           var username = $("[name='username']").val();
-           var password = $("[name='password']").val();
-           var role = $("[name='role']").val();
-           console.log(username);
-           console.log(password);
-           console.log(role);
-           if(username.length < 1 || username.length > 20) {
-                $("[name='username']").select();
+           var name = $("[name='name']").val();
+           var brand = $("[name='brand']").val();
+           var serial = $("[name='serial']").val();
+           var brief = $("[name='brief']").val();
+           if(name.length < 1 || name.length > 20) {
+                $("[name='name']").select();
                 $.gritter.add({
-                    title: '添加用户失败！',
-                    text: '请填写用户名！',
+                    title: '添加设备失败！',
+                    text: '设备全称长度为1-40个字符！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
            }
-           else if(password.length < 1 || password.length > 20) {
-                $("[name='password']").select();
+           else if(brief.length < 1 || brief.length > 40) {
+                $("[name='brief']").select();
                 $.gritter.add({
-                    title: '添加用户失败！',
-                    text: '请填写密码！',
+                    title: '添加设备失败！',
+                    text: '设备编号长度为1-40个字符！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
            }
-           else if(!role) {
-               $("[name='role']").select();
-               $.gritter.add({
-                    title: '添加用户失败！',
-                    text: '请为用户添加角色！',
+           else if(brand.length < 1 || brand.length > 40) {
+                $("[name='brand']").select();
+                $.gritter.add({
+                    title: '添加设备失败！',
+                    text: '设备品牌长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+           }
+           else if(serial.length < 1 || serial.length > 100) {
+                $("[name='serial']").select();
+                $.gritter.add({
+                    title: '添加设备失败！',
+                    text: '产品序列号长度为1-100个字符！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
