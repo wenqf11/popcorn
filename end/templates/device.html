@@ -31,7 +31,7 @@
             </div>
         </div>
         <h2>
-            {{ userinfo.username }}
+            {{ deviceinfo.name }} {{ deviceinfo.qrcode }}
         </h2>
     </div>
     <hr style="margin: 10px"/>
@@ -40,7 +40,7 @@
             <i class="ace-icon fa fa-phone info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              手机：{{ userinfo.mobile }}
+              设备简称：{{ deviceinfo.brief }}
         </h5>
     </div>
     <hr style="margin: 10px"/>
@@ -49,7 +49,7 @@
             <i class="ace-icon fa fa-envelope info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              邮箱：{{ userinfo.email }}
+              设备位置：{{ deviceinfo.position }}
         </h5>
     </div>
     <hr style="margin: 10px" />
@@ -58,7 +58,7 @@
             <i class="ace-icon fa fa-trophy info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              职务：
+              所属部门：
             {% if user_class %}
                 {{ user_class }}
             {% else %}
@@ -74,19 +74,12 @@
         <h5 class="col-xs-9 info-text">
               角色：
             <div class="tags" style="width:75%">
-            {% if user_role %}
-                {% for role in user_role %}
-                    <span class="tag">{{ role.name }}</span>
-                {% endfor %}
-            {% else %}
-                <span>当前用户尚无角色</span>
-            {% endif %}
             </div>
         </h5>
     </div>
 
     <hr style="margin: 10px"/>
-    <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/userdel?id={{userinfo.id}}">
+    <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/userdel?id={{typeinfo.id}}">
         <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
     </a>
     <span style="float:right">&nbsp;&nbsp;</span>

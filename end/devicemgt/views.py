@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
 from datetime import datetime, timedelta
-from helper import handle_uploaded_file, get_current_time, get_current_date
+from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node
 import json
 
 
@@ -298,11 +298,13 @@ def userset(request):
 '''设备管理'''
 def devicemgt(request):
     if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
+        server_msg = ''
+        devicetypes = k_devicetype.objects.all()
+        parents = 0
+        datas = get_device_node(devicetypes, parents) #获取节点树
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
         return render_to_response('device.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -362,28 +364,11 @@ def operate_device(request):
 def deviceadd(request):
     if request.user.is_authenticated():
         user=User.objects.get(username=request.user.username)
-        #返回class的信息
-        #返回type的信息
-        #生产厂商
-        #供应商
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
         return render_to_response('deviceadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
 
-
-def get_type_node(devicetypes, parent):
-    datas = list()
-    for type in devicetypes:
-        if type.parentid == parent:
-            cur_data = dict()
-            cur_data['text'] = type.name.encode('utf8')
-            tmp = get_type_node(devicetypes, type.id)
-            if len(tmp) > 0:
-                cur_data['nodes'] = tmp
-            datas.append(cur_data)
-
-    return datas
 
 def device_type(request):
     if request.user.is_authenticated():
