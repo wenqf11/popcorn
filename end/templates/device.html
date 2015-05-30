@@ -18,7 +18,7 @@
     <div id="treeview6"></div>
 </div>
 
-{% if userinfo %}
+{% if deviceinfo %}
 <div class="col-xs-7">
     <div class="profile-users clearfix">
         <div class="itemdiv memberdiv">
@@ -58,32 +58,25 @@
             <i class="ace-icon fa fa-trophy info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              所属部门：
-            {% if user_class %}
-                {{ user_class }}
-            {% else %}
-                层级关系未知
-            {% endif %}
+              所属部门：{{ deviceinfo.class }}
         </h5>
     </div>
-    <hr style="margin: 10px"/>
+    <hr style="margin: 10px" />
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-child info-icon"></i>
+            <i class="ace-icon fa fa-trophy info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              角色：
-            <div class="tags" style="width:75%">
-            </div>
+              负责人：{{ deviceinfo.owner }}
         </h5>
     </div>
 
     <hr style="margin: 10px"/>
-    <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/userdel?id={{typeinfo.id}}">
+    <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/devicedel?id={{deviceinfo.id}}">
         <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
     </a>
     <span style="float:right">&nbsp;&nbsp;</span>
-    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/user_operate/?id={{userinfo.id}}">
+    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/operate_device/?id={{deviceinfo.id}}">
         <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
     </a>
 </div>
@@ -105,10 +98,6 @@
         {% endfor %}
         defaultData = defaultData.substr(0,defaultData.length-1);
         defaultData += ']';
-        //defaultData = '[{"text": "Parent 2", "href": "#parent2"}]';
-        //console.log(defaultData);
-        //var tmp = '[{"text":"parent 1", "href":"hi"}]';
-        //var defaultData = eval('(' + tmp + ')');
 
         $('#treeview6').treeview({
           color: "#428bca",

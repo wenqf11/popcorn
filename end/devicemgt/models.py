@@ -284,10 +284,11 @@ class k_device(models.Model):
     nextmaintenance = models.DateField(blank=True, default=date.today)
     maintenanceperiod = models.PositiveIntegerField()
     lastrepaire = models.DateField(blank=True, default=date.today)
+    spare = models.CharField(max_length=500)
     # spare = models.ManyToManyField(k_spare)
     lastmeter = models.DateField(blank=True, default=date.today)
-    notice = models.CharField(max_length=100)
-    #? statelog = models.CharField(max_length=100)
+    notice = models.CharField(max_length=500)
+    statelog = models.CharField(max_length=500)
     ownerid = models.PositiveIntegerField()
 
 class k_form(models.Model):

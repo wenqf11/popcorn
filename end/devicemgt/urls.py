@@ -48,6 +48,7 @@ urlpatterns = patterns(
 
     url(r'^device/$', devicemgt),
     url(r'^deviceadd/$', deviceadd),
+    url(r'^devicedel/$', devicedel),
     url(r'^device_type/$', device_type),
     url(r'^device_type_add/$', device_type_add),
     url(r'^device_type_submit/$', device_type_submit),

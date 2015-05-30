@@ -71,8 +71,7 @@ def usermgt(request):
         server_msg = request.GET.get('msg')
         if server_msg == None:
            server_msg = ''
-        else:
-            server_msg = ''
+
         if current_class:
             userdatas = list()
             class_set = k_class.objects.filter(parentid = current_class_id)
@@ -99,7 +98,6 @@ def usermgt(request):
             cur_datas['nodes'] = userdatas
             datas.append(cur_datas)
 
-        #userdata = json.dumps(userdata)
         _id = request.GET.get('id')
         # 如果访问某个用户的信息
         if (_id):
@@ -300,11 +298,51 @@ def devicemgt(request):
     if request.user.is_authenticated():
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
-        server_msg = ''
+        server_msg = request.GET.get('msg')
+        if server_msg == None:
+            server_msg = ''
         devicetypes = k_devicetype.objects.all()
         parents = 0
         datas = get_device_node(devicetypes, parents) #获取节点树
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
+        _id = request.GET.get('id')
+        deviceinfo = dict()
+        if (_id):
+            device = k_device.objects.filter(id=_id)
+            if len(device) == 1:
+                device = device[0]
+                deviceinfo['id'] = _id
+                deviceinfo['brief'] = device.brief
+                deviceinfo['name']  = device.name
+                deviceinfo['position'] = device.position
+                owner = k_user.objects.filter(id=device.ownerid)
+                if len(owner) == 1:
+                    deviceinfo['owner'] = owner[0].name
+                else:
+                    deviceinfo['owner'] = "未指定负责人"
+                _c = k_class.objects.filter(id=device.classid_id)
+                if len(_c) == 1:
+                    _c_list = list()
+                    _c_list.append(_c[0].name)
+                    _parentid = _c[0].parentid
+                    while True:
+                        _cur = k_class.objects.filter(id=_parentid)
+                        if len(_cur) != 1:
+                            break
+                        else:
+                            _parentid = _cur[0].parentid
+                            _c_list.append(_cur[0].name)
+                    _c_num = len(_c_list)
+                    deviceinfo['class'] = ''
+                    for i in xrange(0,_c_num):
+                        deviceinfo['class'] += _c_list[_c_num-i-1] + "-"
+
+                    deviceinfo['class'] = deviceinfo['class'][0:len(deviceinfo['class'])-1]
+                else:
+                    deviceinfo['class'] = '未指定该设备所属部门'
+        if len(deviceinfo) > 0:
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'deviceinfo':deviceinfo})
+        else:
+            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
         return render_to_response('device.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -348,11 +386,11 @@ def operate_device(request):
         userdata['producer_list'] = producer_list
         userdata['people'] = people_list
         if _id:
-            theuser = k_user.objects.filter(id = _id)[0]
-            key_list = ['username', 'password', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
-                        'idcard', 'idcardtype','contactmobile', 'content', 'memo','birthday']
+            thedevice = k_device.objects.filter(id = _id)[0]
+            key_list = ['name', 'brand', 'brief', 'serial', 'model', 'buytime', 'content', 'qrcode', 'position', 'memo',
+                        'lastmaintenance', 'nextmaintenance','maintenanceperiod', 'lastrepaire', 'spare','lastmeter', 'notice']
             for key in key_list:
-                userdata[key] = eval('theuser.'+key)
+                userdata[key] = eval('thedevice.'+key)
         else:
             userdata['isNew'] = True
         variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
@@ -368,6 +406,18 @@ def deviceadd(request):
         return render_to_response('deviceadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
+
+@login_required
+def devicedel(request):
+    _id = request.GET.get('id')
+    if _id:
+        devices = k_device.objects.filter(id=_id)
+        if len(devices) == 1:
+            device = devices[0]
+            device.delete()
+        else:
+            return HttpResponseRedirect('/device/?msg="删除设备失败"')
+    return HttpResponseRedirect('/user/')
 
 
 def device_type(request):
