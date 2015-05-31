@@ -29,8 +29,7 @@ import cn.edu.tsinghua.thss.popcorn.R;
  */
 
 public class ReportFragment extends Fragment {
-    Button open_camera_btn;
-    Button browse_btn;
+    Button open_camera_btn, browse_btn;
     ImageView  image_view;
 
     private static final int TAKE_PICTURE = 1;

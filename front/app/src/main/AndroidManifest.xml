@@ -36,27 +36,47 @@
         <activity
             android:name=".QRcode.QRcodeActivity"
             android:label="@string/title_activity_qrcode"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".RepairListActivity"
             android:label="@string/title_activity_repair_list"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".RepairActivity"
             android:label="@string/title_activity_repair"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".MaintainListActivity"
             android:label="@string/title_activity_maintain_list"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".MaintainActivity"
             android:label="@string/title_activity_maintain"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".DeviceInfoSearchActivity"
+            android:label="@string/title_activity_device_info_search" >
+        </activity>
+        <activity
+            android:name=".DeviceInfoDetailActivity"
+            android:label="@string/title_activity_device_info_detail" >
+        </activity>
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:label="@string/title_activity_change_password" >
+        </activity>
+        <activity
+            android:name=".FeedBackActivity"
+            android:label="@string/title_activity_feedback" >
+        </activity>
+        <activity
+            android:name=".AboutInfoActivity"
+            android:label="@string/title_activity_about_info" >
         </activity>
     </application>
 
