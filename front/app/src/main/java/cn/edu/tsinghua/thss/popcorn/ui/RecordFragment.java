@@ -49,10 +49,9 @@ public class RecordFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent=new Intent(getActivity(), RecordListActivity.class);
-        Bundle bundle=new Bundle();
+        Intent intent = new Intent(getActivity(), RecordListActivity.class);
+        Bundle bundle = new Bundle();
         intent.putExtras(bundle);
-        //执行意图
         startActivity(intent);
 
         super.onListItemClick(l, v, position, id);

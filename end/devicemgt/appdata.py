@@ -58,7 +58,7 @@ def token_required(request_type):
             except Exception:
                 return HttpResponse(json.dumps({
                     'status': 'error',
-                    'data': 'unknown token error'
+                    'data': 'multi user objects'
                 }))
 
             # if not para['token'] == user.token
