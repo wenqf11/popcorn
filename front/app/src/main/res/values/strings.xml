@@ -29,4 +29,11 @@
     <string name="fault_place">故障地点：</string>
     <string name="tabDescription">tab描述</string>
     <string name="submit">提交</string>
+    <string name="advice">建议：</string>
+    <string name="title_activity_device_info_search">DeviceInfoSearchActivity</string>
+    <string name="title_activity_device_info_detail">DeviceInfoDetailActivity</string>
+    <string name="title_activity_change_password">修改密码</string>
+    <string name="title_activity_feedback">意见反馈</string>
+    <string name="title_activity_about_info">关于</string>
+
 </resources>

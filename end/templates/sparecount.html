@@ -1,10 +1,11 @@
-{% extends 'frame.html' %}
+{% extends 'userframe.html' %}
 {% block css %}
     <link href="../static/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
     <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 
 {% block pageheader %}
@@ -14,6 +15,13 @@
 {% block content %}
  <div class="row-fluid">
     <!-- block -->
+    <p>
+        <div>
+            <a class="btn btn-success btn-bold" href="#my-modal" onclick="setData()" role="button" data-toggle="modal">
+                <i class="ace-icon fa fa-plus bigger-130"></i>添加
+            </a>
+        </div>
+    </p>
     <div class="block">
         <div class="block-content collapse in">
             <div class="span12">
@@ -28,8 +36,8 @@
                             <th>备注</th>
                             <th>创建人</th>
                             <th>创建时间</th>
-                            <th>编辑人</th>
-                            <th>编辑时间</th>
+                            <!--<th>编辑人</th>
+                            <th>编辑时间</th>-->
                             <th>审核人</th>
                             <th>审核时间</th>
                             <th></th>
@@ -45,8 +53,8 @@
                             <td>{{ dataitem.memo }}</td>
                             <td>{{ dataitem.creator }}</td>
                             <td>{{ dataitem.createdatetime }}</td>
-                            <td>{{ dataitem.editor }}</td>
-                            <td>{{ dataitem.editdatetime }}</td>
+                            <!--<td>{{ dataitem.editor }}</td>
+                            <td>{{ dataitem.editdatetime }}</td>-->
                             <td>{{ dataitem.auditor }}</td>
                             <td>{{ dataitem.auditdatetime }}</td>
                             <td class="unsearchable">
@@ -54,14 +62,14 @@
                                     {% if dataitem.auditor %}
                                     {% else %}
                                     {% if dataitem.state != "领用退回" and dataitem.state != "领用出库" %}
-                                    <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
+                                    <!--<a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
-                                    </a>
-                                    <a class="red" href="/delete_sparecount?id={{ dataitem.id }}">
+                                    </a>-->
+                                    <a class="red" href="/delete_sparecount?id={{ dataitem.id }}" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
                                     {% endif %}
-                                    <a class="blue" href="/submit_sparecount?id={{ dataitem.id }}&audit=true">
+                                    <a class="blue" href="/submit_sparecount?id={{ dataitem.id }}&audit=true" onclick="audcfm()">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
                                     {% endif %}
@@ -71,11 +79,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div>
-                    <a class="btn btn-blue btn-info btn-bold" href="#my-modal" onclick="setData()" role="button" data-toggle="modal">
-                        <i class="ace-icon fa fa-plus bigger-130"></i>添加
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -85,7 +88,8 @@
 <div id="my-modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="form-horizontal" action="/submit_sparecount/" role="form" id="countform">
+            <form class="form-horizontal" action="/submit_sparecount/" enctype="multipart/form-data" role="form" id="countform">
+                <fieldset>
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3 class="smaller lighter blue no-margin countitemtitle"></h3>
@@ -101,18 +105,23 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">备件简称</label>
                         <div class="col-sm-9">
-                    		<input id="brief" name="brief" type="text" data-provide="typeahead" oninput="setIndex()">
+                            <select class="chosen-select" id="brief" name="brief" onchange="setMax()" data-placeholder="请选择备件">
+                                {% for b in briefinfos %}
+                                <option value="{{ b.brief }}">{{ b.brief }}(合格: {{ b.eligiblestock }}, 不合格: {{ b.ineligiblestock }})</option>
+                                {% endfor %}
+                            </select>
+                            <input id="brief" name="brief" type="text" data-provide="typeahead" oninput="setIndex()">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">出入库状态</label>
                         <div class="col-sm-9">
-                            <select id="state" name="state" form="countform">
+                            <select id="state" name="state" onchange="setMax()" form="countform">
                                 <option value="1" selected="selected">采购入库</option>
                                 <!--<option value="2">领用退回</option>-->
                                 <option value="3">对账入库</option>
                                 <option value="4">采购退货</option>
-                                <option value="5">领用出库</option>
+                                <!--<option value="5">领用出库</option>-->
                                 <option value="6">对账出库</option>
                             </select>
                         </div>
@@ -120,7 +129,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">合格或不合格品</label>
                         <div class="col-sm-9">
-                            <select id="iseligible" name="iseligible" form="countform">
+                            <select id="iseligible" name="iseligible" onchange="setMax()" form="countform">
                                 <option value="1" selected="selected">合格</option>
                                 <option value="2">不合格</option>
                             </select>
@@ -129,7 +138,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">数量</label>
                         <div class="col-sm-9">
-                            <input type="text" name="count" value="" />
+                            <input type="number" min="1" name="count" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -144,17 +153,11 @@
                             <input type="text" name="id" value="" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">领用人（领用出库需填）</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="user" value="" />
-                        </div>
-                    </div>
                 </div>
 
                 <div class="modal-footer">
                     <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-info" type="submit">
+                        <button class="btn btn-info" type="submit" onclick="return checkvalid();">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
                         </button>
@@ -165,6 +168,7 @@
                         </button>
                     </div>
                 </div>
+            </fieldset>
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -175,25 +179,74 @@
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
     <script type="text/javascript">
+    $(function(){
+        var server_msg = "{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '库存已不足',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
     $(document).ready(function() {
-        $('#count').DataTable();
+        $('#count').DataTable({
+            "oLanguage" : {
+                "sLengthMenu" : "每页显示 _MENU_ 条记录",
+                "sZeroRecords" : "对不起，没有匹配的数据",
+                "sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
+                "sInfoEmpty" : "没有数据",
+                "sInfoFiltered" : "(数据表中共 _MAX_ 条记录)",
+                "sProcessing" : "正在加载中...",
+                "sSearch" : "搜索：",
+                "oPaginate" : {
+                    "sFirst" : "第一页",
+                    "sPrevious" : " 上一页 ",
+                    "sNext" : " 下一页 ",
+                    "sLast" : " 最后一页 "
+                }
+            }
+        });
         $('td:not(.unsearchable)').click(function(){
             $('#count_filter input').val($(this).html());
             $('#count_filter input').select();
         });
+        setMax = function(){
+            if($("#state").val() == "4" || $("#state").val() == "6") {
+                a = $(".chosen-single").children()[0].innerText;
+                if($("#iseligible").val() == "1") {
+                    tmp = "合格: ";
+                    a1 = a.search(tmp) + tmp.length;
+                    a2 = a.search(", 不合格:");
+                    $("[name='count']").attr("max", parseInt(a.substr(a1, a2-a1)));
+                }
+                else {
+                    tmp = "不合格: ";
+                    a1 = a.search(tmp) + tmp.length;
+                    a2 = a.length;
+                    $("[name='count']").attr("max", parseInt(a.substr(a1, a2-a1)));
+                }
+            }
+            else
+                $("[name='count']").removeAttr("max");
+        };
         setData = function(){
             var state = document.getElementById("state");
             var divs = state.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
-            divs[1].childNodes[3].childNodes[1].value = "";
+            //divs[1].childNodes[3].childNodes[1].value = "";
             divs[1].childNodes[3].childNodes[1].removeAttribute("disabled");
+            $(divs[1].childNodes[3].childNodes[2]).removeClass("chosen-disabled");
+            divs[1].childNodes[3].childNodes[4].setAttribute("disabled", "");
+            $(divs[1].childNodes[3].childNodes[2]).css("display", "");
+            $(divs[1].childNodes[3].childNodes[4]).css("display", "none");
             divs[2].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
             divs[3].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
-            divs[4].childNodes[3].childNodes[1].value = "";
+            divs[4].childNodes[3].childNodes[1].value = 0;
             divs[5].childNodes[3].childNodes[1].value = "";
             divs[6].childNodes[3].childNodes[1].value = "";
-            divs[7].childNodes[3].childNodes[1].value = "";
-            divs[7].setAttribute("style","display:block");
             $(".countitemtitle").text("添加出入库记录");
+            $("[type='reset']").css("display", "");
+            setMax();
         };
         setIndex = function(){
         	$(".special-for-modal").css("z-index","9999");
@@ -204,7 +257,11 @@
             var divs = state.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
             divs[1].childNodes[3].childNodes[1].setAttribute("disabled", "");
-            divs[1].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
+            $(divs[1].childNodes[3].childNodes[2]).addClass("chosen-disabled");
+            divs[1].childNodes[3].childNodes[4].setAttribute("disabled", "");
+            $(divs[1].childNodes[3].childNodes[2]).css("display", "none");
+            $(divs[1].childNodes[3].childNodes[4]).css("display", "");
+            divs[1].childNodes[3].childNodes[4].value = dataline[0].innerHTML;
 
             var states = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
             var plength = states.length;
@@ -230,16 +287,44 @@
                 }
             }
 
-            divs[4].childNodes[3].childNodes[1].value = dataline[3].innerHTML;
+            var count = parseInt(dataline[3].innerHTML);
+            if(count < 0)
+                count = -count;
+            divs[4].childNodes[3].childNodes[1].value = count;
             divs[5].childNodes[3].childNodes[1].value = dataline[4].innerHTML;
-            divs[7].setAttribute("style", "display:none");
 
             divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
             $(".countitemtitle").text("修改出入库记录");
+            $("[type='reset']").css("display", "none");
         });
     });
     </script>
-    <script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>
+    <script type="text/javascript">
+        function checkvalid() {
+           var memo = $("[name='memo']").val();
+           if(memo.length > 80) {
+                $("[name='memo']").select();
+                $.gritter.add({
+                    title: '增加出入库失败！',
+                    text: '备注长度为0-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            return true;
+        }
+        function delcfm() {
+            if (!confirm("确认要删除？")) {
+                window.event.returnValue = false;
+            }
+        }
+        function audcfm() {
+            if (!confirm("确认要审核？")) {
+                window.event.returnValue = false;
+            }
+        }
+    </script>
+    <!--<script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>
     <script type="text/javascript">
 	    var subjects = new Array();
 	    var x = 0;
@@ -247,5 +332,32 @@
 	        subjects[x++] = "{{ brief }}"; 
 	    {% endfor %}
 	    $('#brief').typeahead({source: subjects});
-	</script>
+	</script>-->
+    <script src="../static/assets/js/chosen.jquery.min.js"></script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
+
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()+150});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()+150});
+                    })
+                });
+
+            }
+        });
+    </script>
 {% endblock %}

@@ -3,6 +3,7 @@
 {% endblock %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="../static/duallistbox/css/bootstrap-duallistbox.css">
+<link rel="stylesheet" type="text/css" href="../static/multiselect/css/multi-select.css">
 {% endblock %}
 {% block pageheader %}
     {% if isNew %}
@@ -60,13 +61,13 @@
                 </div>
             </div>
             <div class="hr hr-16 hr-dotted"></div>
+            <input id="route-input" style="display: none;" type="text" name="routeString" value="{{ data.routeString }}">
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top" for="duallist">
-                    <p>编辑路线　　　　</p>
-                    <p>（左侧为可添加的form）</p>
+                <label class="col-sm-3 control-label no-padding-top" for="routeList">
+                    <p>编辑路线</p>
                 </label>
                 <div class="col-sm-8">
-                    <select id="duallistbox" multiple="multiple" size="10" name="duallistbox" form="roleform">
+                    <select id="multiselect" multiple="multiple" size="10" name="routeList" form="roleform">
                         {% for form in data.forms %}
                             {% if form.selected %}
                             <option value="{{ form.id }}" selected="selected">{{ form.brief }}</option>
@@ -97,24 +98,38 @@
 {% endblock %}
 
 {% block tailjs %}
-<script type="text/javascript" src="../static/duallistbox/js/jquery.bootstrap-duallistbox.js"></script>
+<script type="text/javascript" src="../static/multiselect/js/jquery.multi-select.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        dualListbox = $('#duallistbox').bootstrapDualListbox({
-            moveOnSelect: true,
-            preserveSelectionOnMove: 'moved',
-            selectorMinimalHeight: 300,
-            infoTextFiltered: '<span class="label label-purple label-lg">Filtered</span>'
-        });
-        var dualListboxContainer = dualListbox.bootstrapDualListbox('getContainer');
-        dualListboxContainer.find('.btn').addClass('btn-white btn-info btn-bold');
+        var rstr = $('#route-input').val();
+        var arr = [];
+        if (rstr != "") {
+            arr = $('#route-input').val().split(',');
+        }
 
-        $('.bootstrap-duallistbox-container').css('margin-left', '0px');
+        var multiselect = $('#multiselect').multiSelect({
+            keepOrder: true,
+            selectableHeader: '<div class="custom-header">备选设备</div>',
+            selectionHeader: '<div class="custom-header">已选设备</div>',
+            afterSelect: function (values) {
+                for(var index in values){
+                    arr.push(values[index]); 
+                }
+                $('#route-input').val(arr.toString());
+            },
+            "afterDeselect": function (values) {
+                for(var index in values){
+                    arr.splice($.inArray(values[index], arr), 1);
+                }
+                $('#route-input').val(arr.toString());
+            }
+        });
 
         $('button[type="reset"]').on('click', function(e) {
             e.preventDefault();
             $('#roleform')[0].reset();
-            dualListbox.bootstrapDualListbox('refresh',true);
+            multiselect.multiSelect('refresh');
+            arr = $('#route-input').val().split(',');
         });
     });
 </script>
