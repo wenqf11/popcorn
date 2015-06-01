@@ -2007,35 +2007,420 @@ def delete_sparecount(request):
     return HttpResponseRedirect('/view_sparecount')
 
 
+@login_required
 def view_tool(request):
-    return render_to_response('tool.html', {})
+    _tools = k_tool.objects.all()
+    data = []
+    for _tool in _tools:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_tool.creatorid)
+        dataitem['id'] = _tool.id
+        dataitem['brand'] = _tool.brand
+        dataitem['producer'] = _tool.producerid.name
+        dataitem['supplier'] = _tool.supplierid.name
+        dataitem['name'] = _tool.name
+        dataitem['brief'] = _tool.brief
+        dataitem['model'] = _tool.model
+        dataitem['minimum'] = _tool.minimum
+        dataitem['eligiblestock'] = _tool.eligiblestock
+        dataitem['ineligiblestock'] = _tool.ineligiblestock
+        dataitem['content'] = _tool.content
+        dataitem['memo'] = _tool.memo
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _tool.createdatetime
+
+        if _tool.editorid != 0:
+            _editor = k_user.objects.get(id=_tool.editorid)
+            dataitem['editor'] = _editor.name
+            dataitem['editdatetime'] = _tool.editdatetime
+
+        if _tool.auditorid != 0:
+            _auditor = k_user.objects.get(id=_tool.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _tool.auditdatetime
+
+        data.append(dataitem)
+
+    return render_to_response('tool.html', {"data": data})
 
 def operate_tool(request):
-    return render_to_response('tooloperate.html', {})
+    _id = request.GET.get('id')
+    _data = {}
+    if _id:
+        _tool = k_tool.objects.get(id=_id)
+        _data["id"] = _id
+        _data["isNew"] = False
+        _data["brand"] = _tool.brand
+        _data["producer"] = _tool.producerid.name
+        _data["supplier"] = _tool.supplierid.name
+        _data["name"] = _tool.name
+        _data["brief"] = _tool.brief
+        _data["model"] = _tool.model
+        _data["minimum"] = _tool.minimum
+        _data["content"] = _tool.content
+        _data["memo"] = _tool.memo
+    else:
+        _data["isNew"] = True
+    _producers = []
+    _allproducers = k_producer.objects.all()
+    for _producer in _allproducers:
+        _producers.append(_producer.name)
+    _suppliers = []
+    _allsuppliers = k_supplier.objects.all()
+    for _supplier in _allsuppliers:
+        _suppliers.append(_supplier.name)
+    return render_to_response('tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers})
 
 def submit_tool(request):
-    return render_to_response('tool.html', {})
+    _brand = request.GET.get('brand')
+    _producer = request.GET.get('producer')
+    _supplier = request.GET.get('supplier')
+    _name = request.GET.get('name')
+    _brief = request.GET.get('brief')
+    _model = request.GET.get('model')
+    _minimum = request.GET.get('minimum')
+    _content = request.GET.get('content')
+    _memo = request.GET.get('memo')
+
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    _user = k_user.objects.get(username=request.user.username)
+    if _audit:
+        _tool = k_tool.objects.get(id=_id)
+        _tool.auditorid = _user.id
+        _tool.auditdatetime = get_current_date()
+        _tool.save()
+        return HttpResponseRedirect('/view_tool')
+    if _id:
+        _tool = k_tool.objects.get(id=_id)
+        _tool.editorid = _user.id
+        _tool.editdatetime = get_current_date()
+        _tool.auditorid = 0
+        _producer = k_producer.objects.get(name=_producer)
+        _supplier = k_supplier.objects.get(name=_supplier)
+        _tool.producerid = _producer
+        _tool.supplierid = _supplier
+    else:
+        _producer = k_producer.objects.get(name=_producer)
+        _supplier = k_supplier.objects.get(name=_supplier)
+        _tool = k_tool.objects.create(classid=_user.classid, producerid=_producer, supplierid=_supplier)
+        _tool.creatorid = _user.id
+        _tool.createdatetime = get_current_date()
+    _tool.brand = _brand
+    _tool.name = _name
+    _tool.brief = _brief
+    _tool.model = _model
+    _tool.minimum = int(float(_minimum))
+    _tool.content = _content
+    _tool.memo = _memo
+    _tool.save()
+
+    return HttpResponseRedirect('/view_tool')
 
 def delete_tool(request):
-    return render_to_response('tool.html', {})
+    _id = request.GET.get('id')
+    if _id:
+        _tool = k_tool.objects.get(id=_id)
+        _tooluses = k_tooluse.objects.filter(toolid=_tool)
+        _toolcounts = k_toolcount.objects.filter(toolid=_tool)
+        _tool.delete()
+        _tooluses.delete()
+        _toolcounts.delete()
+    return HttpResponseRedirect('/view_tool')
 
 def view_tooluse(request):
-    return render_to_response('tooluse.html', {})
+    _tooluses = k_tooluse.objects.all()
+    data = []
+    for _tooluse in _tooluses:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_tooluse.creatorid)
+        _tool = k_tool.objects.get(id=_tooluse.toolid_id)
+        dataitem['id'] = _tooluse.id
+        dataitem['brief'] = _tool.brief
+        dataitem['using'] = _tooluse.using
+        dataitem['returned'] = _tooluse.returned
+        dataitem['depleted'] = _tooluse.depleted
+        dataitem['damaged'] = _tooluse.damaged
+        dataitem['rejected'] = _tooluse.rejected
+        dataitem['user'] = _tooluse.user
+        dataitem['memo'] = _tooluse.memo
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _tooluse.createdatetime
+
+        dataitem['notreturned'] = dataitem['using'] - dataitem['returned'] - dataitem['depleted'] - dataitem['damaged'] - dataitem['rejected']
+
+        if _tooluse.editorid != 0:
+            _editor = k_user.objects.get(id=_tooluse.editorid)
+            dataitem['editor'] = _editor.name
+            dataitem['editdatetime'] = _tooluse.editdatetime
+
+        if _tooluse.auditorid != 0:
+            _auditor = k_user.objects.get(id=_tooluse.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _tooluse.auditdatetime
+        elif _tooluse.using == _tooluse.returned + _tooluse.depleted + _tooluse.damaged + _tooluse.rejected:
+            dataitem['audit'] = 'audit'
+        data.append(dataitem)
+
+    _tools = k_tool.objects.all()
+    #_briefs = []
+    #for _tool in _tools:
+        #_briefs.append(_tool.brief)
+
+    _briefinfos = []
+    for s in _tools:
+        _tool = dict()
+        _tool["brief"] = s.brief
+        _tool["eligiblestock"] = s.eligiblestock
+        _tool["ineligiblestock"] = s.ineligiblestock
+        _briefinfos.append(_tool)
+    
+    server_msg = request.GET.get("msg")
+    if server_msg == None:
+        server_msg = ""
+
+    #return render_to_response('tooluse.html', {'data': data, 'briefs': _briefs})
+    return render_to_response('tooluse.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
 
 def submit_tooluse(request):
-    return render_to_response('tooluse.html', {})
+    #_using = request.GET.get('using')
+    _returned = request.GET.get('returned')
+    _depleted = request.GET.get('depleted')
+    _damaged = request.GET.get('damaged')
+    _rejected = request.GET.get('rejected')
+    _memo = request.GET.get('memo')
+    _name = request.GET.get('user')
+
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    _user = k_user.objects.get(username=request.user.username)
+    if _audit:
+        _tooluse = k_tooluse.objects.get(id=_id)
+        _tooluse.auditorid = _user.id
+        _tooluse.auditdatetime = get_current_date()
+        _tooluse.save()
+        return HttpResponseRedirect('/view_tooluse')
+    _tooluse = k_tooluse.objects.get(id=_id)
+    _tooluse.editorid = _user.id
+    _tooluse.editdatetime = get_current_date()
+    """
+    if _tooluse.using != int(float(_using)):
+        _toolcount = k_toolcount.objects.get(tooluseid=_id, state="5")
+        _toolcount.count = -int(float(_using))
+        _toolcount.editorid = _user.id
+        _toolcount.editdatetime = get_current_date()
+        _toolcount.auditorid = 0
+        _tool = k_tool.objects.get(id=_tooluse.toolid_id)
+        _tool.eligiblestock = _tool.eligiblestock + _tooluse.using - int(float(_using))
+        _tool.save()
+        _toolcount.save()
+    """
+    if _tooluse.returned != int(float(_returned)):
+        _tool = k_tool.objects.get(id=_tooluse.toolid_id)
+        _tool.eligiblestock = _tool.eligiblestock - _tooluse.returned + int(float(_returned))
+        _toolcount = k_toolcount.objects.create(classid=_user.classid, tooluseid=_id, toolid=_tool)
+        _toolcount.count = int(float(_returned)) - _tooluse.returned
+        _toolcount.state = "2"
+        _toolcount.iseligible = "1"
+        _toolcount.memo = _tooluse.memo
+        _toolcount.creatorid = _user.id
+        _toolcount.createdatetime = get_current_date()
+        _tool.save()
+        _toolcount.save()
+
+    if _tooluse.rejected != int(float(_rejected)):
+        _tool = k_tool.objects.get(id=_tooluse.toolid_id)
+        _tool.ineligiblestock = _tool.ineligiblestock - _tooluse.rejected + int(float(_rejected))
+        _toolcount = k_toolcount.objects.create(classid=_user.classid, tooluseid=_id, toolid=_tool)
+        _toolcount.count = int(float(_rejected)) - _tooluse.rejected
+        _toolcount.state = "2"
+        _toolcount.iseligible = "2"
+        _toolcount.memo = _tooluse.memo
+        _toolcount.creatorid = _user.id
+        _toolcount.createdatetime = get_current_date()
+        _tool.save()
+        _toolcount.save()
+
+    #_tooluse.using = int(float(_using))
+    _tooluse.returned = int(float(_returned))
+    _tooluse.depleted = int(float(_depleted))
+    _tooluse.damaged = int(float(_damaged))
+    _tooluse.rejected = int(float(_rejected))
+    _tooluse.user = _name
+    _tooluse.memo = _memo
+
+    _tooluse.save()
+    return HttpResponseRedirect('/view_tooluse')
 
 def delete_tooluse(request):
-    return render_to_response('tooluse.html', {})
+    _id = request.GET.get('id')
+    if _id:
+        _tooluse = k_tooluse.objects.get(id=_id)
+
+        _tool = k_tool.objects.get(id=_tooluse.toolid_id)
+        _tool.eligiblestock = _tool.eligiblestock + _tooluse.using - _tooluse.returned
+        _tool.ineligiblestock = _tool.ineligiblestock - _tooluse.rejected
+
+        _tool.save()
+
+        _toolcount = k_toolcount.objects.filter(tooluseid=_id)
+        _toolcount.delete()
+
+        _tooluse.delete()
+    return HttpResponseRedirect('/view_tooluse')
 
 def view_toolcount(request):
-    return render_to_response('toolcount.html', {})
+    _toolcounts = k_toolcount.objects.all()
+    data = []
+    for _toolcount in _toolcounts:
+        dataitem = {}
+
+        _creator = k_user.objects.get(id=_toolcount.creatorid)
+        _tool = k_tool.objects.get(id=_toolcount.toolid_id)
+        dataitem['id'] = _toolcount.id
+        dataitem['tooluseid'] = _toolcount.tooluseid
+        dataitem['brief'] = _tool.brief
+        dataitem['count'] = _toolcount.count
+        dataitem['state'] = _toolcount.get_state_display()
+        dataitem['iseligible'] = _toolcount.get_iseligible_display()
+        dataitem['memo'] = _toolcount.memo
+        dataitem['creator'] = _creator.name
+        dataitem['createdatetime'] = _toolcount.createdatetime
+
+        if _toolcount.editorid != 0:
+            _editor = k_user.objects.get(id=_toolcount.editorid)
+            dataitem['editor'] = _editor.name
+            dataitem['editdatetime'] = _toolcount.editdatetime
+
+        if _toolcount.auditorid != 0:
+            _auditor = k_user.objects.get(id=_toolcount.auditorid)
+            dataitem['auditor'] = _auditor.name
+            dataitem['auditdatetime'] = _toolcount.auditdatetime
+        """
+        if _toolcount.tooluseid != 0:
+            _tooluse = k_tooluse.objects.get(id=_toolcount.tooluseid)
+            dataitem['using'] = _tooluse.using
+            dataitem['returned'] = _tooluse.returned
+            dataitem['depleted'] = _tooluse.depleted
+            dataitem['damaged'] = _tooluse.damaged
+            dataitem['rejected'] = _tooluse.rejected
+            dataitem['user'] = _tooluse.user
+            dataitem['memobill'] = _tooluse.memo
+        """
+        data.append(dataitem)
+
+    _tools = k_tool.objects.all()
+    #_briefs = []
+    #for _tool in _tools:
+        #_briefs.append(_tool.brief)
+
+    _briefinfos = []
+    for s in _tools:
+        _tool = dict()
+        _tool["brief"] = s.brief
+        _tool["eligiblestock"] = s.eligiblestock
+        _tool["ineligiblestock"] = s.ineligiblestock
+        _briefinfos.append(_tool)
+    
+    server_msg = request.GET.get("msg")
+    if server_msg == None:
+        server_msg = ""
+
+    #return render_to_response('toolcount.html', {'data': data, 'briefs': _briefs})
+    return render_to_response('toolcount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
 
 def submit_toolcount(request):
-    return render_to_response('toolcount.html', {})
+    _brief = request.GET.get('brief')
+    _state = request.GET.get('state')
+    _iseligible = request.GET.get('iseligible')
+    _count = request.GET.get('count')
+    _memo = request.GET.get('memo')
+    _name = request.GET.get('user')
+
+    if _state == "4" or _state == "5" or _state == "6":
+        _count = -int(float(_count))
+    elif _count:
+        _count = int(float(_count))
+
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    _user = k_user.objects.get(username=request.user.username)
+    if _audit:
+        _toolcount = k_toolcount.objects.get(id=_id)
+        _toolcount.auditorid = _user.id
+        _toolcount.auditdatetime = get_current_date()
+        _toolcount.save()
+        return HttpResponseRedirect('/view_toolcount')
+    if _id != '':
+        _toolcount = k_toolcount.objects.get(id=_id)
+        _toolcount.editorid = _user.id
+        _toolcount.editdatetime = get_current_date()
+    else:
+        _tool = k_tool.objects.get(brief=_brief)
+        _toolcount = k_toolcount.objects.create(classid=_user.classid, toolid=_tool)
+        _toolcount.creatorid = _user.id
+        _toolcount.createdatetime = get_current_date()
+        if _state == "5":
+            _tooluse = k_tooluse.objects.create(classid=_user.classid, toolid=_tool)
+            _tooluse.using = -_count
+            _tooluse.user = _name
+            _tooluse.memo = _memo
+            _tooluse.creatorid = _user.id
+            _tooluse.createdatetime = get_current_date()
+            _tooluse.save()
+            _toolcount.tooluseid = _tooluse.id
+
+    _tool = k_tool.objects.get(id=_toolcount.toolid_id)
+    if _iseligible == _toolcount.iseligible:
+        if _iseligible == "1":
+            _tool.eligiblestock = _tool.eligiblestock - _toolcount.count + _count
+        else:
+            _tool.ineligiblestock = _tool.ineligiblestock - _toolcount.count + _count
+    else:
+        if _iseligible == "1":
+            _tool.ineligiblestock = _tool.ineligiblestock - _toolcount.count
+            _tool.eligiblestock = _tool.eligiblestock + _count
+        else:
+            _tool.eligiblestock = _tool.eligiblestock - _toolcount.count
+            _tool.ineligiblestock = _tool.ineligiblestock + _count
+
+    _tool.save()
+
+    _toolcount.state = _state
+    _toolcount.iseligible = _iseligible
+    _toolcount.count = _count
+    _toolcount.memo = _memo
+
+    _toolcount.save()
+    if _state == "5":
+        if _tool.eligiblestock < _tool.minimum:
+            return HttpResponseRedirect('/view_tooluse/?msg=库存不足，需补'+str(_tool.minimum-_tool.eligiblestock)+'个')
+        else:
+            return HttpResponseRedirect('/view_tooluse')
+    else:
+        if _tool.eligiblestock < _tool.minimum:
+            return HttpResponseRedirect('/view_toolcount/?msg=库存不足，需补'+str(_tool.minimum-_tool.eligiblestock)+'个')
+        else:
+            return HttpResponseRedirect('/view_toolcount')
 
 def delete_toolcount(request):
-    return render_to_response('toolcount.html', {})
+    _id = request.GET.get('id')
+    if _id:
+        _toolcount = k_toolcount.objects.get(id=_id)
+
+        _tool = k_tool.objects.get(id=_toolcount.toolid_id)
+        if _toolcount.iseligible == "1":
+            _tool.eligiblestock = _tool.eligiblestock - _toolcount.count
+        else:
+            _tool.ineligiblestock = _tool.ineligiblestock - _toolcount.count
+
+        _tool.save()
+
+        _toolcount.delete()
+    return HttpResponseRedirect('/view_toolcount')
+
 
 '''部门设置开始'''
 def department(request):

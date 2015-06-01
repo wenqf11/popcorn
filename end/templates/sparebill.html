@@ -368,6 +368,7 @@
         function checkvalid1() {
            var user = $($("[name='user']")[0]).val();
            var memo = $($("[name='memo']")[0]).val();
+           var notreturned = $("[name='notreturned']").val();
            if(user.length < 1 || user.length > 40) {
                 $("[name='user']").select();
                 $.gritter.add({
@@ -382,6 +383,15 @@
                 $.gritter.add({
                     title: '修改使用表单失败！',
                     text: '备注长度为0-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            if(notreturned == "输入有误，无法计算") {
+                $("[name='memo']").select();
+                $.gritter.add({
+                    title: '修改使用表单失败！',
+                    text: '数据输入有误！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
