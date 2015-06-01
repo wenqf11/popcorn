@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
     <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 
 {% block pageheader %}
@@ -14,6 +15,13 @@
 {% block content %}
  <div class="row-fluid">
     <!-- block -->
+    <p>
+        <div>
+            <a class="btn btn-success btn-bold" href="#my-modal2" onclick="setMax()" role="button" data-toggle="modal">
+                <i class="ace-icon fa fa-plus bigger-130"></i>添加
+            </a>
+        </div>
+    </p>
     <div class="block">
         <div class="block-content collapse in">
             <div class="span12">
@@ -27,6 +35,7 @@
                             <th>消耗</th>
                             <th>损坏</th>
                             <th>不合格品处置</th>
+                            <th>仍在使用</th>
                             <th>领用人</th>
                             <th>备注</th>
                             <th>创建人</th>
@@ -47,6 +56,7 @@
                             <td>{{ dataitem.depleted }}</td>
                             <td>{{ dataitem.damaged }}</td>
                             <td>{{ dataitem.rejected }}</td>
+                            <td>{{ dataitem.notreturned }}</td>
                             <td>{{ dataitem.user }}</td>
                             <td>{{ dataitem.memo }}</td>
                             <td>{{ dataitem.creator }}</td>
@@ -62,11 +72,11 @@
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
-                                    <a class="red" href="/delete_sparebill?id={{ dataitem.id }}">
+                                    <a class="red" href="/delete_sparebill?id={{ dataitem.id }}" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
                                     {% if dataitem.audit %}
-                                    <a class="blue" href="/submit_sparebill?id={{ dataitem.id }}&audit=true">
+                                    <a class="blue" href="/submit_sparebill?id={{ dataitem.id }}&audit=true" onclick="audcfm()">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
                                     {% endif %}
@@ -77,11 +87,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div>
-                    <a class="btn btn-blue btn-info btn-bold" href="#my-modal" onclick="setData()" role="button" data-toggle="modal">
-                        <i class="ace-icon fa fa-plus bigger-130"></i>添加
-                    </a>
-                </div>
             </div>
         </div>
     </div>
@@ -91,7 +96,7 @@
 <div id="my-modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="form-horizontal" action="/submit_sparebill/" role="form">
+            <form class="form-horizontal" action="/submit_sparebill/" role="form" id="billform">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h3 class="smaller lighter blue no-margin">修改使用记录</h3>
@@ -107,62 +112,151 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">备件简称</label>
                         <div class="col-sm-9">
-                    		<input id="brief" name="brief" type="text" value="">
+                    		<input id="brief" name="brief" form="billform" type="text" value="" disabled/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">借出总数</label>
                         <div class="col-sm-9">
-                            <input type="number" name="using" value="" />
+                            <input type="number" min="1" name="using" oninput="setNotreturned()" form="billform" value="" disabled/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">已归还</label>
                         <div class="col-sm-9">
-                            <input type="number" name="returned" value="" />
+                            <input type="number" min="0" name="returned" oninput="setNotreturned()" form="billform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">消耗</label>
                         <div class="col-sm-9">
-                            <input type="number" name="depleted" value="" />
+                            <input type="number" min="0" name="depleted" oninput="setNotreturned()" form="billform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">损坏</label>
                         <div class="col-sm-9">
-                            <input type="number" name="damaged" value="" />
+                            <input type="number" min="0" name="damaged" oninput="setNotreturned()" form="billform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">不合格品处置</label>
                         <div class="col-sm-9">
-                            <input type="number" name="rejected" value="" />
+                            <input type="number" min="0" name="rejected" oninput="setNotreturned()" form="billform" value="" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">仍在使用</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="notreturned" form="billform" value="" disabled/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">领用人</label>
                         <div class="col-sm-9">
-                            <input type="text" name="user" value="" />
+                            <input type="text" name="user" form="billform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">备注</label>
                         <div class="col-sm-9">
-                            <input type="text" name="memo" value="" />
+                            <input type="text" name="memo" form="billform" value="" />
                         </div>
                     </div>
                     <div class="form-group" style="display:none">
                         <label class="col-sm-3 control-label no-padding-top">id</label>
                         <div class="col-sm-9">
-                            <input type="text" name="id" value="" />
+                            <input type="text" name="id" form="billform" value="" />
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-info" type="submit">
+                        <button class="btn btn-info" type="submit" onclick="return checkvalid1();">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<div id="my-modal2" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/submit_sparecount/" role="form" id="countform">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="smaller lighter blue no-margin countitemtitle">添加使用记录</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top"></label>
+                        <div class="col-sm-9">
+                            <input type="file" name="file" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">备件简称</label>
+                        <div class="col-sm-9">
+                            <select class="chosen-select" id="brief2" name="brief" onchange="setMax()" form="countform" data-placeholder="请选择备件">
+                                {% for b in briefinfos %}
+                                <option value="{{ b.brief }}">{{ b.brief }}(合格: {{ b.eligiblestock }}, 不合格: {{ b.ineligiblestock }})</option>
+                                {% endfor %}
+                            </select>
+                            <!--<input id="brief2" name="brief" form="countform" type="text" data-provide="typeahead" oninput="setIndex()">-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">出入库状态</label>
+                        <div class="col-sm-9">
+                            <select id="state" name="state" form="countform">
+                                <option value="5" selected="selected">领用出库</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">合格或不合格品</label>
+                        <div class="col-sm-9">
+                            <select id="iseligible" name="iseligible" form="countform">
+                                <option value="1" selected="selected">合格</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">数量</label>
+                        <div class="col-sm-9">
+                            <input type="number" min="1" name="count" form="countform" value="" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">领用人</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="user" form="countform" value="" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">备注</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="memo" form="countform" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top">id</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="id" form="countform" value="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit" onclick="return checkvalid2();">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
                         </button>
@@ -183,23 +277,193 @@
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
     <script type="text/javascript">
+    $(function(){
+        var server_msg = "{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '库存已不足',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
     $(document).ready(function() {
-        $('#count').DataTable();
+        $('#count').DataTable({
+            "oLanguage" : {
+                "sLengthMenu" : "每页显示 _MENU_ 条记录",
+                "sZeroRecords" : "对不起，没有匹配的数据",
+                "sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
+                "sInfoEmpty" : "没有数据",
+                "sInfoFiltered" : "(数据表中共 _MAX_ 条记录)",
+                "sProcessing" : "正在加载中...",
+                "sSearch" : "搜索：",
+                "oPaginate" : {
+                    "sFirst" : "第一页",
+                    "sPrevious" : " 上一页 ",
+                    "sNext" : " 下一页 ",
+                    "sLast" : " 最后一页 "
+                }
+            }
+        });
         $('td:not(.unsearchable)').click(function(){
             $('#count_filter input').val($(this).html());
             $('#count_filter input').select();
         });
+        setMax = function(){
+            if($("#state").val() == "5") {
+                a = $(".chosen-single").children()[0].innerText;
+                if($("#iseligible").val() == "1") {
+                    tmp = "合格: ";
+                    a1 = a.search(tmp) + tmp.length;
+                    a2 = a.search(", 不合格:");
+                    $("[name='count']").attr("max", parseInt(a.substr(a1, a2-a1)));
+                }
+                else {
+                    tmp = "不合格: ";
+                    a1 = a.search(tmp) + tmp.length;
+                    a2 = a.length;
+                    $("[name='count']").attr("max", parseInt(a.substr(a1, a2-a1)));
+                }
+            }
+            else
+                $("[name='count']").removeAttr("max");
+        };
+        setIndex = function(){
+            $(".special-for-modal").css("z-index","9999");
+        };
         $(".fa-pencil").click(function() {
             var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
             var brief = document.getElementById("brief");
             var divs = brief.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
-            for(var i = 0; i < 8; i++)
+            for(var i = 0; i < 9; i++)
                 divs[i+1].childNodes[3].childNodes[1].value = dataline[i].innerHTML;
-            divs[1].childNodes[3].childNodes[1].setAttribute("disabled", "");
 
-            divs[9].childNodes[3].childNodes[1].value = this.parentNode.id;
+            divs[10].childNodes[3].childNodes[1].value = this.parentNode.id;
         });
+        setNotreturned = function(){
+            var using = $("[name='using']").val();
+            var returned = $("[name='returned']").val();
+            var depleted = $("[name='depleted']").val();
+            var damaged = $("[name='damaged']").val();
+            var rejected = $("[name='rejected']").val();
+            if(using != parseInt(using) || returned != parseInt(returned) || depleted != parseInt(depleted) || damaged != parseInt(damaged) || rejected != parseInt(rejected))
+                $("[name='notreturned']").val("输入有误，无法计算");
+            else{
+                using = parseInt(using);
+                returned = parseInt(returned);
+                depleted = parseInt(depleted);
+                damaged = parseInt(damaged);
+                rejected = parseInt(rejected);
+                var notreturned = using-returned-depleted-damaged-rejected;
+                if(using < 1 || returned < 0 || depleted < 0 || damaged < 0 || rejected < 0 || notreturned < 0)
+                    $("[name='notreturned']").val("输入有误，无法计算");
+                else
+                    $("[name='notreturned']").val(notreturned);
+            }
+        };
     });
+    </script>
+    <script type="text/javascript">
+        function checkvalid1() {
+           var user = $($("[name='user']")[0]).val();
+           var memo = $($("[name='memo']")[0]).val();
+           if(user.length < 1 || user.length > 40) {
+                $("[name='user']").select();
+                $.gritter.add({
+                    title: '修改使用表单失败！',
+                    text: '领用人名字长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+           if(memo.length > 80) {
+                $("[name='memo']").select();
+                $.gritter.add({
+                    title: '修改使用表单失败！',
+                    text: '备注长度为0-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            return true;
+        }
+        function checkvalid2() {
+           var user = $($("[name='user']")[1]).val();
+           var memo = $($("[name='memo']")[1]).val();
+           if(user.length < 1 || user.length > 40) {
+                $("[name='user']").select();
+                $.gritter.add({
+                    title: '增加使用表单失败！',
+                    text: '领用人名字长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+           if(memo.length > 80) {
+                $("[name='memo']").select();
+                $.gritter.add({
+                    title: '增加使用表单失败！',
+                    text: '备注长度为0-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            return true;
+        }
+        function delcfm() {
+            if (!confirm("确认要删除？")) {
+                window.event.returnValue = false;
+            }
+        }
+        function audcfm() {
+            if (!confirm("确认要审核？")) {
+                window.event.returnValue = false;
+            }
+        }
+    </script>
+    <!--<script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>
+    <script type="text/javascript">
+        var subjects = new Array();
+        var x = 0;
+        {% for brief in briefs %}
+            subjects[x++] = "{{ brief }}"; 
+        {% endfor %}
+        $('#brief2').typeahead({source: subjects});
+    </script>-->
+    <script src="../static/assets/js/bootstrap-tag.min.js"></script>
+    <script src="../static/assets/js/chosen.jquery.min.js"></script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
+
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()+150});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()+150});
+                    })
+                });
+
+
+                $('#chosen-multiple-style .btn').on('click', function(e){
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                     else $('#form-field-select-4').removeClass('tag-input-style');
+                });
+            }
+        });
     </script>
 {% endblock %}

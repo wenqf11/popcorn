@@ -231,6 +231,10 @@ def useradd(request):
             elif len(user) == 1:
                 user = user[0]
                 cur_user_id = user.id
+                _c = k_class.objects.get(name=request.POST['classname'])
+                if _c:
+                    user.classid = _c
+                    
                 user.password = request.POST['password']
                 user.email = request.POST['email']
                 user.name = request.POST['name']
@@ -1692,7 +1696,7 @@ def submit_spare(request):
     _spare.name = _name
     _spare.brief = _brief
     _spare.model = _model
-    _spare.minimum = int(_minimum)
+    _spare.minimum = int(float(_minimum))
     _spare.content = _content
     _spare.memo = _memo
     _spare.save()
@@ -1730,6 +1734,8 @@ def view_sparebill(request):
         dataitem['creator'] = _creator.name
         dataitem['createdatetime'] = _sparebill.createdatetime
 
+        dataitem['notreturned'] = dataitem['using'] - dataitem['returned'] - dataitem['depleted'] - dataitem['damaged'] - dataitem['rejected']
+
         if _sparebill.editorid != 0:
             _editor = k_user.objects.get(id=_sparebill.editorid)
             dataitem['editor'] = _editor.name
@@ -1743,10 +1749,28 @@ def view_sparebill(request):
             dataitem['audit'] = 'audit'
         data.append(dataitem)
 
-    return render_to_response('sparebill.html', {'data': data})
+    _spares = k_spare.objects.all()
+    #_briefs = []
+    #for _spare in _spares:
+        #_briefs.append(_spare.brief)
+
+    _briefinfos = []
+    for s in _spares:
+        _spare = dict()
+        _spare["brief"] = s.brief
+        _spare["eligiblestock"] = s.eligiblestock
+        _spare["ineligiblestock"] = s.ineligiblestock
+        _briefinfos.append(_spare)
+    
+    server_msg = request.GET.get("msg")
+    if server_msg == None:
+        server_msg = ""
+
+    #return render_to_response('sparebill.html', {'data': data, 'briefs': _briefs})
+    return render_to_response('sparebill.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
 
 def submit_sparebill(request):
-    _using = request.GET.get('using')
+    #_using = request.GET.get('using')
     _returned = request.GET.get('returned')
     _depleted = request.GET.get('depleted')
     _damaged = request.GET.get('damaged')
@@ -1766,23 +1790,23 @@ def submit_sparebill(request):
     _sparebill = k_sparebill.objects.get(id=_id)
     _sparebill.editorid = _user.id
     _sparebill.editdatetime = get_current_date()
-
-    if _sparebill.using != int(_using):
+    """
+    if _sparebill.using != int(float(_using)):
         _sparecount = k_sparecount.objects.get(sparebillid=_id, state="5")
-        _sparecount.count = -int(_using)
+        _sparecount.count = -int(float(_using))
         _sparecount.editorid = _user.id
         _sparecount.editdatetime = get_current_date()
         _sparecount.auditorid = 0
         _spare = k_spare.objects.get(id=_sparebill.spareid_id)
-        _spare.eligiblestock = _spare.eligiblestock + _sparebill.using - int(_using)
+        _spare.eligiblestock = _spare.eligiblestock + _sparebill.using - int(float(_using))
         _spare.save()
         _sparecount.save()
-
-    if _sparebill.returned != int(_returned):
+    """
+    if _sparebill.returned != int(float(_returned)):
         _spare = k_spare.objects.get(id=_sparebill.spareid_id)
-        _spare.eligiblestock = _spare.eligiblestock - _sparebill.returned + int(_returned)
+        _spare.eligiblestock = _spare.eligiblestock - _sparebill.returned + int(float(_returned))
         _sparecount = k_sparecount.objects.create(classid=_user.classid, sparebillid=_id, spareid=_spare)
-        _sparecount.count = int(_returned) - _sparebill.returned
+        _sparecount.count = int(float(_returned)) - _sparebill.returned
         _sparecount.state = "2"
         _sparecount.iseligible = "1"
         _sparecount.memo = _sparebill.memo
@@ -1791,11 +1815,11 @@ def submit_sparebill(request):
         _spare.save()
         _sparecount.save()
 
-    if _sparebill.rejected != int(_rejected):
+    if _sparebill.rejected != int(float(_rejected)):
         _spare = k_spare.objects.get(id=_sparebill.spareid_id)
-        _spare.ineligiblestock = _spare.ineligiblestock - _sparebill.rejected + int(_rejected)
+        _spare.ineligiblestock = _spare.ineligiblestock - _sparebill.rejected + int(float(_rejected))
         _sparecount = k_sparecount.objects.create(classid=_user.classid, sparebillid=_id, spareid=_spare)
-        _sparecount.count = int(_rejected) - _sparebill.rejected
+        _sparecount.count = int(float(_rejected)) - _sparebill.rejected
         _sparecount.state = "2"
         _sparecount.iseligible = "2"
         _sparecount.memo = _sparebill.memo
@@ -1804,11 +1828,11 @@ def submit_sparebill(request):
         _spare.save()
         _sparecount.save()
 
-    _sparebill.using = int(_using)
-    _sparebill.returned = int(_returned)
-    _sparebill.depleted = int(_depleted)
-    _sparebill.damaged = int(_damaged)
-    _sparebill.rejected = int(_rejected)
+    #_sparebill.using = int(float(_using))
+    _sparebill.returned = int(float(_returned))
+    _sparebill.depleted = int(float(_depleted))
+    _sparebill.damaged = int(float(_damaged))
+    _sparebill.rejected = int(float(_rejected))
     _sparebill.user = _name
     _sparebill.memo = _memo
 
@@ -1873,11 +1897,24 @@ def view_sparecount(request):
         data.append(dataitem)
 
     _spares = k_spare.objects.all()
-    _briefs = []
-    for _spare in _spares:
-        _briefs.append(_spare.brief)
+    #_briefs = []
+    #for _spare in _spares:
+        #_briefs.append(_spare.brief)
 
-    return render_to_response('sparecount.html', {'data': data, 'briefs': _briefs})
+    _briefinfos = []
+    for s in _spares:
+        _spare = dict()
+        _spare["brief"] = s.brief
+        _spare["eligiblestock"] = s.eligiblestock
+        _spare["ineligiblestock"] = s.ineligiblestock
+        _briefinfos.append(_spare)
+    
+    server_msg = request.GET.get("msg")
+    if server_msg == None:
+        server_msg = ""
+
+    #return render_to_response('sparecount.html', {'data': data, 'briefs': _briefs})
+    return render_to_response('sparecount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
 
 def submit_sparecount(request):
     _brief = request.GET.get('brief')
@@ -1886,6 +1923,11 @@ def submit_sparecount(request):
     _count = request.GET.get('count')
     _memo = request.GET.get('memo')
     _name = request.GET.get('user')
+
+    if _state == "4" or _state == "5" or _state == "6":
+        _count = -int(float(_count))
+    elif _count:
+        _count = int(float(_count))
 
     _id = request.GET.get('id')
     _audit = request.GET.get('audit')
@@ -1907,38 +1949,46 @@ def submit_sparecount(request):
         _sparecount.createdatetime = get_current_date()
         if _state == "5":
             _sparebill = k_sparebill.objects.create(classid=_user.classid, spareid=_spare)
-            _sparebill.using = -int(_count)
+            _sparebill.using = -_count
             _sparebill.user = _name
             _sparebill.memo = _memo
             _sparebill.creatorid = _user.id
             _sparebill.createdatetime = get_current_date()
+            _sparebill.save()
             _sparecount.sparebillid = _sparebill.id
 
     _spare = k_spare.objects.get(id=_sparecount.spareid_id)
     if _iseligible == _sparecount.iseligible:
         if _iseligible == "1":
-            _spare.eligiblestock = _spare.eligiblestock - _sparecount.count + int(_count)
+            _spare.eligiblestock = _spare.eligiblestock - _sparecount.count + _count
         else:
-            _spare.ineligiblestock = _spare.ineligiblestock - _sparecount.count + int(_count)
+            _spare.ineligiblestock = _spare.ineligiblestock - _sparecount.count + _count
     else:
         if _iseligible == "1":
             _spare.ineligiblestock = _spare.ineligiblestock - _sparecount.count
-            _spare.eligiblestock = _spare.eligiblestock + int(_count)
+            _spare.eligiblestock = _spare.eligiblestock + _count
         else:
             _spare.eligiblestock = _spare.eligiblestock - _sparecount.count
-            _spare.ineligiblestock = _spare.ineligiblestock + int(_count)
+            _spare.ineligiblestock = _spare.ineligiblestock + _count
 
     _spare.save()
 
     _sparecount.state = _state
     _sparecount.iseligible = _iseligible
-    _sparecount.count = int(_count)
+    _sparecount.count = _count
     _sparecount.memo = _memo
 
     _sparecount.save()
-    
-    _sparebill.save()
-    return HttpResponseRedirect('/view_sparecount')
+    if _state == "5":
+        if _spare.eligiblestock < _spare.minimum:
+            return HttpResponseRedirect('/view_sparebill/?msg=库存不足，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
+        else:
+            return HttpResponseRedirect('/view_sparebill')
+    else:
+        if _spare.eligiblestock < _spare.minimum:
+            return HttpResponseRedirect('/view_sparecount/?msg=库存不足，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
+        else:
+            return HttpResponseRedirect('/view_sparecount')
 
 def delete_sparecount(request):
     _id = request.GET.get('id')

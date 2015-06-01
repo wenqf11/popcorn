@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">品牌<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="brand" type="text" class="span6 m-wrap" value="{{ data.brand }}" />
+                        <input name="brand" type="text" class="span6 m-wrap" value="{{ data.brand }}" required/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -74,21 +74,21 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">备件全称<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="name" type="text" class="span6 m-wrap" value="{{ data.name }}"/>
+                        <input name="name" type="text" class="span6 m-wrap" value="{{ data.name }}" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">备件简称(编号)<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="brief" type="text" class="span6 m-wrap" value="{{ data.brief }}"/>
+                        <input name="brief" type="text" class="span6 m-wrap" value="{{ data.brief }}" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">型号<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="model" type="text" class="span6 m-wrap" value="{{ data.model }}"/>
+                        <input name="model" type="text" class="span6 m-wrap" value="{{ data.model }}" required/>
                     </div>
                 </div>
                 <!--
@@ -103,19 +103,19 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">内容<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="content" type="text" class="span6 m-wrap" value="{{ data.content }}"/>
+                        <input name="content" type="text" class="span6 m-wrap" value="{{ data.content }}" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">最小库存<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="minimum" type="number" class="span6 m-wrap" value="{{ data.minimum }}"/>
+                        <input name="minimum" type="number" min="0" class="span6 m-wrap" value="{{ data.minimum }}" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">备注<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">备注</label>
                     <div class="col-sm-9">
                         <input name="memo" type="text" class="span6 m-wrap" value="{{ data.memo }}"/>
                     </div>
@@ -176,6 +176,66 @@
     </script>
     <script>
         function checkvalid() {
+            var brand = $("[name='brand']").val();
+            var name = $("[name='name']").val();
+            var brief = $("[name='brief']").val();
+            var model = $("[name='model']").val();
+            var content = $("[name='content']").val();
+            var memo = $("[name='memo']").val();
+            if(brand.length < 1 || brand.length > 40) {
+                $("[name='brand']").select();
+                $.gritter.add({
+                    title: '设置备件失败！',
+                    text: '备件品牌长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(name.length < 1 || name.length > 40) {
+                $("[name='name']").select();
+                $.gritter.add({
+                    title: '设置备件失败！',
+                    text: '备件全称长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(brief.length < 1 || brief.length > 40) {
+                $("[name='brief']").select();
+                $.gritter.add({
+                    title: '设置备件失败！',
+                    text: '备件简称(编号)长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(model.length < 1 || model.length > 40) {
+                $("[name='model']").select();
+                $.gritter.add({
+                    title: '设置备件失败！',
+                    text: '备件型号长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(content.length < 1 || content.length > 80) {
+                $("[name='content']").select();
+                $.gritter.add({
+                    title: '设置备件失败！',
+                    text: '备件内容长度为1-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(memo.length > 80) {
+                $("[name='memo']").select();
+                $.gritter.add({
+                    title: '设置备件失败！',
+                    text: '备注长度为0-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
             return true;
         }
     </script>
