@@ -185,7 +185,7 @@ def app_score(request, para, user):
 @get_required
 @token_required('GET')
 def app_route(request, para, user):
-    schedules = k_schedule.objects.filter(user=user.id, date=date.today())
+    schedules = k_schedule.objects.filter(user=user, date=date.today())
     if not schedules.exists():
         return HttpResponse(json.dumps({
             'status': 'empty',
@@ -211,7 +211,11 @@ def app_form(request, para, user):
             'data': 'route not exists'
         }))
 
-    forms = [k_form.objects.get(id=int(_r)) for _r in route.formid.split(',')]
+    if route.formid:
+        forms = [k_form.objects.get(id=int(_r)) for _r in route.formid.split(',')]
+    else:
+        forms = []
+
     response = {
         'status': 'ok',
         'data': [{'id': _f.id, 'name': _f.brief, 'form_content': _f.content} for _f in forms]

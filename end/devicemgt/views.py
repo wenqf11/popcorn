@@ -941,7 +941,10 @@ def view_route(request):
         _class = k_class.objects.get(id=r.classid_id)
         route['id'] = r.id
         route['class'] = _class.name
-        route['forms'] = ', '.join('form' + _form_id for _form_id in r.formid.split(','))
+        if r.formid:
+            route['forms'] = ', '.join('form' + _form_id for _form_id in r.formid.split(','))
+        else:
+            route['forms'] = '暂未指定路线设备'
         route['name'] = r.name
         route['startTime'] = r.starttime
         route['period'] = r.period
@@ -975,13 +978,13 @@ def operate_route(request):
         data['editTime'] = _route.editdatetime
 
         all_form = k_form.objects.all()
-        data['forms'] = []
-        for _form in all_form:
-            data['forms'].append({
-                'id': _form.id,
-                'brief': _form.brief,
-                'selected': str(_form.id) in _forms
-            })
+        data['forms'] = [{
+            'id': _form.id,
+            'brief': _form.brief,
+            'selected': str(_form.id) in _forms
+        } for _form in all_form]
+
+        data['routeString'] = _route.formid
 
         return render_to_response('routeoperate.html', {'isNew': False, 'data': data})
     else:
@@ -1001,7 +1004,7 @@ def operate_route(request):
 def submit_route(request, _id):
     _user = k_user.objects.get(username=request.user.username)
     _editor = _user.id
-    _forms = request.GET.getlist('duallistbox')
+    _forms = request.GET.get('routeString')
     _name = request.GET.get('name')
     _period = request.GET.get('period')
     _start_time = request.GET.get('startTime')
@@ -1018,7 +1021,7 @@ def submit_route(request, _id):
         )
         route.creatorid = _editor
     route.name = _name
-    route.formid = ','.join(_forms)
+    route.formid = _forms
     route.starttime = datetime.strptime(_start_time, '%H:%M').time()
     route.period = _period
     route.editorid = _editor
