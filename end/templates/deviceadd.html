@@ -23,8 +23,21 @@
                     <div class="span12">
 
         <!-- BEGIN FORM-->
-        <form action="/useradd/" class="form-horizontal col-sm-12" enctype="multipart/form-data" method="POST">
+        <form action="/deviceadd/" class="form-horizontal col-sm-12" enctype="multipart/form-data" method="POST">
             <fieldset>
+
+
+                <div class="form-group" style="display: none;">
+                    <label class="col-sm-3 control-label no-padding-right">阶段</label>
+                    <div class="col-sm-9">
+                        {% if data.isNew %}
+                            <input name="phase" type="text" class="span6 m-wrap" value="NEW" readonly/>
+                        {% else %}
+                            <input name="phase" type="text" class="span6 m-wrap" value="EDIT" readonly/>
+                        {% endif %}
+                    </div>
+                </div>
+
 
                 <h4 class="header blue bolder smaller">分类信息</h4>
                 <div class="form-group">
@@ -32,7 +45,11 @@
                     <div class="col-sm-5">
                         <select class="chosen-select" name="classname">
                             {% for class in data.class_list %}
-                            <option value="{{ class }}">{{ class }}</option>
+                                {% if class in data.chosen_class %}
+                                    <option value="{{ class }}" selected="selected">{{ class }}</option>
+                                {% else %}
+                                    <option value="{{ class }}">{{ class }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -40,9 +57,13 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">设备分类编号<span class="required">*</span></label>
                     <div class="col-sm-5">
-                        <select class="chosen-select" name="dtype">
+                        <select class="chosen-select" name="typename">
                             {% for dtype in data.dtype_list %}
-                            <option value="{{ dtype }}">{{ dtype }}</option>
+                                {% if dtype in data.chosen_type %}
+                                    <option value="{{ dtype }}" selected="selected">{{ dtype }}</option>
+                                {% else %}
+                                    <option value="{{ dtype }}">{{ dtype }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -61,7 +82,11 @@
                     <div class="col-sm-5">
                         <select class="chosen-select" name="supplier">
                             {% for supplier in data.supplier_list %}
-                            <option value="{{ supplier }}">{{ supplier }}</option>
+                                {% if supplier in data.chosen_supplier %}
+                                    <option value="{{ supplier }}" selected="selected">{{ supplier }}</option>
+                                {% else %}
+                                    <option value="{{ supplier }}">{{ supplier }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -71,7 +96,11 @@
                     <div class="col-sm-5">
                         <select class="chosen-select" name="producer">
                             {% for producer in data.producer_list %}
-                            <option value="{{ producer }}">{{ producer }}</option>
+                                {% if producer in data.chosen_producer %}
+                                    <option value="{{ producer }}" selected="selected">{{ producer }}</option>
+                                {% else %}
+                                    <option value="{{ producer }}">{{ producer }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -96,14 +125,22 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">设备全称<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="name" type="text" class="span6 m-wrap" value="{{ data.name }}"/>
+                        {% if data.isNew %}
+                            <input name="name" type="text" class="span6 m-wrap" value=""/>
+                        {% else %}
+                            <input name="name" type="text" class="span6 m-wrap" value="{{ data.name }}" readonly/>
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">设备简称(编号)<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="brief" type="text" class="span6 m-wrap" value="{{ data.brief }}"/>
+                        {% if data.isNew %}
+                            <input name="brief" type="text" class="span6 m-wrap" value=""/>
+                        {% else %}
+                            <input name="brief" type="text" class="span6 m-wrap" value="{{ data.brief }}" readonly/>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -124,7 +161,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">购买时间<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="buytime" id="buytime" type="text" class="span6 m-wrap" value="{{ data.buytime |date:"Y年m月d日" }}"/>
+                        <input name="buytime" id="buytime" type="text" class="span6 m-wrap" value="{{ data.buytime |date:"Y-m-d" }}"/>
                     </div>
                 </div>
 
@@ -136,32 +173,31 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">责任人<span class="required">*</span></label>
-                    <div class="col-sm-5">
-                        <select class="chosen-select" data-placeholder="请选择责任人">
-                            {% for p in data.people %}
-                                <option value="{{ p.name }}">{{ p.name }}({{ p.position }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <!--
+                    <label class="col-sm-3 control-label no-padding-right">机器说明</label>
                     <div class="col-sm-9">
-                        <input name="owner" type="text" class="span6 m-wrap" value="{{ data.owner }}"/>
-                    </div>
-                    -->
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">保养周期<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <input name="maintenanceperiod" type="text" class="span6 m-wrap" value="{{ data.maintenanceperiod }}"/>
+                        <input name="content" type="text" class="span6 m-wrap" value="{{ data.content }}"/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">备件列表<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">备件列表</label>
                     <div class="col-sm-9">
                         <input name="spare" type="text" class="span6 m-wrap" value="{{ data.spare }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">责任人<span class="required">*</span></label>
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="owner" data-placeholder="请选择责任人">
+                            {% for p in data.people %}
+                                {% if p.name in data.chosen_owner %}
+                                    <option value="{{ p.name }}" selected="selected">{{ p.name }}({{ p.position }})</option>
+                                {% else %}
+                                    <option value="{{ p.name }}">{{ p.name }}({{ p.position }})</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
 
@@ -211,7 +247,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">注意事项</label>
                     <div class="col-sm-9">
-                        <input name="memo" type="text" class="span6 m-wrap" value="{{ data.notice }}"/>
+                        <input name="notice" type="text" class="span6 m-wrap" value="{{ data.notice }}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -239,11 +275,12 @@
 {% endblock %}
 
 {% block tailjs %}
-    <script src="../static/assets/js/bootstrap-tag.min.js"></script>
     <script src="../static/assets/js/chosen.jquery.min.js"></script>
     <script>
     $(function(){
-        $('#buytime').datepicker();
+        $('#buytime').datepicker({
+            format: 'yyyy-mm-dd'
+        });
         var server_msg="{{ server_msg }}";
         if (server_msg) {
             $.gritter.add({
@@ -293,7 +330,7 @@
            var brand = $("[name='brand']").val();
            var serial = $("[name='serial']").val();
            var brief = $("[name='brief']").val();
-           if(name.length < 1 || name.length > 20) {
+           if(name.length < 1 || name.length > 40) {
                 $("[name='name']").select();
                 $.gritter.add({
                     title: '添加设备失败！',

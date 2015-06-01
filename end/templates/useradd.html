@@ -229,7 +229,9 @@
     <script src="../static/assets/js/chosen.jquery.min.js"></script>
     <script>
     $(function(){
-        $('#birthday').datepicker();
+        $('#birthday').datepicker({
+            format: 'yyyy-mm-dd'
+        });
         var server_msg="{{ server_msg }}";
         if (server_msg) {
             $.gritter.add({
