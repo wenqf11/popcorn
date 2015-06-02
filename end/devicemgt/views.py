@@ -176,12 +176,12 @@ def useradd(request):
     if request.user.is_authenticated():
         #登陆成功
         #user = k_user.objects.get(username=request.user.username)
+        server_msg = ''
+        cur_user_id = 0
         if request.method == 'POST':
             #face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
             face = "../static/images/user.png"
             #如果用户名相同，修改已有的用户
-            server_msg = ''
-            cur_user_id = 0
             user = k_user.objects.filter(username=request.POST['username'])
             if not user:
                 #总共要有26项信息
@@ -264,7 +264,7 @@ def useradd(request):
                 server_msg = '修改用户资料成功！'
                 # 更新用户成功
             else:
-                server_msg = "Error: user with the same username!"
+                server_msg = "数据库中有重名用户！"
         return HttpResponseRedirect('/user_operate/?id='+str(cur_user_id)+'&msg='+server_msg)
     else:
         return HttpResponseRedirect('/login/')
@@ -320,7 +320,7 @@ def devicemgt(request):
                 deviceinfo['position'] = device.position
                 owner = k_user.objects.filter(id=device.ownerid)
                 if len(owner) == 1:
-                    deviceinfo['owner'] = owner[0].name
+                    deviceinfo['owner'] = owner[0].username
                 else:
                     deviceinfo['owner'] = "未指定负责人"
                 _c = k_class.objects.filter(id=device.classid_id)
@@ -358,6 +358,9 @@ def operate_device(request):
         #user=k_user.objects.get(username=request.user.username)
         user=User.objects.get(username=request.user.username)
         #读取权限，显示内容
+        server_msg = request.GET.get('msg')
+        if server_msg == None:
+            server_msg = ''
         _id = request.GET.get('id')
         userdata = dict()
         class_list = list()
@@ -380,7 +383,7 @@ def operate_device(request):
         people = k_user.objects.all()
         for p in people:
             person = dict()
-            person["name"] = p.name
+            person["name"] = p.username
             _c = k_class.objects.get(id=p.classid_id)
             person["position"] = _c.name
             people_list.append(person)
@@ -395,9 +398,17 @@ def operate_device(request):
                         'lastmaintenance', 'nextmaintenance','maintenanceperiod', 'lastrepaire', 'spare','lastmeter', 'notice']
             for key in key_list:
                 userdata[key] = eval('thedevice.'+key)
+            userdata['chosen_producer'] = thedevice.producerid.name
+            userdata['chosen_supplier'] = thedevice.supplierid.name
+            userdata['chosen_class'] = thedevice.classid.name
+            userdata['chosen_type'] = thedevice.typeid.name
+            _owner = k_user.objects.filter(id=thedevice.ownerid)
+            if len(_owner) == 1:
+                _owner = _owner[0]
+                userdata['chosen_owner'] = _owner.username
         else:
             userdata['isNew'] = True
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg':server_msg})
         return render_to_response('deviceadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -406,8 +417,77 @@ def operate_device(request):
 def deviceadd(request):
     if request.user.is_authenticated():
         user=User.objects.get(username=request.user.username)
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
-        return render_to_response('deviceadd.html',variables)
+        server_msg = ''
+        if request.method == 'POST':
+            _brief = request.POST['brief']
+            _name = request.POST['name']
+            _classname = request.POST['classname']
+            _classid = k_class.objects.get(name=_classname)
+            _typeid = k_devicetype.objects.get(name=request.POST['typename'])
+            _producerid = k_producer.objects.get(name=request.POST['producer'])
+            _supplierid = k_supplier.objects.get(name=request.POST['supplier'])
+            _ownerid = k_user.objects.get(username=request.POST['owner'])
+            _devs = k_device.objects.filter(brief=_brief)
+            _devs = _devs.filter(name=_name)
+            if request.POST['phase'] == 'NEW':
+                if len(_devs) > 0:
+                    _dev = _devs[0]
+                    server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备已存在！'
+                    return HttpResponseRedirect('/user_operate/?msg='+server_msg)
+
+                _device = k_device.objects.create(
+                    classid=_classid,
+                    typeid=_typeid,
+                    producerid=_producerid,
+                    supplierid=_supplierid,
+                    ownerid=_ownerid.id,
+                    name=request.POST['name'],
+                    brief=request.POST['brief'],
+                    brand=request.POST['brand'],
+                    state=request.POST['state'],
+                    serial=request.POST['serial'],
+                    model=request.POST['model'],
+                    buytime=request.POST['buytime'],
+                    content=request.POST['content'],
+                    position=request.POST['position'],
+                    memo=request.POST['memo'],
+                    spare=request.POST['spare'],
+                    notice=request.POST['notice'],
+                    maintenanceperiod = 1,
+                    status=2,
+                    creatorid=request.user.id,
+                    createdatetime=get_current_date(),
+                    editorid=request.user.id,
+                    editdatetime=get_current_date()
+                )
+                _device.save()
+                server_msg = '添加设备成功！'
+                return HttpResponseRedirect('/operate_device/?id='+str(_device.id)+'&msg='+server_msg)
+            if request.POST['phase'] == 'EDIT':
+                _dev = _devs[0]
+                _dev.brand = request.POST['brand']
+                _dev.state=request.POST['state']
+                _dev.serial=request.POST['serial']
+                _dev.model=request.POST['model']
+                _dev.buytime=request.POST['buytime']
+                _dev.content=request.POST['content']
+                _dev.position=request.POST['position']
+                _dev.memo=request.POST['memo']
+                _dev.spare=request.POST['spare']
+                _dev.notice=request.POST['notice']
+                _dev.editorid = request.user.id
+                _dev.editdatetime = get_current_date()
+                _dev.classid = _classid
+                _dev.producerid = _producerid
+                _dev.supplierid = _supplierid
+                _dev.typeid = _typeid
+                _dev.ownerid = _ownerid.id
+                _dev.save()
+                server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备信息已成功更新！'
+                return HttpResponseRedirect('/operate_device/?id='+str(_dev.id)+'&msg='+server_msg)
+        else:
+            server_msg = '禁止用非法方式访问！'
+            return HttpResponseRedirect('/operate_device/?msg='+server_msg)
     else:
         return HttpResponseRedirect('/login/')
 
