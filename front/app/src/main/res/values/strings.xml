@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">willwings</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -37,5 +38,7 @@
     <string name="title_activity_change_password">修改密码</string>
     <string name="title_activity_feedback">意见反馈</string>
     <string name="title_activity_about_info">关于</string>
+    <string name="title_activity_rank">RankActivity</string>
+    <string name="title_activity_bonus">BonusActivity</string>
 
 </resources>

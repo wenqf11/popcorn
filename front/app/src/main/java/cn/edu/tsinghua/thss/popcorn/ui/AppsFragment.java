@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cn.edu.tsinghua.thss.popcorn.AttendanceActivity;
+import cn.edu.tsinghua.thss.popcorn.BonusActivity;
+import cn.edu.tsinghua.thss.popcorn.DeviceInfoSearchActivity;
 import cn.edu.tsinghua.thss.popcorn.MaintainListActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
+import cn.edu.tsinghua.thss.popcorn.RankActivity;
 import cn.edu.tsinghua.thss.popcorn.RepairListActivity;
 
 /**
@@ -32,7 +35,6 @@ public class AppsFragment extends Fragment {
                 Intent intent=new Intent(getActivity(), AttendanceActivity.class);
                 Bundle bundle=new Bundle();
                 intent.putExtras(bundle);
-                //执行意图
                 startActivity(intent);
             }
         });
@@ -65,7 +67,6 @@ public class AppsFragment extends Fragment {
                 Intent intent=new Intent(getActivity(), MaintainListActivity.class);
                 Bundle bundle=new Bundle();
                 intent.putExtras(bundle);
-                //执行意图
                 startActivity(intent);
             }
         });
@@ -77,7 +78,40 @@ public class AppsFragment extends Fragment {
                 Intent intent=new Intent(getActivity(), RepairListActivity.class);
                 Bundle bundle=new Bundle();
                 intent.putExtras(bundle);
-                //执行意图
+                startActivity(intent);
+            }
+        });
+
+        //设备资料
+        View mAppsDeviceInfoLayout = appsView.findViewById(R.id.id_apps_deviceInfo_ll);
+        mAppsDeviceInfoLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), DeviceInfoSearchActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        //积分排名
+        View mAppsRankLayout = appsView.findViewById(R.id.id_apps_rank_ll);
+        mAppsRankLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), RankActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+
+        //抢彩蛋
+        View mAppsBonusLayout = appsView.findViewById(R.id.id_apps_bonus_ll);
+        mAppsBonusLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), BonusActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
