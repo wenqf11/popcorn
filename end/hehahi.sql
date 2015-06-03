@@ -705,8 +705,9 @@ DROP TABLE IF EXISTS `devicemgt_k_staffworkinfo`;
 CREATE TABLE `devicemgt_k_staffworkinfo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userid_id` int(11) NOT NULL,
-  `checkin` date NOT NULL,
-  `checkout` date NOT NULL,
+  `date` date NOT NULL,
+  `checkin` varchar(80) NOT NULL,
+  `checkout` varchar(80) NOT NULL,
   `shifting` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_staffworkinfo_936913d1` (`userid_id`),
