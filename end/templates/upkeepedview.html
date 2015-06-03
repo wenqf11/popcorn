@@ -121,11 +121,11 @@
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '4' %}
-                                    <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
-                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
-                                    </a>
-                                    <a class="red" href="/delete_upkeep?id={{ dataitem.id }}">
+                                    <a class="red" href="/delete_upkeep?id={{ dataitem.id }}" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                    </a>
+                                    <a class="blue" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
+                                        <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
                                     {% endifequal %}
                                 </div>
@@ -145,48 +145,53 @@
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
     <script type="text/javascript">
-    $(document).ready(function() {
-        $('#maintenance').DataTable({
-            columns: [
-                ,
-                ,
-                ,
-                ,
-                ,
-                ,
-                ,
-                ,
-                ,
-                ,
-                ,
-                ,
-                { data: null, orderable: false }
-            ]
-        });
-        $('td:not(.unsearchable)').click(function(){
-            $('#maintenance_filter input').val($(this).html());
-            $('#maintenance_filter input').select();
-        });
-        $(".fa-pencil").click(function() {
-            var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-            var factor = document.getElementById("factor");
-
-            var factors = factor.getElementsByTagName("option");
-            var flength = factors.length;
-            var thefactor = dataline[14].innerHTML;
-            factors[0].setAttribute("selected", "selected");
-            for(var i = 1; i < flength; i++) {
-                if(factors[i].value == thefactor) {
-                    factors[i].setAttribute("selected", "selected");
-                    factors[0].removeAttribute("selected");
-                }
-                else {
-                    factors[i].removeAttribute("selected");
-                }
+        function delcfm() {
+            if (!confirm("确认要删除？")) {
+                window.event.returnValue = false;
             }
+        }
+        $(document).ready(function() {
+            $('#maintenance').DataTable({
+                "oLanguage" : {
+                    "sLengthMenu" : "每页显示 _MENU_ 条记录",
+                    "sZeroRecords" : "对不起，没有匹配的数据",
+                    "sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
+                    "sInfoEmpty" : "没有数据",
+                    "sInfoFiltered" : "(数据表中共 _MAX_ 条记录)",
+                    "sProcessing" : "正在加载中...",
+                    "sSearch" : "搜索：",
+                    "oPaginate" : {
+                        "sFirst" : "第一页",
+                        "sPrevious" : " 上一页 ",
+                        "sNext" : " 下一页 ",
+                        "sLast" : " 最后一页 "
+                    }
+                }
+            });
+            $('td:not(.unsearchable)').click(function(){
+                $('#maintenance_filter input').val($(this).html());
+                $('#maintenance_filter input').select();
+            });
+            $(".fa-check").click(function() {
+                var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+                var factor = document.getElementById("factor");
 
-            factor.parentNode.parentNode.nextSibling.nextSibling.childNodes[3].childNodes[1].value = this.parentNode.id;
+                var factors = factor.getElementsByTagName("option");
+                var flength = factors.length;
+                var thefactor = dataline[14].innerHTML;
+                factors[0].setAttribute("selected", "selected");
+                for(var i = 1; i < flength; i++) {
+                    if(factors[i].value == thefactor) {
+                        factors[i].setAttribute("selected", "selected");
+                        factors[0].removeAttribute("selected");
+                    }
+                    else {
+                        factors[i].removeAttribute("selected");
+                    }
+                }
+
+                factor.parentNode.parentNode.nextSibling.nextSibling.childNodes[3].childNodes[1].value = this.parentNode.id;
+            });
         });
-    });
     </script>
 {% endblock %}

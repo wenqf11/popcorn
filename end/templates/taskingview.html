@@ -66,7 +66,7 @@
 
                 <div class="modal-footer">
                     <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-info" type="submit">
+                        <button class="btn btn-info" type="submit" onclick="return checkvalid();">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
                         </button>
@@ -117,7 +117,7 @@
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
-                                    <a class="red" href="/delete_task?id={{ dataitem.id }}&type=2">
+                                    <a class="red" href="/delete_task?id={{ dataitem.id }}&type=2" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
                                     {% endifequal %}
@@ -141,36 +141,92 @@
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
     <script type="text/javascript">
-    $(document).ready(function() {
-        $('#maintenance').DataTable();
-        $('td:not(.unsearchable)').click(function(){
-            $('#maintenance_filter input').val($(this).html());
-            $('#maintenance_filter input').select();
-        });
-        $(".fa-pencil").click(function() {
-            var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-            var priority = document.getElementById("priority");
-            var divs = priority.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
-
-            divs[1].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
-
-            divs[2].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
-
-            var priorities = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
-            var plength = priorities.length;
-            var thepriority = dataline[4].innerHTML;
-            for(var i = 0; i < plength; i++) {
-                if(priorities[i].innerHTML == thepriority) {
-                    priorities[i].setAttribute("selected", "selected");
-                }
-                else {
-                    priorities[i].removeAttribute("selected");
-                }
+        function checkvalid() {
+            var title = $("[name='title']").val();
+            var createcontent = $("[name='createcontent']").val();
+            var memo = $("[name='memo']").val();
+            if(title.length < 1 || title.length > 40) {
+                $("[name='title']").select();
+                $.gritter.add({
+                    title: '修改任务失败！',
+                    text: '任务标题长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
             }
-            divs[4].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
+            if(createcontent.length < 1 || createcontent.length > 80) {
+                $("[name='createcontent']").select();
+                $.gritter.add({
+                    title: '修改任务失败！',
+                    text: '任务描述长度为1-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            if(memo.length > 80) {
+                $("[name='memo']").select();
+                $.gritter.add({
+                    title: '修改任务失败！',
+                    text: '备注长度为0-80个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            return true;
+        }
+        function delcfm() {
+            if (!confirm("确认要删除？")) {
+                window.event.returnValue = false;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#maintenance').DataTable({
+                "oLanguage" : {
+                    "sLengthMenu" : "每页显示 _MENU_ 条记录",
+                    "sZeroRecords" : "对不起，没有匹配的数据",
+                    "sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
+                    "sInfoEmpty" : "没有数据",
+                    "sInfoFiltered" : "(数据表中共 _MAX_ 条记录)",
+                    "sProcessing" : "正在加载中...",
+                    "sSearch" : "搜索：",
+                    "oPaginate" : {
+                        "sFirst" : "第一页",
+                        "sPrevious" : " 上一页 ",
+                        "sNext" : " 下一页 ",
+                        "sLast" : " 最后一页 "
+                    }
+                }
+            });
+            $('td:not(.unsearchable)').click(function(){
+                $('#maintenance_filter input').val($(this).html());
+                $('#maintenance_filter input').select();
+            });
+            $(".fa-pencil").click(function() {
+                var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+                var priority = document.getElementById("priority");
+                var divs = priority.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
-            divs[5].childNodes[3].childNodes[1].value = this.parentNode.id;
+                divs[1].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
+
+                divs[2].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
+
+                var priorities = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var plength = priorities.length;
+                var thepriority = dataline[4].innerHTML;
+                for(var i = 0; i < plength; i++) {
+                    if(priorities[i].innerHTML == thepriority) {
+                        priorities[i].setAttribute("selected", "selected");
+                    }
+                    else {
+                        priorities[i].removeAttribute("selected");
+                    }
+                }
+                divs[4].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
+
+                divs[5].childNodes[3].childNodes[1].value = this.parentNode.id;
+            });
         });
-    });
     </script>
 {% endblock %}

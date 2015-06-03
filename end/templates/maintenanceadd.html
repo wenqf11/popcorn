@@ -92,11 +92,12 @@
             var title = $("[name='title']").val();
             var brief = $("[name='brief']").val();
             var createcontent = $("[name='createcontent']").val();
+            var memo = $("[name='memo']").val();
             if(title.length < 1 || title.length > 40) {
                 $("[name='title']").select();
                 $.gritter.add({
                 title: '添加维修计划失败！',
-                text: '维修标题长度为1-40！',
+                text: '维修标题长度为1-40个字符！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;
@@ -119,8 +120,17 @@
                 $("[name='createcontent']").select();
                 $.gritter.add({
                 title: '添加维修计划失败！',
-                text: '故障描述长度为1-80！',
+                text: '故障描述长度为1-80个字符！',
                 class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            if(memo.length > 80) {
+                $("[name='memo']").select();
+                $.gritter.add({
+                    title: '添加维修计划失败！',
+                    text: '备注长度为0-80个字符！',
+                    class_name: 'gritter-error gritter-center'
                 });
                 return false;
             }
