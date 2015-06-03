@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,6 +28,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,19 +39,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.Buffer;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class AttendanceActivity extends Activity implements LocationListener,View.OnClickListener{
-
     private static String ACCESS_TOKEN = "hello_world";
-    private static String LOCAL_IP = "http://192.168.1.103";
-    private static String ATTENDANCE_POST_URL = LOCAL_IP + "/app/check/";
-    private static String ATTENDANCE_GET_URL = LOCAL_IP + "/app/checkinfo/";
+    private String ATTENDANCE_POST_URL = MainActivity.serverIP + "/app/check/";
+    private String ATTENDANCE_GET_URL = MainActivity.serverIP + "/app/checkinfo/";
 
     private boolean mStatus = false;
     private String mAddress = "无法定位";
@@ -74,6 +71,14 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
 
     @ViewInject(R.id.datePicker)
     private DatePicker datePicker;
+
+    @ViewInject(R.id.submit_date)
+    private  Button mButtonSubmitDate;
+
+    @OnClick(R.id.submit_date)
+    private void submitDateButtonClick(View v) {
+        updateAttendanceData();
+    }
 
 
     @Override
@@ -130,7 +135,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("数据加载中...");
         progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
 
         ViewUtils.inject(this);
         Calendar calendar = Calendar.getInstance();
@@ -141,7 +146,6 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                updateAttendanceData();
             }
         });
         datePicker.setMaxDate(new Date().getTime());
@@ -151,21 +155,22 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
     }
 
     private void updateAttendanceData(){
-        int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth()+1;
-        int year = datePicker.getYear();
-        String sDay = String.valueOf(day), sMonth = String.valueOf(month);
-        if( month < 10){
-            sMonth = "0" + String.valueOf(month);
+        final int pickedDay = datePicker.getDayOfMonth();
+        final int pickedMonth = datePicker.getMonth()+1;
+        final int pickedYear = datePicker.getYear();
+
+        String sDay = String.valueOf(pickedDay), sMonth = String.valueOf(pickedMonth);
+        if( pickedMonth < 10){
+            sMonth = "0" + String.valueOf(pickedMonth);
         }
-        if (day < 10){
-            sDay = "0" + String.valueOf(day);
+        if (pickedDay < 10){
+            sDay = "0" + String.valueOf(pickedDay);
         }
-        String date = String.valueOf(year) + '-' + sMonth +'-'+ sDay;
+        String date = String.valueOf(pickedYear) + '-' + sMonth +'-'+ sDay;
 
         RequestParams params = new RequestParams();
         params.addQueryStringParameter("username", "syb1001");
-        params.addQueryStringParameter("access_token", "hello_world");
+        params.addQueryStringParameter("access_token", ACCESS_TOKEN);
         params.addQueryStringParameter("date", date);
 
         progressDialog.show();
@@ -203,8 +208,19 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                             else{
                                 mTextViewOnWork.setText("");
                                 mTextViewOffWork.setText("");
-                                mButtonOnWork.setVisibility(View.VISIBLE);
-                                mButtonOffWork.setVisibility(View.GONE);
+
+                                Calendar calendar = Calendar.getInstance();
+                                int currentYear = calendar.get(Calendar.YEAR);
+                                int currentMonth = calendar.get(Calendar.MONTH)+1;
+                                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+                                if(pickedYear==currentYear && pickedMonth==currentMonth && pickedDay==currentDay) {
+                                    mButtonOnWork.setVisibility(View.VISIBLE);
+                                    mButtonOffWork.setVisibility(View.GONE);
+                                }
+                                String msg = jsonObject.getString("data");
+                                if(msg.equals("can't connect to database")) {
+                                    Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -300,7 +316,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                     String date = start.split(" ")[0];
                     RequestParams params = new RequestParams();
                     params.addBodyParameter("username", "syb1001");
-                    params.addBodyParameter("access_token", "hello_world");
+                    params.addBodyParameter("access_token", ACCESS_TOKEN);
                     params.addBodyParameter("date", date);
                     params.addBodyParameter("checkin", mTextViewOnWork.getText().toString());
                     params.addBodyParameter("checkout", mTextViewOffWork.getText().toString());
@@ -322,13 +338,11 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
 
                                 @Override
                                 public void onSuccess(ResponseInfo<String> responseInfo) {
-                                    //testTextView.setText("reply: " + responseInfo.result);
                                     Toast.makeText(getApplicationContext(), responseInfo.result, Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFailure(HttpException error, String msg) {
-                                    //testTextView.setText(error.getExceptionCode() + ":" + msg);
                                     Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
                                 }
                             });

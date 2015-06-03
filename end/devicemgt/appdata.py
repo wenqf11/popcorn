@@ -58,7 +58,7 @@ def token_required(request_type):
             except Exception:
                 return HttpResponse(json.dumps({
                     'status': 'error',
-                    'data': 'multi user objects'
+                    'data': "can't connect to database"
                 }))
 
             # if not para['token'] == user.token

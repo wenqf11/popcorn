@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +35,7 @@ import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
  */
 
 public class MainActivity extends FragmentActivity {
-
+    static  String serverIP = "http://192.168.1.106";
 	private ViewPager mPageVp;
 
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
@@ -280,10 +281,15 @@ public class MainActivity extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
             case R.id.scan_btn:
-                Intent intent=new Intent(this, QRcodeActivity.class);
-                Bundle bundle=new Bundle();
-                intent.putExtras(bundle);
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(this, QRcodeActivity.class);
+                    Bundle bundle = new Bundle();
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                catch (Exception e){
+                    Log.e("Exception", e.getMessage(), e);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
