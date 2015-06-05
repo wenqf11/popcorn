@@ -1141,8 +1141,18 @@ def delete_route(request):
 
 @login_required
 def view_form(request):
-    _brief = request.GET.get('brief')
-    _form = k_form.objects.get(brief=_brief)
+    _id = request.GET.get('id')
+    if _id:
+        _device = k_device.objects.get(id=_id)
+        _brief = _device.brief
+    else:
+        _brief = request.GET.get('brief')
+        _device = k_device.objects.get(brief=_brief)
+    _form = k_form.objects.filter(brief=_brief)
+    if len(_form) == 0:
+        _form = k_form.objects.create(classid=_device.classid,brief=_brief)
+    else:
+        _form = _form[0]
     _formitems = k_formitem.objects.filter(formid_id=_form.id)
     return render_to_response('formview.html', {'brief': _brief, 'formid': _form.id, 'data': _formitems})
 
@@ -1168,7 +1178,8 @@ def submit_form(request):
         _formitem.editorid = _user.id
         _formitem.editdatetime = get_current_date()
     else:
-        _formitem = k_formitem.objects.create(classid=_user.classid, formid_id=_formid)
+        _form = k_form.objects.get(brief=_brief)
+        _formitem = k_formitem.objects.create(classid=_form.classid, formid_id=_formid)
         _formitem.creatorid = _user.id
         _formitem.createdatetime = get_current_date()
     _formitem.name = _name
