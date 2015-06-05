@@ -896,9 +896,8 @@ def view_role(request):
     roledata = []
     for p in allrole:
         onerole = {}
-        theclass = k_class.objects.get(id=p.classid_id)
         onerole["id"] = p.id
-        onerole["class"] = theclass.name
+        onerole['classname'] = p.classid.name
         onerole["name"] = p.name
         onerole["purviews"] = []
         therolepurviews = p.purviews.all()
@@ -936,6 +935,13 @@ def view_role(request):
 @login_required
 def operate_role(request):
     theid = request.GET.get("id")
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+        server_msg = ""
+    _classes = []
+    _allclasses = k_class.objects.all()
+    for _class in _allclasses:
+        _classes.append(_class.name)
     user = k_user.objects.get(username=request.user.username)
     if theid:
         roledata = {}
@@ -954,6 +960,7 @@ def operate_role(request):
         theeditor = k_user.objects.get(id=therole.editorid)
         roledata["editor"] = theeditor.username
         roledata["editdatetime"] = therole.editdatetime
+        roledata['classname'] = therole.classid.name
 
         all_purview = k_purview.objects.all()
         roledata["purviews"] = []
@@ -963,7 +970,7 @@ def operate_role(request):
                 'name': _purview.name + ', ' + _purview.item,
                 'selected': _purview.id in purview_ids
             })
-        return render_to_response('roleoperate.html', {'username':user.username,'isNew': False, 'data': roledata})
+        return render_to_response('roleoperate.html', {'username':user.username,'isNew': False, 'data': roledata, "classes": _classes, 'server_msg': server_msg})
     else:
         data = {}
         data['purviews'] = []
@@ -975,7 +982,7 @@ def operate_role(request):
                 'selected': False
             })
 
-        return render_to_response('roleoperate.html', {'username':user.username,'isNew': True, 'data': data})
+        return render_to_response('roleoperate.html', {'username':user.username,'isNew': True, 'data': data, "classes": _classes, 'server_msg': server_msg})
 
 
 @login_required
@@ -989,6 +996,7 @@ def delete_role(request):
 
 @login_required
 def submit_role(request, _id):
+    _classname = request.GET.get('classname')
     _name = request.GET.get('name')
     _editdatetime = get_current_date()
     # 编辑者
@@ -997,10 +1005,20 @@ def submit_role(request, _id):
     _purviews = request.GET.getlist('duallistbox')
     _memo = request.GET.get('memo')
 
+    _class = k_class.objects.get(name=_classname)
     if _id:
         _role = k_role.objects.get(id=_id)
+        _role.classid = _class
+        _roles = k_role.objects.filter(name=_name)
+        if len(_roles) > 1 or (len(_roles) == 1 and _roles[0].id != int(_id)):
+            server_msg = '名称为'+_roles[0].name+'的角色已存在！'
+            return HttpResponseRedirect('/operate_role/?msg='+server_msg+'&id='+_id)
     else:
-        _role = k_role.objects.create(classid=_user.classid)
+        _roles = k_role.objects.filter(name=_name)
+        if len(_roles) > 0:
+            server_msg = '名称为'+_roles[0].name+'的角色已存在！'
+            return HttpResponseRedirect('/operate_role/?msg='+server_msg)
+        _role = k_role.objects.create(classid=_class)
         _role.creatorid = _editor
     _role.name = _name
     _role.editdatetime = _editdatetime
