@@ -32,6 +32,23 @@
                     </div>
                 </div>
 
+                <h4 class="header blue bolder smaller">分类信息</h4>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">所属<span class="required">*</span></label>
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="classname">
+                            {% for class in classes %}
+                                {% ifequal class data.classname %}
+                                    <option value="{{ class }}" selected="selected">{{ class }}</option>
+                                {% else %}
+                                    <option value="{{ class }}">{{ class }}</option>
+                                {% endifequal %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
                 <h4 class="header blue bolder smaller">厂家信息</h4>
 
                 <div class="form-group">
@@ -141,6 +158,18 @@
 {% block tailjs %}
     <script src="../static/assets/js/bootstrap-tag.min.js"></script>
     <script src="../static/assets/js/chosen.jquery.min.js"></script>
+    <script>
+        $(function(){
+            var server_msg="{{ server_msg }}";
+            if (server_msg) {
+                $.gritter.add({
+                    title: '系统消息',
+                    text: server_msg,
+                    class_name: 'gritter-error gritter-center'
+                });
+            }
+        })
+    </script>
     <script>
         jQuery(function($) {
             if(!ace.vars['touch']) {

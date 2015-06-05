@@ -1684,6 +1684,7 @@ def view_spare(request):
 
         _creator = k_user.objects.get(id=_spare.creatorid)
         dataitem['id'] = _spare.id
+        dataitem['classname'] = _spare.classid.name
         dataitem['brand'] = _spare.brand
         dataitem['producer'] = _spare.producerid.name
         dataitem['supplier'] = _spare.supplierid.name
@@ -1714,6 +1715,9 @@ def view_spare(request):
 
 def operate_spare(request):
     _id = request.GET.get('id')
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+        server_msg = ""
     _data = {}
     if _id:
         _spare = k_spare.objects.get(id=_id)
@@ -1728,8 +1732,13 @@ def operate_spare(request):
         _data["minimum"] = _spare.minimum
         _data["content"] = _spare.content
         _data["memo"] = _spare.memo
+        _data['classname'] = _spare.classid.name
     else:
         _data["isNew"] = True
+    _classes = []
+    _allclasses = k_class.objects.all()
+    for _class in _allclasses:
+        _classes.append(_class.name)
     _producers = []
     _allproducers = k_producer.objects.all()
     for _producer in _allproducers:
@@ -1738,9 +1747,10 @@ def operate_spare(request):
     _allsuppliers = k_supplier.objects.all()
     for _supplier in _allsuppliers:
         _suppliers.append(_supplier.name)
-    return render_to_response('spareoperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers})
+    return render_to_response('spareoperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg})
 
 def submit_spare(request):
+    _classname = request.GET.get('classname')
     _brand = request.GET.get('brand')
     _producer = request.GET.get('producer')
     _supplier = request.GET.get('supplier')
@@ -1760,19 +1770,35 @@ def submit_spare(request):
         _spare.auditdatetime = get_current_date()
         _spare.save()
         return HttpResponseRedirect('/view_spare')
+    _class = k_class.objects.get(name=_classname)
+    _producer = k_producer.objects.get(name=_producer)
+    _supplier = k_supplier.objects.get(name=_supplier)
     if _id:
         _spare = k_spare.objects.get(id=_id)
+        _spares = k_spare.objects.filter(name=_name)
+        if len(_spares) > 1 or (len(_spares) == 1 and _spares[0].id != int(_id)):
+            server_msg = '名称为'+_spares[0].name+'的备件已存在！'
+            return HttpResponseRedirect('/operate_spare/?msg='+server_msg+'&id='+_id)
+        _spares = k_spare.objects.filter(brief=_brief)
+        if len(_spares) > 1 or (len(_spares) == 1 and _spares[0].id != int(_id)):
+            server_msg = '简称为'+_spares[0].brief+'的备件已存在！'
+            return HttpResponseRedirect('/operate_spare/?msg='+server_msg+'&id='+_id)
         _spare.editorid = _user.id
         _spare.editdatetime = get_current_date()
         _spare.auditorid = 0
-        _producer = k_producer.objects.get(name=_producer)
-        _supplier = k_supplier.objects.get(name=_supplier)
+        _spare.classid = _class
         _spare.producerid = _producer
         _spare.supplierid = _supplier
     else:
-        _producer = k_producer.objects.get(name=_producer)
-        _supplier = k_supplier.objects.get(name=_supplier)
-        _spare = k_spare.objects.create(classid=_user.classid, producerid=_producer, supplierid=_supplier)
+        _spares = k_spare.objects.filter(name=_name)
+        if len(_spares) > 0:
+            server_msg = '名称为'+_spares[0].name+'的备件已存在！'
+            return HttpResponseRedirect('/operate_spare/?msg='+server_msg)
+        _spares = k_spare.objects.filter(brief=_brief)
+        if len(_spares) > 0:
+            server_msg = '简称为'+_spares[0].brief+'的备件已存在！'
+            return HttpResponseRedirect('/operate_spare/?msg='+server_msg)
+        _spare = k_spare.objects.create(classid=_class, producerid=_producer, supplierid=_supplier)
         _spare.creatorid = _user.id
         _spare.createdatetime = get_current_date()
     _spare.brand = _brand
@@ -2099,6 +2125,7 @@ def view_tool(request):
 
         _creator = k_user.objects.get(id=_tool.creatorid)
         dataitem['id'] = _tool.id
+        dataitem['classname'] = _tool.classid.name
         dataitem['brand'] = _tool.brand
         dataitem['producer'] = _tool.producerid.name
         dataitem['supplier'] = _tool.supplierid.name
@@ -2129,6 +2156,9 @@ def view_tool(request):
 
 def operate_tool(request):
     _id = request.GET.get('id')
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+        server_msg = ""
     _data = {}
     if _id:
         _tool = k_tool.objects.get(id=_id)
@@ -2143,8 +2173,13 @@ def operate_tool(request):
         _data["minimum"] = _tool.minimum
         _data["content"] = _tool.content
         _data["memo"] = _tool.memo
+        _data['classname'] = _tool.classid.name
     else:
         _data["isNew"] = True
+    _classes = []
+    _allclasses = k_class.objects.all()
+    for _class in _allclasses:
+        _classes.append(_class.name)
     _producers = []
     _allproducers = k_producer.objects.all()
     for _producer in _allproducers:
@@ -2153,9 +2188,10 @@ def operate_tool(request):
     _allsuppliers = k_supplier.objects.all()
     for _supplier in _allsuppliers:
         _suppliers.append(_supplier.name)
-    return render_to_response('tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers})
+    return render_to_response('tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg})
 
 def submit_tool(request):
+    _classname = request.GET.get('classname')
     _brand = request.GET.get('brand')
     _producer = request.GET.get('producer')
     _supplier = request.GET.get('supplier')
@@ -2175,19 +2211,35 @@ def submit_tool(request):
         _tool.auditdatetime = get_current_date()
         _tool.save()
         return HttpResponseRedirect('/view_tool')
+    _class = k_class.objects.get(name=_classname)
+    _producer = k_producer.objects.get(name=_producer)
+    _supplier = k_supplier.objects.get(name=_supplier)
     if _id:
         _tool = k_tool.objects.get(id=_id)
+        _tools = k_tool.objects.filter(name=_name)
+        if len(_tools) > 1 or (len(_tools) == 1 and _tools[0].id != int(_id)):
+            server_msg = '名称为'+_tools[0].name+'的工具已存在！'
+            return HttpResponseRedirect('/operate_tool/?msg='+server_msg+'&id='+_id)
+        _tools = k_tool.objects.filter(brief=_brief)
+        if len(_tools) > 1 or (len(_tools) == 1 and _tools[0].id != int(_id)):
+            server_msg = '简称为'+_tools[0].brief+'的工具已存在！'
+            return HttpResponseRedirect('/operate_tool/?msg='+server_msg+'&id='+_id)
         _tool.editorid = _user.id
         _tool.editdatetime = get_current_date()
         _tool.auditorid = 0
-        _producer = k_producer.objects.get(name=_producer)
-        _supplier = k_supplier.objects.get(name=_supplier)
+        _tool.classid = _class
         _tool.producerid = _producer
         _tool.supplierid = _supplier
     else:
-        _producer = k_producer.objects.get(name=_producer)
-        _supplier = k_supplier.objects.get(name=_supplier)
-        _tool = k_tool.objects.create(classid=_user.classid, producerid=_producer, supplierid=_supplier)
+        _tools = k_tool.objects.filter(name=_name)
+        if len(_tools) > 0:
+            server_msg = '名称为'+_tools[0].name+'的工具已存在！'
+            return HttpResponseRedirect('/operate_tool/?msg='+server_msg)
+        _tools = k_tool.objects.filter(brief=_brief)
+        if len(_tools) > 0:
+            server_msg = '简称为'+_tools[0].brief+'的工具已存在！'
+            return HttpResponseRedirect('/operate_tool/?msg='+server_msg)
+        _tool = k_tool.objects.create(classid=_class, producerid=_producer, supplierid=_supplier)
         _tool.creatorid = _user.id
         _tool.createdatetime = get_current_date()
     _tool.brand = _brand
