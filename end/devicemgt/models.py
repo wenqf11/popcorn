@@ -403,6 +403,33 @@ class k_maintenance(models.Model):
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
+class k_deviceplan(models.Model):
+    DEVICEPLAN_PERIODS = (
+        ("day", "天"),
+        ("week", "周"),
+        ("halfmonth", "半个月"),
+        ("month", "月"),
+        ("twomonth", "两个月"),
+        ("threemonth", "季度"),
+        ("fourmonth", "四个月"),
+        ("halfyear", "半年"),
+        ("year", "年"),
+        ("twoyear", "两年"),
+    )
+    deviceid = models.ForeignKey(k_device, related_name='deviceplan_set')
+    maintenanceid = models.ForeignKey(k_maintenance, related_name='deviceplan_set')
+    title = models.CharField(max_length=50)
+    period = models.CharField(max_length=15, choices=DEVICEPLAN_PERIODS, default='0')
+    createcontent = models.CharField(max_length=100)
+    memo = models.CharField(max_length=100)
+    assignorid = models.PositiveIntegerField(default=0)
+    assigndatetime = models.DateField(blank=True, default=date.today)
+    editorid = models.PositiveIntegerField(default=0)
+    editdatetime = models.DateField(blank=True, default=date.today)
+    auditorid = models.PositiveIntegerField(default=0)
+    auditdatetime = models.DateField(blank=True, default=date.today)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+
 class k_task(models.Model):
     TASK_STATUS = (
         ('1', '计划'),

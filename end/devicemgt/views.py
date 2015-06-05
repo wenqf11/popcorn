@@ -1212,6 +1212,83 @@ def delete_form(request):
 
 
 @login_required
+def view_deviceplan(request):
+    _deviceid = request.GET.get('id')
+    _device = k_device.objects.get(id=_deviceid)
+    _brief = _device.brief
+    _deviceplans = k_deviceplan.objects.filter(deviceid=_device)
+    data = []
+    for _deviceplan in _deviceplans:
+        _assignor = k_user.objects.get(id=_deviceplan.assignorid)
+        _editor = k_user.objects.get(id=_deviceplan.editorid)
+        data.append({
+            'id': _deviceplan.id,
+            'title': _deviceplan.title,
+            'period': _deviceplan.get_period_display(),
+            'createcontent': _deviceplan.createcontent,
+            'memo': _deviceplan.memo,
+            'assignor': _assignor.name,
+            'assigndatetime': _deviceplan.assigndatetime,
+            'editor': _editor.name
+        })
+    _users = k_user.objects.all()
+    _maintainers = []
+    for _user in _users:
+        _maintainers.append(_user.name)
+    return render_to_response('deviceplanview.html', {'brief': _brief, 'deviceid': _deviceid, 'data': data, 'maintainers': _maintainers})
+
+
+@login_required
+def submit_deviceplan(request):
+    _title = request.GET.get('title')
+    _period = request.GET.get('period')
+    _createcontent = request.GET.get('createcontent')
+    _editor = request.GET.get('editor')
+    _memo = request.GET.get('memo')
+
+    _id = request.GET.get('id')
+    _deviceid = request.GET.get('deviceid')
+    _user = k_user.objects.get(username=request.user.username)
+    _editor = k_user.objects.get(name=_editor)
+
+    if _id != "":
+        _deviceplan = k_deviceplan.objects.get(id=_id)
+        _maintenance = k_maintenance.objects.get(id=_deviceplan.maintenanceid_id)
+    else:
+        _maintenance = k_maintenance.objects.create(mtype=1,deviceid_id=_deviceid,state=2)
+        _deviceplan = k_deviceplan.objects.create(deviceid_id=_deviceid,maintenanceid=_maintenance)
+
+    _maintenance.assignorid = _user.id
+    _maintenance.assigndatetime = get_current_date()
+    _maintenance.title = _title
+    _maintenance.createcontent = _createcontent
+    _maintenance.editorid = _editor.id
+    _maintenance.memo = _memo
+    _maintenance.save()
+
+    _deviceplan.assignorid = _user.id
+    _deviceplan.assigndatetime = get_current_date()
+    _deviceplan.title = _title
+    _deviceplan.period = _period
+    _deviceplan.createcontent = _createcontent
+    _deviceplan.editorid = _editor.id
+    _deviceplan.memo = _memo
+    _deviceplan.save()
+
+    return HttpResponseRedirect('/view_deviceplan/?id='+_deviceid)
+
+
+@login_required
+def delete_deviceplan(request):
+    _id = request.GET.get('id')
+    _deviceid = request.GET.get('deviceid')
+    if _id:
+        _deviceplan = k_deviceplan.objects.get(id=_id)
+        _deviceplan.delete()
+    return HttpResponseRedirect('/view_deviceplan/?id='+_deviceid)
+
+
+@login_required
 def view_maintaining(request):
     _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=3)
     data = []
