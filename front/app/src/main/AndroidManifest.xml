@@ -8,16 +8,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name=".LoginActivity" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name=".MainActivity" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".AttendanceActivity"
@@ -61,31 +66,38 @@
         </activity>
         <activity
             android:name=".DeviceInfoSearchActivity"
-            android:label="@string/title_activity_device_info_search" >
+            android:label="@string/title_activity_device_info_search"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".DeviceInfoDetailActivity"
-            android:label="@string/title_activity_device_info_detail" >
+            android:label="@string/title_activity_device_info_detail"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ChangePasswordActivity"
-            android:label="@string/title_activity_change_password" >
+            android:label="@string/title_activity_change_password"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".FeedBackActivity"
-            android:label="@string/title_activity_feedback" >
+            android:label="@string/title_activity_feedback"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".AboutInfoActivity"
-            android:label="@string/title_activity_about_info" >
+            android:label="@string/title_activity_about_info"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".RankActivity"
-            android:label="@string/title_activity_rank" >
+            android:label="@string/title_activity_rank"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".BonusActivity"
-            android:label="@string/title_activity_bonus" >
+            android:label="@string/title_activity_bonus"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
@@ -99,5 +111,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" /> -->
 
 </manifest>

@@ -33,12 +33,12 @@
     <string name="submit">提交</string>
     <string name="advice">建议：</string>
     <string name="query">查询</string>
-    <string name="title_activity_device_info_search">DeviceInfoSearchActivity</string>
-    <string name="title_activity_device_info_detail">DeviceInfoDetailActivity</string>
+    <string name="title_activity_device_info_search">查看设备资料</string>
+    <string name="title_activity_device_info_detail">设备资料信息</string>
     <string name="title_activity_change_password">修改密码</string>
     <string name="title_activity_feedback">意见反馈</string>
     <string name="title_activity_about_info">关于</string>
-    <string name="title_activity_rank">RankActivity</string>
-    <string name="title_activity_bonus">BonusActivity</string>
+    <string name="title_activity_rank">积分排名</string>
+    <string name="title_activity_bonus">抢彩蛋</string>
 
 </resources>

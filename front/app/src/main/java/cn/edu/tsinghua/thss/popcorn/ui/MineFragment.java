@@ -1,6 +1,8 @@
 package cn.edu.tsinghua.thss.popcorn.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,6 +44,9 @@ public class MineFragment extends Fragment {
     @ViewInject(R.id.about_info)
     private LinearLayout aboutInfo;
 
+    @ViewInject(R.id.log_out)
+    private LinearLayout logOut;
+
     @OnClick(R.id.change_password)
     private void onChangePsdClick(View v) {
         Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
@@ -64,6 +69,16 @@ public class MineFragment extends Fragment {
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.log_out)
+    private void onLogOutClick(View v){
+        SharedPreferences sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("PHONE", "");
+        editor.putString("PASSWORD", "");
+        editor.apply();
+        getActivity().finish();
     }
 
     @Override
