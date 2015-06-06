@@ -1,8 +1,8 @@
-#-*- encoding=UTF-8 -*-
+# -*- encoding=UTF-8 -*-
 __author__ = 'LY'
 
 
-from django.shortcuts import render,render_to_response
+from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -15,21 +15,21 @@ from helper import handle_uploaded_file, get_current_time, get_current_date, get
 import json
 
 
-#首页
+# 首页
+@login_required
 def index(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user = k_user.objects.get(username=request.user.username)
-        user = User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'index'})
-        return render_to_response('index.html', variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'index'})
+    return render_to_response('index.html', variables)
 
 
-'''用户管理开始
 '''
+用户管理开始
+'''
+
 
 def get_leaf(leaf_list):
     result = list()
@@ -39,6 +39,7 @@ def get_leaf(leaf_list):
         userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     return result
+
 
 def get_node(child_leaf_list, child_node_list):
     result = list()
@@ -60,214 +61,236 @@ def get_node(child_leaf_list, child_node_list):
     return result
 
 
+@login_required
 def usermgt(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        user = k_user.objects.get(username=request.user.username)
-        #user = User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        current_class_id = user.classid_id
-        current_class = k_class.objects.get(id=current_class_id)
-        server_msg = request.GET.get('msg')
-        if server_msg == None:
-           server_msg = ''
+    # 登陆成功
+    user = k_user.objects.get(username=request.user.username)
+    # user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    current_class_id = user.classid_id
+    current_class = k_class.objects.get(id=current_class_id)
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+       server_msg = ''
 
-        if current_class:
-            userdatas = list()
-            class_set = k_class.objects.filter(parentid = current_class_id)
-            leaf_list = k_user.objects.filter(classid_id=current_class_id)
-            for leaf in leaf_list:
-                userdata = dict()
-                userdata["text"] = leaf.username.encode('utf8')
-                userdata["href"] = "/user?id=" + str(leaf.id)
-                userdatas.append(userdata)
-            for c in class_set:
-                userdata = dict()
-                userdata["text"] = c.name.encode('utf8')
-                child_list = k_class.objects.filter(parentid = c.id)
-                leaf_list = k_user.objects.filter(classid_id=c.id)
-                if child_list:
-                    userdata["nodes"] = get_node(leaf_list, child_list)
-                #elif leaf_list:
-                #    userdata["nodes"] = get_leaf(leaf_list)
-                userdatas.append(userdata)
+    if current_class:
+        userdatas = list()
+        class_set = k_class.objects.filter(parentid=current_class_id)
+        leaf_list = k_user.objects.filter(classid_id=current_class_id)
+        for leaf in leaf_list:
+            userdata = dict()
+            userdata["text"] = leaf.username.encode('utf8')
+            userdata["href"] = "/user?id=" + str(leaf.id)
+            userdatas.append(userdata)
+        for c in class_set:
+            userdata = dict()
+            userdata["text"] = c.name.encode('utf8')
+            child_list = k_class.objects.filter(parentid = c.id)
+            leaf_list = k_user.objects.filter(classid_id=c.id)
+            if child_list:
+                userdata["nodes"] = get_node(leaf_list, child_list)
+            #elif leaf_list:
+            #    userdata["nodes"] = get_leaf(leaf_list)
+            userdatas.append(userdata)
 
-            cur_datas = dict()
-            datas = list()
-            cur_datas["text"] = current_class.name.encode('utf8')
-            cur_datas['nodes'] = userdatas
-            datas.append(cur_datas)
+        cur_datas = dict()
+        datas = list()
+        cur_datas["text"] = current_class.name.encode('utf8')
+        cur_datas['nodes'] = userdatas
+        datas.append(cur_datas)
 
-        _id = request.GET.get('id')
-        # 如果访问某个用户的信息
-        if (_id):
-            # 根据用户id取出用户
-            user_info = k_user.objects.get(id=_id)
-            # 根据用户id取出用户角色
-            user_role = k_role.objects.filter(k_user=_id)
-            # 根据用户的classid取出层级关系
-            user_class_list = []
-            tmp_class = k_class.objects.filter(id=user_info.classid_id)
-            while tmp_class:
-                if len(tmp_class) == 1:
-                    user_class_list.append(tmp_class[0].name)
-                    tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
-                else:
-                    print "error!"
-            user_class = ""
-            user_class_len = len(user_class_list)
-            for i in xrange(0,user_class_len):
-                user_class += user_class_list[user_class_len - i - 1] + "-"
-            user_class = user_class[0:len(user_class) - 1]
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas, 'userinfo':user_info,
-                                              'user_role':user_role, 'user_class': user_class, 'server_msg':server_msg})
-        else:
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': datas, 'server_msg':server_msg})
-        return render_to_response('user.html',variables)
+    _id = request.GET.get('id')
+    # 如果访问某个用户的信息
+    if _id:
+        # 根据用户id取出用户
+        user_info = k_user.objects.get(id=_id)
+        # 根据用户id取出用户角色
+        user_role = k_role.objects.filter(k_user=_id)
+        # 根据用户的classid取出层级关系
+        user_class_list = []
+        tmp_class = k_class.objects.filter(id=user_info.classid_id)
+        while tmp_class:
+            if len(tmp_class) == 1:
+                user_class_list.append(tmp_class[0].name)
+                tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
+            else:
+                print "error!"
+        user_class = ""
+        user_class_len = len(user_class_list)
+        for i in xrange(0,user_class_len):
+            user_class += user_class_list[user_class_len - i - 1] + "-"
+        user_class = user_class[0:len(user_class) - 1]
+        variables = RequestContext(request, {
+            'username': user.username,
+            'clicked_item': 'user',
+            'data': datas,
+            'userinfo': user_info,
+            'user_role': user_role,
+            'user_class': user_class,
+            'server_msg': server_msg
+        })
     else:
-        return HttpResponseRedirect('/login/')
+        variables = RequestContext(request, {
+            'username': user.username,
+            'clicked_item': 'user',
+            'data': datas,
+            'server_msg': server_msg
+        })
+    return render_to_response('user.html', variables)
 
 
+@login_required
 def operate_user(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        _id = request.GET.get('id')
-        userdata = dict()
-        class_list = list()
-        classes = k_class.objects.all()
-        for c in classes:
-            class_list.append(c.name)
-        role_list = list()
-        roles = k_role.objects.all()
-        for role in roles:
-            role_list.append(role.name)
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    _id = request.GET.get('id')
+    userdata = dict()
+    class_list = list()
+    classes = k_class.objects.all()
+    for c in classes:
+        class_list.append(c.name)
+    role_list = list()
+    roles = k_role.objects.all()
+    for role in roles:
+        role_list.append(role.name)
 
-        userdata['class_list'] = class_list
-        userdata['role_list'] = role_list
-        if _id:
-            theuser = k_user.objects.filter(id = _id)[0]
-            key_list = ['username', 'password', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
-                        'idcard', 'idcardtype','contactmobile', 'content', 'memo','birthday']
-            for key in key_list:
-                userdata[key] = eval('theuser.'+key)
+    userdata['class_list'] = class_list
+    userdata['role_list'] = role_list
+    if _id:
+        theuser = k_user.objects.filter(id=_id)[0]
+        key_list = ['username', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
+                    'idcard', 'idcardtype','contactmobile', 'content', 'memo', 'birthday']
+        for key in key_list:
+            userdata[key] = eval('theuser.' + key)
 
-            k_chosed_roles = k_role.objects.filter(k_user=_id)
-            chosed_roles = []
-            for k_chosed_role in k_chosed_roles:
-                chosed_roles.append(k_chosed_role.name)
-            userdata['chosen_roles'] = chosed_roles
-        else:
-            userdata['isNew'] = True
-
-        server_msg = request.GET.get('msg')
-        if server_msg:
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata,'server_msg':server_msg})
-        else:
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata})
-        return render_to_response('useradd.html',variables)
+        k_chosed_roles = k_role.objects.filter(k_user=_id)
+        chosed_roles = []
+        for k_chosed_role in k_chosed_roles:
+            chosed_roles.append(k_chosed_role.name)
+        userdata['chosen_roles'] = chosed_roles
     else:
-        return HttpResponseRedirect('/login/')
+        userdata['isNew'] = True
+
+    server_msg = request.GET.get('msg')
+    if server_msg:
+        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg': server_msg})
+    else:
+        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata})
+    return render_to_response('useradd.html', variables)
+
 
 # 提交表单，添加用户
+@login_required
 def useradd(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user = k_user.objects.get(username=request.user.username)
-        server_msg = ''
-        cur_user_id = 0
-        if request.method == 'POST':
-            #face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
-            face = "../static/images/user.png"
-            #如果用户名相同，修改已有的用户
-            user = k_user.objects.filter(username=request.POST['username'])
-            if not user:
-                #总共要有26项信息
-                classid = k_class.objects.filter(name=request.POST['classname'])[0]
-                user = k_user.objects.create_user(username=request.POST['username'],
-                    classid=classid,
-                    state=1,
-                    password=request.POST['password'],
-                    name=request.POST['name'],
-                    face=face,
-                    mobile=request.POST['mobile'],
-                    email=request.POST['email'],
-                    address=request.POST['address'],
-                    zipcode=request.POST['zipcode'],
-                    gender =request.POST['gender'],
-                    #birthday=request.POST['birthday'],
-                    birthday="1993-05-28",
-                    idcard=request.POST['idcard'],
-                    idcardtype=0,
-                    content=request.POST['content'],
-                    memo=request.POST['memo'],
-                    contact=request.POST['contact'],
-                    contactmobile=request.POST['contactmobile'],
-                    creatorid=0,
-                    createdatetime=get_current_date(),
-                    editorid=0,
-                    editdatetime=get_current_date(),
-                    auditorid=0,
-                    auditdatetime=get_current_date(),
-                    status=0,
-                )
-                cur_user_id = user.id
-                #给roles和user也增加一条记录
-                olduser = User.objects.create_user(
-                    username=user.username,
-                    email=user.email,
-                    password=user.password
-                )
-                #保存
-                user.save()
-                olduser.save()
-                #建立user和role的关系
-                roles = k_role.objects.filter(name=request.POST['role'])
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    server_msg = ''
+    cur_user_id = 0
+    if request.method == 'POST':
+        # face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
+        face = "../static/images/user.png"
+        # 如果用户名相同，修改已有的用户
+        user = k_user.objects.filter(username=request.POST['username'])
+        if not user:
+            # 总共要有26项信息
+            classid = k_class.objects.filter(name=request.POST['classname'])[0]
+            user = k_user.objects.create_user(username=request.POST['username'],
+                classid=classid,
+                state=1,
+                password=request.POST['password'],
+                name=request.POST['name'],
+                face=face,
+                mobile=request.POST['mobile'],
+                email=request.POST['email'],
+                address=request.POST['address'],
+                zipcode=request.POST['zipcode'],
+                gender=request.POST['gender'],
+                birthday=datetime.strptime(request.POST['birthday'], '%Y年%m月%d日').date(),
+                idcard=request.POST['idcard'],
+                idcardtype=0,
+                content=request.POST['content'],
+                memo=request.POST['memo'],
+                contact=request.POST['contact'],
+                contactmobile=request.POST['contactmobile'],
+                creatorid=0,
+                createdatetime=get_current_date(),
+                editorid=0,
+                editdatetime=get_current_date(),
+                auditorid=0,
+                auditdatetime=get_current_date(),
+                status=0,
+            )
+            # 给roles和user也增加一条记录
+            olduser = User.objects.create_user(
+                username=user.username,
+                email=user.email,
+                password=user.password
+            )
+
+            # 保存
+            user.save()
+            olduser.save()
+
+            cur_user_id = user.id
+
+            # 建立user和role的关系
+            roles = k_role.objects.filter(name=request.POST['role'])
+            for role in roles:
+                user.roles.add(role.id)
+            server_msg = '添加用户成功！'
+        elif len(user) == 1:
+            user = user[0]
+            cur_user_id = user.id
+
+            _d_username = user.username
+
+            _c = k_class.objects.get(name=request.POST['classname'])
+            if _c:
+                user.classid = _c
+
+            raw_password = request.POST['password']
+            user.email = request.POST['email']
+            user.name = request.POST['name']
+            user.mobile = request.POST['mobile']
+            user.gender = request.POST['gender']
+            user.zipcode = request.POST['zipcode']
+            user.address = request.POST['address']
+            user.birthday = datetime.strptime(request.POST['birthday'], '%Y年%m月%d日').date()
+            user.idcard = request.POST['idcard']
+            user.idcardtype = request.POST['idcardtype']
+            user.content = request.POST['content']
+            user.memo = request.POST['memo']
+            user.contact = request.POST['contact']
+            user.contactmobile = request.POST['contactmobile']
+            user.editorid = request.user.id
+            user.editdatetime = get_current_date()
+            tmp_urs = user.roles.filter(k_user=user.id)
+            for ur in tmp_urs:
+                user.roles.remove(ur)
+            # 建立user和role的关系
+            roles_name = request.POST.getlist('role')
+            for r_name in roles_name:
+                roles = k_role.objects.filter(name=r_name)
                 for role in roles:
                     user.roles.add(role.id)
-                server_msg = '添加用户成功！'
-            elif len(user) == 1:
-                user = user[0]
-                cur_user_id = user.id
-                _c = k_class.objects.get(name=request.POST['classname'])
-                if _c:
-                    user.classid = _c
-                    
-                user.password = request.POST['password']
-                user.email = request.POST['email']
-                user.name = request.POST['name']
-                user.mobile = request.POST['mobile']
-                user.gender = request.POST['gender']
-                user.zipcode = request.POST['zipcode']
-                user.address = request.POST['address']
-                #user.birthday = request.POST['birthday']
-                user.idcard = request.POST['idcard']
-                user.idcardtype = request.POST['idcardtype']
-                user.content = request.POST['content']
-                user.memo = request.POST['memo']
-                user.editorid = request.user.id
-                user.editdatetime = get_current_date()
-                tmp_urs = user.roles.filter(k_user = user.id)
-                for ur in tmp_urs:
-                    user.roles.remove(ur)
-                #建立user和role的关系
-                roles_name = request.POST.getlist('role')
-                for r_name in roles_name:
-                    roles = k_role.objects.filter(name=r_name)
-                    for role in roles:
-                        user.roles.add(role.id)
-                user.editorid = request.user.id
-                user.editdatetime=get_current_date()
-                user.save()
-                server_msg = '修改用户资料成功！'
-                # 更新用户成功
-            else:
-                server_msg = "数据库中有重名用户！"
-        return HttpResponseRedirect('/user_operate/?id='+str(cur_user_id)+'&msg='+server_msg)
-    else:
-        return HttpResponseRedirect('/login/')
+            user.editorid = request.user.id
+            user.editdatetime=get_current_date()
+
+            user.set_password(raw_password)
+            user.save()
+
+            # 修改django数据库中的密码
+            _d_user = User.objects.get(username=_d_username)
+            _d_user.set_password(raw_password)
+            _d_user.save()
+
+            server_msg = '修改用户资料成功！'
+            # 更新用户成功
+        else:
+            server_msg = "数据库中有重名用户！"
+    return HttpResponseRedirect('/user_operate/?id=' + str(cur_user_id) + '&msg=' + server_msg)
 
 
 def userdel(request):
@@ -283,213 +306,209 @@ def userdel(request):
         return HttpResponseRedirect('/login/')
 
 
+@login_required
 def userset(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user = k_user.objects.get(username=request.user.username)
-        user = User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables = RequestContext(request,{'username': user.username, 'clicked_item': 'user'})
-        return render_to_response('userset.html', variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user'})
+    return render_to_response('userset.html', variables)
 
-'''用户管理结束
+
+'''
+用户管理结束
+设备管理开始
 '''
 
-'''设备管理'''
+
+@login_required
 def devicemgt(request):
-    if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        server_msg = request.GET.get('msg')
-        if server_msg == None:
-            server_msg = ''
-        devicetypes = k_devicetype.objects.all()
-        parents = 0
-        datas = get_device_node(devicetypes, parents) #获取节点树
-        _id = request.GET.get('id')
-        deviceinfo = dict()
-        if (_id):
-            device = k_device.objects.filter(id=_id)
-            if len(device) == 1:
-                device = device[0]
-                deviceinfo['id'] = _id
-                deviceinfo['brief'] = device.brief
-                deviceinfo['name']  = device.name
-                deviceinfo['position'] = device.position
-                owner = k_user.objects.filter(id=device.ownerid)
-                if len(owner) == 1:
-                    deviceinfo['owner'] = owner[0].username
-                else:
-                    deviceinfo['owner'] = "未指定负责人"
-                _c = k_class.objects.filter(id=device.classid_id)
-                if len(_c) == 1:
-                    _c_list = list()
-                    _c_list.append(_c[0].name)
-                    _parentid = _c[0].parentid
-                    while True:
-                        _cur = k_class.objects.filter(id=_parentid)
-                        if len(_cur) != 1:
-                            break
-                        else:
-                            _parentid = _cur[0].parentid
-                            _c_list.append(_cur[0].name)
-                    _c_num = len(_c_list)
-                    deviceinfo['class'] = ''
-                    for i in xrange(0,_c_num):
-                        deviceinfo['class'] += _c_list[_c_num-i-1] + "-"
-
-                    deviceinfo['class'] = deviceinfo['class'][0:len(deviceinfo['class'])-1]
-                else:
-                    deviceinfo['class'] = '未指定该设备所属部门'
-        if len(deviceinfo) > 0:
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'deviceinfo':deviceinfo})
-        else:
-            variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
-        return render_to_response('device.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def operate_device(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        server_msg = request.GET.get('msg')
-        if server_msg == None:
-            server_msg = ''
-        _id = request.GET.get('id')
-        userdata = dict()
-        class_list = list()
-        type_list = list()
-        supplier_list = list()
-        producer_list = list()
-        people_list = list()
-        classes = k_class.objects.all()
-        for c in classes:
-            class_list.append(c.name)
-        types = k_devicetype.objects.all()
-        for t in types:
-            type_list.append(t.name)
-        suppliers = k_supplier.objects.all()
-        for s in suppliers:
-            supplier_list.append(s.name)
-        producers = k_producer.objects.all()
-        for p in producers:
-            producer_list.append(p.name)
-        people = k_user.objects.all()
-        for p in people:
-            person = dict()
-            person["name"] = p.username
-            _c = k_class.objects.get(id=p.classid_id)
-            person["position"] = _c.name
-            people_list.append(person)
-        userdata['class_list'] = class_list
-        userdata['dtype_list'] = type_list
-        userdata['supplier_list'] = supplier_list
-        userdata['producer_list'] = producer_list
-        userdata['people'] = people_list
-        if _id:
-            thedevice = k_device.objects.filter(id = _id)[0]
-            key_list = ['name', 'brand', 'brief', 'serial', 'model', 'buytime', 'content', 'qrcode', 'position', 'memo',
-                        'lastmaintenance', 'nextmaintenance','maintenanceperiod', 'lastrepaire', 'spare','lastmeter', 'notice']
-            for key in key_list:
-                userdata[key] = eval('thedevice.'+key)
-            userdata['chosen_producer'] = thedevice.producerid.name
-            userdata['chosen_supplier'] = thedevice.supplierid.name
-            userdata['chosen_class'] = thedevice.classid.name
-            userdata['chosen_type'] = thedevice.typeid.name
-            _owner = k_user.objects.filter(id=thedevice.ownerid)
-            if len(_owner) == 1:
-                _owner = _owner[0]
-                userdata['chosen_owner'] = _owner.username
-        else:
-            userdata['isNew'] = True
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg':server_msg})
-        return render_to_response('deviceadd.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def deviceadd(request):
-    if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
         server_msg = ''
-        if request.method == 'POST':
-            _brief = request.POST['brief']
-            _name = request.POST['name']
-            _classname = request.POST['classname']
-            _classid = k_class.objects.get(name=_classname)
-            _typeid = k_devicetype.objects.get(name=request.POST['typename'])
-            _producerid = k_producer.objects.get(name=request.POST['producer'])
-            _supplierid = k_supplier.objects.get(name=request.POST['supplier'])
-            _ownerid = k_user.objects.get(username=request.POST['owner'])
-            _devs = k_device.objects.filter(brief=_brief)
-            _devs = _devs.filter(name=_name)
-            if request.POST['phase'] == 'NEW':
-                if len(_devs) > 0:
-                    _dev = _devs[0]
-                    server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备已存在！'
-                    return HttpResponseRedirect('/user_operate/?msg='+server_msg)
+    devicetypes = k_devicetype.objects.all()
+    parents = 0
+    datas = get_device_node(devicetypes, parents) #获取节点树
+    _id = request.GET.get('id')
+    deviceinfo = dict()
+    if (_id):
+        device = k_device.objects.filter(id=_id)
+        if len(device) == 1:
+            device = device[0]
+            deviceinfo['id'] = _id
+            deviceinfo['brief'] = device.brief
+            deviceinfo['name']  = device.name
+            deviceinfo['position'] = device.position
+            owner = k_user.objects.filter(id=device.ownerid)
+            if len(owner) == 1:
+                deviceinfo['owner'] = owner[0].username
+            else:
+                deviceinfo['owner'] = "未指定负责人"
+            _c = k_class.objects.filter(id=device.classid_id)
+            if len(_c) == 1:
+                _c_list = list()
+                _c_list.append(_c[0].name)
+                _parentid = _c[0].parentid
+                while True:
+                    _cur = k_class.objects.filter(id=_parentid)
+                    if len(_cur) != 1:
+                        break
+                    else:
+                        _parentid = _cur[0].parentid
+                        _c_list.append(_cur[0].name)
+                _c_num = len(_c_list)
+                deviceinfo['class'] = ''
+                for i in xrange(0,_c_num):
+                    deviceinfo['class'] += _c_list[_c_num-i-1] + "-"
 
-                _device = k_device.objects.create(
-                    classid=_classid,
-                    typeid=_typeid,
-                    producerid=_producerid,
-                    supplierid=_supplierid,
-                    ownerid=_ownerid.id,
-                    name=request.POST['name'],
-                    brief=request.POST['brief'],
-                    brand=request.POST['brand'],
-                    state=request.POST['state'],
-                    serial=request.POST['serial'],
-                    model=request.POST['model'],
-                    buytime=request.POST['buytime'],
-                    content=request.POST['content'],
-                    position=request.POST['position'],
-                    memo=request.POST['memo'],
-                    spare=request.POST['spare'],
-                    notice=request.POST['notice'],
-                    maintenanceperiod = 1,
-                    status=2,
-                    creatorid=request.user.id,
-                    createdatetime=get_current_date(),
-                    editorid=request.user.id,
-                    editdatetime=get_current_date()
-                )
-                _device.save()
-                server_msg = '添加设备成功！'
-                return HttpResponseRedirect('/operate_device/?id='+str(_device.id)+'&msg='+server_msg)
-            if request.POST['phase'] == 'EDIT':
-                _dev = _devs[0]
-                _dev.brand = request.POST['brand']
-                _dev.state=request.POST['state']
-                _dev.serial=request.POST['serial']
-                _dev.model=request.POST['model']
-                _dev.buytime=request.POST['buytime']
-                _dev.content=request.POST['content']
-                _dev.position=request.POST['position']
-                _dev.memo=request.POST['memo']
-                _dev.spare=request.POST['spare']
-                _dev.notice=request.POST['notice']
-                _dev.editorid = request.user.id
-                _dev.editdatetime = get_current_date()
-                _dev.classid = _classid
-                _dev.producerid = _producerid
-                _dev.supplierid = _supplierid
-                _dev.typeid = _typeid
-                _dev.ownerid = _ownerid.id
-                _dev.save()
-                server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备信息已成功更新！'
-                return HttpResponseRedirect('/operate_device/?id='+str(_dev.id)+'&msg='+server_msg)
-        else:
-            server_msg = '禁止用非法方式访问！'
-            return HttpResponseRedirect('/operate_device/?msg='+server_msg)
+                deviceinfo['class'] = deviceinfo['class'][0:len(deviceinfo['class'])-1]
+            else:
+                deviceinfo['class'] = '未指定该设备所属部门'
+    if len(deviceinfo) > 0:
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'deviceinfo':deviceinfo})
     else:
-        return HttpResponseRedirect('/login/')
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
+    return render_to_response('device.html',variables)
+
+
+@login_required
+def operate_device(request):
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+        server_msg = ''
+    _id = request.GET.get('id')
+    userdata = dict()
+    class_list = list()
+    type_list = list()
+    supplier_list = list()
+    producer_list = list()
+    people_list = list()
+    classes = k_class.objects.all()
+    for c in classes:
+        class_list.append(c.name)
+    types = k_devicetype.objects.all()
+    for t in types:
+        type_list.append(t.name)
+    suppliers = k_supplier.objects.all()
+    for s in suppliers:
+        supplier_list.append(s.name)
+    producers = k_producer.objects.all()
+    for p in producers:
+        producer_list.append(p.name)
+    people = k_user.objects.all()
+    for p in people:
+        person = dict()
+        person["name"] = p.username
+        _c = k_class.objects.get(id=p.classid_id)
+        person["position"] = _c.name
+        people_list.append(person)
+    userdata['class_list'] = class_list
+    userdata['dtype_list'] = type_list
+    userdata['supplier_list'] = supplier_list
+    userdata['producer_list'] = producer_list
+    userdata['people'] = people_list
+    if _id:
+        thedevice = k_device.objects.filter(id = _id)[0]
+        key_list = ['name', 'brand', 'brief', 'serial', 'model', 'buytime', 'content', 'qrcode', 'position', 'memo',
+                    'lastmaintenance', 'nextmaintenance','maintenanceperiod', 'lastrepaire', 'spare','lastmeter', 'notice']
+        for key in key_list:
+            userdata[key] = eval('thedevice.'+key)
+        userdata['chosen_producer'] = thedevice.producerid.name
+        userdata['chosen_supplier'] = thedevice.supplierid.name
+        userdata['chosen_class'] = thedevice.classid.name
+        userdata['chosen_type'] = thedevice.typeid.name
+        _owner = k_user.objects.filter(id=thedevice.ownerid)
+        if len(_owner) == 1:
+            _owner = _owner[0]
+            userdata['chosen_owner'] = _owner.username
+    else:
+        userdata['isNew'] = True
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg': server_msg})
+    return render_to_response('deviceadd.html', variables)
+
+
+@login_required
+def deviceadd(request):
+    user = User.objects.get(username=request.user.username)
+    server_msg = ''
+    if request.method == 'POST':
+        _brief = request.POST['brief']
+        _name = request.POST['name']
+        _classname = request.POST['classname']
+        _classid = k_class.objects.get(name=_classname)
+        _typeid = k_devicetype.objects.get(name=request.POST['typename'])
+        _producerid = k_producer.objects.get(name=request.POST['producer'])
+        _supplierid = k_supplier.objects.get(name=request.POST['supplier'])
+        _ownerid = k_user.objects.get(username=request.POST['owner'])
+        _devs = k_device.objects.filter(brief=_brief)
+        _devs = _devs.filter(name=_name)
+        if request.POST['phase'] == 'NEW':
+            if len(_devs) > 0:
+                _dev = _devs[0]
+                server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备已存在！'
+                return HttpResponseRedirect('/user_operate/?msg='+server_msg)
+
+            _device = k_device.objects.create(
+                classid=_classid,
+                typeid=_typeid,
+                producerid=_producerid,
+                supplierid=_supplierid,
+                ownerid=_ownerid.id,
+                name=request.POST['name'],
+                brief=request.POST['brief'],
+                brand=request.POST['brand'],
+                state=request.POST['state'],
+                serial=request.POST['serial'],
+                model=request.POST['model'],
+                buytime=request.POST['buytime'],
+                content=request.POST['content'],
+                position=request.POST['position'],
+                memo=request.POST['memo'],
+                spare=request.POST['spare'],
+                notice=request.POST['notice'],
+                maintenanceperiod = 1,
+                status=2,
+                creatorid=request.user.id,
+                createdatetime=get_current_date(),
+                editorid=request.user.id,
+                editdatetime=get_current_date()
+            )
+            _device.save()
+            server_msg = '添加设备成功！'
+            return HttpResponseRedirect('/operate_device/?id='+str(_device.id)+'&msg='+server_msg)
+        if request.POST['phase'] == 'EDIT':
+            _dev = _devs[0]
+            _dev.brand = request.POST['brand']
+            _dev.state = request.POST['state']
+            _dev.serial = request.POST['serial']
+            _dev.model = request.POST['model']
+            _dev.buytime = request.POST['buytime']
+            _dev.content = request.POST['content']
+            _dev.position = request.POST['position']
+            _dev.memo = request.POST['memo']
+            _dev.spare = request.POST['spare']
+            _dev.notice = request.POST['notice']
+            _dev.editorid = request.user.id
+            _dev.editdatetime = get_current_date()
+            _dev.classid = _classid
+            _dev.producerid = _producerid
+            _dev.supplierid = _supplierid
+            _dev.typeid = _typeid
+            _dev.ownerid = _ownerid.id
+            _dev.save()
+            server_msg = _classname + '中' + _dev.name + '(' + _dev.brief + ')的设备信息已成功更新！'
+            return HttpResponseRedirect('/operate_device/?id=' + str(_dev.id) + '&msg=' + server_msg)
+    else:
+        server_msg = '禁止用非法方式访问！'
+        return HttpResponseRedirect('/operate_device/?msg=' + server_msg)
+
 
 @login_required
 def devicedel(request):
@@ -504,45 +523,49 @@ def devicedel(request):
     return HttpResponseRedirect('/user/')
 
 
+@login_required
 def device_type(request):
-    if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
-        devicetypes = k_devicetype.objects.all()
-        parents = 0
-        datas = get_type_node(devicetypes, parents) #获取节点树
-        server_msg = request.GET.get("msg")
-        if server_msg == None:
-            server_msg = ""
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
-        return render_to_response('devicetype.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    user = User.objects.get(username=request.user.username)
+    devicetypes = k_devicetype.objects.all()
+    parents = 0
+    datas = get_type_node(devicetypes, parents) #获取节点树
+    server_msg = request.GET.get("msg")
+    if server_msg == None:
+        server_msg = ""
+    variables = RequestContext(request,{'username': user.username, 'clicked_item': 'device', 'data': datas, 'server_msg': server_msg})
+    return render_to_response('devicetype.html', variables)
+
 
 @login_required
 def device_type_add(request):
-    if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
-        k_devicetypes = k_devicetype.objects.all()
-        devicetypes = list()
-        for k_type in k_devicetypes:
-            devicetypes.append(k_type.name)
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'devicetypes':devicetypes})
-        return render_to_response('devicetypeadd.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    user = User.objects.get(username=request.user.username)
+    k_devicetypes = k_devicetype.objects.all()
+    devicetypes = list()
+    for k_type in k_devicetypes:
+        devicetypes.append(k_type.name)
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device', 'devicetypes': devicetypes})
+    return render_to_response('devicetypeadd.html', variables)
+
 
 @login_required
 def device_type_submit(request):
-    if not k_devicetype.objects.filter(name = request.GET.get('name')):
+    if not k_devicetype.objects.filter(name=request.GET.get('name')):
         _parentname = request.GET.get('parentname')
         _name = request.GET.get('name')
         _memo = request.GET.get('memo')
         if len(_parentname) == 0:
             _id = 0
             _depth = 0
-            _type = k_devicetype.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo,
-                                                  creatorid = request.user.id, createdatetime=get_current_date(),
-                                                  editorid=request.user.id, editdatetime=get_current_date())
+            _type = k_devicetype.objects.create(
+                name=_name,
+                parentid=_id,
+                depth=_depth,
+                memo=_memo,
+                creatorid=request.user.id,
+                createdatetime=get_current_date(),
+                editorid=request.user.id,
+                editdatetime=get_current_date()
+            )
             _type.save()
             return HttpResponseRedirect('/device_type/')
         else:
@@ -550,15 +573,23 @@ def device_type_submit(request):
             if len(_parent) == 1:
                 _id = _parent[0].id
                 _depth = _parent[0].depth+1
-                _type = k_devicetype.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo,
-                                                      creatorid = request.user.id, createdatetime=get_current_date(),
-                                                      editorid=request.user.id, editdatetime=get_current_date())
+                _type = k_devicetype.objects.create(
+                    name=_name,
+                    parentid=_id,
+                    depth=_depth,
+                    memo=_memo,
+                    creatorid=request.user.id,
+                    createdatetime=get_current_date(),
+                    editorid=request.user.id,
+                    editdatetime=get_current_date()
+                )
                 _type.save()
                 return HttpResponseRedirect('/device_type/')
             else:
                 return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
     else:
         return HttpResponseRedirect('/device_type/?msg="该设备名称已存在！"')
+
 
 def supplier(request):
     _suppliers = k_supplier.objects.all()
@@ -575,13 +606,12 @@ def supplier(request):
 
     return render_to_response('supplier.html', {'data': data})
 
+
+@login_required
 def add_supplier(request):
-    if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
-        return render_to_response('supplieradd.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    user = User.objects.get(username=request.user.username)
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device'})
+    return render_to_response('supplieradd.html', variables)
 
 
 @login_required
@@ -618,6 +648,7 @@ def submit_supplier(request):
             return HttpResponseRedirect('/supplier/?msg="该供应商已存在！"')
     return HttpResponseRedirect('/supplier/')
 
+
 @login_required
 def producer(request):
     _producers = k_producer.objects.all()
@@ -634,19 +665,19 @@ def producer(request):
 
     return render_to_response('producer.html', {'data': data})
 
+
+@login_required
 def add_producer(request):
-    if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device'})
-        return render_to_response('produceradd.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    user = User.objects.get(username=request.user.username)
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device'})
+    return render_to_response('produceradd.html', variables)
+
 
 @login_required
 def submit_producer(request):
     if request.method == 'POST':
-        #修改供应商
-        _producer = k_producer.objects.filter(name = request.POST.get('name'))
+        # 修改供应商
+        _producer = k_producer.objects.filter(name=request.POST.get('name'))
         if _producer:
             _producer = _producer[0]
             _producer.contact = request.POST.get('contact')
@@ -674,32 +705,30 @@ def submit_producer(request):
             return HttpResponseRedirect('/producer/')
         else:
             return HttpResponseRedirect('/producer/?msg="error1"')
-#个人信息
+
+
+# 个人信息
+@login_required
 def profile(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username})
-        return render_to_response('profile.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    return render_to_response('profile.html', variables)
 
 
+@login_required
 def setting(request):
-    if request.user.is_authenticated():
-        #登陆成功
-        #user=k_user.objects.get(username=request.user.username)
-        user=User.objects.get(username=request.user.username)
-        #读取权限，显示内容
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'setting'})
-        return render_to_response('setting.html',variables)
-    else:
-        return HttpResponseRedirect('/login/')
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'setting'})
+    return render_to_response('setting.html', variables)
 
 
-#注册, 创建一个新用户
+# 注册, 创建一个新用户
 def register(req):
     if req.method == 'POST':
         uf = UserForm(req.POST)
@@ -722,16 +751,16 @@ def register(req):
     return render_to_response('register.html', {'uf': uf}, context_instance=RequestContext(req))
 
 
-#处理登录请求
+# 处理登录请求
 def login(request):
     if request.method == 'POST':
         uf = UserForm(request.POST)
         if uf.is_valid():
-            #获取表单用户密码
+            # 获取表单用户密码
             username = uf.cleaned_data['username']
             password = uf.cleaned_data['password']
-            #获取的表单数据与数据库进行比较
-            #user = k_user.objects.filter(username = username,password = password)
+            # 获取的表单数据与数据库进行比较
+            # user = k_user.objects.filter(username = username,password = password)
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
@@ -1819,6 +1848,7 @@ def view_spare(request):
 
     return render_to_response('spare.html', {"data": data})
 
+
 def operate_spare(request):
     _id = request.GET.get('id')
     server_msg = request.GET.get('msg')
@@ -1854,6 +1884,7 @@ def operate_spare(request):
     for _supplier in _allsuppliers:
         _suppliers.append(_supplier.name)
     return render_to_response('spareoperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg})
+
 
 def submit_spare(request):
     _classname = request.GET.get('classname')
@@ -1918,6 +1949,7 @@ def submit_spare(request):
 
     return HttpResponseRedirect('/view_spare')
 
+
 def delete_spare(request):
     _id = request.GET.get('id')
     if _id:
@@ -1928,6 +1960,7 @@ def delete_spare(request):
         _sparebills.delete()
         _sparecounts.delete()
     return HttpResponseRedirect('/view_spare')
+
 
 def view_sparebill(request):
     _sparebills = k_sparebill.objects.all()
@@ -1983,6 +2016,7 @@ def view_sparebill(request):
 
     #return render_to_response('sparebill.html', {'data': data, 'briefs': _briefs})
     return render_to_response('sparebill.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+
 
 def submit_sparebill(request):
     #_using = request.GET.get('using')
@@ -2054,6 +2088,7 @@ def submit_sparebill(request):
     _sparebill.save()
     return HttpResponseRedirect('/view_sparebill')
 
+
 def delete_sparebill(request):
     _id = request.GET.get('id')
     if _id:
@@ -2070,6 +2105,7 @@ def delete_sparebill(request):
 
         _sparebill.delete()
     return HttpResponseRedirect('/view_sparebill')
+
 
 def view_sparecount(request):
     _sparecounts = k_sparecount.objects.all()
@@ -2130,6 +2166,7 @@ def view_sparecount(request):
 
     #return render_to_response('sparecount.html', {'data': data, 'briefs': _briefs})
     return render_to_response('sparecount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+
 
 def submit_sparecount(request):
     _brief = request.GET.get('brief')
@@ -2205,6 +2242,7 @@ def submit_sparecount(request):
         else:
             return HttpResponseRedirect('/view_sparecount')
 
+
 def delete_sparecount(request):
     _id = request.GET.get('id')
     if _id:
@@ -2260,6 +2298,7 @@ def view_tool(request):
 
     return render_to_response('tool.html', {"data": data})
 
+
 def operate_tool(request):
     _id = request.GET.get('id')
     server_msg = request.GET.get('msg')
@@ -2295,6 +2334,7 @@ def operate_tool(request):
     for _supplier in _allsuppliers:
         _suppliers.append(_supplier.name)
     return render_to_response('tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg})
+
 
 def submit_tool(request):
     _classname = request.GET.get('classname')
@@ -2359,6 +2399,7 @@ def submit_tool(request):
 
     return HttpResponseRedirect('/view_tool')
 
+
 def delete_tool(request):
     _id = request.GET.get('id')
     if _id:
@@ -2369,6 +2410,7 @@ def delete_tool(request):
         _tooluses.delete()
         _toolcounts.delete()
     return HttpResponseRedirect('/view_tool')
+
 
 def view_tooluse(request):
     _tooluses = k_tooluse.objects.all()
@@ -2424,6 +2466,7 @@ def view_tooluse(request):
 
     #return render_to_response('tooluse.html', {'data': data, 'briefs': _briefs})
     return render_to_response('tooluse.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+
 
 def submit_tooluse(request):
     #_using = request.GET.get('using')
@@ -2495,6 +2538,7 @@ def submit_tooluse(request):
     _tooluse.save()
     return HttpResponseRedirect('/view_tooluse')
 
+
 def delete_tooluse(request):
     _id = request.GET.get('id')
     if _id:
@@ -2511,6 +2555,7 @@ def delete_tooluse(request):
 
         _tooluse.delete()
     return HttpResponseRedirect('/view_tooluse')
+
 
 def view_toolcount(request):
     _toolcounts = k_toolcount.objects.all()
@@ -2571,6 +2616,7 @@ def view_toolcount(request):
 
     #return render_to_response('toolcount.html', {'data': data, 'briefs': _briefs})
     return render_to_response('toolcount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+
 
 def submit_toolcount(request):
     _brief = request.GET.get('brief')
@@ -2646,6 +2692,7 @@ def submit_toolcount(request):
         else:
             return HttpResponseRedirect('/view_toolcount')
 
+
 def delete_toolcount(request):
     _id = request.GET.get('id')
     if _id:
@@ -2663,10 +2710,14 @@ def delete_toolcount(request):
     return HttpResponseRedirect('/view_toolcount')
 
 
-'''部门设置开始'''
+'''
+部门设置开始
+'''
+
+
 def department(request):
     if request.user.is_authenticated():
-        user=User.objects.get(username=request.user.username)
+        user = User.objects.get(username=request.user.username)
         classes = k_class.objects.all()
         parents = 0
         datas = get_type_node(classes, parents) #获取节点树
@@ -2677,6 +2728,7 @@ def department(request):
         return render_to_response('department.html',variables)
     else:
         return HttpResponseRedirect('/login/')
+
 
 @login_required
 def departmentadd(request):
