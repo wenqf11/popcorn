@@ -82,6 +82,10 @@ urlpatterns = patterns(
     url(r'^submit_form/$', submit_form),
     url(r'^delete_form/$', delete_form),
 
+    url(r'^view_deviceplan/$', view_deviceplan),
+    url(r'^submit_deviceplan/$', submit_deviceplan),
+    url(r'^delete_deviceplan/$', delete_deviceplan),
+
     url(r'^view_maintaining/$', view_maintaining),
     url(r'^view_maintained/$', view_maintained),
     url(r'^add_maintenance/$', add_maintenance),

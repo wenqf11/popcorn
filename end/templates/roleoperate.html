@@ -16,7 +16,21 @@
     <div class="col-xs-12">
         <form class="form-horizontal" action="/submit_role/{{ data.id }}/" role="form" id="roleform">
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">角色名称</label>
+                <label class="col-sm-3 control-label no-padding-top">所属<span class="required">*</span></label>
+                <div class="col-sm-9">
+                    <select name="classname">
+                        {% for class in classes %}
+                            {% ifequal class data.classname %}
+                                <option value="{{ class }}" selected="selected">{{ class }}</option>
+                            {% else %}
+                                <option value="{{ class }}">{{ class }}</option>
+                            {% endifequal %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">角色名称<span class="required">*</span></label>
                 <div class="col-sm-9">
                     <input type="text" name="name" value="{{ data.name }}">
                 </div>
@@ -56,7 +70,7 @@
             <div class="hr hr-16 hr-dotted"></div>
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top" for="duallist">
-                    <p>编辑权限　　　</p>
+                    <p>编辑权限<span class="required">*</span></p>
                     <p>（左侧为可添加权限）</p>
                 </label>
                 <div class="col-sm-8">
@@ -73,7 +87,7 @@
             </div>
             <div class="clearfix form-actions">
                 <div class="col-md-offset-3 col-md-9">
-                    <button class="btn btn-info" type="submit">
+                    <button class="btn btn-info" type="submit" onclick="return checkvalid();">
                         <i class="ace-icon fa fa-check bigger-110"></i>
                         保存
                     </button>
@@ -92,6 +106,18 @@
 
 {% block tailjs %}
 <script type="text/javascript" src="../static/duallistbox/js/jquery.bootstrap-duallistbox.js"></script>
+<script>
+    $(function(){
+        var server_msg="{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '系统消息',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    })
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         dualListbox = $('#duallistbox').bootstrapDualListbox({
@@ -111,5 +137,45 @@
             dualListbox.bootstrapDualListbox('refresh',true);
         });
     });
+</script>
+<script>
+    function checkvalid() {
+        var name = $("[name='name']").val();
+        var memo = $("[name='memo']").val();
+        var duallist = document.getElementById("duallistbox");
+        if(name.length < 1 || name.length > 40) {
+            $("[name='name']").select();
+            $.gritter.add({
+                title: '设置角色失败！',
+                text: '角色名称长度为1-40个字符！',
+                class_name: 'gritter-error gritter-center'
+            });
+            return false;
+        }
+        else if(memo.length > 80) {
+            $("[name='memo']").select();
+            $.gritter.add({
+                title: '设置角色失败！',
+                text: '备注长度为0-80个字符！',
+                class_name: 'gritter-error gritter-center'
+            });
+            return false;
+        }
+        var hasselected = false;
+        for(var i = 0; i < duallist.options.length; i++) {
+            if (duallist.options[i].selected == true)
+                hasselected = true;
+        }
+        if(hasselected == false) {
+            $("[name='duallistbox']").select();
+            $.gritter.add({
+                title: '设置角色失败！',
+                text: '请至少选择一个权限！',
+                class_name: 'gritter-error gritter-center'
+            });
+            return false;
+        }
+        return true;
+    }
 </script>
 {% endblock %}

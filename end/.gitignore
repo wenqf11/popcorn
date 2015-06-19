@@ -1,3 +1,5 @@
 # gitignore file of 'end' directory
 /.idea/
 *.pyc
+
+local_settings.py

@@ -147,6 +147,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/id_apps_deviceInfo_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -263,6 +264,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/id_apps_rank_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -288,11 +290,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="公司排名"
+                android:text="积分排名"
                 android:textColor="#000"
                 android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/id_apps_bonus_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -317,7 +320,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="积分彩蛋"
+                android:text="抢彩蛋"
                 android:textColor="#000"
                 android:textSize="14sp" />
         </LinearLayout>

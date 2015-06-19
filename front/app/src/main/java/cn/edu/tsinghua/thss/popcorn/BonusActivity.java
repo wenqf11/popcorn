@@ -6,19 +6,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class DeviceInfoDetailActivity extends Activity {
+public class BonusActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_info_detail);
+        setContentView(R.layout.activity_bonus);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.device_info_detail, menu);
+        getMenuInflater().inflate(R.menu.bonus, menu);
         return true;
     }
 
@@ -29,7 +29,7 @@ public class DeviceInfoDetailActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.close_btn) {
-            DeviceInfoDetailActivity.this.finish();
+            BonusActivity.this.finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

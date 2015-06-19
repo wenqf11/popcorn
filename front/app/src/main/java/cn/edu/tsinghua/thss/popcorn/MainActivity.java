@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +36,7 @@ import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
  */
 
 public class MainActivity extends FragmentActivity {
-
+    static  String serverIP = "http://192.168.1.106";
 	private ViewPager mPageVp;
 
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
@@ -266,6 +268,18 @@ public class MainActivity extends FragmentActivity {
 
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
+            intent.addCategory(Intent.CATEGORY_HOME);
+            this.startActivity(intent);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -279,10 +293,15 @@ public class MainActivity extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
             case R.id.scan_btn:
-                Intent intent=new Intent(this, QRcodeActivity.class);
-                Bundle bundle=new Bundle();
-                intent.putExtras(bundle);
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(this, QRcodeActivity.class);
+                    Bundle bundle = new Bundle();
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                catch (Exception e){
+                    Log.e("Exception", e.getMessage(), e);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

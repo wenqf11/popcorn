@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.28 (64 bit)
-MySQL - 5.5.25a : Database - devicemgtdb
+SQLyog Ultimate v11.11 (64 bit)
+MySQL - 5.6.10 : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -60,11 +60,11 @@ CREATE TABLE `auth_permission` (
   UNIQUE KEY `content_type_id` (`content_type_id`,`codename`),
   KEY `auth_permission_37ef4eb4` (`content_type_id`),
   CONSTRAINT `content_type_id_refs_id_d043b34a` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=latin1;
 
 /*Data for the table `auth_permission` */
 
-insert  into `auth_permission`(`id`,`name`,`content_type_id`,`codename`) values (1,'Can add permission',1,'add_permission'),(2,'Can change permission',1,'change_permission'),(3,'Can delete permission',1,'delete_permission'),(4,'Can add group',2,'add_group'),(5,'Can change group',2,'change_group'),(6,'Can delete group',2,'delete_group'),(7,'Can add user',3,'add_user'),(8,'Can change user',3,'change_user'),(9,'Can delete user',3,'delete_user'),(10,'Can add content type',4,'add_contenttype'),(11,'Can change content type',4,'change_contenttype'),(12,'Can delete content type',4,'delete_contenttype'),(13,'Can add session',5,'add_session'),(14,'Can change session',5,'change_session'),(15,'Can delete session',5,'delete_session'),(16,'Can add site',6,'add_site'),(17,'Can change site',6,'change_site'),(18,'Can delete site',6,'delete_site'),(19,'Can add log entry',7,'add_logentry'),(20,'Can change log entry',7,'change_logentry'),(21,'Can delete log entry',7,'delete_logentry'),(22,'Can add k_class',8,'add_k_class'),(23,'Can change k_class',8,'change_k_class'),(24,'Can delete k_class',8,'delete_k_class'),(25,'Can add k_purview',9,'add_k_purview'),(26,'Can change k_purview',9,'change_k_purview'),(27,'Can delete k_purview',9,'delete_k_purview'),(28,'Can add k_role',10,'add_k_role'),(29,'Can change k_role',10,'change_k_role'),(30,'Can delete k_role',10,'delete_k_role'),(31,'Can add k_classrole',11,'add_k_classrole'),(32,'Can change k_classrole',11,'change_k_classrole'),(33,'Can delete k_classrole',11,'delete_k_classrole'),(34,'Can add k_user',12,'add_k_user'),(35,'Can change k_user',12,'change_k_user'),(36,'Can delete k_user',12,'delete_k_user'),(37,'Can add k_devicetype',13,'add_k_devicetype'),(38,'Can change k_devicetype',13,'change_k_devicetype'),(39,'Can delete k_devicetype',13,'delete_k_devicetype'),(40,'Can add k_supplier',14,'add_k_supplier'),(41,'Can change k_supplier',14,'change_k_supplier'),(42,'Can delete k_supplier',14,'delete_k_supplier'),(43,'Can add k_producer',15,'add_k_producer'),(44,'Can change k_producer',15,'change_k_producer'),(45,'Can delete k_producer',15,'delete_k_producer'),(46,'Can add k_spare',16,'add_k_spare'),(47,'Can change k_spare',16,'change_k_spare'),(48,'Can delete k_spare',16,'delete_k_spare'),(49,'Can add k_device',17,'add_k_device'),(50,'Can change k_device',17,'change_k_device'),(51,'Can delete k_device',17,'delete_k_device'),(52,'Can add k_form',18,'add_k_form'),(53,'Can change k_form',18,'change_k_form'),(54,'Can delete k_form',18,'delete_k_form'),(55,'Can add k_formitem',19,'add_k_formitem'),(56,'Can change k_formitem',19,'change_k_formitem'),(57,'Can delete k_formitem',19,'delete_k_formitem'),(58,'Can add k_route',20,'add_k_route'),(59,'Can change k_route',20,'change_k_route'),(60,'Can delete k_route',20,'delete_k_route'),(61,'Can add k_meter',21,'add_k_meter'),(62,'Can change k_meter',21,'change_k_meter'),(63,'Can delete k_meter',21,'delete_k_meter'),(64,'Can add k_maintenance',22,'add_k_maintenance'),(65,'Can change k_maintenance',22,'change_k_maintenance'),(66,'Can delete k_maintenance',22,'delete_k_maintenance'),(67,'Can add k_task',23,'add_k_task'),(68,'Can change k_task',23,'change_k_task'),(69,'Can delete k_task',23,'delete_k_task'),(70,'Can add k_taskitem',24,'add_k_taskitem'),(71,'Can change k_taskitem',24,'change_k_taskitem'),(72,'Can delete k_taskitem',24,'delete_k_taskitem'),(73,'Can add k_sparebill',25,'add_k_sparebill'),(74,'Can change k_sparebill',25,'change_k_sparebill'),(75,'Can delete k_sparebill',25,'delete_k_sparebill'),(76,'Can add k_sparecount',26,'add_k_sparecount'),(77,'Can change k_sparecount',26,'change_k_sparecount'),(78,'Can delete k_sparecount',26,'delete_k_sparecount'),(79,'Can add k_tool',27,'add_k_tool'),(80,'Can change k_tool',27,'change_k_tool'),(81,'Can delete k_tool',27,'delete_k_tool'),(82,'Can add k_tooluse',28,'add_k_tooluse'),(83,'Can change k_tooluse',28,'change_k_tooluse'),(84,'Can delete k_tooluse',28,'delete_k_tooluse'),(85,'Can add k_toolcount',29,'add_k_toolcount'),(86,'Can change k_toolcount',29,'change_k_toolcount'),(87,'Can delete k_toolcount',29,'delete_k_toolcount'),(88,'Can add k_project',30,'add_k_project'),(89,'Can change k_project',30,'change_k_project'),(90,'Can delete k_project',30,'delete_k_project'),(91,'Can add k_schedule',31,'add_k_schedule'),(92,'Can change k_schedule',31,'change_k_schedule'),(93,'Can delete k_schedule',31,'delete_k_schedule'),(94,'Can add k_staffworkinfo',32,'add_k_staffworkinfo'),(95,'Can change k_staffworkinfo',32,'change_k_staffworkinfo'),(96,'Can delete k_staffworkinfo',32,'delete_k_staffworkinfo'),(97,'Can add k_staffscoreinfo',33,'add_k_staffscoreinfo'),(98,'Can change k_staffscoreinfo',33,'change_k_staffscoreinfo'),(99,'Can delete k_staffscoreinfo',33,'delete_k_staffscoreinfo'),(100,'Can add k_staffegginfo',34,'add_k_staffegginfo'),(101,'Can change k_staffegginfo',34,'change_k_staffegginfo'),(102,'Can delete k_staffegginfo',34,'delete_k_staffegginfo'),(103,'Can add k_feedback',35,'add_k_feedback'),(104,'Can change k_feedback',35,'change_k_feedback'),(105,'Can delete k_feedback',35,'delete_k_feedback');
+insert  into `auth_permission`(`id`,`name`,`content_type_id`,`codename`) values (1,'Can add permission',1,'add_permission'),(2,'Can change permission',1,'change_permission'),(3,'Can delete permission',1,'delete_permission'),(4,'Can add group',2,'add_group'),(5,'Can change group',2,'change_group'),(6,'Can delete group',2,'delete_group'),(7,'Can add user',3,'add_user'),(8,'Can change user',3,'change_user'),(9,'Can delete user',3,'delete_user'),(10,'Can add content type',4,'add_contenttype'),(11,'Can change content type',4,'change_contenttype'),(12,'Can delete content type',4,'delete_contenttype'),(13,'Can add session',5,'add_session'),(14,'Can change session',5,'change_session'),(15,'Can delete session',5,'delete_session'),(16,'Can add site',6,'add_site'),(17,'Can change site',6,'change_site'),(18,'Can delete site',6,'delete_site'),(19,'Can add log entry',7,'add_logentry'),(20,'Can change log entry',7,'change_logentry'),(21,'Can delete log entry',7,'delete_logentry'),(22,'Can add k_class',8,'add_k_class'),(23,'Can change k_class',8,'change_k_class'),(24,'Can delete k_class',8,'delete_k_class'),(25,'Can add k_purview',9,'add_k_purview'),(26,'Can change k_purview',9,'change_k_purview'),(27,'Can delete k_purview',9,'delete_k_purview'),(28,'Can add k_role',10,'add_k_role'),(29,'Can change k_role',10,'change_k_role'),(30,'Can delete k_role',10,'delete_k_role'),(31,'Can add k_classrole',11,'add_k_classrole'),(32,'Can change k_classrole',11,'change_k_classrole'),(33,'Can delete k_classrole',11,'delete_k_classrole'),(34,'Can add k_user',12,'add_k_user'),(35,'Can change k_user',12,'change_k_user'),(36,'Can delete k_user',12,'delete_k_user'),(37,'Can add k_devicetype',13,'add_k_devicetype'),(38,'Can change k_devicetype',13,'change_k_devicetype'),(39,'Can delete k_devicetype',13,'delete_k_devicetype'),(40,'Can add k_supplier',14,'add_k_supplier'),(41,'Can change k_supplier',14,'change_k_supplier'),(42,'Can delete k_supplier',14,'delete_k_supplier'),(43,'Can add k_producer',15,'add_k_producer'),(44,'Can change k_producer',15,'change_k_producer'),(45,'Can delete k_producer',15,'delete_k_producer'),(46,'Can add k_spare',16,'add_k_spare'),(47,'Can change k_spare',16,'change_k_spare'),(48,'Can delete k_spare',16,'delete_k_spare'),(49,'Can add k_device',17,'add_k_device'),(50,'Can change k_device',17,'change_k_device'),(51,'Can delete k_device',17,'delete_k_device'),(52,'Can add k_form',18,'add_k_form'),(53,'Can change k_form',18,'change_k_form'),(54,'Can delete k_form',18,'delete_k_form'),(55,'Can add k_formitem',19,'add_k_formitem'),(56,'Can change k_formitem',19,'change_k_formitem'),(57,'Can delete k_formitem',19,'delete_k_formitem'),(58,'Can add k_route',20,'add_k_route'),(59,'Can change k_route',20,'change_k_route'),(60,'Can delete k_route',20,'delete_k_route'),(61,'Can add k_meter',21,'add_k_meter'),(62,'Can change k_meter',21,'change_k_meter'),(63,'Can delete k_meter',21,'delete_k_meter'),(64,'Can add k_maintenance',22,'add_k_maintenance'),(65,'Can change k_maintenance',22,'change_k_maintenance'),(66,'Can delete k_maintenance',22,'delete_k_maintenance'),(67,'Can add k_task',23,'add_k_task'),(68,'Can change k_task',23,'change_k_task'),(69,'Can delete k_task',23,'delete_k_task'),(70,'Can add k_taskitem',24,'add_k_taskitem'),(71,'Can change k_taskitem',24,'change_k_taskitem'),(72,'Can delete k_taskitem',24,'delete_k_taskitem'),(73,'Can add k_sparebill',25,'add_k_sparebill'),(74,'Can change k_sparebill',25,'change_k_sparebill'),(75,'Can delete k_sparebill',25,'delete_k_sparebill'),(76,'Can add k_sparecount',26,'add_k_sparecount'),(77,'Can change k_sparecount',26,'change_k_sparecount'),(78,'Can delete k_sparecount',26,'delete_k_sparecount'),(79,'Can add k_tool',27,'add_k_tool'),(80,'Can change k_tool',27,'change_k_tool'),(81,'Can delete k_tool',27,'delete_k_tool'),(82,'Can add k_tooluse',28,'add_k_tooluse'),(83,'Can change k_tooluse',28,'change_k_tooluse'),(84,'Can delete k_tooluse',28,'delete_k_tooluse'),(85,'Can add k_toolcount',29,'add_k_toolcount'),(86,'Can change k_toolcount',29,'change_k_toolcount'),(87,'Can delete k_toolcount',29,'delete_k_toolcount'),(88,'Can add k_project',30,'add_k_project'),(89,'Can change k_project',30,'change_k_project'),(90,'Can delete k_project',30,'delete_k_project'),(91,'Can add k_schedule',31,'add_k_schedule'),(92,'Can change k_schedule',31,'change_k_schedule'),(93,'Can delete k_schedule',31,'delete_k_schedule'),(94,'Can add k_staffworkinfo',32,'add_k_staffworkinfo'),(95,'Can change k_staffworkinfo',32,'change_k_staffworkinfo'),(96,'Can delete k_staffworkinfo',32,'delete_k_staffworkinfo'),(97,'Can add k_staffscoreinfo',33,'add_k_staffscoreinfo'),(98,'Can change k_staffscoreinfo',33,'change_k_staffscoreinfo'),(99,'Can delete k_staffscoreinfo',33,'delete_k_staffscoreinfo'),(100,'Can add k_staffegginfo',34,'add_k_staffegginfo'),(101,'Can change k_staffegginfo',34,'change_k_staffegginfo'),(102,'Can delete k_staffegginfo',34,'delete_k_staffegginfo'),(103,'Can add k_feedback',35,'add_k_feedback'),(104,'Can change k_feedback',35,'change_k_feedback'),(105,'Can delete k_feedback',35,'delete_k_feedback'),(106,'Can add k_deviceplan',36,'add_k_deviceplan'),(107,'Can change k_deviceplan',36,'change_k_deviceplan'),(108,'Can delete k_deviceplan',36,'delete_k_deviceplan');
 
 /*Table structure for table `auth_user` */
 
@@ -88,7 +88,7 @@ CREATE TABLE `auth_user` (
 
 /*Data for the table `auth_user` */
 
-insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$ln3ukwiANbdn$VuXcNEexlSj14R2IomJTnxVXQtj3yK9m2uBPi1iRh/A=','2015-05-30 03:27:08',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28'),(2,'pbkdf2_sha256$10000$fPkfeuFWOm7Q$mRRgi1LIiStJXdXye76dm3yfHlCnXlL+TrN7vjmRQ+0=','2015-05-01 07:09:01',0,'test1','','','',0,1,'2015-05-01 07:09:01'),(3,'pbkdf2_sha256$10000$R5fRnnAB92qP$8kGYC+W8/XszspeA+nTsqkYjA6gTj4TfImMlqKKYW2w=','2015-05-01 08:24:07',0,'user1','','','',0,1,'2015-05-01 08:24:07'),(4,'pbkdf2_sha256$10000$N7LQP7QhVHm8$ws8tLd5n09/pIGLqx8s5m2B/D6OBNEDvlIC9xJgtbkM=','2015-05-01 08:25:37',0,'user2','','','',0,1,'2015-05-01 08:25:37'),(5,'pbkdf2_sha256$10000$bzbxw7d6Zwt3$yqLH7e75JDMQWZEUpMVxyeIbxTz3jY3Ku4lfXBE+dnA=','2015-05-01 08:35:40',0,'user3','','','',0,1,'2015-05-01 08:35:40'),(6,'pbkdf2_sha256$10000$8fCR4xNap1N3$aCEUSvEGNcrfyTiIIMKf1ZeYl16M+gOG4uU3FboC5u0=','2015-05-01 09:18:27',0,'user4','','','',0,1,'2015-05-01 09:18:27');
+insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$ln3ukwiANbdn$VuXcNEexlSj14R2IomJTnxVXQtj3yK9m2uBPi1iRh/A=','2015-06-05 02:26:43',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28'),(2,'pbkdf2_sha256$10000$fPkfeuFWOm7Q$mRRgi1LIiStJXdXye76dm3yfHlCnXlL+TrN7vjmRQ+0=','2015-05-01 07:09:01',0,'test1','','','',0,1,'2015-05-01 07:09:01'),(3,'pbkdf2_sha256$10000$R5fRnnAB92qP$8kGYC+W8/XszspeA+nTsqkYjA6gTj4TfImMlqKKYW2w=','2015-05-01 08:24:07',0,'user1','','','',0,1,'2015-05-01 08:24:07'),(4,'pbkdf2_sha256$10000$N7LQP7QhVHm8$ws8tLd5n09/pIGLqx8s5m2B/D6OBNEDvlIC9xJgtbkM=','2015-05-01 08:25:37',0,'user2','','','',0,1,'2015-05-01 08:25:37'),(5,'pbkdf2_sha256$10000$bzbxw7d6Zwt3$yqLH7e75JDMQWZEUpMVxyeIbxTz3jY3Ku4lfXBE+dnA=','2015-05-01 08:35:40',0,'user3','','','',0,1,'2015-05-01 08:35:40'),(6,'pbkdf2_sha256$10000$8fCR4xNap1N3$aCEUSvEGNcrfyTiIIMKf1ZeYl16M+gOG4uU3FboC5u0=','2015-05-01 09:18:27',0,'user4','','','',0,1,'2015-05-01 09:18:27');
 
 /*Table structure for table `auth_user_groups` */
 
@@ -246,6 +246,36 @@ CREATE TABLE `devicemgt_k_device_spare` (
 
 /*Data for the table `devicemgt_k_device_spare` */
 
+/*Table structure for table `devicemgt_k_deviceplan` */
+
+DROP TABLE IF EXISTS `devicemgt_k_deviceplan`;
+
+CREATE TABLE `devicemgt_k_deviceplan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `deviceid_id` int(11) NOT NULL,
+  `maintenanceid_id` int(11) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `period` varchar(15) NOT NULL,
+  `createcontent` varchar(100) NOT NULL,
+  `memo` varchar(100) NOT NULL,
+  `assignorid` int(10) unsigned NOT NULL,
+  `assigndatetime` date NOT NULL,
+  `editorid` int(10) unsigned NOT NULL,
+  `editdatetime` date NOT NULL,
+  `auditorid` int(10) unsigned NOT NULL,
+  `auditdatetime` date NOT NULL,
+  `status` varchar(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `devicemgt_k_deviceplan_72537f95` (`deviceid_id`),
+  KEY `devicemgt_k_deviceplan_221733ad` (`maintenanceid_id`),
+  CONSTRAINT `maintenanceid_id_refs_id_7574d147` FOREIGN KEY (`maintenanceid_id`) REFERENCES `devicemgt_k_maintenance` (`id`),
+  CONSTRAINT `deviceid_id_refs_id_e0de95d1` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `devicemgt_k_deviceplan` */
+
+insert  into `devicemgt_k_deviceplan`(`id`,`deviceid_id`,`maintenanceid_id`,`title`,`period`,`createcontent`,`memo`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,43,'556','halfmonth','778','990',1,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(2,1,44,'rrr','fourmonth','ttt','yyyy',1,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0');
+
 /*Table structure for table `devicemgt_k_devicetype` */
 
 DROP TABLE IF EXISTS `devicemgt_k_devicetype`;
@@ -303,11 +333,11 @@ CREATE TABLE `devicemgt_k_form` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_form_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_5ea6c07b` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_form` */
 
-insert  into `devicemgt_k_form`(`id`,`classid_id`,`content`,`brief`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'{data: 1}','kz084732',1,'2015-04-01',1,'2015-04-01',1,'2015-04-01','3'),(2,1,'{data: 2}','tx029412',1,'2015-04-02',1,'2015-04-02',1,'2015-04-02','3'),(3,1,'{data: 3}','kx098472',1,'2015-04-03',1,'2015-04-03',1,'2015-04-03','3'),(4,1,'{data: 4}','tx330032',1,'2015-04-04',1,'2015-04-04',1,'2015-04-04','3'),(5,1,'{data: 5}','tt333333',1,'2015-04-05',1,'2015-04-05',1,'2015-04-05','3'),(6,1,'{data: 6}','tx222222',1,'2015-04-06',1,'2015-04-06',1,'2015-04-06','3'),(7,1,'{data: 7}','ke222222',1,'2015-04-07',1,'2015-04-07',1,'2015-04-07','3'),(8,1,'{data: 8}','he428421',1,'2015-04-08',1,'2015-04-08',1,'2015-04-08','3');
+insert  into `devicemgt_k_form`(`id`,`classid_id`,`content`,`brief`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'{data: 1}','kz084732',1,'2015-04-01',1,'2015-04-01',1,'2015-04-01','3'),(2,1,'{data: 2}','tx029412',1,'2015-04-02',1,'2015-04-02',1,'2015-04-02','3'),(3,1,'{data: 3}','kx098472',1,'2015-04-03',1,'2015-04-03',1,'2015-04-03','3'),(4,1,'{data: 4}','tx330032',1,'2015-04-04',1,'2015-04-04',1,'2015-04-04','3'),(5,1,'{data: 5}','tt333333',1,'2015-04-05',1,'2015-04-05',1,'2015-04-05','3'),(6,1,'{data: 6}','tx222222',1,'2015-04-06',1,'2015-04-06',1,'2015-04-06','3'),(7,1,'{data: 7}','ke222222',1,'2015-04-07',1,'2015-04-07',1,'2015-04-07','3'),(8,1,'{data: 8}','he428421',1,'2015-04-08',1,'2015-04-08',1,'2015-04-08','3'),(9,1,'','wd052813',0,'2015-06-05',0,'2015-06-05',0,'2015-06-05','0');
 
 /*Table structure for table `devicemgt_k_formitem` */
 
@@ -336,11 +366,11 @@ CREATE TABLE `devicemgt_k_formitem` (
   KEY `devicemgt_k_formitem_a6f496e6` (`formid_id`),
   CONSTRAINT `classid_id_refs_id_35b3b5fc` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `formid_id_refs_id_a81e9254` FOREIGN KEY (`formid_id`) REFERENCES `devicemgt_k_form` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_formitem` */
 
-insert  into `devicemgt_k_formitem`(`id`,`classid_id`,`formid_id`,`name`,`datatype`,`unit`,`lowerthreshold`,`upperthreshold`,`choices`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,1,'pressure','0','MPa','12','18','-','important',1,'2015-04-27',1,'2015-04-28',1,'2015-04-27','3'),(2,1,1,'machine status','1','-','-','-','normal/abnormal','very important',1,'2015-04-27',1,'2015-04-27',1,'2015-04-27','3');
+insert  into `devicemgt_k_formitem`(`id`,`classid_id`,`formid_id`,`name`,`datatype`,`unit`,`lowerthreshold`,`upperthreshold`,`choices`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (2,1,1,'machine status','1','-','-','-','normal/abnormal','very important',1,'2015-04-27',1,'2015-06-05',1,'2015-04-27','3'),(3,1,9,'','0','','','','-','',1,'2015-06-05',0,'2015-06-05',0,'2015-06-05','0'),(4,1,1,'pressure','0','MPa','12','18','-','important',1,'2015-06-05',0,'2015-06-05',0,'2015-06-05','0'),(5,1,1,'haha','0','123','1.3e10','','-','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(6,1,1,'123','0','123','2432','2432','-','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0');
 
 /*Table structure for table `devicemgt_k_maintenance` */
 
@@ -370,11 +400,11 @@ CREATE TABLE `devicemgt_k_maintenance` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_maintenance_72537f95` (`deviceid_id`),
   CONSTRAINT `deviceid_id_refs_id_e790c6dd` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_maintenance` */
 
-insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(29,2,'5','m5','broken','','done!',2,'234','2','1',1,'2015-05-01',1,'2015-05-01',2,'2015-05-01',1,'2015-05-02','0'),(30,2,'5','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',1,'2015-05-08','0'),(31,2,'5','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',1,'2015-05-01','0'),(33,2,'2','54353','create..','','',1,'','2','1',1,'2015-05-02',1,'2015-05-08',4,'2015-05-02',0,'2015-05-02','0'),(34,2,'2','k1','c1','','',1,'x','1','',0,'2015-05-05',1,'2015-05-05',3,'2015-05-05',0,'2015-05-05','0'),(35,2,'3','k2','c2','','',1,'x','1','',0,'2015-05-05',1,'2015-04-30',4,'2015-05-01',0,'2015-05-05','0'),(36,2,'5','k3','c3','','ok',3,'x','1','',0,'2015-05-05',1,'2015-04-30',5,'2015-05-01',1,'2015-05-05','0'),(37,2,'5','k4','c4','','ok',2,'x','1','',0,'2015-05-05',1,'2015-04-30',6,'2015-05-01',1,'2015-05-05','0'),(38,2,'2','k5','c5','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',7,'2015-05-02',0,'2015-05-05','0'),(39,2,'3','k6','c6','','',1,'x','1','',0,'2015-05-05',1,'2015-05-01',6,'2015-05-02',0,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',0,'2015-05-05',1,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,'2','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',1,'2015-05-08',5,'2015-05-08',0,'2015-05-08','0');
+insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(29,2,'5','m5','broken','','done!',2,'234','2','1',1,'2015-05-01',1,'2015-05-01',2,'2015-05-01',1,'2015-05-02','0'),(30,2,'5','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',1,'2015-05-08','0'),(31,2,'5','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',1,'2015-05-01','0'),(33,2,'2','54353','create..','','',1,'','2','1',1,'2015-05-02',1,'2015-05-08',4,'2015-05-02',0,'2015-05-02','0'),(36,2,'5','k3','c3','','ok',3,'x','1','',0,'2015-05-05',1,'2015-04-30',5,'2015-05-01',1,'2015-05-05','0'),(37,2,'5','k4','c4','','ok',2,'x','1','',0,'2015-05-05',1,'2015-04-30',6,'2015-05-01',1,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',0,'2015-05-05',1,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,'2','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',1,'2015-05-08',5,'2015-05-08',0,'2015-05-08','0'),(43,1,'2','556','778','','',1,'990','1','1',0,'2015-06-05',1,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(44,1,'2','rrr','ttt','','',1,'yyyy','1','1',0,'2015-06-05',1,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0');
 
 /*Table structure for table `devicemgt_k_meter` */
 
@@ -493,11 +523,11 @@ CREATE TABLE `devicemgt_k_role` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_role_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_fdd4c13d` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_role` */
 
-insert  into `devicemgt_k_role`(`id`,`classid_id`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'purview_design','312',1,'2015-04-07',1,'2015-04-21',1,'2015-04-15','3'),(2,1,'information_audition','31232',1,'2015-04-15',1,'2015-04-15',1,'2015-04-17','3');
+insert  into `devicemgt_k_role`(`id`,`classid_id`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'purview_design','312',1,'2015-04-07',1,'2015-04-21',1,'2015-04-15','3'),(2,1,'information_audition','31232',1,'2015-04-15',1,'2015-04-15',1,'2015-04-17','3'),(6,1,'123','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(7,6,'12345','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(8,5,'ffff','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0');
 
 /*Table structure for table `devicemgt_k_role_purviews` */
 
@@ -513,11 +543,11 @@ CREATE TABLE `devicemgt_k_role_purviews` (
   KEY `devicemgt_k_role_purviews_7b0e22a5` (`k_purview_id`),
   CONSTRAINT `k_purview_id_refs_id_f7485864` FOREIGN KEY (`k_purview_id`) REFERENCES `devicemgt_k_purview` (`id`),
   CONSTRAINT `k_role_id_refs_id_21374a3f` FOREIGN KEY (`k_role_id`) REFERENCES `devicemgt_k_role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_role_purviews` */
 
-insert  into `devicemgt_k_role_purviews`(`id`,`k_role_id`,`k_purview_id`) values (11,1,2),(12,1,5),(10,1,10),(6,2,1),(9,2,6),(7,2,8),(8,2,10);
+insert  into `devicemgt_k_role_purviews`(`id`,`k_role_id`,`k_purview_id`) values (11,1,2),(12,1,5),(10,1,10),(6,2,1),(9,2,6),(7,2,8),(8,2,10),(14,6,1),(17,7,5),(32,8,5),(33,8,7),(35,8,8),(34,8,9),(30,8,10),(31,8,12);
 
 /*Table structure for table `devicemgt_k_route` */
 
@@ -599,11 +629,11 @@ CREATE TABLE `devicemgt_k_spare` (
   CONSTRAINT `classid_id_refs_id_0b558ac8` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_9fd74a5a` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_b2e6caa3` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_spare` */
 
-insert  into `devicemgt_k_spare`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (11,1,'spare1','s1_1','b1',1,'mo1',1,'c1','me1',20,30,0,1,'2015-05-24',0,'2015-05-24',0,'2015-05-24','0');
+insert  into `devicemgt_k_spare`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (11,7,'spare1','s1_1','b1',1,'mo1',1,'c1','me1',20,30,0,1,'2015-05-24',1,'2015-06-05',0,'2015-05-24','0'),(12,6,'s12','s11','b1',3,'m1',3,'c1','',3,0,0,1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0');
 
 /*Table structure for table `devicemgt_k_sparebill` */
 
@@ -828,9 +858,11 @@ CREATE TABLE `devicemgt_k_tool` (
   CONSTRAINT `classid_id_refs_id_67fdcf25` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_1d6747ec` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_ea0efb3f` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_tool` */
+
+insert  into `devicemgt_k_tool`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`ownerid`) values (1,7,'11','11','111',1,'11',1,'11','',9,0,0,1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0',0),(2,1,'12','12','11',1,'11',1,'11','',11,0,0,1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0',0);
 
 /*Table structure for table `devicemgt_k_toolcount` */
 
@@ -987,11 +1019,11 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_label` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 
 /*Data for the table `django_content_type` */
 
-insert  into `django_content_type`(`id`,`name`,`app_label`,`model`) values (1,'permission','auth','permission'),(2,'group','auth','group'),(3,'user','auth','user'),(4,'content type','contenttypes','contenttype'),(5,'session','sessions','session'),(6,'site','sites','site'),(7,'log entry','admin','logentry'),(8,'k_class','devicemgt','k_class'),(9,'k_purview','devicemgt','k_purview'),(10,'k_role','devicemgt','k_role'),(11,'k_classrole','devicemgt','k_classrole'),(12,'k_user','devicemgt','k_user'),(13,'k_devicetype','devicemgt','k_devicetype'),(14,'k_supplier','devicemgt','k_supplier'),(15,'k_producer','devicemgt','k_producer'),(16,'k_spare','devicemgt','k_spare'),(17,'k_device','devicemgt','k_device'),(18,'k_form','devicemgt','k_form'),(19,'k_formitem','devicemgt','k_formitem'),(20,'k_route','devicemgt','k_route'),(21,'k_meter','devicemgt','k_meter'),(22,'k_maintenance','devicemgt','k_maintenance'),(23,'k_task','devicemgt','k_task'),(24,'k_taskitem','devicemgt','k_taskitem'),(25,'k_sparebill','devicemgt','k_sparebill'),(26,'k_sparecount','devicemgt','k_sparecount'),(27,'k_tool','devicemgt','k_tool'),(28,'k_tooluse','devicemgt','k_tooluse'),(29,'k_toolcount','devicemgt','k_toolcount'),(30,'k_project','devicemgt','k_project'),(31,'k_schedule','devicemgt','k_schedule'),(32,'k_staffworkinfo','devicemgt','k_staffworkinfo'),(33,'k_staffscoreinfo','devicemgt','k_staffscoreinfo'),(34,'k_staffegginfo','devicemgt','k_staffegginfo'),(35,'k_feedback','devicemgt','k_feedback');
+insert  into `django_content_type`(`id`,`name`,`app_label`,`model`) values (1,'permission','auth','permission'),(2,'group','auth','group'),(3,'user','auth','user'),(4,'content type','contenttypes','contenttype'),(5,'session','sessions','session'),(6,'site','sites','site'),(7,'log entry','admin','logentry'),(8,'k_class','devicemgt','k_class'),(9,'k_purview','devicemgt','k_purview'),(10,'k_role','devicemgt','k_role'),(11,'k_classrole','devicemgt','k_classrole'),(12,'k_user','devicemgt','k_user'),(13,'k_devicetype','devicemgt','k_devicetype'),(14,'k_supplier','devicemgt','k_supplier'),(15,'k_producer','devicemgt','k_producer'),(16,'k_spare','devicemgt','k_spare'),(17,'k_device','devicemgt','k_device'),(18,'k_form','devicemgt','k_form'),(19,'k_formitem','devicemgt','k_formitem'),(20,'k_route','devicemgt','k_route'),(21,'k_meter','devicemgt','k_meter'),(22,'k_maintenance','devicemgt','k_maintenance'),(23,'k_task','devicemgt','k_task'),(24,'k_taskitem','devicemgt','k_taskitem'),(25,'k_sparebill','devicemgt','k_sparebill'),(26,'k_sparecount','devicemgt','k_sparecount'),(27,'k_tool','devicemgt','k_tool'),(28,'k_tooluse','devicemgt','k_tooluse'),(29,'k_toolcount','devicemgt','k_toolcount'),(30,'k_project','devicemgt','k_project'),(31,'k_schedule','devicemgt','k_schedule'),(32,'k_staffworkinfo','devicemgt','k_staffworkinfo'),(33,'k_staffscoreinfo','devicemgt','k_staffscoreinfo'),(34,'k_staffegginfo','devicemgt','k_staffegginfo'),(35,'k_feedback','devicemgt','k_feedback'),(36,'k_deviceplan','devicemgt','k_deviceplan');
 
 /*Table structure for table `django_migrations` */
 
@@ -1023,7 +1055,7 @@ CREATE TABLE `django_session` (
 
 /*Data for the table `django_session` */
 
-insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('8lhsh9oulqek6tpblczdm5occoug3mqf','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-14 07:58:02'),('bdsp4ls3yt2wlje64pyxw1e89db2fqld','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-06-13 03:27:08'),('eioghmljg0d33i6hhay1rrnh93nuojpo','ODNjZjBkY2Q5ZTU4ZGEzOWZiMGVlZDZjYzI0ZmZiOGQ1NjlkMTY1MzqAAn1xAShVDV9hdXRoX3VzZXJfaWSKAQFVEl9hdXRoX3VzZXJfYmFja2VuZFUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxAnUu','2015-06-06 03:07:17'),('if0bcle58w0z5crrktpqypg8dtj2a8jz','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-26 12:00:49'),('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('p3uo1lg5ave4shjekcmxhekwnto4a49g','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-05-08 14:33:28'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24'),('un4cbhq8i8zup2egzqtflzuuwhomxzy6','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-11 07:52:20');
+insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('8lhsh9oulqek6tpblczdm5occoug3mqf','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-14 07:58:02'),('bdsp4ls3yt2wlje64pyxw1e89db2fqld','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-06-13 03:27:08'),('eioghmljg0d33i6hhay1rrnh93nuojpo','ODNjZjBkY2Q5ZTU4ZGEzOWZiMGVlZDZjYzI0ZmZiOGQ1NjlkMTY1MzqAAn1xAShVDV9hdXRoX3VzZXJfaWSKAQFVEl9hdXRoX3VzZXJfYmFja2VuZFUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxAnUu','2015-06-06 03:07:17'),('if0bcle58w0z5crrktpqypg8dtj2a8jz','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-26 12:00:49'),('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('p3uo1lg5ave4shjekcmxhekwnto4a49g','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-05-08 14:33:28'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24'),('un4cbhq8i8zup2egzqtflzuuwhomxzy6','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-11 07:52:20'),('zxdvlyja9lkxzc96jwyo50gxffs853ae','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-06-19 02:26:43');
 
 /*Table structure for table `django_site` */
 

@@ -168,3 +168,8 @@ LOGGING = {
 }
 
 LOGIN_URL = '/login/'
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
