@@ -317,7 +317,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                     String date = start.split(" ")[0];
                     RequestParams params = new RequestParams();
                     params.addBodyParameter("username", "syb1001");
-                    params.addBodyParameter("access_token", ACCESS_TOKEN);
+                    params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
                     params.addBodyParameter("date", date);
                     params.addBodyParameter("checkin", mTextViewOnWork.getText().toString());
                     params.addBodyParameter("checkout", mTextViewOffWork.getText().toString());
