@@ -44,12 +44,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import cn.edu.tsinghua.thss.popcorn.config.Config;
+
 public class AttendanceActivity extends Activity implements LocationListener,View.OnClickListener{
 
-    private static String ACCESS_TOKEN = "hello_world";
-    private static String LOCAL_IP = "http://192.168.1.103";
-    private static String ATTENDANCE_POST_URL = LOCAL_IP + "/app/check/";
-    private static String ATTENDANCE_GET_URL = LOCAL_IP + "/app/checkinfo/";
+    private static String ATTENDANCE_POST_URL = Config.LOCAL_IP + "/app/check/";
+    private static String ATTENDANCE_GET_URL = Config.LOCAL_IP + "/app/checkinfo/";
 
     private boolean mStatus = false;
     private String mAddress = "无法定位";
@@ -164,8 +164,8 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
         String date = String.valueOf(year) + '-' + sMonth +'-'+ sDay;
 
         RequestParams params = new RequestParams();
-        params.addQueryStringParameter("username", "syb1001");
-        params.addQueryStringParameter("access_token", "hello_world");
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
         params.addQueryStringParameter("date", date);
 
         progressDialog.show();

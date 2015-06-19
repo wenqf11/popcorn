@@ -24,6 +24,7 @@ public class TableActivity extends FormActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //generateForm{json)
         LinearLayout container = generateForm( FormActivity.parseFileToString( this, "schemas.json" ) );
 
         LinearLayout list = new LinearLayout(this);

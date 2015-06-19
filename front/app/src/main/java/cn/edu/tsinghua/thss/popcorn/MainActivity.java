@@ -40,7 +40,6 @@ public class MainActivity extends FragmentActivity {
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
 	private FragmentAdapter mFragmentAdapter;
 
-
 	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv;
 
     private FontAwesomeText mTabRecordFat, mTabRepairFat, mTabAppsFat, mTabMineFat;
