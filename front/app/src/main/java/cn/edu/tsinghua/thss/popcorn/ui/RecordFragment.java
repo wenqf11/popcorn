@@ -77,7 +77,7 @@ public class RecordFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-/*
+
         progressDialog = new ProgressDialog(getActivity(), R.style.buffer_dialog);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("数据加载中...");
@@ -159,7 +159,6 @@ public class RecordFragment extends ListFragment {
                         progressDialog.hide();
                     }
                 });
-        */
     }
 
     @Override
