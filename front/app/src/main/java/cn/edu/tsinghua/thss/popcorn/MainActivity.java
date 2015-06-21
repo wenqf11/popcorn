@@ -36,7 +36,6 @@ import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
  */
 
 public class MainActivity extends FragmentActivity {
-    static  String serverIP = "http://192.168.1.106";
 	private ViewPager mPageVp;
 
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();

@@ -16,7 +16,7 @@
     <string name="off_work_activity_attendance">下班：</string>
     <string name="sign_in_activity_attendance">签到</string>
     <string name="sign_out_activity_attendance">签退</string>
-    <string name="device_id">设备编号：</string>
+    <string name="device_number">设备编号：</string>
     <string name="report_title">报修标题：</string>
     <string name="memo">备注：</string>
     <string name="report_datetime">上报时间：</string>

@@ -52,7 +52,7 @@ android:shrinkColumns="*">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:text="@string/device_id"/>
+            android:text="@string/device_number"/>
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

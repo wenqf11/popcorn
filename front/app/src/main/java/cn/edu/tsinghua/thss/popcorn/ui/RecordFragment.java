@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.edu.tsinghua.thss.popcorn.MainActivity;
 import cn.edu.tsinghua.thss.popcorn.RecordListActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
@@ -76,7 +77,7 @@ public class RecordFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+/*
         progressDialog = new ProgressDialog(getActivity(), R.style.buffer_dialog);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("数据加载中...");
@@ -100,7 +101,7 @@ public class RecordFragment extends ListFragment {
         progressDialog.show();
 
         HttpUtils http = new HttpUtils();
-        http.configCurrentHttpCacheExpiry(1000 * 10);
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.GET,
                 ROUTE_GET_URL,
                 params,
@@ -158,6 +159,7 @@ public class RecordFragment extends ListFragment {
                         progressDialog.hide();
                     }
                 });
+        */
     }
 
     @Override
