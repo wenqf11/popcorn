@@ -350,7 +350,7 @@
 - 请求参数：
 	- username，`string`，用户名
 	- access_token，`string`，用户认证用的token
-	- **device_id**，`int`，报修的设备id，可以扫二维码获得
+	- **device_brief**，`int`，设备简称
 	- **title**，`string`，报修标题
 	- **description**，`string`，情况描述
 	- **image**，`string`，图片URL，先传好图片再新建报修
@@ -389,6 +389,8 @@
 					title: "空调04进风管报修",
 					device_name: "空调04",
 					device_brief: "kt273311",
+					reporter: "" 报修人,
+					report_time: "2015-04-21 12:02:02" 报修时间,
 					description: "进风管损坏，需更换",
 					image: "http://domain.com/static/12.jpg",
 					memo: "需携带配件",
