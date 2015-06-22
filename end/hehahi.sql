@@ -12,7 +12,7 @@ MySQL - 5.6.10 : Database - devicemgtdb
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `devicemgtdb`;
 
@@ -25,7 +25,7 @@ CREATE TABLE `auth_group` (
   `name` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `auth_group` */
 
@@ -43,7 +43,7 @@ CREATE TABLE `auth_group_permissions` (
   KEY `auth_group_permissions_83d7f98b` (`permission_id`),
   CONSTRAINT `group_id_refs_id_f4b32aac` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
   CONSTRAINT `permission_id_refs_id_6ba0f519` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `auth_group_permissions` */
 
@@ -60,7 +60,7 @@ CREATE TABLE `auth_permission` (
   UNIQUE KEY `content_type_id` (`content_type_id`,`codename`),
   KEY `auth_permission_37ef4eb4` (`content_type_id`),
   CONSTRAINT `content_type_id_refs_id_d043b34a` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
 
 /*Data for the table `auth_permission` */
 
@@ -84,7 +84,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 /*Data for the table `auth_user` */
 
@@ -104,7 +104,7 @@ CREATE TABLE `auth_user_groups` (
   KEY `auth_user_groups_5f412f9a` (`group_id`),
   CONSTRAINT `group_id_refs_id_274b862c` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
   CONSTRAINT `user_id_refs_id_40c41112` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `auth_user_groups` */
 
@@ -122,7 +122,7 @@ CREATE TABLE `auth_user_user_permissions` (
   KEY `auth_user_user_permissions_83d7f98b` (`permission_id`),
   CONSTRAINT `permission_id_refs_id_35d9ac25` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `user_id_refs_id_4dc23c39` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `auth_user_user_permissions` */
 
@@ -153,7 +153,7 @@ CREATE TABLE `devicemgt_k_class` (
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_class` */
 
@@ -172,7 +172,7 @@ CREATE TABLE `devicemgt_k_classrole` (
   KEY `devicemgt_k_classrole_a1a2a495` (`roleid_id`),
   CONSTRAINT `classid_id_refs_id_08bcb693` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `roleid_id_refs_id_74e15c3a` FOREIGN KEY (`roleid_id`) REFERENCES `devicemgt_k_role` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_classrole` */
 
@@ -222,7 +222,7 @@ CREATE TABLE `devicemgt_k_device` (
   CONSTRAINT `producerid_id_refs_id_0ca0a6d9` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_b397bc4d` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`),
   CONSTRAINT `typeid_id_refs_id_33dcc1e6` FOREIGN KEY (`typeid_id`) REFERENCES `devicemgt_k_devicetype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_device` */
 
@@ -242,7 +242,7 @@ CREATE TABLE `devicemgt_k_device_spare` (
   KEY `devicemgt_k_device_spare_ec82079c` (`k_spare_id`),
   CONSTRAINT `k_device_id_refs_id_b9927edc` FOREIGN KEY (`k_device_id`) REFERENCES `devicemgt_k_device` (`id`),
   CONSTRAINT `k_spare_id_refs_id_9043de86` FOREIGN KEY (`k_spare_id`) REFERENCES `devicemgt_k_spare` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_device_spare` */
 
@@ -270,7 +270,7 @@ CREATE TABLE `devicemgt_k_deviceplan` (
   KEY `devicemgt_k_deviceplan_221733ad` (`maintenanceid_id`),
   CONSTRAINT `maintenanceid_id_refs_id_7574d147` FOREIGN KEY (`maintenanceid_id`) REFERENCES `devicemgt_k_maintenance` (`id`),
   CONSTRAINT `deviceid_id_refs_id_e0de95d1` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_deviceplan` */
 
@@ -294,7 +294,7 @@ CREATE TABLE `devicemgt_k_devicetype` (
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_devicetype` */
 
@@ -310,7 +310,7 @@ CREATE TABLE `devicemgt_k_feedback` (
   `creatorid` int(10) unsigned NOT NULL,
   `createdatetime` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_feedback` */
 
@@ -333,7 +333,7 @@ CREATE TABLE `devicemgt_k_form` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_form_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_5ea6c07b` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_form` */
 
@@ -366,7 +366,7 @@ CREATE TABLE `devicemgt_k_formitem` (
   KEY `devicemgt_k_formitem_a6f496e6` (`formid_id`),
   CONSTRAINT `classid_id_refs_id_35b3b5fc` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `formid_id_refs_id_a81e9254` FOREIGN KEY (`formid_id`) REFERENCES `devicemgt_k_form` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_formitem` */
 
@@ -400,7 +400,7 @@ CREATE TABLE `devicemgt_k_maintenance` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_maintenance_72537f95` (`deviceid_id`),
   CONSTRAINT `deviceid_id_refs_id_e790c6dd` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_maintenance` */
 
@@ -432,7 +432,7 @@ CREATE TABLE `devicemgt_k_meter` (
   KEY `routeid_id` (`routeid_id`),
   CONSTRAINT `deviceid_id_refs_id_ff1ae68d` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`),
   CONSTRAINT `devicemgt_k_meter_ibfk_1` FOREIGN KEY (`routeid_id`) REFERENCES `devicemgt_k_route` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_meter` */
 
@@ -453,7 +453,7 @@ CREATE TABLE `devicemgt_k_producer` (
   `linkman` varchar(30) NOT NULL,
   `mobile` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_producer` */
 
@@ -474,7 +474,7 @@ CREATE TABLE `devicemgt_k_project` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_project_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_d573ce4b` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_project` */
 
@@ -498,7 +498,7 @@ CREATE TABLE `devicemgt_k_purview` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_purview_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_92b6dd49` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_purview` */
 
@@ -523,7 +523,7 @@ CREATE TABLE `devicemgt_k_role` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_role_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_fdd4c13d` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_role` */
 
@@ -543,7 +543,7 @@ CREATE TABLE `devicemgt_k_role_purviews` (
   KEY `devicemgt_k_role_purviews_7b0e22a5` (`k_purview_id`),
   CONSTRAINT `k_purview_id_refs_id_f7485864` FOREIGN KEY (`k_purview_id`) REFERENCES `devicemgt_k_purview` (`id`),
   CONSTRAINT `k_role_id_refs_id_21374a3f` FOREIGN KEY (`k_role_id`) REFERENCES `devicemgt_k_role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_role_purviews` */
 
@@ -570,7 +570,7 @@ CREATE TABLE `devicemgt_k_route` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_route_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_baa2a870` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_route` */
 
@@ -593,7 +593,7 @@ CREATE TABLE `devicemgt_k_schedule` (
   CONSTRAINT `classid_id_refs_id_4dc8fa60` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `route_id_refs_id_bcf0225a` FOREIGN KEY (`route_id`) REFERENCES `devicemgt_k_route` (`id`),
   CONSTRAINT `user_id_refs_id_af05aa4f` FOREIGN KEY (`user_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_schedule` */
 
@@ -629,7 +629,7 @@ CREATE TABLE `devicemgt_k_spare` (
   CONSTRAINT `classid_id_refs_id_0b558ac8` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_9fd74a5a` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_b2e6caa3` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_spare` */
 
@@ -662,7 +662,7 @@ CREATE TABLE `devicemgt_k_sparebill` (
   KEY `devicemgt_k_sparebill_12fc9209` (`spareid_id`),
   CONSTRAINT `classid_id_refs_id_4ffbefc7` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `spareid_id_refs_id_8eee649a` FOREIGN KEY (`spareid_id`) REFERENCES `devicemgt_k_spare` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_sparebill` */
 
@@ -691,7 +691,7 @@ CREATE TABLE `devicemgt_k_sparecount` (
   KEY `devicemgt_k_sparecount_12fc9209` (`spareid_id`),
   CONSTRAINT `classid_id_refs_id_9a8f3ea4` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `spareid_id_refs_id_c63e4168` FOREIGN KEY (`spareid_id`) REFERENCES `devicemgt_k_spare` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_sparecount` */
 
@@ -707,7 +707,7 @@ CREATE TABLE `devicemgt_k_staffegginfo` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_staffegginfo_936913d1` (`userid_id`),
   CONSTRAINT `userid_id_refs_id_95587539` FOREIGN KEY (`userid_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_staffegginfo` */
 
@@ -724,7 +724,7 @@ CREATE TABLE `devicemgt_k_staffscoreinfo` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_staffscoreinfo_936913d1` (`userid_id`),
   CONSTRAINT `userid_id_refs_id_760427ab` FOREIGN KEY (`userid_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_staffscoreinfo` */
 
@@ -742,7 +742,7 @@ CREATE TABLE `devicemgt_k_staffworkinfo` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_staffworkinfo_936913d1` (`userid_id`),
   CONSTRAINT `userid_id_refs_id_9174919c` FOREIGN KEY (`userid_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_staffworkinfo` */
 
@@ -763,7 +763,7 @@ CREATE TABLE `devicemgt_k_supplier` (
   `linkman` varchar(30) NOT NULL,
   `mobile` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_supplier` */
 
@@ -788,7 +788,7 @@ CREATE TABLE `devicemgt_k_task` (
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_task` */
 
@@ -819,7 +819,7 @@ CREATE TABLE `devicemgt_k_taskitem` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_taskitem_752fe31f` (`taskid_id`),
   CONSTRAINT `taskid_id_refs_id_1ab584ad` FOREIGN KEY (`taskid_id`) REFERENCES `devicemgt_k_task` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_taskitem` */
 
@@ -858,7 +858,7 @@ CREATE TABLE `devicemgt_k_tool` (
   CONSTRAINT `classid_id_refs_id_67fdcf25` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_1d6747ec` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_ea0efb3f` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_tool` */
 
@@ -889,7 +889,7 @@ CREATE TABLE `devicemgt_k_toolcount` (
   KEY `devicemgt_k_toolcount_9e808b4a` (`toolid_id`),
   CONSTRAINT `classid_id_refs_id_639b3160` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `toolid_id_refs_id_bf3b36c6` FOREIGN KEY (`toolid_id`) REFERENCES `devicemgt_k_tool` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_toolcount` */
 
@@ -920,7 +920,7 @@ CREATE TABLE `devicemgt_k_tooluse` (
   KEY `devicemgt_k_tooluse_9e808b4a` (`toolid_id`),
   CONSTRAINT `classid_id_refs_id_b7701519` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `toolid_id_refs_id_28000472` FOREIGN KEY (`toolid_id`) REFERENCES `devicemgt_k_tool` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_tooluse` */
 
@@ -960,7 +960,7 @@ CREATE TABLE `devicemgt_k_user` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_user_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_6b588af6` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_user` */
 
@@ -980,7 +980,7 @@ CREATE TABLE `devicemgt_k_user_roles` (
   KEY `devicemgt_k_user_roles_893707b2` (`k_role_id`),
   CONSTRAINT `k_role_id_refs_id_85e9cbb2` FOREIGN KEY (`k_role_id`) REFERENCES `devicemgt_k_role` (`id`),
   CONSTRAINT `k_user_id_refs_id_25e7ab78` FOREIGN KEY (`k_user_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_user_roles` */
 
@@ -1004,7 +1004,7 @@ CREATE TABLE `django_admin_log` (
   KEY `django_admin_log_37ef4eb4` (`content_type_id`),
   CONSTRAINT `content_type_id_refs_id_93d2d1f8` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `user_id_refs_id_c0d12874` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `django_admin_log` */
 
@@ -1019,7 +1019,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_label` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
 /*Data for the table `django_content_type` */
 
@@ -1051,7 +1051,7 @@ CREATE TABLE `django_session` (
   `expire_date` datetime NOT NULL,
   PRIMARY KEY (`session_key`),
   KEY `django_session_b7b81f0c` (`expire_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `django_session` */
 
@@ -1066,7 +1066,7 @@ CREATE TABLE `django_site` (
   `domain` varchar(100) NOT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `django_site` */
 
