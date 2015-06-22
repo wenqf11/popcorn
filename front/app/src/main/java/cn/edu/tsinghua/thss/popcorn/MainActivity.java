@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,13 +37,12 @@ import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
  */
 
 public class MainActivity extends FragmentActivity {
-    static  String serverIP = "http://192.168.1.106";
 	private ViewPager mPageVp;
 
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
 	private FragmentAdapter mFragmentAdapter;
 
-	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv;
+	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv,mbottomTabMeterTv;
 
     private FontAwesomeText mTabRecordFat, mTabRepairFat, mTabAppsFat, mTabMineFat;
 
@@ -98,6 +98,9 @@ public class MainActivity extends FragmentActivity {
         mTabAppsLayout = this.findViewById(R.id.id_tab_apps_ll);
         mTabMineLayout = this.findViewById(R.id.id_tab_mine_ll);
 
+        mbottomTabMeterTv = (TextView)this.findViewById(R.id.main_bottom_tab_meter_id);
+        mBodyMeterTv = (TextView)this.findViewById(R.id.main_body_app_meter_id);
+
 		mTabLineIv = (ImageView) this.findViewById(R.id.id_tab_line_iv);
 		mPageVp = (ViewPager) this.findViewById(R.id.id_page_vp);
 	}
@@ -112,14 +115,31 @@ public class MainActivity extends FragmentActivity {
 		mFragmentList.add(mRecordFg);
 		mFragmentList.add(mRepairFg);
         mFragmentList.add(mMineFg);
-
-		mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
+        if (mFragmentAdapter == null) {
+            mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
+        } else {
+            mFragmentAdapter.setFragmentsList(getSupportFragmentManager(),mFragmentList);
+        }
 		mPageVp.setAdapter(mFragmentAdapter);
 		mPageVp.setCurrentItem(0);
+
 
         mTabAppsLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mPageVp.setCurrentItem(0, false);
+                if (mRecordFg.unfinished > 0) {
+                    mbottomTabMeterTv.setText(String.valueOf(mRecordFg.unfinished));
+                    if(mBodyMeterTv == null) {
+                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                    }
+                    mBodyMeterTv.setText(String.valueOf(mRecordFg.unfinished));
+                } else {
+                    mbottomTabMeterTv.setVisibility(View.GONE);
+                    if(mBodyMeterTv == null) {
+                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                    }
+                    mBodyMeterTv.setVisibility(View.GONE);
+                }
             }
         });
 
