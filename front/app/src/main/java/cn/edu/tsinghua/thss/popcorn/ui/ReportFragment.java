@@ -39,6 +39,7 @@ import java.util.Calendar;
 
 import cn.edu.tsinghua.thss.popcorn.MainActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
+import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 /**
  * @author wenqingfu
@@ -50,7 +51,7 @@ public class ReportFragment extends Fragment {
     private static String ACCESS_TOKEN = "hello_world";
     private static final int TAKE_PICTURE = 1;
     private static final int BROWSE = 2;
-    private String REPORT_URL = "http://192.168.1.106" + "/app/maintain/add/";
+    private String REPORT_URL =  Config.LOCAL_IP + "/app/maintain/add/";
 
     private ProgressDialog progressDialog;
 
@@ -75,9 +76,6 @@ public class ReportFragment extends Fragment {
     @ViewInject(R.id.tab_report_device_id)
     private EditText deviceIdText;
 
-    @ViewInject(R.id.tab_report_fault_place)
-    private EditText faultPlaceText;
-
     @ViewInject(R.id.tab_report_fault_description)
     private EditText faultDescriptionText;
 
@@ -91,7 +89,6 @@ public class ReportFragment extends Fragment {
     private void submitButtonClick(View v){
         String deviceId = deviceIdText.getText().toString();
         String reportTitle = reportTitleText.getText().toString();
-        String faultPlace = faultPlaceText.getText().toString();
         String faultDescription = faultDescriptionText.getText().toString();
         String reportMemo = reportMemoText.getText().toString();
         String imgURL = "";

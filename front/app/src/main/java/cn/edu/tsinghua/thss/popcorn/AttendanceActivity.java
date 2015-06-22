@@ -73,9 +73,6 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
     @ViewInject(R.id.datePicker)
     private DatePicker datePicker;
 
-    @ViewInject(R.id.submit_date)
-    private  Button mButtonSubmitDate;
-
     @OnClick(R.id.submit_date)
     private void submitDateButtonClick(View v) {
         updateAttendanceData();
@@ -177,7 +174,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
         progressDialog.show();
 
         HttpUtils http = new HttpUtils();
-        http.configCurrentHttpCacheExpiry(1000 * 10);
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.GET,
                 ATTENDANCE_GET_URL,
                 params,
@@ -316,7 +313,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                     String start = mTextViewOnWork.getText().toString();
                     String date = start.split(" ")[0];
                     RequestParams params = new RequestParams();
-                    params.addBodyParameter("username", "syb1001");
+                    params.addBodyParameter("username", Config.DEBUG_USERNAME);
                     params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
                     params.addBodyParameter("date", date);
                     params.addBodyParameter("checkin", mTextViewOnWork.getText().toString());
