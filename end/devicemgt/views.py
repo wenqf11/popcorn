@@ -15,14 +15,37 @@ from helper import handle_uploaded_file, get_current_time, get_current_date, get
 import json
 
 
+# 权限判断
+def check_purview(username, pid):
+    _user = k_user.objects.get(username=username)
+    _roles = _user.roles.all()
+    _userpurviews = []
+    for _role in _roles:
+        _purviews = _role.purviews.all()
+        for _purview in _purviews:
+            if _purview.id not in _userpurviews:
+                _userpurviews.append(_purview.id)
+    if int(pid) in _userpurviews:
+        return 0
+    else:
+        _purview = k_purview.objects.get(id=pid)
+        return _purview.memo
+
+
 # 首页
 @login_required
 def index(request):
     # 登陆成功
     # user = k_user.objects.get(username=request.user.username)
     user = User.objects.get(username=request.user.username)
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'index'})
+    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'index', 'purview_msg': purview_msg})
     return render_to_response('index.html', variables)
 
 
@@ -367,10 +390,15 @@ def devicemgt(request):
                 deviceinfo['class'] = deviceinfo['class'][0:len(deviceinfo['class'])-1]
             else:
                 deviceinfo['class'] = '未指定该设备所属部门'
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+
     if len(deviceinfo) > 0:
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'deviceinfo':deviceinfo})
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'deviceinfo':deviceinfo, 'purview_msg':purview_msg})
     else:
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'purview_msg':purview_msg})
     return render_to_response('device.html',variables)
 
 
@@ -1242,6 +1270,11 @@ def delete_form(request):
 
 @login_required
 def view_deviceplan(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 28)
+    if _msg != 0:
+        return HttpResponseRedirect('/device/?msg='+_msg)
+
     _deviceid = request.GET.get('id')
     _device = k_device.objects.get(id=_deviceid)
     _brief = _device.brief
@@ -1264,11 +1297,23 @@ def view_deviceplan(request):
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
-    return render_to_response('deviceplanview.html', {'brief': _brief, 'deviceid': _deviceid, 'data': data, 'maintainers': _maintainers})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('deviceplanview.html', {'brief': _brief, 'deviceid': _deviceid, 'data': data, 'maintainers': _maintainers, 'purview_msg': purview_msg})
 
 
 @login_required
 def submit_deviceplan(request):
+    _deviceid = request.GET.get('deviceid')
+    #权限判断
+    _msg = check_purview(request.user.username, 29)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_deviceplan/?msg='+_msg+'&id='+_deviceid)
+    
     _title = request.GET.get('title')
     _period = request.GET.get('period')
     _createcontent = request.GET.get('createcontent')
@@ -1276,7 +1321,6 @@ def submit_deviceplan(request):
     _memo = request.GET.get('memo')
 
     _id = request.GET.get('id')
-    _deviceid = request.GET.get('deviceid')
     _user = k_user.objects.get(username=request.user.username)
     _editor = k_user.objects.get(name=_editor)
 
@@ -1311,6 +1355,11 @@ def submit_deviceplan(request):
 def delete_deviceplan(request):
     _id = request.GET.get('id')
     _deviceid = request.GET.get('deviceid')
+    #权限判断
+    _msg = check_purview(request.user.username, 30)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_deviceplan/?msg='+_msg+'&id='+_deviceid)
+    
     if _id:
         _deviceplan = k_deviceplan.objects.get(id=_id)
         _deviceplan.delete()
@@ -1319,6 +1368,11 @@ def delete_deviceplan(request):
 
 @login_required
 def view_maintaining(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 31)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+    
     _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=3)
     data = []
     for _maintaining in _maintainings:
@@ -1361,11 +1415,21 @@ def view_maintaining(request):
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
-    return render_to_response('maintainingview.html', {'data': data, 'maintainers': _maintainers})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+
+    return render_to_response('maintainingview.html', {'data': data, 'maintainers': _maintainers, 'purview_msg': purview_msg})
 
 
 @login_required
 def view_maintained(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 31)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+    
     _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=4)
     data = []
     for _maintained in _maintaineds:
@@ -1415,11 +1479,21 @@ def view_maintained(request):
                 'factor': _maintained.factor,
                 'state': _maintained.state
             })
-    return render_to_response('maintainedview.html', {'data': data})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+
+    return render_to_response('maintainedview.html', {'data': data, 'purview_msg': purview_msg})
 
 
 @login_required
 def add_maintenance(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 33)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+    
     _users = k_user.objects.all()
     _maintainers = []
     for _user in _users:
@@ -1428,21 +1502,41 @@ def add_maintenance(request):
     _briefs = []
     for _device in _devices:
         _briefs.append(_device.brief)
-    return render_to_response('maintenanceadd.html', {'maintainers': _maintainers, 'briefs': _briefs})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('maintenanceadd.html', {'maintainers': _maintainers, 'briefs': _briefs, 'purview_msg': purview_msg})
 
 
 @login_required
 def submit_maintenance(request):
+    _id = request.GET.get('id')
+    _factor = request.GET.get('factor')
+    _editor = request.GET.get('editor')
+    #权限判断
+    if _factor:
+        _msg = check_purview(request.user.username, 34)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_maintained/?msg='+_msg)
+    else:
+        _msg = check_purview(request.user.username, 33)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+        _maintenance = k_maintenance.objects.get(id=_id)
+        _maintainer = k_user.objects.get(name=_editor)
+        if _maintenance.editorid != _maintainer.id:
+            _msg = check_purview(request.user.username, 32)
+            if _msg != 0:
+                return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+    
     _title = request.GET.get('title')
     _brief = request.GET.get('brief')
-    _editor = request.GET.get('editor')
     _createcontent = request.GET.get('createcontent')
     _priority = request.GET.get('priority')
     _memo = request.GET.get('memo')
-
-    _id = request.GET.get('id')
-
-    _factor = request.GET.get('factor')
 
     _user = k_user.objects.get(username=request.user.username)
     if _factor:
@@ -1490,12 +1584,20 @@ def submit_maintenance(request):
 
 @login_required
 def delete_maintenance(request):
-    _id = request.GET.get('id')
     _type = request.GET.get('type')
+    #权限判断
+    _msg = check_purview(request.user.username, 34)
+    if _msg != 0:
+        if _type == "1":
+            return HttpResponseRedirect('/view_maintained/?msg='+_msg)
+        else:
+            return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+
+    _id = request.GET.get('id')
     if _id:
         _maintenance = k_maintenance.objects.get(id=_id)
         _maintenance.delete()
-    if _type == 1:
+    if _type == "1":
         return HttpResponseRedirect('/view_maintained/')
     else:
         return HttpResponseRedirect('/view_maintaining/')
@@ -1503,6 +1605,11 @@ def delete_maintenance(request):
 
 @login_required
 def view_upkeeping(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 28)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+    
     _maintainings = k_maintenance.objects.filter(mtype=1, state__lte=3)
     data = []
     for _maintaining in _maintainings:
@@ -1528,10 +1635,21 @@ def view_upkeeping(request):
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
-    return render_to_response('upkeepingview.html', {'data': data, 'maintainers': _maintainers})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('upkeepingview.html', {'data': data, 'maintainers': _maintainers, 'purview_msg': purview_msg})
 
 @login_required
 def view_upkeeped(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 28)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _maintaineds = k_maintenance.objects.filter(mtype=1, state__gte=4)
     data = []
     for _maintained in _maintaineds:
@@ -1585,11 +1703,22 @@ def view_upkeeped(request):
                 'factor': _maintained.factor,
                 'state': _maintained.state
             })
-    return render_to_response('upkeepedview.html', {'data': data})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('upkeepedview.html', {'data': data, 'purview_msg': purview_msg})
 
 
 @login_required
 def submit_upkeep(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 30)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_upkeeped/?msg='+_msg)
+        
     _id = request.GET.get('id')
     _factor = request.GET.get('factor')
     _user = k_user.objects.get(username=request.user.username)
@@ -1604,6 +1733,11 @@ def submit_upkeep(request):
 
 @login_required
 def delete_upkeep(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 30)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_upkeeped/?msg='+_msg)
+        
     _id = request.GET.get('id')
     if _id:
         _maintenance = k_maintenance.objects.get(id=_id)
@@ -1613,6 +1747,11 @@ def delete_upkeep(request):
 
 @login_required
 def view_tasking(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 35)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+        
     _maintainings = k_task.objects.filter(state__lte=2)
     data = []
     for _maintaining in _maintainings:
@@ -1627,11 +1766,22 @@ def view_tasking(request):
             'priority': _maintaining.get_priority_display(),
             'state': _maintaining.get_state_display()
         })
-    return render_to_response('taskingview.html', {'data': data})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('taskingview.html', {'data': data, 'purview_msg': purview_msg})
 
 
 @login_required
 def view_tasked(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 35)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+        
     _maintaineds = k_task.objects.filter(state__gte=3)
     data = []
     for _maintained in _maintaineds:
@@ -1646,16 +1796,38 @@ def view_tasked(request):
             'priority': _maintained.get_priority_display(),
             'state': _maintained.get_state_display()
         })
-    return render_to_response('taskedview.html', {'data': data})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('taskedview.html', {'data': data, 'purview_msg': purview_msg})
 
 
 @login_required
 def add_task(request):
-    return render_to_response('taskadd.html')
+    #权限判断
+    _msg = check_purview(request.user.username, 37)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+        
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('taskadd.html', {'purview_msg': purview_msg})
 
 
 @login_required
 def submit_task(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 37)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_tasking/?msg='+_msg)
+        
     _title = request.GET.get('title')
     _createcontent = request.GET.get('createcontent')
     _priority = request.GET.get('priority')
@@ -1690,6 +1862,14 @@ def submit_task(request):
 def delete_task(request):
     _id = request.GET.get('id')
     _type = request.GET.get('type')
+    #权限判断
+    _msg = check_purview(request.user.username, 38)
+    if _msg != 0:
+        if _type == "1":
+            return HttpResponseRedirect('/view_tasked/?msg='+_msg)
+        else:
+            return HttpResponseRedirect('/view_tasking/?msg='+_msg)
+        
     if _id:
         _maintenance = k_task.objects.get(id=_id)
         _maintenance.delete()
@@ -1701,6 +1881,11 @@ def delete_task(request):
 
 @login_required
 def view_taskitem(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 35)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _id = request.GET.get('id')
     _task = k_task.objects.get(id=_id)
     _taskitems = k_taskitem.objects.filter(taskid_id=_task.id)
@@ -1735,24 +1920,45 @@ def view_taskitem(request):
     _users = k_user.objects.all()
     for _user in _users:
         _taskers.append(_user.name)
-    return render_to_response('taskitemview.html', {'title': _task.title, 'taskers': _taskers, 'taskid': _task.id, 'data': data})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('taskitemview.html', {'title': _task.title, 'taskers': _taskers, 'taskid': _task.id, 'data': data, 'purview_msg': purview_msg})
 
 
 @login_required
 def submit_taskitem(request):
+    _id = request.GET.get('id')
+    _taskid = request.GET.get('taskid')
+    _editor = request.GET.get('editor')
+    _submittype = request.GET.get('submittype')
+    #权限判断
+    if _submittype == "1":
+        _msg = check_purview(request.user.username, 38)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+    else:
+        _msg = check_purview(request.user.username, 37)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+        _taskitem = k_taskitem.objects.get(id=_id)
+        _tasker = k_user.objects.get(name=_editor)
+        if _taskitem.editorid != _tasker.id:
+            _msg = check_purview(request.user.username, 36)
+            if _msg != 0:
+                return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+
     _title = request.GET.get('title')
     _createcontent = request.GET.get('createcontent')
     _priority = request.GET.get('priority')
     _memo = request.GET.get('memo')
-    _editor = request.GET.get('editor')
 
     _factor = request.GET.get('factor')
 
-    _id = request.GET.get('id')
-    _taskid = request.GET.get('taskid')
     _user = k_user.objects.get(username=request.user.username)
-
-    _submittype = request.GET.get('submittype')
 
     if _submittype == "1":
         _taskitem = k_taskitem.objects.get(id=_id)
@@ -1795,6 +2001,12 @@ def submit_taskitem(request):
 @login_required
 def delete_taskitem(request):
     _id = request.GET.get('id')
+    _taskitem = k_taskitem.objects.get(id=_id)
+    #权限判断
+    _msg = check_purview(request.user.username, 38)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id=%i' % _taskitem.taskid_id)
+
     if _id:
         _taskitem = k_taskitem.objects.get(id=_id)
         _taskitem.delete()
@@ -1846,7 +2058,13 @@ def view_spare(request):
 
         data.append(dataitem)
 
-    return render_to_response('spare.html', {"data": data})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('spare.html', {"data": data, 'purview_msg': purview_msg})
 
 
 def operate_spare(request):
@@ -1883,7 +2101,13 @@ def operate_spare(request):
     _allsuppliers = k_supplier.objects.all()
     for _supplier in _allsuppliers:
         _suppliers.append(_supplier.name)
-    return render_to_response('spareoperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg})
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('spareoperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg, 'purview_msg': purview_msg})
 
 
 def submit_spare(request):
@@ -2013,9 +2237,15 @@ def view_sparebill(request):
     server_msg = request.GET.get("msg")
     if server_msg == None:
         server_msg = ""
+        #非法权限信息    
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
 
     #return render_to_response('sparebill.html', {'data': data, 'briefs': _briefs})
-    return render_to_response('sparebill.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+    return render_to_response('sparebill.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
 
 
 def submit_sparebill(request):
@@ -2163,9 +2393,15 @@ def view_sparecount(request):
     server_msg = request.GET.get("msg")
     if server_msg == None:
         server_msg = ""
+        #非法权限信息    
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
 
     #return render_to_response('sparecount.html', {'data': data, 'briefs': _briefs})
-    return render_to_response('sparecount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+    return render_to_response('sparecount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
 
 
 def submit_sparecount(request):
@@ -2295,8 +2531,14 @@ def view_tool(request):
             dataitem['auditdatetime'] = _tool.auditdatetime
 
         data.append(dataitem)
+        #非法权限信息    
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
 
-    return render_to_response('tool.html', {"data": data})
+
+    return render_to_response('tool.html', {"data": data, 'purview_msg': purview_msg})
 
 
 def operate_tool(request):
@@ -2333,7 +2575,13 @@ def operate_tool(request):
     _allsuppliers = k_supplier.objects.all()
     for _supplier in _allsuppliers:
         _suppliers.append(_supplier.name)
-    return render_to_response('tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg})
+        #非法权限信息    
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return render_to_response('tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg, 'purview_msg': purview_msg})
 
 
 def submit_tool(request):
@@ -2463,9 +2711,15 @@ def view_tooluse(request):
     server_msg = request.GET.get("msg")
     if server_msg == None:
         server_msg = ""
+        #非法权限信息    
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
 
     #return render_to_response('tooluse.html', {'data': data, 'briefs': _briefs})
-    return render_to_response('tooluse.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+    return render_to_response('tooluse.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
 
 
 def submit_tooluse(request):
@@ -2613,9 +2867,15 @@ def view_toolcount(request):
     server_msg = request.GET.get("msg")
     if server_msg == None:
         server_msg = ""
+        #非法权限信息    
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
 
     #return render_to_response('toolcount.html', {'data': data, 'briefs': _briefs})
-    return render_to_response('toolcount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg})
+    return render_to_response('toolcount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
 
 
 def submit_toolcount(request):
@@ -2724,7 +2984,13 @@ def department(request):
         server_msg = request.GET.get("msg")
         if server_msg == None:
             server_msg = ""
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg})
+            #非法权限信息
+        purview_msg = request.GET.get('msg')
+        if purview_msg == None:
+           purview_msg = ''
+        #, 'purview_msg': purview_msg
+
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
         return render_to_response('department.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -2745,7 +3011,13 @@ def departmentadd(request):
             role_list.append(r.name)
         datas['class_list'] = class_list
         datas['role_list'] = role_list
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'depatment', 'data':datas})
+            #非法权限信息
+        purview_msg = request.GET.get('msg')
+        if purview_msg == None:
+           purview_msg = ''
+        #, 'purview_msg': purview_msg
+
+        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'depatment', 'data':datas, 'purview_msg': purview_msg})
         return render_to_response('departmentadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
