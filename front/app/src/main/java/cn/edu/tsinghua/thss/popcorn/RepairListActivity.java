@@ -62,7 +62,7 @@ public class RepairListActivity extends ListActivity {
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
 
         HttpUtils http = new HttpUtils();
-        http.configCurrentHttpCacheExpiry(1000*10);
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.GET,
                 REPAIR_TASK_LIST_URL,
                 params,

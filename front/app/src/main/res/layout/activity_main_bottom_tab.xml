@@ -113,7 +113,7 @@
                         android:layout_height="20dp"
                         android:background="@drawable/tips_circle"
                         android:gravity="center"
-                        android:text="5"
+                        android:text="3"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white" />

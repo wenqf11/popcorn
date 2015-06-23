@@ -3,6 +3,7 @@ package cn.edu.tsinghua.thss.popcorn.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,21 +17,43 @@ import cn.edu.tsinghua.thss.popcorn.R;
  */
 
 public class FragmentAdapter extends FragmentPagerAdapter {
+	private List<Fragment> mFragments;
 
-	List<Fragment> fragmentList = new ArrayList<Fragment>();
-	public FragmentAdapter(FragmentManager fm,List<Fragment> fragmentList) {
+	public FragmentAdapter(FragmentManager fm) {
 		super(fm);
-		this.fragmentList = fragmentList;
+	}
+
+	public FragmentAdapter(FragmentManager fm,List<Fragment> fragments) {
+		super(fm);
+		this.mFragments = fragments;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
-		return fragmentList.get(position);
+		return mFragments.get(position);
 	}
 
 	@Override
 	public int getCount() {
-		return fragmentList.size();
+		return mFragments.size();
 	}
 
+	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
+	}
+
+	public void setFragmentsList(FragmentManager fm, List<Fragment> fragments){
+		if (this.mFragments != null) {
+			FragmentTransaction ft = fm.beginTransaction();
+			for (Fragment f : this.mFragments) {
+				ft.remove(f);
+			}
+			ft.commit();
+			ft = null;
+			fm.executePendingTransactions();
+		}
+		this.mFragments = fragments;
+		notifyDataSetChanged();
+	}
 }

@@ -25,7 +25,7 @@
     <string name="picture">照片：</string>
     <string name="repair_result">维修结论：</string>
     <string name="maintain_name">保养名称：</string>
-    <string name="device_place">设备位置：</string>
+    <string name="device_name">设备名称：</string>
     <string name="maintain_description">保养描述：</string>
     <string name="maintain_result">保养结论：</string>
     <string name="fault_place">故障地点：</string>

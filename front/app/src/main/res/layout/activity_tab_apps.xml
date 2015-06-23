@@ -40,12 +40,12 @@
                     android:layout_height="wrap_content" >
 
                     <TextView
-
+                        android:id="@+id/main_body_app_meter_id"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@drawable/tips_circle"
                         android:gravity="center"
-                        android:text="5"
+                        android:text="0"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white" />

@@ -93,10 +93,10 @@ public class RepairActivity extends Activity {
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
                             if(status.equals("ok")) {
-                                Toast.makeText(getApplicationContext(), "Ã·Ωª≥…π¶", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Êèê‰∫§ÊàêÂäü", Toast.LENGTH_SHORT).show();
                             }
                             else{
-                                Toast.makeText(getApplicationContext(), "Œ¨–ﬁ»ŒŒÒ≤ª¥Ê‘⁄", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Êèê‰∫§Â§±Ë¥•ÔºåËØ∑ÈáçÊñ∞Êèê‰∫§", Toast.LENGTH_SHORT).show();
                             }
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -126,7 +126,7 @@ public class RepairActivity extends Activity {
         }
         progressDialog = new ProgressDialog(RepairActivity.this, R.style.buffer_dialog);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage(" ˝æ›º”‘ÿ÷–...");
+        progressDialog.setMessage("Êï∞ÊçÆÂä†ËΩΩ‰∏≠...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
 
@@ -152,6 +152,13 @@ public class RepairActivity extends Activity {
         faultDescriptionTextView.setText(faultDescription);
         repairMemoTextView.setText(repairMemo);
     }
+
+    @Override
+    protected  void onDestroy(){
+        progressDialog.dismiss();
+        super.onDestroy();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

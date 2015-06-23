@@ -54,23 +54,16 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 public class RecordFragment extends ListFragment {
     private List<Map<String, Object>> mData;
 
+    public int unfinished;
+
     ProgressDialog progressDialog;
 
-    private TextView bottomTabMeterText;
-
-    private FrameLayout bottomTabMeterLayout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
 		View recordView = inflater.inflate(R.layout.activity_tab_record, container,false);
-        View mainBottomView = inflater.inflate(R.layout.activity_main_bottom_tab, container, false);
-        bottomTabMeterText = (TextView)mainBottomView.findViewById(R.id.main_bottom_tab_meter_id);
-        bottomTabMeterLayout = (FrameLayout)mainBottomView.findViewById(R.id.main_bottom_tab_meter_fl_id);
-        bottomTabMeterText.setText("1");
-        //bottomTabMeterLayout.setVisibility(View.GONE);
-
-        //ViewUtils.inject(this, recordView);
+        unfinished = 0;
         return recordView;
 	}
 
@@ -138,13 +131,14 @@ public class RecordFragment extends ListFragment {
                                 mData = getData(str_title, str_time);
                                 RouteListAdapter adapter = new RouteListAdapter(getActivity());
                                 setListAdapter(adapter);
-                                bottomTabMeterText.setText(String.valueOf(10));
-                                bottomTabMeterText.setVisibility(View.VISIBLE);
+                                unfinished = str_title.length;
                             } else {
                                 Toast.makeText(getActivity(), "您今天没有抄表任务", Toast.LENGTH_SHORT).show();
-                                bottomTabMeterText.setText(String.valueOf(1));
-
-                                bottomTabMeterText.setVisibility(View.GONE);
+                                unfinished = 0;
+                                //bottomTabMeterText.setText(String.valueOf(1));
+                                //bottomTabMeterText.setText("2");
+                                //bottomTabMeterText.setTextSize(50);
+                                //bottomTabMeterText.setVisibility(View.GONE);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
