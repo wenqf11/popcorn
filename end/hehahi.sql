@@ -88,7 +88,7 @@ CREATE TABLE `auth_user` (
 
 /*Data for the table `auth_user` */
 
-insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$8fK4yxVskZiO$5Suf/dtqJDXgq/xY8/gbZwz7KKv+ERreOSZW6Aa0pyo=','2015-06-23 13:38:24',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28'),(2,'pbkdf2_sha256$10000$fPkfeuFWOm7Q$mRRgi1LIiStJXdXye76dm3yfHlCnXlL+TrN7vjmRQ+0=','2015-05-01 07:09:01',0,'test1','','','',0,1,'2015-05-01 07:09:01'),(3,'pbkdf2_sha256$10000$R5fRnnAB92qP$8kGYC+W8/XszspeA+nTsqkYjA6gTj4TfImMlqKKYW2w=','2015-05-01 08:24:07',0,'user1','','','',0,1,'2015-05-01 08:24:07'),(4,'pbkdf2_sha256$10000$N7LQP7QhVHm8$ws8tLd5n09/pIGLqx8s5m2B/D6OBNEDvlIC9xJgtbkM=','2015-05-01 08:25:37',0,'user2','','','',0,1,'2015-05-01 08:25:37'),(5,'pbkdf2_sha256$10000$bzbxw7d6Zwt3$yqLH7e75JDMQWZEUpMVxyeIbxTz3jY3Ku4lfXBE+dnA=','2015-05-01 08:35:40',0,'user3','','','',0,1,'2015-05-01 08:35:40'),(6,'pbkdf2_sha256$10000$8fCR4xNap1N3$aCEUSvEGNcrfyTiIIMKf1ZeYl16M+gOG4uU3FboC5u0=','2015-05-01 09:18:27',0,'user4','','','',0,1,'2015-05-01 09:18:27');
+insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$pa7GHfzsgGmD$vOeOV6J337VncLMB940omxqGOcPpjDWwh+C+sEb092M=','2015-06-23 13:38:24',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28'),(2,'pbkdf2_sha256$10000$fPkfeuFWOm7Q$mRRgi1LIiStJXdXye76dm3yfHlCnXlL+TrN7vjmRQ+0=','2015-05-01 07:09:01',0,'test1','','','',0,1,'2015-05-01 07:09:01'),(3,'pbkdf2_sha256$10000$R5fRnnAB92qP$8kGYC+W8/XszspeA+nTsqkYjA6gTj4TfImMlqKKYW2w=','2015-05-01 08:24:07',0,'user1','','','',0,1,'2015-05-01 08:24:07'),(4,'pbkdf2_sha256$10000$N7LQP7QhVHm8$ws8tLd5n09/pIGLqx8s5m2B/D6OBNEDvlIC9xJgtbkM=','2015-05-01 08:25:37',0,'user2','','','',0,1,'2015-05-01 08:25:37'),(5,'pbkdf2_sha256$10000$bzbxw7d6Zwt3$yqLH7e75JDMQWZEUpMVxyeIbxTz3jY3Ku4lfXBE+dnA=','2015-05-01 08:35:40',0,'user3','','','',0,1,'2015-05-01 08:35:40'),(6,'pbkdf2_sha256$10000$8fCR4xNap1N3$aCEUSvEGNcrfyTiIIMKf1ZeYl16M+gOG4uU3FboC5u0=','2015-05-01 09:18:27',0,'user4','','','',0,1,'2015-05-01 09:18:27');
 
 /*Table structure for table `auth_user_groups` */
 
@@ -268,8 +268,8 @@ CREATE TABLE `devicemgt_k_deviceplan` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_deviceplan_72537f95` (`deviceid_id`),
   KEY `devicemgt_k_deviceplan_221733ad` (`maintenanceid_id`),
-  CONSTRAINT `maintenanceid_id_refs_id_7574d147` FOREIGN KEY (`maintenanceid_id`) REFERENCES `devicemgt_k_maintenance` (`id`),
-  CONSTRAINT `deviceid_id_refs_id_e0de95d1` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
+  CONSTRAINT `deviceid_id_refs_id_e0de95d1` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`),
+  CONSTRAINT `maintenanceid_id_refs_id_7574d147` FOREIGN KEY (`maintenanceid_id`) REFERENCES `devicemgt_k_maintenance` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_deviceplan` */
@@ -498,7 +498,7 @@ CREATE TABLE `devicemgt_k_purview` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_purview_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_92b6dd49` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_purview` */
 
@@ -523,11 +523,11 @@ CREATE TABLE `devicemgt_k_role` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_role_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_fdd4c13d` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_role` */
 
-insert  into `devicemgt_k_role`(`id`,`classid_id`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'purview_design','312',1,'2015-04-07',1,'2015-04-21',1,'2015-04-15','3'),(2,1,'information_audition','31232',1,'2015-04-15',1,'2015-04-15',1,'2015-04-17','3'),(6,1,'123','',1,'2015-06-05',1,'2015-06-23',0,'2015-06-05','0'),(7,6,'12345','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(8,5,'ffff','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0');
+insert  into `devicemgt_k_role`(`id`,`classid_id`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'purview_design','312',1,'2015-04-07',1,'2015-04-21',1,'2015-04-15','3'),(2,1,'information_audition','31232',1,'2015-04-15',1,'2015-04-15',1,'2015-04-17','3'),(6,1,'123','',1,'2015-06-05',1,'2015-06-23',0,'2015-06-05','0'),(7,6,'12345','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(8,5,'ffff','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(9,1,'所有查看','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(10,1,'所有添加/编辑','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(11,1,'所有审核/删除','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(12,1,'所有权限','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0');
 
 /*Table structure for table `devicemgt_k_role_purviews` */
 
@@ -543,11 +543,11 @@ CREATE TABLE `devicemgt_k_role_purviews` (
   KEY `devicemgt_k_role_purviews_7b0e22a5` (`k_purview_id`),
   CONSTRAINT `k_purview_id_refs_id_f7485864` FOREIGN KEY (`k_purview_id`) REFERENCES `devicemgt_k_purview` (`id`),
   CONSTRAINT `k_role_id_refs_id_21374a3f` FOREIGN KEY (`k_role_id`) REFERENCES `devicemgt_k_role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_role_purviews` */
 
-insert  into `devicemgt_k_role_purviews`(`id`,`k_role_id`,`k_purview_id`) values (12,1,1),(11,1,2),(10,1,3),(6,2,1),(9,2,2),(7,2,3),(36,6,34),(17,7,1),(32,8,1),(33,8,2),(35,8,3);
+insert  into `devicemgt_k_role_purviews`(`id`,`k_role_id`,`k_purview_id`) values (12,1,1),(11,1,2),(10,1,3),(6,2,1),(9,2,2),(7,2,3),(36,6,34),(17,7,1),(32,8,1),(33,8,2),(35,8,3),(48,9,1),(49,9,4),(50,9,7),(37,9,10),(38,9,13),(40,9,16),(41,9,19),(39,9,22),(51,9,25),(42,9,28),(43,9,31),(47,9,35),(46,9,39),(45,9,42),(44,9,45),(63,10,2),(64,10,5),(65,10,8),(52,10,11),(55,10,14),(56,10,17),(54,10,20),(57,10,23),(53,10,26),(60,10,29),(58,10,33),(59,10,37),(61,10,40),(62,10,43),(75,11,3),(77,11,6),(78,11,9),(67,11,12),(68,11,15),(70,11,18),(69,11,21),(66,11,24),(74,11,27),(72,11,30),(73,11,34),(76,11,38),(79,11,41),(71,11,44),(96,12,1),(98,12,2),(97,12,3),(100,12,4),(99,12,5),(102,12,6),(101,12,7),(104,12,8),(103,12,9),(108,12,10),(107,12,11),(106,12,12),(105,12,13),(112,12,14),(111,12,15),(114,12,16),(113,12,17),(116,12,18),(115,12,19),(86,12,20),(87,12,21),(88,12,22),(89,12,23),(82,12,24),(83,12,25),(84,12,26),(85,12,27),(92,12,28),(81,12,29),(118,12,30),(117,12,31),(124,12,32),(123,12,33),(122,12,34),(121,12,35),(120,12,36),(119,12,37),(110,12,38),(109,12,39),(94,12,40),(95,12,41),(80,12,42),(93,12,43),(90,12,44),(91,12,45);
 
 /*Table structure for table `devicemgt_k_route` */
 
@@ -964,7 +964,7 @@ CREATE TABLE `devicemgt_k_user` (
 
 /*Data for the table `devicemgt_k_user` */
 
-insert  into `devicemgt_k_user`(`id`,`classid_id`,`state`,`username`,`password`,`name`,`gender`,`face`,`mobile`,`email`,`address`,`zipcode`,`birthday`,`idcard`,`idcardtype`,`content`,`memo`,`contact`,`contactmobile`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`todo`,`onlinetime`) values (1,1,'','hahehi','pbkdf2_sha256$12000$F44vcL13Ikyv$8Eyw2vr27EUFluTL2eq78aww8IfwYbxXZLMG2wxoKqo=','zhangsan','1','../static/images/user.png','15959540000','hahehi@qq.com','406B','100084','1992-09-01','','','','','','',0,'2015-04-29',1,'2015-06-23',0,'2015-04-29','',0,0),(2,2,'','syb1001','syb','lisi','1','../static/images/user.png','132********','syb@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(3,3,'','yl-1993','yl','wangwu','1','../static/images/user.png','yl188','yl@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(4,3,'','wenqf11','wqf','chenliu','1','../static/images/user.png','wqf188','wqf@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(5,5,'1','test1','123','','1','../static/images/user.png','','','','','1993-05-28','','0','','','','',0,'2015-05-01',1,'2015-05-23',0,'2015-05-01','0',0,0),(6,5,'1','user1','pbkdf2_sha256$10000$ykDJrrNndgrZ$l0SFaaQhZP8VDTd6CJGljWkIYKQtcyRersT/xopxKhM=','user1','1','../static/images/user.png','18810305385','691@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(7,2,'1','user2','pbkdf2_sha256$10000$PSfY4NA9p7Ga$ZYJGpjWR2m05ynL4+DSVTIoh1wIH/KsDOm9PlYAu7Hg=','user2','1','../static/images/user.png','18810305383','691w@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(8,7,'1','user3','pbkdf2_sha256$10000$DmZNtTUwnxw4$8ubToZomThUK9wBk/mGiIyVChRpXHcLUMKCItDAya5Y=','user3','1','../static/images/user.png','18810305382','69@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(9,8,'1','user4','pbkdf2_sha256$10000$pH2ghR1OiXOo$tvom0zCO9G6rZnDVqt50xAPgHNvJpQdzkBcKbJfqDeQ=','user4','1','../static/images/user.png','18810305381','6987@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0);
+insert  into `devicemgt_k_user`(`id`,`classid_id`,`state`,`username`,`password`,`name`,`gender`,`face`,`mobile`,`email`,`address`,`zipcode`,`birthday`,`idcard`,`idcardtype`,`content`,`memo`,`contact`,`contactmobile`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`todo`,`onlinetime`) values (1,1,'','hahehi','pbkdf2_sha256$12000$LvH6eK5ascaH$v5Dxk6Z0ORka/+6LB7G5MnDmdHVSXET7mqmHQVEPnc8=','zhangsan','1','../static/images/user.png','15959540000','hahehi@qq.com','406B','100084','1992-09-01','','','','','','',0,'2015-04-29',1,'2015-06-26',0,'2015-04-29','',0,0),(2,2,'','syb1001','syb','lisi','1','../static/images/user.png','132********','syb@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(3,3,'','yl-1993','yl','wangwu','1','../static/images/user.png','yl188','yl@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(4,3,'','wenqf11','wqf','chenliu','1','../static/images/user.png','wqf188','wqf@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(5,5,'1','test1','123','','1','../static/images/user.png','','','','','1993-05-28','','0','','','','',0,'2015-05-01',1,'2015-05-23',0,'2015-05-01','0',0,0),(6,5,'1','user1','pbkdf2_sha256$10000$ykDJrrNndgrZ$l0SFaaQhZP8VDTd6CJGljWkIYKQtcyRersT/xopxKhM=','user1','1','../static/images/user.png','18810305385','691@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(7,2,'1','user2','pbkdf2_sha256$10000$PSfY4NA9p7Ga$ZYJGpjWR2m05ynL4+DSVTIoh1wIH/KsDOm9PlYAu7Hg=','user2','1','../static/images/user.png','18810305383','691w@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(8,7,'1','user3','pbkdf2_sha256$10000$DmZNtTUwnxw4$8ubToZomThUK9wBk/mGiIyVChRpXHcLUMKCItDAya5Y=','user3','1','../static/images/user.png','18810305382','69@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(9,8,'1','user4','pbkdf2_sha256$10000$pH2ghR1OiXOo$tvom0zCO9G6rZnDVqt50xAPgHNvJpQdzkBcKbJfqDeQ=','user4','1','../static/images/user.png','18810305381','6987@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0);
 
 /*Table structure for table `devicemgt_k_user_roles` */
 
@@ -980,11 +980,11 @@ CREATE TABLE `devicemgt_k_user_roles` (
   KEY `devicemgt_k_user_roles_893707b2` (`k_role_id`),
   CONSTRAINT `k_role_id_refs_id_85e9cbb2` FOREIGN KEY (`k_role_id`) REFERENCES `devicemgt_k_role` (`id`),
   CONSTRAINT `k_user_id_refs_id_25e7ab78` FOREIGN KEY (`k_user_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_user_roles` */
 
-insert  into `devicemgt_k_user_roles`(`id`,`k_user_id`,`k_role_id`) values (22,1,1),(23,1,2),(24,1,6),(8,5,1),(2,6,1),(3,7,1),(6,8,1),(7,9,1);
+insert  into `devicemgt_k_user_roles`(`id`,`k_user_id`,`k_role_id`) values (25,1,9),(8,5,1),(2,6,1),(3,7,1),(6,8,1),(7,9,1);
 
 /*Table structure for table `django_admin_log` */
 

@@ -2024,6 +2024,11 @@ def delete_taskitem(request):
 
 @login_required
 def view_spare(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 22)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _spares = k_spare.objects.all()
     data = []
     for _spare in _spares:
@@ -2069,6 +2074,14 @@ def view_spare(request):
 
 def operate_spare(request):
     _id = request.GET.get('id')
+    #权限判断
+    _msg = check_purview(request.user.username, 23)
+    if _msg != 0:
+        if _id:
+            return HttpResponseRedirect('/view_spare/?msg='+_msg)
+        else:
+            return HttpResponseRedirect('/?msg='+_msg)
+
     server_msg = request.GET.get('msg')
     if server_msg == None:
         server_msg = ""
@@ -2111,6 +2124,18 @@ def operate_spare(request):
 
 
 def submit_spare(request):
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    #权限判断
+    if _audit:
+        _msg = check_purview(request.user.username, 24)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_spare/?msg='+_msg)
+    else:
+        _msg = check_purview(request.user.username, 23)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_spare/?msg='+_msg)
+
     _classname = request.GET.get('classname')
     _brand = request.GET.get('brand')
     _producer = request.GET.get('producer')
@@ -2122,8 +2147,6 @@ def submit_spare(request):
     _content = request.GET.get('content')
     _memo = request.GET.get('memo')
 
-    _id = request.GET.get('id')
-    _audit = request.GET.get('audit')
     _user = k_user.objects.get(username=request.user.username)
     if _audit:
         _spare = k_spare.objects.get(id=_id)
@@ -2175,6 +2198,11 @@ def submit_spare(request):
 
 
 def delete_spare(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 24)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_spare/?msg='+_msg)
+
     _id = request.GET.get('id')
     if _id:
         _spare = k_spare.objects.get(id=_id)
@@ -2187,6 +2215,11 @@ def delete_spare(request):
 
 
 def view_sparebill(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 39)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _sparebills = k_sparebill.objects.all()
     data = []
     for _sparebill in _sparebills:
@@ -2249,6 +2282,18 @@ def view_sparebill(request):
 
 
 def submit_sparebill(request):
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    #权限判断
+    if _audit:
+        _msg = check_purview(request.user.username, 41)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
+    else:
+        _msg = check_purview(request.user.username, 40)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
+
     #_using = request.GET.get('using')
     _returned = request.GET.get('returned')
     _depleted = request.GET.get('depleted')
@@ -2257,8 +2302,6 @@ def submit_sparebill(request):
     _memo = request.GET.get('memo')
     _name = request.GET.get('user')
 
-    _id = request.GET.get('id')
-    _audit = request.GET.get('audit')
     _user = k_user.objects.get(username=request.user.username)
     if _audit:
         _sparebill = k_sparebill.objects.get(id=_id)
@@ -2320,6 +2363,11 @@ def submit_sparebill(request):
 
 
 def delete_sparebill(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 41)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
+
     _id = request.GET.get('id')
     if _id:
         _sparebill = k_sparebill.objects.get(id=_id)
@@ -2338,6 +2386,11 @@ def delete_sparebill(request):
 
 
 def view_sparecount(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 39)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _sparecounts = k_sparecount.objects.all()
     data = []
     for _sparecount in _sparecounts:
@@ -2405,6 +2458,18 @@ def view_sparecount(request):
 
 
 def submit_sparecount(request):
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    #权限判断
+    if _audit:
+        _msg = check_purview(request.user.username, 41)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
+    else:
+        _msg = check_purview(request.user.username, 40)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
+
     _brief = request.GET.get('brief')
     _state = request.GET.get('state')
     _iseligible = request.GET.get('iseligible')
@@ -2417,8 +2482,6 @@ def submit_sparecount(request):
     elif _count:
         _count = int(float(_count))
 
-    _id = request.GET.get('id')
-    _audit = request.GET.get('audit')
     _user = k_user.objects.get(username=request.user.username)
     if _audit:
         _sparecount = k_sparecount.objects.get(id=_id)
@@ -2480,6 +2543,11 @@ def submit_sparecount(request):
 
 
 def delete_sparecount(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 41)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
+
     _id = request.GET.get('id')
     if _id:
         _sparecount = k_sparecount.objects.get(id=_id)
@@ -2498,6 +2566,11 @@ def delete_sparecount(request):
 
 @login_required
 def view_tool(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 25)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _tools = k_tool.objects.all()
     data = []
     for _tool in _tools:
@@ -2543,6 +2616,14 @@ def view_tool(request):
 
 def operate_tool(request):
     _id = request.GET.get('id')
+    #权限判断
+    _msg = check_purview(request.user.username, 26)
+    if _msg != 0:
+        if _id:
+            return HttpResponseRedirect('/view_tool/?msg='+_msg)
+        else:
+            return HttpResponseRedirect('/?msg='+_msg)
+
     server_msg = request.GET.get('msg')
     if server_msg == None:
         server_msg = ""
@@ -2585,6 +2666,18 @@ def operate_tool(request):
 
 
 def submit_tool(request):
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    #权限判断
+    if _audit:
+        _msg = check_purview(request.user.username, 27)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_tool/?msg='+_msg)
+    else:
+        _msg = check_purview(request.user.username, 26)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_tool/?msg='+_msg)
+
     _classname = request.GET.get('classname')
     _brand = request.GET.get('brand')
     _producer = request.GET.get('producer')
@@ -2596,8 +2689,6 @@ def submit_tool(request):
     _content = request.GET.get('content')
     _memo = request.GET.get('memo')
 
-    _id = request.GET.get('id')
-    _audit = request.GET.get('audit')
     _user = k_user.objects.get(username=request.user.username)
     if _audit:
         _tool = k_tool.objects.get(id=_id)
@@ -2649,6 +2740,11 @@ def submit_tool(request):
 
 
 def delete_tool(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 27)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_tool/?msg='+_msg)
+
     _id = request.GET.get('id')
     if _id:
         _tool = k_tool.objects.get(id=_id)
@@ -2661,6 +2757,11 @@ def delete_tool(request):
 
 
 def view_tooluse(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 42)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _tooluses = k_tooluse.objects.all()
     data = []
     for _tooluse in _tooluses:
@@ -2723,6 +2824,18 @@ def view_tooluse(request):
 
 
 def submit_tooluse(request):
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    #权限判断
+    if _audit:
+        _msg = check_purview(request.user.username, 44)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
+    else:
+        _msg = check_purview(request.user.username, 43)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
+
     #_using = request.GET.get('using')
     _returned = request.GET.get('returned')
     _depleted = request.GET.get('depleted')
@@ -2731,8 +2844,6 @@ def submit_tooluse(request):
     _memo = request.GET.get('memo')
     _name = request.GET.get('user')
 
-    _id = request.GET.get('id')
-    _audit = request.GET.get('audit')
     _user = k_user.objects.get(username=request.user.username)
     if _audit:
         _tooluse = k_tooluse.objects.get(id=_id)
@@ -2794,6 +2905,11 @@ def submit_tooluse(request):
 
 
 def delete_tooluse(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 44)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
+
     _id = request.GET.get('id')
     if _id:
         _tooluse = k_tooluse.objects.get(id=_id)
@@ -2812,6 +2928,11 @@ def delete_tooluse(request):
 
 
 def view_toolcount(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 42)
+    if _msg != 0:
+        return HttpResponseRedirect('/?msg='+_msg)
+
     _toolcounts = k_toolcount.objects.all()
     data = []
     for _toolcount in _toolcounts:
@@ -2879,6 +3000,18 @@ def view_toolcount(request):
 
 
 def submit_toolcount(request):
+    _id = request.GET.get('id')
+    _audit = request.GET.get('audit')
+    #权限判断
+    if _audit:
+        _msg = check_purview(request.user.username, 44)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
+    else:
+        _msg = check_purview(request.user.username, 43)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
+
     _brief = request.GET.get('brief')
     _state = request.GET.get('state')
     _iseligible = request.GET.get('iseligible')
@@ -2891,8 +3024,6 @@ def submit_toolcount(request):
     elif _count:
         _count = int(float(_count))
 
-    _id = request.GET.get('id')
-    _audit = request.GET.get('audit')
     _user = k_user.objects.get(username=request.user.username)
     if _audit:
         _toolcount = k_toolcount.objects.get(id=_id)
@@ -2954,6 +3085,11 @@ def submit_toolcount(request):
 
 
 def delete_toolcount(request):
+    #权限判断
+    _msg = check_purview(request.user.username, 44)
+    if _msg != 0:
+        return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
+
     _id = request.GET.get('id')
     if _id:
         _toolcount = k_toolcount.objects.get(id=_id)
