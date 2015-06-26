@@ -194,6 +194,8 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                         try{
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
+
+
                             if(status.equals("ok")) {
                                 JSONObject results = jsonObject.getJSONObject("data");
                                 String checkIn = results.getString("checkin");
@@ -206,7 +208,8 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                             else{
                                 mTextViewOnWork.setText("");
                                 mTextViewOffWork.setText("");
-
+                                mButtonOnWork.setVisibility(View.GONE);
+                                mButtonOffWork.setVisibility(View.GONE);
                                 Calendar calendar = Calendar.getInstance();
                                 int currentYear = calendar.get(Calendar.YEAR);
                                 int currentMonth = calendar.get(Calendar.MONTH)+1;

@@ -80,7 +80,7 @@
                 android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-asterisk"
                 android:textSize="48sp"
-                android:textColor="#CC3300"
+                android:textColor="#0099CC"
                 android:layout_gravity="center|center_vertical"
                 />
             <TextView
@@ -115,7 +115,7 @@
                     android:layout_marginRight="10dp"
                     fontawesometext:fa_icon="fa-table"
                     android:textSize="48sp"
-                    android:textColor="#66CC33"
+                    android:textColor="#669999"
                     android:layout_gravity="center|center_vertical"
                     />
                 <FrameLayout
@@ -166,7 +166,7 @@
                 android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-file"
                 android:textSize="48sp"
-                android:textColor="#339999"
+                android:textColor="#33B5E5"
                 android:layout_gravity="center|center_vertical"
                 />
             <TextView
@@ -205,7 +205,7 @@
                     android:layout_marginRight="10dp"
                     fontawesometext:fa_icon="fa-wrench"
                     android:textSize="48sp"
-                    android:textColor="#CC9966"
+                    android:textColor="#0099CC"
                     android:layout_gravity="center|center_vertical"
                     />
                 <FrameLayout
@@ -252,7 +252,7 @@
                 android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-bars"
                 android:textSize="48sp"
-                android:textColor="#33CC66"
+                android:textColor="#669999"
                 android:layout_gravity="center|center_vertical"
                 />
             <TextView
@@ -283,7 +283,7 @@
                 android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-users"
                 android:textSize="48sp"
-                android:textColor="#CC3300"
+                android:textColor="#0099CC"
                 android:layout_gravity="center|center_vertical"
                 />
             <TextView
@@ -313,7 +313,7 @@
                 android:layout_marginRight="10dp"
                 fontawesometext:fa_icon="fa-diamond"
                 android:textSize="48sp"
-                android:textColor="#CC3300"
+                android:textColor="#669999"
                 android:layout_gravity="center|center_vertical"
                 />
             <TextView
