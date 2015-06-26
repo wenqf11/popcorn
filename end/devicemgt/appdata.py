@@ -435,7 +435,7 @@ def app_maintain_update(request, para, user):
             'data': 'maintain task not confirmed yet'
         }))
     else:
-        task.note = para['note']
+        task.editcontent = para['note']
         task.save()
         return HttpResponse(json.dumps({
             'status': 'ok',
