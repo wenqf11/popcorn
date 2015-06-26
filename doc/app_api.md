@@ -234,7 +234,7 @@
 	- username，`string`，用户名
 	- access_token，`string`，用户认证用的token
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：获取到的保养任务列表，以数组形式返回
 - json示例：
 
 		{
@@ -284,7 +284,7 @@
 	- access_token，`string`，用户认证用的token
 	- **maintain_id**，`int`，要接受的保养任务id
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：确认保养任务是否成功，失败则返回失败原因
 - json示例：
 
 		{
@@ -308,7 +308,7 @@
 	- **maintain_id**，`int`，要更新的保养任务id
 	- **note**，`string`，更新的保养记录
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：更新保养计划是否成功，失败则返回失败原因
 - json示例：
 
 		{
@@ -331,7 +331,7 @@
 	- access_token，`string`，用户认证用的token
 	- **maintain_id**，`int`，要提交的保养任务id
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：提交保养任务是否成功，失败则返回失败原因
 - json示例：
 
 		{
@@ -360,7 +360,7 @@
 	- **image**，`string`，图片URL，先传好图片再新建报修
 	- **memo**，`string`，备注
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：新建维修任务是否成功，失败则返回失败原因
 - json示例：
 
 		{
@@ -382,7 +382,7 @@
 	- username，`string`，用户名
 	- access_token，`string`，用户认证用的token
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：获取到的维修任务列表，以数组形式返回
 - json示例：
 
 		{
@@ -432,7 +432,7 @@
 	- access_token，`string`，用户认证用的token
 	- **maintain_id**，`int`，要接受的维修任务id
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：确认维修任务是否成功，失败则返回失败原因
 - json示例：
 
 		{
@@ -456,7 +456,7 @@
 	- **maintain_id**，`int`，要更新的维修任务id
 	- **note**，`string`，更新的维修记录
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：更新维修进度是否成功，失败则返回失败原因
 - json示例：
 
 		{
@@ -479,7 +479,7 @@
 	- access_token，`string`，用户认证用的token
 	- **maintain_id**，`int`，要提交的维修任务id
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：
+- 返回结果：提交维修任务是否成功，失败则返回失败原因
 - json示例：
 
 		{
@@ -491,5 +491,29 @@
 		{
 			status: "error",
 			data: "maintain task not exist"
+		}
+
+## 意见反馈模块
+
+### 提交反馈意见
+
+- 请求地址：http://domain.com/app/feedback/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：提交反馈意见是否成功，失败则返回失败原因
+- json示例：
+
+		{
+			status: "ok",
+			data: "feedback created"
+		}
+	或
+
+		{
+			status: "error",
+			data: "user not exists"
 		}
 

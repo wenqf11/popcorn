@@ -448,3 +448,22 @@ def app_maintain_submit(request, para, user):
     }))
 
 
+@post_required
+@token_required('POST')
+def app_feedback(request, para, user):
+    para['feedback'] = request.POST.get('feedback')
+
+    _feedback = k_feedback.objects.create()
+
+    _feedback.feedback = para['feedback']
+    _feedback.creatorid = user.id
+    _feedback.createdatetime = datetime.now()
+
+    _feedback.save()
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'feedback created'
+    }))
+
+
