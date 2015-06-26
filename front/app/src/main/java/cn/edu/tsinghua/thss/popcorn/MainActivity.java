@@ -133,6 +133,8 @@ public class MainActivity extends FragmentActivity {
                         mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
                     }
                     mBodyMeterTv.setText(String.valueOf(mRecordFg.unfinished));
+                    mbottomTabMeterTv.setVisibility(View.VISIBLE);
+                    mBodyMeterTv.setVisibility(View.VISIBLE);
                 } else {
                     mbottomTabMeterTv.setVisibility(View.GONE);
                     if(mBodyMeterTv == null) {

@@ -54,6 +54,8 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 public class RecordFragment extends ListFragment {
     private List<Map<String, Object>> mData;
 
+    String[] mTitle, mTime, mID;
+
     public int unfinished;
 
     ProgressDialog progressDialog;
@@ -115,23 +117,25 @@ public class RecordFragment extends ListFragment {
                             String status = jsonObject.getString("status");
                             ArrayList<String> tmp_title = new ArrayList<String>();
                             ArrayList<String> tmp_time = new ArrayList<String>();
+                            ArrayList<String> tmp_route_id = new ArrayList<String>();
                             if (status.equals("ok")) {
                                 JSONArray results = jsonObject.getJSONArray("data");
                                 for (int i = 0; i < results.length(); ++i) {
                                     JSONObject result = results.getJSONObject(i);
                                     String name = result.getString("name");
                                     String start_time = result.getString("start_time");
-                                    String interval = result.getString("interval");
-                                    String checked = result.getString("checked");
+                                    String route_id = result.getString("id");
                                     tmp_title.add(name);
                                     tmp_time.add(start_time);
+                                    tmp_route_id.add(route_id);
                                 }
-                                String[] str_title = tmp_title.toArray(new String[]{});
-                                String[] str_time = tmp_time.toArray(new String[]{});
-                                mData = getData(str_title, str_time);
+                                mTitle = tmp_title.toArray(new String[]{});
+                                mTime = tmp_time.toArray(new String[]{});
+                                mID = tmp_route_id.toArray(new String[]{});
+                                mData = getData(mTitle, mTime);
                                 RouteListAdapter adapter = new RouteListAdapter(getActivity());
                                 setListAdapter(adapter);
-                                unfinished = str_title.length;
+                                unfinished = mTitle.length;
                             } else {
                                 Toast.makeText(getActivity(), "您今天没有抄表任务", Toast.LENGTH_SHORT).show();
                                 unfinished = 0;
@@ -159,7 +163,9 @@ public class RecordFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(getActivity(), RecordListActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putString("route_id", mID[(int)id]);
         intent.putExtras(bundle);
+        //intent.putExtra("route_id",id);
         startActivity(intent);
 
         super.onListItemClick(l, v, position, id);

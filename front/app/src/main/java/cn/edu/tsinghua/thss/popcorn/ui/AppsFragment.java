@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import cn.edu.tsinghua.thss.popcorn.AttendanceActivity;
 import cn.edu.tsinghua.thss.popcorn.BonusActivity;
@@ -41,6 +42,8 @@ public class AppsFragment extends Fragment {
 
         //抄表
         View mAppsRecordLayout = appsView.findViewById(R.id.id_apps_record_ll);
+        TextView mBodyMeterTv = (TextView)mAppsRecordLayout.findViewById(R.id.main_body_app_meter_id);
+        mBodyMeterTv.setVisibility(View.GONE);
         mAppsRecordLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 ViewPager vg = (ViewPager) getActivity()
