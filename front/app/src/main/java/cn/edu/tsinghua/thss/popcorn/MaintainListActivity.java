@@ -1,6 +1,7 @@
 package cn.edu.tsinghua.thss.popcorn;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,24 +22,96 @@ import java.util.List;
 import java.util.Map;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 public class MaintainListActivity extends ListActivity {
 
+    private static String MAINTAIN_TASK_LIST_URL = Config.LOCAL_IP + "/app/maintain/list/1/";
     private List<Map<String, Object>> mData;
+    JSONArray maintainTaskList = null;
+    ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String[] str_title = {"设备一","设备二","设备三","设备四","设备五"};
-        mData = getData(str_title);
-        DeviceListAdapter adapter = new DeviceListAdapter (this);
-        setListAdapter(adapter);
+
+        progressDialog = new ProgressDialog(MaintainListActivity.this, R.style.buffer_dialog);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("数据加载中...");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        getMaintainTaskList();
+    }
+
+    private void getMaintainTaskList(){
+        progressDialog.show();
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                MAINTAIN_TASK_LIST_URL,
+                params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if (status.equals("ok")) {
+                                maintainTaskList = jsonObject.getJSONArray("data");
+                                mData = getData();
+                                DeviceListAdapter adapter = new DeviceListAdapter(MaintainListActivity.this);
+                                setListAdapter(adapter);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        progressDialog.hide();
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        progressDialog.hide();
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent=new Intent(this, MaintainActivity.class);
-        Bundle bundle=new Bundle();
+        Intent intent = new Intent(this, RepairActivity.class);
+        Bundle bundle = new Bundle();
+        JSONObject task = null;
+        try {
+            task = maintainTaskList.getJSONObject(position);
+        } catch (Exception e) {
+        }
+        bundle.putString("task", task.toString());
         intent.putExtras(bundle);
         startActivity(intent);
 
@@ -45,15 +119,20 @@ public class MaintainListActivity extends ListActivity {
     }
 
 
-    private List<Map<String, Object>> getData(String[] str_title) {
+    private List<Map<String, Object>> getData() {
         List<Map<String ,Object>> list = new ArrayList<Map<String,Object>>();
 
-        for (int i = 0; i < str_title.length; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("title", str_title[i]);
-            list.add(map);
+        if (maintainTaskList != null) {
+            for (int i = 0; i < maintainTaskList.length(); i++) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                try {
+                    JSONObject tempObject = maintainTaskList.getJSONObject(i);
+                    map.put("title", tempObject.getString("title"));
+                    list.add(map);
+                } catch (Exception e) {
+                }
+            }
         }
-
         return list;
     }
 
@@ -110,7 +189,11 @@ public class MaintainListActivity extends ListActivity {
         }
     }
 
-
+    @Override
+    protected  void onDestroy(){
+        progressDialog.dismiss();
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

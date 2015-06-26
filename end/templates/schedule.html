@@ -37,6 +37,18 @@
 <script type="text/javascript" src="../static/fullcalendar/lang/zh-cn.js"></script>
 <script type="text/javascript" src="../static/js/jquery-ui.custom.min.js"></script>
 
+<script>
+    $(function(){
+        var purview_msg = "{{ purview_msg }}";
+        if (purview_msg) {
+            $.gritter.add({
+                title: '您没有权限进行此操作',
+                text: purview_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
+</script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#routes div.external-event').each(function() {

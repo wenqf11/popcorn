@@ -405,6 +405,8 @@ img {
 <ul>
 <li>username，<code>string</code>，用户名</li>
 <li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>year</strong>，<code>int</code>，所要查询积分的年份，如2015</li>
+<li><strong>month</strong>，<code>int</code>，所要查询积分的月份，如5</li>
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
@@ -588,7 +590,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：获取到的保养任务列表，以数组形式返回</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -599,6 +601,8 @@ img {
             title: &quot;空调每月保养计划&quot;,
             device_name: &quot;空调05&quot;,
             device_breif: &quot;kt028462&quot;,
+            creator: &quot;张三&quot;,
+            create_time: &quot;2015-04-21 12:02:02&quot;,
             description: &quot;积灰过多，需清灰&quot;,
             image: &quot;http://domain.com/static/05.jpg&quot;,
             memo: &quot;较重要，需优先处理&quot;,
@@ -610,6 +614,8 @@ img {
             title: &quot;锅炉每周保养计划&quot;,
             device_name: &quot;锅炉2&quot;,
             device_breif: &quot;gt135212&quot;,
+            creator: &quot;李四&quot;,
+            create_time: &quot;2015-05-04 21:06:01&quot;,
             description: &quot;需进行某项操作&quot;,
             image: &quot;http://domain.com/static/23.jpg&quot;,
             memo: &quot;一般重要&quot;,
@@ -642,7 +648,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：确认保养任务是否成功，失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -674,7 +680,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：更新保养计划是否成功，失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -705,7 +711,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：提交保养任务是否成功，失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -733,7 +739,7 @@ img {
 <ul>
 <li>username，<code>string</code>，用户名</li>
 <li>access_token，<code>string</code>，用户认证用的token</li>
-<li><strong>device_id</strong>，<code>int</code>，报修的设备id，可以扫二维码获得</li>
+<li><strong>device_brief</strong>，<code>int</code>，设备简称</li>
 <li><strong>title</strong>，<code>string</code>，报修标题</li>
 <li><strong>description</strong>，<code>string</code>，情况描述</li>
 <li><strong>image</strong>，<code>string</code>，图片URL，先传好图片再新建报修</li>
@@ -741,7 +747,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：新建维修任务是否成功，失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -771,7 +777,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：获取到的维修任务列表，以数组形式返回</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -782,6 +788,8 @@ img {
             title: &quot;空调04进风管报修&quot;,
             device_name: &quot;空调04&quot;,
             device_brief: &quot;kt273311&quot;,
+            creator: &quot;张三&quot;,
+            create_time: &quot;2015-04-21 12:02:02&quot;,
             description: &quot;进风管损坏，需更换&quot;,
             image: &quot;http://domain.com/static/12.jpg&quot;,
             memo: &quot;需携带配件&quot;,
@@ -792,7 +800,9 @@ img {
             id: 20,
             title: &quot;空调04损坏&quot;,
             device_name: &quot;空调04&quot;,
-            device_brief: &quot;kt999283&quot;，
+            device_brief: &quot;kt999283&quot;,
+            creator: &quot;李四&quot;,
+            create_time: &quot;2015-05-04 21:06:01&quot;,
             description: &quot;空调损坏，原因不明&quot;,
             image: &quot;http://domain.com/static/30.jpg&quot;,
             memo: &quot;&quot;,
@@ -825,7 +835,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：确认维修任务是否成功，失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -857,7 +867,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：更新维修进度是否成功，失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -888,7 +898,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：</li>
+<li>返回结果：提交维修任务是否成功，失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -901,6 +911,38 @@ img {
 <pre><code>{
     status: &quot;error&quot;,
     data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h2>意见反馈模块</h2>
+<h3>提交反馈意见</h3>
+<ul>
+<li>请求地址：http://domain.com/app/feedback/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>feedback</strong>，<code>string</code>，用户的反馈意见</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：提交反馈意见是否成功，失败则返回失败原因</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;feedback created&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;user not exists&quot;
 }
 </code></pre>
 

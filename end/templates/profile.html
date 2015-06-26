@@ -209,6 +209,18 @@
     <script src="../static/assets/js/bootstrap-editable.min.js"></script>
     <script src="../static/assets/js/ace-editable.min.js"></script>
     <script src="../static/assets/js/bootstrap-wysiwyg.min.js"></script>
+<script>
+    $(function(){
+        var purview_msg = "{{ purview_msg }}";
+        if (purview_msg) {
+            $.gritter.add({
+                title: '您没有权限进行此操作',
+                text: purview_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
+</script>
     <script type="text/javascript">
         jQuery(function($) {
 

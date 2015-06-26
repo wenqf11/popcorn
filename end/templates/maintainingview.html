@@ -138,7 +138,7 @@
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
-                                    <a class="red" href="/delete_maintenance?id={{ dataitem.id }}&type=2" onclick="delcfm()">
+                                    <a class="red" href="/delete_maintenance?id={{ dataitem.id }}$type=2" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
                                     {% endifequal %}
@@ -162,6 +162,16 @@
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
     <script type="text/javascript">
+    $(function(){
+        var purview_msg = "{{ purview_msg }}";
+        if (purview_msg) {
+            $.gritter.add({
+                title: '您没有权限进行此操作',
+                text: purview_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
         function checkvalid() {
             var title = $("[name='title']").val();
             var createcontent = $("[name='createcontent']").val();

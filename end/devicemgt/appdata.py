@@ -168,18 +168,34 @@ def app_userinfo(request, para, user):
 @get_required
 @token_required('GET')
 def app_score(request, para, user):
-    try:
-        score = k_staffscoreinfo.objects.get(userid=user.id)
-    except ObjectDoesNotExist:
+    para['year'] = request.GET.get('year')
+    para['month'] = request.GET.get('month')
+
+    scores = k_staffscoreinfo.objects.filter(userid=user.id)
+
+    if len(scores) == 0:
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'score not exist for this user'
         }))
 
-    return HttpResponse(json.dumps({
-        'status': 'ok',
-        'data': int(score.score)
-    }))
+    score = -1
+    for _s in scores:
+        _y = _s.time.year
+        _m = _s.time.month
+        if str(_y) == para['year'] and str(_m) == para['month']:
+            score = _s.score
+
+    if score == -1:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'score not exist for this month'
+        }))
+    else:
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': int(score.score)
+        }))
 
 
 @get_required
@@ -300,6 +316,8 @@ def app_maintain_list_1(request, para, user):
             'title': task.title,
             'device_name': task.deviceid.name,
             'device_brief': task.deviceid.brief,
+            'creator': k_user.objects.get(id=task.creatorid).name,
+            'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
             'description': task.createcontent,
             'image': task.image,
             'memo': task.memo,
@@ -325,6 +343,8 @@ def app_maintain_list_2(request, para, user):
             'title': task.title,
             'device_name': task.deviceid.name,
             'device_brief': task.deviceid.brief,
+            'creator': k_user.objects.get(id=task.creatorid).name,
+            'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
             'description': task.createcontent,
             'image': task.image,
             'memo': task.memo,
@@ -337,14 +357,14 @@ def app_maintain_list_2(request, para, user):
 @post_required
 @token_required('POST')
 def app_maintain_add(request, para, user):
-    para['device_id'] = int(request.POST.get('device_id'))
+    para['device_brief'] = int(request.POST.get('device_brief'))
     para['title'] = request.POST.get('title')
     para['description'] = request.POST.get('description')
     para['image'] = request.POST.get('image')
     para['memo'] = request.POST.get('memo')
 
     try:
-        device = k_device.objects.get(id=para['device_id'])
+        device = k_device.objects.get(brief=para['device_brief'])
     except ObjectDoesNotExist:
         return HttpResponse(json.dumps({
             'status': 'error',
@@ -441,6 +461,25 @@ def app_maintain_submit(request, para, user):
     return HttpResponse(json.dumps({
         'status': 'ok',
         'data': 'maintain task submitted'
+    }))
+
+
+@post_required
+@token_required('POST')
+def app_feedback(request, para, user):
+    para['feedback'] = request.POST.get('feedback')
+
+    _feedback = k_feedback.objects.create()
+
+    _feedback.feedback = para['feedback']
+    _feedback.creatorid = user.id
+    _feedback.createdatetime = datetime.now()
+
+    _feedback.save()
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'feedback created'
     }))
 
 
