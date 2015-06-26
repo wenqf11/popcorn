@@ -132,11 +132,13 @@ public class MaintainActivity extends Activity {
         String deviceNumber = "";
         String faultDescription = "";
         String repairMemo = "";
+        String repairResult = "";
         try{
             title = maintainTask.getString("title");
             deviceNumber = maintainTask.getString("device_brief");
             faultDescription = maintainTask.getString("description");
             repairMemo = maintainTask.getString("memo");
+            repairResult = maintainTask.getString("note");
         }catch (Exception e){
         }
 
@@ -144,6 +146,7 @@ public class MaintainActivity extends Activity {
         deviceNumberTextView.setText(deviceNumber);
         maintainDescriptionTextView.setText(faultDescription);
         maintainMemoTextView.setText(repairMemo);
+        maintainResultEditText.setText(repairResult);
     }
 
     @Override

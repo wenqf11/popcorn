@@ -139,11 +139,13 @@ public class RepairActivity extends Activity {
         String deviceNumber = "";
         String faultDescription = "";
         String repairMemo = "";
+        String repairResult = "";
         try{
             title = repairTask.getString("title");
             deviceNumber = repairTask.getString("device_brief");
             faultDescription = repairTask.getString("description");
             repairMemo = repairTask.getString("memo");
+            repairResult = repairTask.getString("note");
         }catch (Exception e){
         }
 
@@ -151,6 +153,7 @@ public class RepairActivity extends Activity {
         deviceNumberTextView.setText(deviceNumber);
         faultDescriptionTextView.setText(faultDescription);
         repairMemoTextView.setText(repairMemo);
+        repairResultEditText.setText(repairResult);
     }
 
     @Override
