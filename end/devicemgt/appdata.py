@@ -357,7 +357,7 @@ def app_maintain_list_2(request, para, user):
 @post_required
 @token_required('POST')
 def app_maintain_add(request, para, user):
-    para['device_brief'] = int(request.POST.get('device_brief'))
+    para['device_brief'] = request.POST.get('device_brief')
     para['title'] = request.POST.get('title')
     para['description'] = request.POST.get('description')
     para['image'] = request.POST.get('image')
