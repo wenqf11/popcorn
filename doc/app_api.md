@@ -88,6 +88,8 @@
 - 请求参数：
 	- username，`string`，用户名
 	- access_token，`string`，用户认证用的token
+	- **year**，`int`，所要查询积分的年份，如2015
+	- **month**，`int`，所要查询积分的月份，如5
 	- timestamp，`int`，时间戳，暂时没有用
 - 返回结果：该用户的积分
 - json示例：
@@ -502,6 +504,7 @@
 - 请求参数：
 	- username，`string`，用户名
 	- access_token，`string`，用户认证用的token
+	- **feedback**，`string`，用户的反馈意见
 	- timestamp，`int`，时间戳，暂时没有用
 - 返回结果：提交反馈意见是否成功，失败则返回失败原因
 - json示例：

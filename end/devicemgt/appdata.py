@@ -168,18 +168,34 @@ def app_userinfo(request, para, user):
 @get_required
 @token_required('GET')
 def app_score(request, para, user):
-    try:
-        score = k_staffscoreinfo.objects.get(userid=user.id)
-    except ObjectDoesNotExist:
+    para['year'] = request.GET.get('year')
+    para['month'] = request.GET.get('month')
+
+    scores = k_staffscoreinfo.objects.filter(userid=user.id)
+
+    if len(scores) == 0:
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'score not exist for this user'
         }))
 
-    return HttpResponse(json.dumps({
-        'status': 'ok',
-        'data': int(score.score)
-    }))
+    score = -1
+    for _s in scores:
+        _y = _s.time.year
+        _m = _s.time.month
+        if str(_y) == para['year'] and str(_m) == para['month']:
+            score = _s.score
+
+    if score == -1:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'score not exist for this month'
+        }))
+    else:
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': int(score.score)
+        }))
 
 
 @get_required
