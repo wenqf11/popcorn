@@ -32,7 +32,7 @@ urlpatterns = patterns(
     url(r'^app/maintain/update/$', app_maintain_update),
     url(r'^app/maintain/submit/$', app_maintain_submit),
 
-    url(r'^app/feedback/$'),
+    url(r'^app/feedback/$',app_feedback),
 
     url(r'app_test/$', app_test),
     # Uncomment the next line to enable the admin:

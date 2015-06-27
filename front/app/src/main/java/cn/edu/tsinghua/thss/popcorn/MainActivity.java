@@ -2,6 +2,11 @@ package cn.edu.tsinghua.thss.popcorn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.os.Handler;
+import android.os.Message;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -80,7 +85,44 @@ public class MainActivity extends FragmentActivity {
 		findById();
 		init();
 		initTabLineWidth();
+        timer.schedule(task, 1000, 1000); // 1s后执行task,经过1s再次执行
 	}
+
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                //接收消息后要做的处理
+                if (mRecordFg.unfinished > 0) {
+                    mbottomTabMeterTv.setText(String.valueOf(mRecordFg.unfinished));
+                    if(mBodyMeterTv == null) {
+                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                    }
+                    mBodyMeterTv.setText(String.valueOf(mRecordFg.unfinished));
+                    mbottomTabMeterTv.setVisibility(View.VISIBLE);
+                    mBodyMeterTv.setVisibility(View.VISIBLE);
+                } else {
+                    mbottomTabMeterTv.setVisibility(View.GONE);
+                    if(mBodyMeterTv == null) {
+                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                    } else{
+                        mBodyMeterTv.setVisibility(View.GONE);
+                    }
+                }
+            }
+            super.handleMessage(msg);
+        };
+    };
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
+
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    };
 
 	private void findById() {
 		mTabRecordTv = (TextView) this.findViewById(R.id.id_record_tv);
@@ -123,25 +165,9 @@ public class MainActivity extends FragmentActivity {
 		mPageVp.setAdapter(mFragmentAdapter);
 		mPageVp.setCurrentItem(0);
 
-
         mTabAppsLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mPageVp.setCurrentItem(0, false);
-                if (mRecordFg.unfinished > 0) {
-                    mbottomTabMeterTv.setText(String.valueOf(mRecordFg.unfinished));
-                    if(mBodyMeterTv == null) {
-                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                    }
-                    mBodyMeterTv.setText(String.valueOf(mRecordFg.unfinished));
-                    mbottomTabMeterTv.setVisibility(View.VISIBLE);
-                    mBodyMeterTv.setVisibility(View.VISIBLE);
-                } else {
-                    mbottomTabMeterTv.setVisibility(View.GONE);
-                    if(mBodyMeterTv == null) {
-                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                    }
-                    mBodyMeterTv.setVisibility(View.GONE);
-                }
             }
         });
 
