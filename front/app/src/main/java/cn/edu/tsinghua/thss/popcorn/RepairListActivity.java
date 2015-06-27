@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
 import com.lidroid.xutils.HttpUtils;
@@ -43,6 +47,24 @@ public class RepairListActivity extends ListActivity {
     JSONArray repairTaskList = null;
     ProgressDialog progressDialog;
 
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            getRepairTaskList();
+            super.handleMessage(msg);
+        };
+    };
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
+
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +74,14 @@ public class RepairListActivity extends ListActivity {
         progressDialog.setMessage("数据加载中...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
-        getRepairTaskList();
+        progressDialog.show();
+        //getRepairTaskList();
+        timer.schedule(task, 0, Config.REPAIR_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+        progressDialog.hide();
     }
 
     private void getRepairTaskList(){
-        progressDialog.show();
+
         RequestParams params = new RequestParams();
         params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
@@ -92,13 +117,13 @@ public class RepairListActivity extends ListActivity {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
 
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        progressDialog.hide();
+                        //progressDialog.hide();
                         Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
                     }
                 });

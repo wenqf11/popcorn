@@ -213,11 +213,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
                     <TextView
+                        android:id="@+id/main_body_app_repair_id"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@drawable/tips_circle"
                         android:gravity="center"
-                        android:text="3"
+                        android:text="0"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white" />

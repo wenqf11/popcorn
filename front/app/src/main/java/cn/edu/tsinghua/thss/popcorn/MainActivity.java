@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.beardedhen.androidbootstrap.FontAwesomeText;
 
 import cn.edu.tsinghua.thss.popcorn.QRcode.QRcodeActivity;
+import cn.edu.tsinghua.thss.popcorn.config.Config;
 import cn.edu.tsinghua.thss.popcorn.ui.AppsFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.FragmentAdapter;
 import cn.edu.tsinghua.thss.popcorn.ui.MineFragment;
@@ -47,7 +48,7 @@ public class MainActivity extends FragmentActivity {
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
 	private FragmentAdapter mFragmentAdapter;
 
-	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv,mbottomTabMeterTv;
+	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv,mbottomTabMeterTv, mbottomTabAppTv;
 
     private FontAwesomeText mTabRecordFat, mTabRepairFat, mTabAppsFat, mTabMineFat;
 
@@ -85,18 +86,21 @@ public class MainActivity extends FragmentActivity {
 		findById();
 		init();
 		initTabLineWidth();
-        timer.schedule(task, 1000, 2000); // 1s后执行task,经过2s再次执行
+        timer.schedule(task, 0, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
 	}
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
                 //接收消息后要做的处理
+                // 增加2个http请求分别用来统计未维修和未保养的数量
                 if (mRecordFg.unfinished > 0) {
                     mbottomTabMeterTv.setText(String.valueOf(mRecordFg.unfinished));
-                    if(mBodyMeterTv == null) {
-                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                    }
+                    mbottomTabAppTv.setText(String.valueOf(mRecordFg.unfinished));
+                    //if(mBodyMeterTv == null) {
+                    //    mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                    //}
+                    mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
                     mBodyMeterTv.setText(String.valueOf(mRecordFg.unfinished));
                     mbottomTabMeterTv.setVisibility(View.VISIBLE);
                     mBodyMeterTv.setVisibility(View.VISIBLE);
@@ -140,6 +144,7 @@ public class MainActivity extends FragmentActivity {
         mTabMineLayout = this.findViewById(R.id.id_tab_mine_ll);
 
         mbottomTabMeterTv = (TextView)this.findViewById(R.id.main_bottom_tab_meter_id);
+        mbottomTabAppTv = (TextView)this.findViewById(R.id.main_bottom_tab_app_id);
         mBodyMeterTv = (TextView)this.findViewById(R.id.main_body_app_meter_id);
 
 		mTabLineIv = (ImageView) this.findViewById(R.id.id_tab_line_iv);
