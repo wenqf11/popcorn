@@ -85,7 +85,7 @@ public class MainActivity extends FragmentActivity {
 		findById();
 		init();
 		initTabLineWidth();
-        timer.schedule(task, 1000, 1000); // 1s后执行task,经过1s再次执行
+        timer.schedule(task, 1000, 2000); // 1s后执行task,经过2s再次执行
 	}
 
     Handler handler = new Handler() {
@@ -104,9 +104,8 @@ public class MainActivity extends FragmentActivity {
                     mbottomTabMeterTv.setVisibility(View.GONE);
                     if(mBodyMeterTv == null) {
                         mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                    } else{
-                        mBodyMeterTv.setVisibility(View.GONE);
                     }
+                    mBodyMeterTv.setVisibility(View.GONE);
                 }
             }
             super.handleMessage(msg);

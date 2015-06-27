@@ -40,6 +40,8 @@ public class RecordListActivity extends ListActivity {
 
     private List<Map<String, Object>> mData;
 
+    private String[] mBrief, mFormContent;
+
     private TableListAdapter mAdapter;
 
     @Override
@@ -83,6 +85,7 @@ public class RecordListActivity extends ListActivity {
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
                             ArrayList<String> tmp_title = new ArrayList<String>();
+                            ArrayList<String> tmp_form_content = new ArrayList<String>();
                             if (status.equals("ok")) {
                                 JSONArray results = jsonObject.getJSONArray("data");
                                 for (int i = 0; i < results.length(); ++i) {
@@ -90,9 +93,11 @@ public class RecordListActivity extends ListActivity {
                                     String name = result.getString("name");
                                     String form_content = result.getString("form_content");
                                     tmp_title.add(name);
+                                    tmp_form_content.add(form_content);
                                 }
-                                String[] str_title = tmp_title.toArray(new String[]{});
-                                mData = getData(str_title);
+                                mBrief = tmp_title.toArray(new String[]{});
+                                mFormContent = tmp_form_content.toArray(new String[]{});
+                                mData = getData(mBrief);
                                 //TableListAdapter adapter = new TableListAdapter(this);
                                 setListAdapter(mAdapter);
                             } else {
@@ -119,6 +124,7 @@ public class RecordListActivity extends ListActivity {
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent=new Intent(this, TableActivity.class);
         Bundle bundle=new Bundle();
+        bundle.putString("form_content", mFormContent[(int)id]);
         intent.putExtras(bundle);
         startActivity(intent);
 

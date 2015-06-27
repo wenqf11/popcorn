@@ -24,8 +24,54 @@ public class TableActivity extends FormActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle tmp_bundle = this.getIntent().getExtras();
+        String form_content_json = tmp_bundle.getString("form_content");
         //generateForm{json)
-        LinearLayout container = generateForm( FormActivity.parseFileToString( this, "schemas.json" ) );
+        String item_json = "{\n" +
+                "    \"meta\": {\n" +
+                "        \"type\": \"meta\",\n" +
+                "        \"name\": \"Music Album\"\n" +
+                "    },\n" +
+                "    \"冷供水温度  ℃\": {\n" +
+                "        \"type\": \"integer\",\n" +
+                "        \"id\": \"0\",\n" +
+                "        \"default\": \"\",\n" +
+                "        \"priority\": \"0\",\n" +
+                "        \"hint\":\"7-12\"\n" +
+                "    },\n" +
+                "    \"冷供水压力  Mpa\": {\n" +
+                "        \"type\": \"integer\",\n" +
+                "        \"id\": \"1\",\n" +
+                "        \"default\": \"\",\n" +
+                "        \"priority\": \"1\"\n" +
+                "    },\n" +
+                "    \"冷回水压力  Mpa\": {\n" +
+                "        \"type\": \"integer\",\n" +
+                "        \"id\": \"2\",\n" +
+                "        \"default\": \"\",\n" +
+                "        \"priority\": \"2\"\n" +
+                "    },\n" +
+                "    \"热供水温度  ℃\": {\n" +
+                "        \"type\": \"integer\",\n" +
+                "        \"id\": \"3\",\n" +
+                "        \"default\": \"\",\n" +
+                "        \"priority\": \"3\"\n" +
+                "    },\n" +
+                "    \"水位\": {\n" +
+                "        \"type\": \"integer\",\n" +
+                "        \"id\": \"4\",\n" +
+                "        \"default\": \"0\",\n" +
+                "        \"priority\": \"4\",\n" +
+                "        \"options\": {\n" +
+                "            \"0\": \"偏高\",\n" +
+                "            \"1\": \"中等\",\n" +
+                "            \"2\": \"偏低\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+
+        //LinearLayout container = generateForm( FormActivity.parseFileToString( this, "schemas.json" ) );
+        LinearLayout container = generateForm( form_content_json );
 
         LinearLayout list = new LinearLayout(this);
         list.setGravity(Gravity.RIGHT);

@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.11 (64 bit)
-MySQL - 5.6.10 : Database - devicemgtdb
+SQLyog Ultimate v11.28 (64 bit)
+MySQL - 5.5.25a : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.6.10 : Database - devicemgtdb
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `devicemgtdb`;
 
@@ -337,7 +337,7 @@ CREATE TABLE `devicemgt_k_form` (
 
 /*Data for the table `devicemgt_k_form` */
 
-insert  into `devicemgt_k_form`(`id`,`classid_id`,`content`,`brief`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'{data: 1}','kz084732',1,'2015-04-01',1,'2015-04-01',1,'2015-04-01','3'),(2,1,'{data: 2}','tx029412',1,'2015-04-02',1,'2015-04-02',1,'2015-04-02','3'),(3,1,'{data: 3}','kx098472',1,'2015-04-03',1,'2015-04-03',1,'2015-04-03','3'),(4,1,'{data: 4}','tx330032',1,'2015-04-04',1,'2015-04-04',1,'2015-04-04','3'),(5,1,'{data: 5}','tt333333',1,'2015-04-05',1,'2015-04-05',1,'2015-04-05','3'),(6,1,'{data: 6}','tx222222',1,'2015-04-06',1,'2015-04-06',1,'2015-04-06','3'),(7,1,'{data: 7}','ke222222',1,'2015-04-07',1,'2015-04-07',1,'2015-04-07','3'),(8,1,'{data: 8}','he428421',1,'2015-04-08',1,'2015-04-08',1,'2015-04-08','3'),(9,1,'','wd052813',0,'2015-06-05',0,'2015-06-05',0,'2015-06-05','0');
+insert  into `devicemgt_k_form`(`id`,`classid_id`,`content`,`brief`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'{data: 1}','kz084732',1,'2015-04-01',1,'2015-04-01',1,'2015-04-01','3'),(2,1,'{\"冷供水温度  ℃\": {\"type\": \"integer\",\"id\": \"0\",\"default\": \"\",\"priority\": \"0\",\"hint\":\"7-12\"}}','tx029412',1,'2015-04-02',1,'2015-04-02',1,'2015-04-02','3'),(3,1,'{data: 3}','kx098472',1,'2015-04-03',1,'2015-04-03',1,'2015-04-03','3'),(4,1,'{data: 4}','tx330032',1,'2015-04-04',1,'2015-04-04',1,'2015-04-04','3'),(5,1,'{\"水位\": {\"type\": \"integer\",\"id\": \"4\",\"default\": \"0\",\"priority\": \"4\",\"options\": {\"0\": \"偏高\",\"1\": \"中等\",\"2\": \"偏低\"}}}','tt333333',1,'2015-04-05',1,'2015-04-05',1,'2015-04-05','3'),(6,1,'{\"meta\": {\"type\": \"meta\",\"name\": \"Music Album\"},\"冷供水压力  Mpa\": {\"type\": \"integer\",\"id\": \"1\",\"default\": \"\",\"priority\": \"1\"}}','tx222222',1,'2015-04-06',1,'2015-04-06',1,'2015-04-06','3'),(7,1,'{\"冷供水温度  ℃\": {\"type\": \"integer\",\"id\": \"0\",\"default\": \"\",\"priority\": \"0\",\"hint\":\"7-12\"}}','ke222222',1,'2015-04-07',1,'2015-04-07',1,'2015-04-07','3'),(8,1,'{data: 8}','he428421',1,'2015-04-08',1,'2015-04-08',1,'2015-04-08','3'),(9,1,'','wd052813',0,'2015-06-05',0,'2015-06-05',0,'2015-06-05','0');
 
 /*Table structure for table `devicemgt_k_formitem` */
 
@@ -593,9 +593,11 @@ CREATE TABLE `devicemgt_k_schedule` (
   CONSTRAINT `classid_id_refs_id_4dc8fa60` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `route_id_refs_id_bcf0225a` FOREIGN KEY (`route_id`) REFERENCES `devicemgt_k_route` (`id`),
   CONSTRAINT `user_id_refs_id_af05aa4f` FOREIGN KEY (`user_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_schedule` */
+
+insert  into `devicemgt_k_schedule`(`id`,`classid_id`,`route_id`,`user_id`,`date`) values (1,1,1,2,'2015-06-27');
 
 /*Table structure for table `devicemgt_k_spare` */
 
