@@ -232,9 +232,25 @@ def app_form(request, para, user):
     else:
         forms = []
 
+    for _f in forms:
+        _items = k_formitem.objects.filter(formid=_f)
+        _f.new_content = [{
+            'name': _item.name,
+            'choice': True,
+            'choices': _item.choices.split('/'),
+            'memo': _item.memo
+        } if int(_item.datatype) == 1 else {
+            'name': _item.name,
+            'choice': False,
+            'unit': _item.unit,
+            'min': _item.lowerthreshold,
+            'max': _item.upperthreshold,
+            'memo': _item.memo
+        } for _item in _items]
+
     response = {
         'status': 'ok',
-        'data': [{'id': _f.id, 'name': _f.brief, 'form_content': _f.content} for _f in forms]
+        'data': [{'id': _f.id, 'name': _f.brief, 'content': _f.new_content} for _f in forms]
     }
     return HttpResponse(json.dumps(response))
 
@@ -480,6 +496,45 @@ def app_feedback(request, para, user):
     return HttpResponse(json.dumps({
         'status': 'ok',
         'data': 'feedback created'
+    }))
+
+
+@get_required
+@token_required('GET')
+def app_device_brief(request, para, user):
+    devices = k_device.objects.all()
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': [_d.brief for _d in devices]
+    }))
+
+
+@get_required
+@token_required('GET')
+def app_device_info(request, para, user):
+    para['device_brief'] = request.GET.get('device_brief')
+
+    try:
+        d = k_device.objects.get(brief=para['device_brief'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'device not exist'
+        }))
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': {
+            'id': d.id,
+            'brief': d.brief,
+            'name': d.name,
+            'serial': d.serial,
+            'brand': d.brand,
+            'model': d.model,
+            'bought_time': d.buytime.strftime('%Y-%m-%d'),
+            'location': d.position,
+            'memo': d.memo
+        }
     }))
 
 

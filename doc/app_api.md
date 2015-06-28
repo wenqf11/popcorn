@@ -158,6 +158,50 @@
 			data: "check info existed"
 		}
 
+## 设备模块
+
+### 获取所有设备简称
+
+- 请求地址：http://domain.com/app/device/brief/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：所有设备的简称brief
+- json示例：
+
+		{
+			status: "ok",
+			data: ["ks304921", "kt931121", "dj239932", "gl991223"]
+		}
+
+### 获取设备信息
+
+- 请求地址：http://domain.com/app/device/info/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **device_brief**，`string`，设备简称
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：所查询设备的基本信息
+- json示例：
+
+		{
+			status: "ok",
+			data: {
+				id: 2,
+				brief: "kz084732",
+				name: "kz设备名称",
+				serial: "10086-10000-4008823823",
+				brand: "certain brand",
+				model: "haha",
+				location: "c#210",
+				memo: ""
+			}
+		}
+
 ## 抄表模块
 
 ### 获取当日巡视路线列表
@@ -207,7 +251,7 @@
 	- access_token，`string`，用户认证用的token
 	- **route_id**，`int`，要查询的路线id，获取此路线上的所有设备
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：指定id路线上的所有设备信息（包括json格式的抄表表单）
+- 返回结果：指定id路线上的所有设备信息，抄表表单以表单项数组返回
 - json示例：
 
 		{
@@ -216,12 +260,34 @@
 				{
 					id: 12,
 					name: "kt094732",
-					content: "{data: 1}"
+					content: [
+						{
+							name: "设备状态",
+							choice: true,
+							choices: ["正常", "异常"],
+							memo: "重要"
+						},
+						{
+							name: "压力",
+							choice: false,
+							unit: "MPa",
+							min: "12",
+							max: "18",
+							memo: "重要"
+						}
+					]
 				},
 				{
 					id: 32,
 					name: "ms383831",
-					content: "{data: 1}"
+					content: [
+						{
+							name: "设备状态",
+							choice: true,
+							choices: ["正常", "异常"],
+							memo: "重要"
+						}
+					]
 				}
 			]
 		}
