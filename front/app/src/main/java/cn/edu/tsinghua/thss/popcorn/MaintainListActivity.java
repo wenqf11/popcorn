@@ -36,8 +36,6 @@ import org.json.JSONObject;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 public class MaintainListActivity extends ListActivity {
-
-    private static String MAINTAIN_TASK_LIST_URL = Config.LOCAL_IP + "/app/maintain/list/1/";
     private List<Map<String, Object>> mData;
     JSONArray maintainTaskList = null;
     ProgressDialog progressDialog;
@@ -63,7 +61,7 @@ public class MaintainListActivity extends ListActivity {
         HttpUtils http = new HttpUtils();
         http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.GET,
-                MAINTAIN_TASK_LIST_URL,
+                Config.MAINTAIN_TASK_LIST_URL,
                 params,
                 new RequestCallBack<String>() {
                     @Override

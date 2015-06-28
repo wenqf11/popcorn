@@ -119,13 +119,12 @@
                     android:layout_gravity="center|center_vertical"
                     />
                 <FrameLayout
-                    android:visibility="invisible"
                     android:layout_gravity="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" >
 
                     <TextView
-
+                        android:id="@+id/main_body_app_maintain_id"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@drawable/tips_circle"

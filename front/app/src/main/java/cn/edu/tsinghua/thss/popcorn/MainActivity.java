@@ -21,12 +21,22 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cn.edu.tsinghua.thss.popcorn.QRcode.QRcodeActivity;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
@@ -48,7 +58,7 @@ public class MainActivity extends FragmentActivity {
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
 	private FragmentAdapter mFragmentAdapter;
 
-	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv,mbottomTabMeterTv, mbottomTabAppTv;
+	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv, mBodyRepairTv, mBodyMaintainTv,mbottomTabMeterTv, mbottomTabAppTv;
 
     private FontAwesomeText mTabRecordFat, mTabRepairFat, mTabAppsFat, mTabMineFat;
 
@@ -61,7 +71,7 @@ public class MainActivity extends FragmentActivity {
 	 * Fragment
 	 */
 	private RecordFragment mRecordFg;
-	private ReportFragment mRepairFg;
+	private ReportFragment mReportFg;
     private AppsFragment mAppsFg;
     private MineFragment mMineFg;
 	/**
@@ -79,6 +89,13 @@ public class MainActivity extends FragmentActivity {
      */
     private int numOfTabs = 4;
 
+    /**
+     * 未完成的任务数量
+     */
+    private int mRecordUnfinished = 0;
+    private int mRepairUnfinished = 0;
+    private int mMaintainUnfinished = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,22 +111,69 @@ public class MainActivity extends FragmentActivity {
             if (msg.what == 1) {
                 //接收消息后要做的处理
                 // 增加2个http请求分别用来统计未维修和未保养的数量
-                if (mRecordFg.unfinished > 0) {
-                    mbottomTabMeterTv.setText(String.valueOf(mRecordFg.unfinished));
-                    mbottomTabAppTv.setText(String.valueOf(mRecordFg.unfinished));
-                    //if(mBodyMeterTv == null) {
-                    //    mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                    //}
-                    mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                    mBodyMeterTv.setText(String.valueOf(mRecordFg.unfinished));
-                    mbottomTabMeterTv.setVisibility(View.VISIBLE);
-                    mBodyMeterTv.setVisibility(View.VISIBLE);
+                mRecordUnfinished = mRecordFg.unfinished;
+                getUnRepairNum();
+                getUnMaintainNum();
+                // 显示在界面上
+                if (mRecordUnfinished > 0 || mRepairUnfinished > 0 || mMaintainUnfinished > 0) {
+                    mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished));
+                    mbottomTabAppTv.setVisibility(View.VISIBLE);
+                    if (mRecordUnfinished > 0) {
+                        mbottomTabMeterTv.setText(String.valueOf(mRecordUnfinished));
+                        mbottomTabMeterTv.setVisibility(View.VISIBLE);
+                        if(mBodyMeterTv == null) {
+                            mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                        }
+                        mBodyMeterTv.setText(String.valueOf(mRecordUnfinished));
+                        mBodyMeterTv.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        if(mBodyMeterTv == null) {
+                            mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                        }
+                        mbottomTabMeterTv.setVisibility(View.GONE);
+                    }
+                    if (mRepairUnfinished > 0) {
+                        if(mBodyRepairTv == null) {
+                            mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
+                        }
+                        mBodyRepairTv.setText(String.valueOf(mRepairUnfinished));
+                        mBodyRepairTv.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        if(mBodyRepairTv == null) {
+                            mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
+                        }
+                        mBodyRepairTv.setVisibility(View.GONE);
+                    }
+                    if(mMaintainUnfinished > 0) {
+                        if(mBodyMaintainTv == null) {
+                            mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
+                        }
+                        mBodyMaintainTv.setText(String.valueOf(mMaintainUnfinished));
+                        mBodyMaintainTv.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        if(mBodyMaintainTv == null) {
+                            mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
+                        }
+                        mBodyMaintainTv.setVisibility(View.GONE);
+                    }
                 } else {
                     mbottomTabMeterTv.setVisibility(View.GONE);
+                    mbottomTabAppTv.setVisibility(View.GONE);
                     if(mBodyMeterTv == null) {
                         mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
                     }
+                    if(mBodyRepairTv == null) {
+                        mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
+                    }
+                    if(mBodyMaintainTv == null) {
+                        mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
+                    }
                     mBodyMeterTv.setVisibility(View.GONE);
+                    mBodyRepairTv.setVisibility(View.GONE);
+                    mBodyMaintainTv.setVisibility(View.GONE);
                 }
             }
             super.handleMessage(msg);
@@ -146,6 +210,8 @@ public class MainActivity extends FragmentActivity {
         mbottomTabMeterTv = (TextView)this.findViewById(R.id.main_bottom_tab_meter_id);
         mbottomTabAppTv = (TextView)this.findViewById(R.id.main_bottom_tab_app_id);
         mBodyMeterTv = (TextView)this.findViewById(R.id.main_body_app_meter_id);
+        mBodyRepairTv = (TextView)this.findViewById(R.id.main_body_app_repair_id);
+        mBodyMaintainTv = (TextView)this.findViewById(R.id.main_body_app_maintain_id);
 
 		mTabLineIv = (ImageView) this.findViewById(R.id.id_tab_line_iv);
 		mPageVp = (ViewPager) this.findViewById(R.id.id_page_vp);
@@ -153,13 +219,13 @@ public class MainActivity extends FragmentActivity {
 
 	private void init() {
 		mRecordFg = new RecordFragment();
-		mRepairFg = new ReportFragment();
+		mReportFg = new ReportFragment();
         mAppsFg = new AppsFragment();
         mMineFg = new MineFragment();
 
         mFragmentList.add(mAppsFg);
 		mFragmentList.add(mRecordFg);
-		mFragmentList.add(mRepairFg);
+		mFragmentList.add(mReportFg);
         mFragmentList.add(mMineFg);
         if (mFragmentAdapter == null) {
             mFragmentAdapter = new FragmentAdapter(this.getSupportFragmentManager(), mFragmentList);
@@ -359,4 +425,88 @@ public class MainActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void getUnRepairNum(){
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.REPAIR_TASK_LIST_URL,
+                params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try{
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if(status.equals("ok")) {
+                                JSONArray repairTaskList = jsonObject.getJSONArray("data");
+                                mRepairUnfinished = repairTaskList.length();
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void getUnMaintainNum(){
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.MAINTAIN_TASK_LIST_URL,
+                params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public void onStart() {
+                    }
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if (status.equals("ok")) {
+                                JSONArray maintainTaskList = jsonObject.getJSONArray("data");
+                                mMaintainUnfinished = maintainTaskList.length();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 }

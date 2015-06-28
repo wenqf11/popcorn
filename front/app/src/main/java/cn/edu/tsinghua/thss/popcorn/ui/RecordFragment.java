@@ -123,7 +123,7 @@ public class RecordFragment extends ListFragment {
                                         setListAdapter(adapter);
                                         unfinished = mTitle.length;
                                     } else {
-                                        Toast.makeText(getActivity(), "您今天没有抄表任务", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getActivity(), "您今天没有抄表任务", Toast.LENGTH_SHORT).show();
                                         unfinished = 0;
                                         //bottomTabMeterText.setText(String.valueOf(1));
                                         //bottomTabMeterText.setText("2");

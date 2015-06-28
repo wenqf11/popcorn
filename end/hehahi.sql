@@ -404,7 +404,7 @@ CREATE TABLE `devicemgt_k_maintenance` (
 
 /*Data for the table `devicemgt_k_maintenance` */
 
-insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',1,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(30,2,'4','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',1,'2015-05-01',3,'2015-05-01',0,'2015-05-08','0'),(31,2,'4','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',1,'2015-05-01',4,'2015-05-01',0,'2015-05-01','0'),(36,2,'4','k3','c3','','ok',3,'x','1','',0,'2015-05-05',1,'2015-04-30',5,'2015-05-01',0,'2015-05-05','0'),(37,2,'4','k4','c4','','ok',2,'x','1','',0,'2015-05-05',1,'2015-04-30',6,'2015-05-01',0,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',0,'2015-05-05',1,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,'2','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',1,'2015-05-08',5,'2015-05-08',0,'2015-05-08','0'),(43,1,'2','556','778','','',1,'990','1','1',0,'2015-06-05',1,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(44,1,'2','rrr','ttt','','',1,'yyyy','1','1',0,'2015-06-05',1,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0');
+insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',2,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(30,2,'3','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',2,'2015-05-01',3,'2015-05-01',0,'2015-05-08','0'),(31,2,'3','m7','parts loosening','','ok!',2,'456','2','3',1,'2015-05-01',2,'2015-05-01',4,'2015-05-01',0,'2015-05-01','0'),(36,2,'3','k3','c3','','ok',3,'x','2','',1,'2015-05-05',2,'2015-04-30',5,'2015-05-01',0,'2015-05-05','0'),(37,2,'3','k4','c4','','ok',2,'x','1','',1,'2015-05-05',2,'2015-04-30',6,'2015-05-01',0,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',1,'2015-05-05',2,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,'2','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',2,'2015-05-08',5,'2015-05-08',0,'2015-05-08','0'),(43,1,'2','556','778','','',1,'990','1','1',1,'2015-06-05',2,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(44,1,'2','rrr','ttt','','',1,'yyyy','1','1',1,'2015-06-05',2,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0');
 
 /*Table structure for table `devicemgt_k_meter` */
 
@@ -593,11 +593,11 @@ CREATE TABLE `devicemgt_k_schedule` (
   CONSTRAINT `classid_id_refs_id_4dc8fa60` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `route_id_refs_id_bcf0225a` FOREIGN KEY (`route_id`) REFERENCES `devicemgt_k_route` (`id`),
   CONSTRAINT `user_id_refs_id_af05aa4f` FOREIGN KEY (`user_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_schedule` */
 
-insert  into `devicemgt_k_schedule`(`id`,`classid_id`,`route_id`,`user_id`,`date`) values (1,1,1,2,'2015-06-27');
+insert  into `devicemgt_k_schedule`(`id`,`classid_id`,`route_id`,`user_id`,`date`) values (1,1,1,2,'2015-06-27'),(2,1,2,2,'2015-06-27');
 
 /*Table structure for table `devicemgt_k_spare` */
 
