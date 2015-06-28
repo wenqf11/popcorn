@@ -180,8 +180,14 @@ public class RecordFragment extends ListFragment {
         //String[] str_title = {"线路一","线路二","线路三","线路四","线路五"};
         //String[] str_time = {"8:00","10:00","12:00","14:00","16:00"};
         progressDialog.show();
-        timer.schedule(task, 0, Config.RECORD_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+        timer.schedule(task, Config.RECORD_UPDATE_DELAY, Config.RECORD_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
         progressDialog.hide();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        timer.cancel();
     }
 
     @Override

@@ -74,7 +74,7 @@ public class RepairListActivity extends ListActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
         //getRepairTaskList();
-        timer.schedule(task, 0, Config.REPAIR_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+        timer.schedule(task, Config.REPAIR_UPDATE_DELAY, Config.REPAIR_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
         progressDialog.hide();
     }
 
@@ -220,6 +220,7 @@ public class RepairListActivity extends ListActivity {
     protected  void onDestroy(){
         progressDialog.dismiss();
         super.onDestroy();
+        timer.cancel();
     }
 
     @Override
@@ -241,4 +242,5 @@ public class RepairListActivity extends ListActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

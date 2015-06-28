@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity {
 		findById();
 		init();
 		initTabLineWidth();
-        timer.schedule(task, 0, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+        timer.schedule(task, Config.MAIN_UPDATE_DELAY, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
 	}
 
     Handler handler = new Handler() {
@@ -509,4 +509,9 @@ public class MainActivity extends FragmentActivity {
                 });
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        timer.cancel();
+    }
 }

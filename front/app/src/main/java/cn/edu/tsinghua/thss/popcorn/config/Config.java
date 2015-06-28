@@ -14,7 +14,11 @@ public class Config {
     public static String DEBUG_USERNAME = "syb1001";
     public static int MAX_NETWORK_TIME = 5000;
 
-    public static int MAIN_UPDATE_INTERVAL = 5000;
-    public static int REPAIR_UPDATE_INTERVAL = 10000;
-    public static int RECORD_UPDATE_INTERVAL = 10000;
+    public static int MAIN_UPDATE_DELAY = 0;
+    public static int REPAIR_UPDATE_DELAY = 0;
+    public static int RECORD_UPDATE_DELAY = 0;
+
+    public static int MAIN_UPDATE_INTERVAL = 1000;
+    public static int REPAIR_UPDATE_INTERVAL = 1000*60*2;
+    public static int RECORD_UPDATE_INTERVAL = 1000*60*2;
 }
