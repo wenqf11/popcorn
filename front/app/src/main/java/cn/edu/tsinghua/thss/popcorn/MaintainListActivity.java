@@ -102,7 +102,7 @@ public class MaintainListActivity extends ListActivity {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(this, RepairActivity.class);
+        Intent intent = new Intent(this, MaintainActivity.class);
         Bundle bundle = new Bundle();
         JSONObject task = null;
         try {
