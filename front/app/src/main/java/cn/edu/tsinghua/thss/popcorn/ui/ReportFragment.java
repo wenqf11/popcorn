@@ -48,7 +48,7 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
  */
 
 public class ReportFragment extends Fragment {
-    private static String ACCESS_TOKEN = "hello_world";
+//    private static String ACCESS_TOKEN = "hello_world";
     private static final int TAKE_PICTURE = 1;
     private static final int BROWSE = 2;
     private String REPORT_URL =  Config.LOCAL_IP + "/app/maintain/add/";
@@ -96,8 +96,8 @@ public class ReportFragment extends Fragment {
         String imgURL = "";
 
         RequestParams params = new RequestParams();
-        params.addBodyParameter("username", "syb1001");
-        params.addBodyParameter("access_token", ACCESS_TOKEN);
+        params.addBodyParameter("username", Config.DEBUG_USERNAME);
+        params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
         params.addBodyParameter("device_id", deviceId);
         params.addBodyParameter("title", reportTitle);
         params.addBodyParameter("description", faultDescription);

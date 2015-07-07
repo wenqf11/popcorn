@@ -64,6 +64,8 @@ public class RecordFragment extends ListFragment {
 
     ProgressDialog progressDialog;
 
+    private View recordView;
+
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
@@ -162,8 +164,30 @@ public class RecordFragment extends ListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
-		View recordView = inflater.inflate(R.layout.activity_tab_record, container,false);
+		//View recordView = inflater.inflate(R.layout.activity_tab_record, container,false);
+        if(recordView==null){
+            recordView=inflater.inflate(R.layout.activity_tab_record, null);
+        }
+        //缓存的rootView需要判断是否已经被加过parent， 如果有parent需要从parent删除，要不然会发生这个rootview已经有parent的错误。
+        ViewGroup parent = (ViewGroup) recordView.getParent();
+        if (parent != null) {
+            parent.removeView(recordView);
+        }
+
+
         unfinished = 0;
+
+//        progressDialog = new ProgressDialog(getActivity(), R.style.buffer_dialog);
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progressDialog.setMessage("数据加载中...");
+//        progressDialog.setIndeterminate(false);
+//        progressDialog.setCancelable(true);
+//
+//        //String[] str_title = {"线路一","线路二","线路三","线路四","线路五"};
+//        //String[] str_time = {"8:00","10:00","12:00","14:00","16:00"};
+//        progressDialog.show();
+//        timer.schedule(task, Config.RECORD_UPDATE_DELAY, Config.RECORD_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+//        progressDialog.hide();
         return recordView;
 	}
 

@@ -218,9 +218,9 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void init() {
+        mAppsFg = new AppsFragment();
 		mRecordFg = new RecordFragment();
 		mReportFg = new ReportFragment();
-        mAppsFg = new AppsFragment();
         mMineFg = new MineFragment();
 
         mFragmentList.add(mAppsFg);
