@@ -24,11 +24,19 @@ import cn.edu.tsinghua.thss.popcorn.RepairListActivity;
  */
 public class AppsFragment extends Fragment {
 
+    private View appsView;
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
         super.onCreateView(inflater, container, savedInstanceState);
-        View appsView = inflater.inflate(R.layout.activity_tab_apps, container,false);
-
+        if (appsView == null) {
+            appsView = inflater.inflate(R.layout.activity_tab_apps, container,false);
+        }
+        //缓存的rootView需要判断是否已经被加过parent， 如果有parent需要从parent删除，要不然会发生这个rootview已经有parent的错误。
+        ViewGroup parent = (ViewGroup) appsView.getParent();
+        if (parent != null) {
+            parent.removeView(appsView);
+        }
         //考勤打卡
         View mAppsAttendanceLayout = appsView.findViewById(R.id.id_apps_attendance_ll);
         mAppsAttendanceLayout.setOnClickListener(new View.OnClickListener() {

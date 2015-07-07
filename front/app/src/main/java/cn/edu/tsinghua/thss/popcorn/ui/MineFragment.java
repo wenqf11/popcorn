@@ -35,6 +35,8 @@ import cn.edu.tsinghua.thss.popcorn.RecordListActivity;
 
 public class MineFragment extends Fragment {
 
+    private View mineView;
+
     @ViewInject(R.id.change_password)
     private LinearLayout changePsd;
 
@@ -84,8 +86,15 @@ public class MineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
         super.onCreateView(inflater, container, savedInstanceState);
-        View mineView = inflater.inflate(R.layout.activity_tab_mine, container,false);
 
+        if(mineView==null){
+            mineView=inflater.inflate(R.layout.activity_tab_report, null);
+        }
+        //缓存的rootView需要判断是否已经被加过parent， 如果有parent需要从parent删除，要不然会发生这个rootview已经有parent的错误。
+        ViewGroup parent = (ViewGroup) mineView.getParent();
+        if (parent != null) {
+            parent.removeView(mineView);
+        }
         ViewUtils.inject(this, mineView);
 
         return mineView;

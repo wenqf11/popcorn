@@ -55,6 +55,8 @@ public class ReportFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
+    private View reportView;
+
     // 获取sd卡根目录地址,并创建图片父目录文件对象和文件的对象;
     String file_str = Environment.getExternalStorageDirectory().getPath();
     String file_path = file_str + "/willwings/photos";
@@ -165,7 +167,19 @@ public class ReportFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
-		View reportView = inflater.inflate(R.layout.activity_tab_report, container,false);
+//        if (reportView != null)
+//            return reportView;
+//
+//		reportView = inflater.inflate(R.layout.activity_tab_report, container,false);
+        if(reportView==null){
+            reportView=inflater.inflate(R.layout.activity_tab_report, null);
+        }
+        //缓存的rootView需要判断是否已经被加过parent， 如果有parent需要从parent删除，要不然会发生这个rootview已经有parent的错误。
+        ViewGroup parent = (ViewGroup) reportView.getParent();
+        if (parent != null) {
+            parent.removeView(reportView);
+        }
+        //return reportView;
 
         ViewUtils.inject(this, reportView);
         progressDialog = new ProgressDialog(getActivity(), R.style.buffer_dialog);
