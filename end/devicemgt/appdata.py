@@ -558,3 +558,5 @@ def app_device_info(request, para, user):
     }))
 
 
+def app_version(request):
+    return render_to_response('version.xml',mimetype="application/xml")  

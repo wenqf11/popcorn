@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
@@ -140,10 +141,9 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
         int year = calendar.get(Calendar.YEAR);
         int monthOfYear = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        datePicker.init(year, monthOfYear, dayOfMonth, new OnDateChangedListener(){
+        datePicker.init(year, monthOfYear, dayOfMonth, new OnDateChangedListener() {
             @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
-            {
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             }
         });
         datePicker.setMaxDate(new Date().getTime());
@@ -217,7 +217,18 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                                 if(pickedYear==currentYear && pickedMonth==currentMonth && pickedDay==currentDay) {
                                     mButtonOnWork.setVisibility(View.VISIBLE);
                                     mButtonOffWork.setVisibility(View.GONE);
+
+                                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
+                                    String checkIn = sp.getString("checkin", "");
+                                    if (!checkIn.equals("")){
+                                        mTextViewOnWork.setText(checkIn);
+                                        mButtonOnWork.setVisibility(View.GONE);
+                                        mButtonOffWork.setVisibility(View.VISIBLE);
+                                    }
                                 }
+
+
+
                                 String msg = jsonObject.getString("data");
                                 if(msg.equals("can't connect to database")) {
                                     Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
@@ -301,9 +312,14 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
             SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             if(!mStatus){
                 if(!mAddress.equals("无法定位")){
+                    String checkinInfo = datetimeFormat.format(new Date()) +'\n'+ mAddress;
                     mButtonOnWork.setVisibility(View.GONE);
-                    mTextViewOnWork.setText(datetimeFormat.format(new Date()) +'\n'+ mAddress);
+                    mTextViewOnWork.setText(checkinInfo);
                     mButtonOffWork.setVisibility(View.VISIBLE);
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("checkin", checkinInfo);
+                    editor.apply();
                 }else{
                     mStatus = true;
                     Toast.makeText(getApplicationContext(), "无法定位，请检查网络状态是否正常", Toast.LENGTH_SHORT).show();
@@ -339,6 +355,10 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
 
                                 @Override
                                 public void onSuccess(ResponseInfo<String> responseInfo) {
+                                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putString("checkin", "");
+                                    editor.apply();
                                     Toast.makeText(getApplicationContext(), responseInfo.result, Toast.LENGTH_SHORT).show();
                                 }
 
