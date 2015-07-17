@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import *
 from models import *
 from datetime import date, datetime, time, timedelta
+from django.contrib.auth.hashers import make_password
 import json
 
 
@@ -129,7 +130,7 @@ def app_password(request, para, user):
             'data': 'new password required'
         }))
 
-    user.password = para['new_password']
+    user.password = make_password(para['new_password'])
     user.save()
     return HttpResponse(json.dumps({
         'status': 'ok',
@@ -196,6 +197,23 @@ def app_score(request, para, user):
             'status': 'ok',
             'data': int(score.score)
         }))
+
+
+@get_required
+@token_required('GET')
+def app_score_rank(request, para, user):
+    para['year'] = request.GET.get('year')
+    para['month'] = request.GET.get('month')
+
+    scores = k_staffscoreinfo.objects.filter(time__year=int(para['year']), time__month=int(para['month']))
+    scores = scores.order_by('-score')
+
+    result = [{'username': _s.userid.username, 'score': _s.score} for _s in scores]
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': result
+    }))
 
 
 @get_required
@@ -528,6 +546,8 @@ def app_device_info(request, para, user):
             'id': d.id,
             'brief': d.brief,
             'name': d.name,
+            'producer': d.producerid.name,
+            'type': d.typeid.name,
             'serial': d.serial,
             'brand': d.brand,
             'model': d.model,

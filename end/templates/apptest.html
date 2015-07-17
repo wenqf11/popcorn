@@ -9,10 +9,11 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.get('/app/device/info/', {
+            $.get('/app/score/rank/', {
                 username: 'syb1001',
                 access_token: 'hello_world',
-                device_brief: 'kz084732',
+                year: 2015,
+                month: 7,
                 timestamp: 1383712332,
             }, function(data) {
                 console.log(data);

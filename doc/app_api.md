@@ -105,6 +105,34 @@
 			data: "score not exist for this user"
 		}
 
+### 获取积分排名
+
+- 请求地址：http://domain.com/app/score/rank/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **year**，`int`，所要查询积分的年份，如2015
+	- **month**，`int`，所要查询积分的月份，如5
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：所有用户在所查询月份的积分，返回结果按积分降序排列
+- json示例：
+
+		{
+			status: "ok",
+			data: [
+				{ username: "hahehi", score: 24 },
+				{ username: "syb", score: 23 },
+				{ username: "yanglei", score: 10 }
+			]
+		}
+	或
+
+		{
+			status: "ok",
+			data: []
+		}
+
 ## 考勤模块
 
 ### 获取上下班数据
@@ -194,9 +222,12 @@
 				id: 2,
 				brief: "kz084732",
 				name: "kz设备名称",
+				producer: "HUAWEI",
+				type: "kernel",
 				serial: "10086-10000-4008823823",
 				brand: "certain brand",
 				model: "haha",
+				bought_time: "2011-02-17",
 				location: "c#210",
 				memo: ""
 			}

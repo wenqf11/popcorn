@@ -21,6 +21,7 @@ urlpatterns = patterns(
     url(r'^app/password/$', app_password),
     url(r'^app/userinfo/$', app_userinfo),
     url(r'^app/score/$', app_score),
+    url(r'^app/score/rank/$', app_score_rank),
 
     url(r'^app/checkinfo/$', app_checkinfo),
     url(r'^app/check/$', app_check),
