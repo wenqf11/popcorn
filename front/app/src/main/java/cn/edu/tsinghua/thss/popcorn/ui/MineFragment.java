@@ -90,7 +90,7 @@ public class MineFragment extends Fragment {
         if(mineView==null){
             mineView=inflater.inflate(R.layout.activity_tab_mine, null);
         }
-        //缓存的rootView需要判断是否已经被加过parent， 如果有parent需要从parent删除，要不然会发生这个rootview已经有parent的错误。
+
         ViewGroup parent = (ViewGroup) mineView.getParent();
         if (parent != null) {
             parent.removeView(mineView);
