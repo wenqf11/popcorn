@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.core.exceptions import *
 from models import *
 from datetime import date, datetime, time, timedelta
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 import json
 
 
@@ -100,10 +100,10 @@ def app_login(request):
             'data': 'unknown user query error'
         }))
 
-    if user.password == para['password']:
+    if check_password(para['password'], user.password):
         return HttpResponse(json.dumps({
             'status': 'ok',
-            'data': 'hello_world;'
+            'data': 'hello_world'
         }))
     else:
         return HttpResponse(json.dumps({
@@ -208,7 +208,7 @@ def app_score_rank(request, para, user):
     scores = k_staffscoreinfo.objects.filter(time__year=int(para['year']), time__month=int(para['month']))
     scores = scores.order_by('-score')
 
-    result = [{'username': _s.userid.username, 'score': _s.score} for _s in scores]
+    result = [{'username': _s.userid.name, 'score': _s.score} for _s in scores]
 
     return HttpResponse(json.dumps({
         'status': 'ok',
@@ -222,7 +222,7 @@ def app_route(request, para, user):
     schedules = k_schedule.objects.filter(user=user, date=date.today())
     if not schedules.exists():
         return HttpResponse(json.dumps({
-            'status': 'empty',
+            'status': 'ok',
             'data': []
         }))
 
@@ -239,7 +239,7 @@ def app_route(request, para, user):
 def app_form(request, para, user):
     try:
         route = k_route.objects.get(id=int(request.GET.get('route_id')))
-    except Exception:
+    except ObjectDoesNotExist:
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'route not exists'
@@ -559,4 +559,6 @@ def app_device_info(request, para, user):
 
 
 def app_version(request):
-    return render_to_response('version.xml',mimetype="application/xml")  
+    return render_to_response('version.xml',mimetype="application/xml")
+
+

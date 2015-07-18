@@ -9,11 +9,10 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.get('/app/score/rank/', {
+            $.get('/app/login/', {
                 username: 'syb1001',
+                password: 'syb',
                 access_token: 'hello_world',
-                year: 2015,
-                month: 7,
                 timestamp: 1383712332,
             }, function(data) {
                 console.log(data);
