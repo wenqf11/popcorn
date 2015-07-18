@@ -1,22 +1,72 @@
 {% extends 'base.html' %}
 {% block title %}登录{% endblock %}
 
+{% block css %}
+<style type="text/css">
+.wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.center-box {
+    width: 360px;
+    height: 300px;
+    position: absolute;
+    top: -30px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+}
+
+#well-box {
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    padding: 24px;
+    background-color: white;
+}
+</style>
+{% endblock %}
+
 {% block frame %}
-    <div id = "login">
-    <div class="container">
+<div id="navbar" class="navbar navbar-default">
+    <script type="text/javascript">
+        try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+    </script>
 
-      <form class="form-signin" method="POST">
-        <h2 class="form-signin-heading">用户登录</h2>
-        <input name="username" type="text" class="input-block-level" placeholder="用户名">
-        <input name="password" type="password" class="input-block-level" placeholder="密码">
-        <label class="checkbox">
-          <input type="checkbox" value="remember-me"> 记住我
-        </label>
-        <button class="btn btn-large btn-primary" type="submit">登录</button>
-      </form>
+    <div class="navbar-container" id="navbar-container">
 
-    </div> <!-- /container -->
+        <div class="navbar-header pull-left">
+            <a href="/" class="navbar-brand">
+                <small>
+                    <img src="../static/images/logo.png" width="36" height="36" style="margin-top: -15px;margin-bottom: -10px;">
+                    网电盈科科技发展有限公司
+                </small>
+            </a>
+        </div>
     </div>
+</div>
+
+<div class="wrapper">
+    <div class="container center-box">
+        <div id="well-box" class="row"> 
+            <div id="login" class="col-xs-12">
+                <h3 style="text-align: center; margin-top: 10px;">用户登录</h3>
+                <form id="login-form" method="post">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input name="username" type="text" class="input-block-level" placeholder="用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input name="password" type="password" class="input-block-level" placeholder="密码">
+                    </div>
+                    <button type="submit" class="btn btn-primary pull-right">登录</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block tailjs %}

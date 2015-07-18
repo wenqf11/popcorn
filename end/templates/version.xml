@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<info>
+	<version>0.0.1</version>
+	<url>http://192.168.1.108/static/apk/willwings.apk</url>
+	<description>检测到最新版本，请及时更新！</description>
+	<url_server>http://192.168.1.108/app/version</url_server>
+</info>
