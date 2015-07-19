@@ -8,9 +8,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
             <LinearLayout
+                android:id="@+id/mine_user_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
+                android:clickable="true"
+                android:background="@drawable/layout_selector"
                 >
                 <ImageView
                     android:id="@+id/id_tab_mine_avatar"
@@ -23,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="10dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:orientation="vertical"
                     >
 
@@ -42,18 +45,22 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|center_vertical"
                         android:text=""
-                        android:textColor="#000"
+                        android:textColor="#999999"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
     </TableRow>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="20dp"
+        android:background="#DCDCDC" />
+
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#DCDCDC" />
-
-
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
