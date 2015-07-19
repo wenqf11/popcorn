@@ -3,10 +3,13 @@ package cn.edu.tsinghua.thss.popcorn;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,24 +18,41 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
+import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
 public class RankActivity extends Activity {
 
     private List<Map<String, Object>> mData = null;
-
+    private ProgressDialog progressDialog;
+    private JSONArray RankList = null;
     private RankListAdapter adapter;
 
     @ViewInject(R.id.rank_datepicker)
@@ -46,11 +66,7 @@ public class RankActivity extends Activity {
 
     @OnClick(R.id.rank_submit_date)
     private void submitDataClick(View v){
-        String[] str_name = {"黄小明","王小明","小明","赵小明","孙小明"};
-        String[] str_dept = {"微谷项目部","天坛项目部","天坛项目部","微谷项目部","微谷项目部"};
-        String[] str_credit = {"140","120","110","90","80"};
-        mData = getData(str_name, str_dept, str_credit);
-        adapter.notifyDataSetChanged();
+        updateRanListData();
     }
 
     @Override
@@ -58,31 +74,96 @@ public class RankActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rank);
 
+        progressDialog = new ProgressDialog(RankActivity.this, R.style.buffer_dialog);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("数据加载中...");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+
         ViewUtils.inject(this);
 
+        datePicker.setMaxDate(new Date().getTime());
         if (datePicker != null) {
             ((ViewGroup)((ViewGroup) datePicker.getChildAt(0)).getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
         }
 
-        String[] str_name = {"黄小明","王小明","小明","赵小明","孙小明","钱小明","李小明","李小明","李小明"};
-        String[] str_dept = {"微谷项目部","天坛项目部","天坛项目部","微谷项目部","微谷项目部","微谷项目部","微谷项目部","天坛项目部","天坛项目部"};
-        String[] str_credit = {"140","120","110","90","80","60","50","50","50"};
-        mData = getData(str_name, str_dept, str_credit);
-
         adapter = new RankListAdapter (this);
         lv.setAdapter(adapter);
+        updateRanListData();
 
     }
 
-    private List<Map<String, Object>> getData(String[] str_name, String[] str_dept, String[] str_credit) {
+    public void updateRanListData(){
+        final int pickedMonth = datePicker.getMonth()+1;
+        final int pickedYear = datePicker.getYear();
+
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+        params.addQueryStringParameter("year", String.valueOf(pickedYear));
+        params.addQueryStringParameter("month", String.valueOf(pickedMonth));
+
+        progressDialog.show();
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.SCORE_RANK_URL,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try{
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+
+
+                            if(status.equals("ok")) {
+                                RankList = jsonObject.getJSONArray("data");
+                            }
+
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+                        mData = getData();
+                        adapter.notifyDataSetChanged();
+
+                        progressDialog.hide();
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        progressDialog.hide();
+                    }
+                });
+    }
+
+    private List<Map<String, Object>> getData() {
         List<Map<String ,Object>> list = new ArrayList<Map<String,Object>>();
 
-        for (int i = 0; i < str_dept.length; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("name", str_name[i]);
-            map.put("dept", str_dept[i]);
-            map.put("credit", str_credit[i]);
-            list.add(map);
+        if (RankList != null) {
+            for (int i = 0; i < RankList.length(); i++) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                try {
+                    JSONObject tempObject = RankList.getJSONObject(i);
+                    map.put("name", tempObject.getString("username"));
+                    map.put("score", tempObject.getString("score"));
+                    list.add(map);
+                } catch (Exception e) {
+                }
+            }
         }
 
         return list;
@@ -90,8 +171,9 @@ public class RankActivity extends Activity {
 
     class ViewHolder {
         public TextView name;
-        public TextView dept;
-        public TextView credit;
+        public TextView rank;
+        public TextView score;
+        public LinearLayout linearLayoutBg;
     }
 
     public class RankListAdapter extends BaseAdapter {
@@ -133,21 +215,32 @@ public class RankActivity extends Activity {
                 convertView = mInflater.inflate(R.layout.listview_rank, null);
 
                 holder.name = (TextView) convertView.findViewById(R.id.listview_rank_name);
-                holder.dept = (TextView) convertView.findViewById(R.id.listview_rank_dept);
-                holder.credit = (TextView) convertView.findViewById(R.id.listview_rank_credit);
+                holder.rank = (TextView) convertView.findViewById(R.id.listview_rank_rank);
+                holder.score = (TextView) convertView.findViewById(R.id.listview_rank_score);
+                holder.linearLayoutBg = (LinearLayout) convertView.findViewById(R.id.listview_rank_ll);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.name.setText((String)mData.get(position).get("name"));
-            holder.dept.setText((String)mData.get(position).get("dept"));
-            holder.credit.setText((String)mData.get(position).get("credit"));
-
+            holder.name.setText((String) mData.get(position).get("name"));
+            //holder.rank.setText((String)mData.get(position).get("rank"));
+            holder.score.setText((String) mData.get(position).get("score"));
+            holder.rank.setText(String.valueOf(position + 1));
+            if(holder.name.getText().equals(Config.DEBUG_USERNAME)) {
+                holder.linearLayoutBg.setBackgroundColor(Color.parseColor("#E1FFFF"));
+            }else{
+                holder.linearLayoutBg.setBackgroundColor(Color.WHITE);
+            }
             return convertView;
         }
     }
 
+    @Override
+    protected  void onDestroy(){
+        progressDialog.dismiss();
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

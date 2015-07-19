@@ -100,8 +100,7 @@ public class AboutInfoActivity extends Activity {
         InputStream is;
         public void run() {
             try {
-                String path = getResources().getString(R.string.url_server);
-                URL url = new URL(path);
+                URL url = new URL(Config.VERSION_SERVER_URL);
                 HttpURLConnection conn = (HttpURLConnection) url
                         .openConnection();
                 conn.setConnectTimeout(5000);

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 
@@ -103,8 +105,15 @@ public class MainActivity extends FragmentActivity {
 		findById();
 		init();
 		initTabLineWidth();
+        setLocalUsername();
         timer.schedule(task, Config.MAIN_UPDATE_DELAY, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
 	}
+
+    private void setLocalUsername(){
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        String username = sp.getString("USERNAME", "");
+        Config.DEBUG_USERNAME = username;
+    }
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {

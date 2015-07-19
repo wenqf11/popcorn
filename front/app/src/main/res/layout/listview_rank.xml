@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listview_rank_ll"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="10dp"
@@ -12,25 +13,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="40dp"
+        android:width="100dp"
         android:textColor="#000"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/listview_rank_dept"
+        android:id="@+id/listview_rank_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
-        android:layout_marginLeft="20dp"
+        android:width="80dp"
         android:textColor="#000"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/listview_rank_credit"
+        android:id="@+id/listview_rank_rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
-        android:layout_marginLeft="20dp"
+        android:width="40dp"
         android:textColor="#000"
         android:textSize="16sp" />
 </LinearLayout>

@@ -26,19 +26,6 @@ public class BonusActivity extends Activity {
 
     @OnClick(R.id.id_get_lottery_btn)
     private void getLotteryButtonClick(View v) {
-        progressDialog = new ProgressDialog(BonusActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("请稍候...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
-        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                mTextViewResult.setText("很遗憾，您没有中奖，下次再来！");
-                mButtonGetLottery.setVisibility(View.GONE);
-            }
-        });
-
         progressDialog.show();
 
         new Thread(new Runnable() {
@@ -64,6 +51,19 @@ public class BonusActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bonus);
         ViewUtils.inject(this);
+
+        progressDialog = new ProgressDialog(BonusActivity.this, R.style.buffer_dialog);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("请稍候...");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mTextViewResult.setText("很遗憾，您没有中奖，下次再来！");
+                mButtonGetLottery.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override

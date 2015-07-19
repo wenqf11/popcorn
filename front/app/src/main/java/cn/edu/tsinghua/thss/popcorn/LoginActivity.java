@@ -33,9 +33,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.tsinghua.thss.popcorn.config.Config;
+
 
 /**
- * A login screen that offers login via Phone/password.
+ * A login screen that offers login via username/password.
 
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
@@ -45,7 +47,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mPhoneView;
+    private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -56,7 +58,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
-        mPhoneView = (AutoCompleteTextView) findViewById(R.id.login_phone);
+        mUsernameView = (AutoCompleteTextView) findViewById(R.id.login_username);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.login_password);
@@ -71,8 +73,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             }
         });
 
-        Button mPhoneSignInButton = (Button) findViewById(R.id.sign_in_button);
-        mPhoneSignInButton.setOnClickListener(new OnClickListener() {
+        Button mUsernameSignInButton = (Button) findViewById(R.id.sign_in_button);
+        mUsernameSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -85,11 +87,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         //判断是否已经登录过
         SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String phone = sp.getString("PHONE", "");
+        String username = sp.getString("USERNAME", "");
         String password = sp.getString("PASSWORD", "");
-        String lastUsername = sp.getString("LAST_USERNAME", "");
-        mPhoneView.setText(lastUsername);
-        if(phone.length() > 0 && password.length() > 0){
+        mUsernameView.setText(username);
+        if(username.length() > 0 && password.length() > 0){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
@@ -98,7 +99,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 //    @Override
 //    protected void onResume(){
 //        SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-//        String phone = sp.getString("PHONE", "");
+//        String username = sp.getString("username", "");
 //        super.onResume();
 //    }
 
@@ -109,7 +110,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
     /**
      * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid Phone, missing fields, etc.), the
+     * If there are form errors (invalid username, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
@@ -118,11 +119,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         }
 
         // Reset errors.
-        mPhoneView.setError(null);
+        mUsernameView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String phone = mPhoneView.getText().toString();
+        String username = mUsernameView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -136,14 +137,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             cancel = true;
         }
 
-        // Check for a valid Phone address.
-        if (TextUtils.isEmpty(phone)) {
-            mPhoneView.setError(getString(R.string.error_field_required));
-            focusView = mPhoneView;
+        // Check for a valid username address.
+        if (TextUtils.isEmpty(username)) {
+            mUsernameView.setError(getString(R.string.error_field_required));
+            focusView = mUsernameView;
             cancel = true;
-        } else if (!isPhoneValid(phone)) {
-            mPhoneView.setError(getString(R.string.error_invalid_phone));
-            focusView = mPhoneView;
+        } else if (!isUsernameValid(username)) {
+            mUsernameView.setError(getString(R.string.error_invalid_username));
+            focusView = mUsernameView;
             cancel = true;
         }
 
@@ -155,12 +156,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(phone, password);
+            mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
         }
     }
-    private boolean isPhoneValid(String phone) {
-        return phone.length()==11 ;
+    private boolean isUsernameValid(String username) {
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -210,29 +211,29 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
                         ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
 
-                // Select only Phone addresses.
+                // Select only username addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Phone
+                        " = ?", new String[]{ContactsContract.CommonDataKinds.username
                                                                      .CONTENT_ITEM_TYPE},
 
-                // Show primary Phone addresses first. Note that there won't be
-                // a primary Phone address if the user hasn't specified one.
+                // Show primary username addresses first. Note that there won't be
+                // a primary username address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");*/
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        /* List<String> Phones = new ArrayList<String>();
+        /* List<String> usernames = new ArrayList<String>();
        cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Phones.add(cursor.getString(ProfileQuery.ADDRESS));
+            usernames.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }*/
-        List<String> phones = new ArrayList<String>();
-        phones.add("13681332621");
-        phones.add("18810305382");
-        addPhonesToAutoComplete(phones);
+        List<String> usernames = new ArrayList<String>();
+        usernames.add("13681332621");
+        usernames.add("18810305382");
+        addusernamesToAutoComplete(usernames);
     }
 
     @Override
@@ -244,13 +245,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     }
 
 
-    private void addPhonesToAutoComplete(List<String> phoneAddressCollection) {
+    private void addusernamesToAutoComplete(List<String> usernameAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, phoneAddressCollection);
+                        android.R.layout.simple_dropdown_item_1line, usernameAddressCollection);
 
-        mPhoneView.setAdapter(adapter);
+        mUsernameView.setAdapter(adapter);
     }
 
     /**
@@ -259,11 +260,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mPhone;
+        private final String mUsername;
         private final String mPassword;
 
-        UserLoginTask(String phone, String password) {
-            mPhone = phone;
+        UserLoginTask(String username, String password) {
+            mUsername = username;
             mPassword = password;
         }
 
@@ -281,8 +282,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             // TODO: register the new account here.
             SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
-            editor.putString("PHONE", mPhone);
-            editor.putString("LAST_USERNAME", mPhone);
+            editor.putString("USERNAME", mUsername);
             editor.putString("PASSWORD",mPassword);
             editor.apply();
 

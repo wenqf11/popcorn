@@ -32,10 +32,10 @@
                 android:orientation="vertical">
 
                 <AutoCompleteTextView
-                    android:id="@+id/login_phone"
+                    android:id="@+id/login_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_phone"
+                    android:hint="@string/prompt_username"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"/>
