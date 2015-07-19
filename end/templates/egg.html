@@ -1,0 +1,47 @@
+{% extends 'userframe.html' %}
+
+{% block pageheader %}
+    彩蛋设置
+{% endblock %}
+
+{% block maincontent %}
+<div class="row-fluid well" style="width: 75%; margin: auto;">
+    <form action="/egg/submit/" class="form-horizontal col-sm-12" method="POST">
+        <h4 class="header blue bolder smaller">彩蛋管理</h4>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">中奖金额</label>
+            <div class="col-sm-9">
+                <input name="bonus" type="text" class="span6 m-wrap" value="{{ data.bonus }}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">中奖概率</label>
+            <div class="col-sm-9">
+                <input name="probability" type="text" class="span6 m-wrap" value="{{ data.probability }}" />
+            </div>
+        </div>
+
+        <div class="clearfix form-actions" style="margin-top: 0px; margin-bottom: 0px; padding-top: 20px; padding-bottom: 0px;">
+            <div class="col-md-offset-3 col-md-9">
+                <button type="submit" class="btn btn-primary" onclick="return checkvalid();">确定</button>
+                <button type="reset" class="btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block tailjs %}
+<script>
+    $(function(){
+        var purview_msg = "{{ purview_msg }}";
+        if (purview_msg) {
+            $.gritter.add({
+                title: '您没有权限进行此操作',
+                text: purview_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
+</script>
+{% endblock %}

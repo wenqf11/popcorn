@@ -34,6 +34,8 @@ urlpatterns = patterns(
     url(r'^app/maintain/submit/$', app_maintain_submit),
 
     url(r'^app/feedback/$', app_feedback),
+    url(r'^app/egg/$', app_egg),
+    url(r'^app/egg/info/$', app_egg_info),
     url(r'^app/version/$', app_version),
 
     url(r'^app/device/brief/$', app_device_brief),
@@ -141,4 +143,6 @@ urlpatterns = patterns(
     url(r'^department_submit/$', department_submit),
 
     url(r'^score/$', score),
+    url(r'^egg/$', egg),
+    url(r'^egg/submit/$', egg_submit),
 )

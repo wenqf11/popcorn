@@ -9,10 +9,10 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.get('/app/login/', {
+            $.get('/app/egg/info/', {
                 username: 'syb1001',
-                password: 'syb',
                 access_token: 'hello_world',
+                date: '2015-07-19',
                 timestamp: 1383712332,
             }, function(data) {
                 console.log(data);

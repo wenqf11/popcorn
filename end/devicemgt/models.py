@@ -638,9 +638,18 @@ class k_staffscoreinfo(models.Model):
 class k_staffegginfo(models.Model):
     userid = models.ForeignKey(k_user, related_name='staffegginfo_set')
     time = models.DateField(blank=True, default=date.today)
+    bonus = models.FloatField()
+    probability = models.FloatField()
     state = models.CharField(max_length=1) #1 yes, 0 no
 
 class k_feedback(models.Model):
     feedback = models.CharField(max_length=200)
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
+
+
+class k_config(models.Model):
+    # a table to store global variable of the server
+    # remember always to get the element of id=1
+    eggbonus = models.FloatField()
+    eggprobability = models.FloatField()

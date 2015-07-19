@@ -7,7 +7,7 @@ from django.core.exceptions import *
 from models import *
 from datetime import date, datetime, time, timedelta
 from django.contrib.auth.hashers import make_password, check_password
-import json
+import json, random
 
 
 # wrapper that require the request to be GET type
@@ -208,7 +208,7 @@ def app_score_rank(request, para, user):
     scores = k_staffscoreinfo.objects.filter(time__year=int(para['year']), time__month=int(para['month']))
     scores = scores.order_by('-score')
 
-    result = [{'username': _s.userid.name, 'score': _s.score} for _s in scores]
+    result = [{'username': _s.userid.username, 'name': _s.userid.name, 'score': _s.score} for _s in scores]
 
     return HttpResponse(json.dumps({
         'status': 'ok',
@@ -560,5 +560,66 @@ def app_device_info(request, para, user):
 
 def app_version(request):
     return render_to_response('version.xml',mimetype="application/xml")
+
+
+@get_required
+@token_required('GET')
+def app_egg(request, para, user):
+    # query whether already tried to get an egg today
+    egginfo = k_staffegginfo.objects.filter(userid=user, time=date.today())
+
+    if egginfo.exists():
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'already tried today'
+        }))
+
+    config = k_config.objects.get(id=1)
+    number = random.random()
+
+    # update staff egg info
+    _info = k_staffegginfo.objects.create(
+        userid=user,
+        time=date.today(),
+        bonus=config.eggbonus,
+        probability=config.eggprobability,
+        state=1 if config.eggprobability > number else 0
+    )
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': {
+            'bonus': config.eggbonus,
+            'probability': config.eggprobability,
+            'result': config.eggprobability > number
+        }
+    }))
+
+
+@get_required
+@token_required('GET')
+def app_egg_info(request, para, user):
+    para['date'] = request.GET.get('date')
+
+    _d = datetime.strptime(para['date'], '%Y-%m-%d').date()
+
+    try:
+        _info = k_staffegginfo.objects.get(userid=user, time=_d)
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'element not exists'
+        }))
+    except MultipleObjectsReturned:
+        _info = _info[0]
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': {
+            'bonus': _info.bonus,
+            'probability': _info.probability,
+            'result': _info.state == 1
+        }
+    }))
 
 

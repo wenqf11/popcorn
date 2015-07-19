@@ -121,9 +121,9 @@
 		{
 			status: "ok",
 			data: [
-				{ username: "hahehi", score: 24 },
-				{ username: "syb", score: 23 },
-				{ username: "yanglei", score: 10 }
+				{ username: "hahehi", name: "zhangsan", score: 24 },
+				{ username: "syb", name:"lisi", score: 23 },
+				{ username: "yanglei", name:"wangwu", score: 10 }
 			]
 		}
 	或
@@ -131,6 +131,63 @@
 		{
 			status: "ok",
 			data: []
+		}
+
+### 抢彩蛋
+
+- 请求地址：http://domain.com/app/egg/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：`bonus`为本次抢彩蛋的奖金，`probability`为中奖概率，`result`为是否中奖
+- json示例：
+
+		{
+			status: "ok",
+			data: {
+				bonus: 20.0,
+				probability: 0.1,
+				result: true
+			}
+		}
+	或
+
+		{
+			status: "ok",
+			data: {
+				bonus: 50.0,
+				probability: 0.05,
+				result: false
+			}
+		}
+
+### 彩蛋信息查询
+
+- 请求地址：http://domain.com/app/egg/info/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **date**，`string`，要查询的日期，如“2015-05-22”
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：`bonus`为当次抢彩蛋的奖金，`probability`为当日中奖概率，`result`为是否中奖
+- json示例：
+
+		{
+			status: "ok",
+			data: {
+				bonus: 20.0,
+				probability: 0.1,
+				result: true
+			}
+		}
+	或
+
+		{
+			status: "error",
+			data: "element not exists"
 		}
 
 ## 考勤模块

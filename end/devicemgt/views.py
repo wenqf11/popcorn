@@ -3158,6 +3158,7 @@ def departmentadd(request):
     else:
         return HttpResponseRedirect('/login/')
 
+
 @login_required
 def department_submit(request):
     if not k_class.objects.filter(name = request.GET.get('name')):
@@ -3198,3 +3199,23 @@ def department_submit(request):
 @login_required
 def score(request):
     return render_to_response('score.html', {})
+
+
+@login_required
+def egg(request):
+    config = k_config.objects.get(id=1)
+    return render_to_response('egg.html', {'data': {'bonus': config.eggbonus, 'probability': config.eggprobability}})
+
+
+def egg_submit(request):
+    bonus = request.POST.get('bonus')
+    probability = request.POST.get('probability')
+
+    _c = k_config.objects.get(id=1)
+    _c.eggbonus = bonus
+    _c.eggprobability = probability
+    _c.save()
+
+    return HttpResponseRedirect('/egg/')
+
+
