@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.dtr.zbar.build.ZBarDecoder;
 
+import cn.edu.tsinghua.thss.popcorn.DeviceInfoDetailActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
 
 public class QRcodeActivity extends Activity {
@@ -149,9 +150,12 @@ public class QRcodeActivity extends Activity {
                 mCamera.stopPreview();
 
                 barcodeScanned = true;
-                Intent intent = QRcodeActivity.this.getIntent();
-                intent.putExtra("result", result);
-                QRcodeActivity.this.setResult(Activity.RESULT_OK, intent);
+
+                Intent intent = new Intent(getApplicationContext(), DeviceInfoDetailActivity.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("device_brief", result);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 QRcodeActivity.this.finish();
             }
         }

@@ -23,10 +23,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:text="@string/report_title"/>
+                android:text="@string/device_number"/>
 
             <TextView
-                android:id="@+id/repair_report_title"
+                android:id="@+id/device_info_brief"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -52,10 +52,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:text="@string/device_number"/>
+                android:text="@string/device_name"/>
 
             <TextView
-                android:id="@+id/repair_device_number"
+                android:id="@+id/device_info_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -80,10 +80,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:text="@string/reporter"/>
+                android:text="@string/device_producer"/>
 
             <TextView
-                android:id="@+id/repair_reporter"
+                android:id="@+id/device_info_producer"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="false"/>
@@ -110,9 +110,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:text="@string/report_datetime"/>
+                android:text="@string/device_type"/>
             <TextView
-                android:id="@+id/repair_report_datetime"
+                android:id="@+id/device_info_type"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -137,10 +137,126 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:text="@string/fault_description"/>
+                android:text="@string/device_serial"/>
 
             <TextView
-                android:id="@+id/repair_fault_description"
+                android:id="@+id/device_info_serial"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"/>
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DCDCDC" />
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:background="@drawable/layout_selector"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:text="@string/device_brand"/>
+
+            <TextView
+                android:id="@+id/device_info_brand"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"/>
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DCDCDC" />
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:background="@drawable/layout_selector"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:text="@string/device_model"/>
+
+            <TextView
+                android:id="@+id/device_info_model"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"/>
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DCDCDC" />
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:background="@drawable/layout_selector"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:text="@string/device_bought_time"/>
+
+            <TextView
+                android:id="@+id/device_info_bought_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"/>
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DCDCDC" />
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:background="@drawable/layout_selector"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:text="@string/device_location"/>
+
+            <TextView
+                android:id="@+id/device_info_location"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="false"/>
@@ -169,7 +285,7 @@
                 android:text="@string/memo"/>
 
             <TextView
-                android:id="@+id/repair_memo"
+                android:id="@+id/device_info_memo"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="false"/>
@@ -180,46 +296,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#DCDCDC" />
-
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp"
-            android:background="@drawable/layout_selector"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:text="@string/repair_result"/>
-
-            <EditText
-                android:id="@+id/repair_result"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:textSize="14sp"
-                android:hint=""/>
-        </LinearLayout>
-    </TableRow>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DCDCDC" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/repair_submit"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/submit"/>
-    </LinearLayout>
 
 </TableLayout>

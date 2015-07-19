@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -26,6 +27,7 @@ import cn.edu.tsinghua.thss.popcorn.ChangePasswordActivity;
 import cn.edu.tsinghua.thss.popcorn.FeedBackActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
 import cn.edu.tsinghua.thss.popcorn.RecordListActivity;
+import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
 /**
@@ -37,17 +39,11 @@ public class MineFragment extends Fragment {
 
     private View mineView;
 
-    @ViewInject(R.id.change_password)
-    private LinearLayout changePsd;
+    @ViewInject(R.id.mine_name)
+    private TextView myName;
 
-    @ViewInject(R.id.feed_back)
-    private LinearLayout feedBack;
-
-    @ViewInject(R.id.about_info)
-    private LinearLayout aboutInfo;
-
-    @ViewInject(R.id.log_out)
-    private LinearLayout logOut;
+    @ViewInject(R.id.mine_username)
+    private TextView myUserName;
 
     @OnClick(R.id.change_password)
     private void onChangePsdClick(View v) {
@@ -75,11 +71,6 @@ public class MineFragment extends Fragment {
 
     @OnClick(R.id.log_out)
     private void onLogOutClick(View v){
-        SharedPreferences sp = getActivity().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("PHONE", "");
-        editor.putString("PASSWORD", "");
-        editor.apply();
         getActivity().finish();
     }
 
@@ -97,7 +88,13 @@ public class MineFragment extends Fragment {
         }
         ViewUtils.inject(this, mineView);
 
+        setMineView();
+
         return mineView;
+    }
+
+    private void setMineView(){
+        myUserName.setText("用户名："+Config.DEBUG_USERNAME);
     }
 
     @Override

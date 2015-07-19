@@ -13,15 +13,4 @@
         android:layout_height="wrap_content"
         android:background="#969696" />
 
-    <ListView
-        android:id="@+id/device_info_listview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        ></ListView>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#DCDCDC" />
-
 </LinearLayout>

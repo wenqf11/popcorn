@@ -16,7 +16,7 @@
     <string name="off_work_activity_attendance">下班：</string>
     <string name="sign_in_activity_attendance">签到</string>
     <string name="sign_out_activity_attendance">签退</string>
-    <string name="device_number">设备编号：</string>
+    <string name="device_number">设备简称：</string>
     <string name="report_title">报修标题：</string>
     <string name="memo">备注：</string>
     <string name="report_datetime">上报时间：</string>
@@ -26,6 +26,14 @@
     <string name="repair_result">维修结论：</string>
     <string name="maintain_name">保养名称：</string>
     <string name="device_name">设备名称：</string>
+    <string name="device_producer">生产厂商：</string>
+    <string name="device_type">设备类型：</string>
+    <string name="device_serial">产品序列号：</string>
+    <string name="device_brand">设备品牌：</string>
+    <string name="device_model">设备型号：</string>
+    <string name="device_bought_time">购买时间：</string>
+    <string name="device_location">设备位置：</string>
+
     <string name="maintain_description">保养描述：</string>
     <string name="maintain_result">保养结论：</string>
     <string name="fault_place">故障地点：</string>
@@ -39,6 +47,6 @@
     <string name="title_activity_feedback">意见反馈</string>
     <string name="title_activity_about_info">关于</string>
     <string name="title_activity_rank">积分排名</string>
-    <string name="title_activity_bonus">抢彩蛋</string>
+    <string name="title_activity_bonus">抽奖</string>
     <string name="get_lottery">抽奖</string>
 </resources>

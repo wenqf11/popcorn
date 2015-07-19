@@ -26,19 +26,22 @@
                     android:layout_marginLeft="20dp"
                     android:orientation="vertical"
                     >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left|center_vertical"
-                        android:text="做人低调"
-                        android:textColor="#000"
-                        android:textSize="14sp" />
 
                     <TextView
+                    android:id="@+id/mine_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/mine_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|center_vertical"
-                        android:text="账号: wenqingfu"
+                        android:text=""
                         android:textColor="#000"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -82,43 +85,6 @@
                 android:textColor="#000"
                 android:textSize="14sp" />
             </LinearLayout>
-    </TableRow>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DCDCDC" />
-
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:clickable="true"
-            android:background="@drawable/layout_selector"
-            >
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                fontawesometext:fa_icon="fa-cog"
-                android:textSize="28sp"
-                android:textColor="#33B5E5"
-                android:layout_gravity="center|center_vertical"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|center_vertical"
-                android:layout_marginLeft="20dp"
-                android:text="设置"
-                android:textColor="#000"
-                android:textSize="14sp" />
-        </LinearLayout>
     </TableRow>
 
     <View

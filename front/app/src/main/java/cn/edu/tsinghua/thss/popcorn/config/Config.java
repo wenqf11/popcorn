@@ -13,6 +13,8 @@ public class Config {
 
     public static String SCORE_RANK_URL = LOCAL_IP + "/app/score/rank/";
     public static String VERSION_SERVER_URL = LOCAL_IP + "/app/version/";
+    public static String GET_ALL_DEVICE_BRIEF_URL = LOCAL_IP + "/app/device/brief/";
+    public static String GET_DEVICE_INFO_URL = LOCAL_IP + "/app/device/info/";
 
     public static String WILL_WINGS_ORG_WEBSITE = "http://www.willwings.com";
     public static String DEBUG_USERNAME = "";
