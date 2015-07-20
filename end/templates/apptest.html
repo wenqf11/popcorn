@@ -9,10 +9,12 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.get('/app/egg/info/', {
+            $.post('/app/meter/', {
                 username: 'syb1001',
                 access_token: 'hello_world',
-                date: '2015-07-19',
+                brief: 'kz939922',
+                route_id: 2,
+                content: '{meter: 5, data: "hheiid"}',
                 timestamp: 1383712332,
             }, function(data) {
                 console.log(data);

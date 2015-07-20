@@ -345,26 +345,11 @@ class k_route(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_meter(models.Model):
-    METER_STATUS = (
-        ('0', '不正常'),
-        ('1', '正常'),
-        ('2', '引起注意'),
-    )
-    deviceid = models.ForeignKey(k_device, related_name='meter_set')
-    state = models.CharField(max_length=1, choices=METER_STATUS, default='0')
-    title = models.CharField(max_length=50)
-    content = models.CharField(max_length=200)
-    memo = models.CharField(max_length=100)
-    orderedtime = models.TimeField()
-    metertime = models.DateTimeField(auto_now=True)
-    routeid = models.ForeignKey(k_route, related_name='meter_set')
-    creatorid = models.PositiveIntegerField(default=0)
-    createdatetime = models.DateField(blank=True, default=date.today)
-    editorid = models.PositiveIntegerField(default=0)
-    editdatetime = models.DateField(blank=True, default=date.today)
-    auditorid = models.PositiveIntegerField(default=0)
-    auditdatetime = models.DateField(blank=True, default=date.today)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    breif = models.CharField(max_length=50)
+    routeid = models.ForeignKey(k_route)
+    userid = models.ForeignKey(k_user)
+    metertime = models.DateTimeField(auto_now_add=True)
+    json = models.TextField()
 
 class k_maintenance(models.Model):
     MAINTENANCE_STATUS = (
