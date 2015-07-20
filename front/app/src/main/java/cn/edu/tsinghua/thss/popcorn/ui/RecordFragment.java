@@ -111,13 +111,17 @@ public class RecordFragment extends ListFragment {
                                         for (int i = 0; i < results.length(); ++i) {
                                             JSONObject result = results.getJSONObject(i);
                                             String name = result.getString("name");
-                                            String start_time = result.getString("start_time");
+                                            String str_start_time = result.getString("start_time");
                                             String route_id = result.getString("id");
-                                            String interval = result.getString("interval");
-                                            int count = (24 - Integer.parseInt(start_time))/Integer.parseInt(interval);
+                                            String str_interval = result.getString("interval");
+                                            Integer interval = Integer.parseInt(str_interval);
+                                            String[] date = str_start_time.split(":");
+                                            Integer hour = Integer.parseInt(date[0]);
+                                            String minute = date[1];
+                                            int count = (24 - hour)/interval;
                                             for (int j = 0; j < count; ++j) {
                                                 tmp_title.add(name);
-                                                tmp_time.add(start_time);
+                                                tmp_time.add((hour+j*interval)+":"+minute);
                                                 tmp_route_id.add(route_id);
                                             }
                                         }
