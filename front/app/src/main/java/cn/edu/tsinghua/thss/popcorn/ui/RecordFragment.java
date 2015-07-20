@@ -113,9 +113,13 @@ public class RecordFragment extends ListFragment {
                                             String name = result.getString("name");
                                             String start_time = result.getString("start_time");
                                             String route_id = result.getString("id");
-                                            tmp_title.add(name);
-                                            tmp_time.add(start_time);
-                                            tmp_route_id.add(route_id);
+                                            String interval = result.getString("interval");
+                                            int count = (24 - Integer.parseInt(start_time))/Integer.parseInt(interval);
+                                            for (int j = 0; j < count; ++j) {
+                                                tmp_title.add(name);
+                                                tmp_time.add(start_time);
+                                                tmp_route_id.add(route_id);
+                                            }
                                         }
                                         mTitle = tmp_title.toArray(new String[]{});
                                         mTime = tmp_time.toArray(new String[]{});

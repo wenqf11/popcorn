@@ -464,7 +464,7 @@ public class MainActivity extends FragmentActivity {
                                 mRepairUnfinished = repairTaskList.length();
                             }
                             else{
-                                Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "服务器内部出错1", Toast.LENGTH_SHORT).show();
                             }
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -505,7 +505,7 @@ public class MainActivity extends FragmentActivity {
                                 JSONArray maintainTaskList = jsonObject.getJSONArray("data");
                                 mMaintainUnfinished = maintainTaskList.length();
                             } else {
-                                Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "服务器内部出错2", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
