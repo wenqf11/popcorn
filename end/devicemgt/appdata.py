@@ -273,6 +273,29 @@ def app_form(request, para, user):
     return HttpResponse(json.dumps(response))
 
 
+@post_required
+@token_required('POST')
+def app_meter(request, para, user):
+    para['route'] = int(request.POST.get('route_id'))
+    para['brief'] = request.POST.get('brief')
+    para['content'] = request.POST.get('content')
+
+    try:
+        _route = k_route.objects.get(id=para['route'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'route not exists'
+        }))
+
+    meter = k_meter(breif=para['brief'], routeid=_route, userid=user, json=para['content'])
+    meter.save()
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'meter data submitted'
+    }))
+
+
 @get_required
 @token_required('GET')
 def app_checkinfo(request, para, user):

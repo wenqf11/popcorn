@@ -8,6 +8,7 @@ public class Config {
     public static String ACCESS_TOKEN = "hello_world";
 
     public static String LOCAL_IP = "http://192.168.1.103";//"http://192.168.1.103";
+    //public static String LOCAL_IP = "http://59.66.137.53";
     public static String REPAIR_TASK_LIST_URL =  Config.LOCAL_IP + "/app/maintain/list/2/";
     public static String MAINTAIN_TASK_LIST_URL = Config.LOCAL_IP + "/app/maintain/list/1/";
 
@@ -16,6 +17,8 @@ public class Config {
     public static String GET_ALL_DEVICE_BRIEF_URL = LOCAL_IP + "/app/device/brief/";
     public static String GET_DEVICE_INFO_URL = LOCAL_IP + "/app/device/info/";
     public static String GET_USER_INFO_URL = LOCAL_IP + "/app/userinfo/";
+    public static String GET_BONUS_URL = LOCAL_IP + "/app/egg/";
+    public static String LOGIN_URL = LOCAL_IP +"/app/login/";
 
     public static String WILL_WINGS_ORG_WEBSITE = "http://www.willwings.com";
     public static String DEBUG_USERNAME = "";

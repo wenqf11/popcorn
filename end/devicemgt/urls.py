@@ -16,6 +16,7 @@ urlpatterns = patterns(
 
     url(r'^app/route/$', app_route),
     url(r'^app/form/$', app_form),
+    url(r'app/meter/$', app_meter),
 
     url(r'^app/login/$', app_login),
     url(r'^app/password/$', app_password),

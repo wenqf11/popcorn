@@ -62,6 +62,7 @@ public class FeedBackActivity extends Activity {
                                 String status = jsonObject.getString("status");
                                 if (status.equals("ok")) {
                                     Toast.makeText(getApplicationContext(), "提交成功，感谢您的宝贵意见", Toast.LENGTH_SHORT).show();
+                                    FeedBackActivity.this.finish();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "提交失败，请重新提交", Toast.LENGTH_SHORT).show();
                                 }

@@ -768,6 +768,39 @@ img {
 
 </li>
 </ul>
+<h3>提交抄表数据</h3>
+<ul>
+<li>请求地址：http://domain.com/app/meter/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>route_id</strong>，<code>int</code>，抄表路线id，获取此路线上的所有设备</li>
+<li><strong>brief</strong>，<code>string</code>，设备简称</li>
+<li><strong>content</strong>，<code>string</code>，json格式的抄表数据</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：是否提交成功</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;meter data submittid&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;route not exists&quot;
+}
+</code></pre>
+
+</li>
+</ul>
 <h2>保养模块</h2>
 <h3>获取保养任务列表</h3>
 <ul>

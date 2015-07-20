@@ -111,8 +111,8 @@ public class MainActivity extends FragmentActivity {
 
     private void setLocalUsername(){
         SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String username = sp.getString("USERNAME", "");
-        Config.DEBUG_USERNAME = username;
+        Config.DEBUG_USERNAME = sp.getString("USERNAME", "");
+        Config.ACCESS_TOKEN = sp.getString("ACCESS_TOKEN", "");
     }
 
     Handler handler = new Handler() {

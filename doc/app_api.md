@@ -380,6 +380,31 @@
 			]
 		}
 
+### 提交抄表数据
+
+- 请求地址：http://domain.com/app/meter/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **route_id**，`int`，抄表路线id，获取此路线上的所有设备
+	- **brief**，`string`，设备简称
+	- **content**，`string`，json格式的抄表数据
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：是否提交成功
+- json示例：
+
+		{
+			status: "ok",
+			data: "meter data submittid"
+		}
+	或
+
+		{
+			status: "error",
+			data: "route not exists"
+		}
+
 ## 保养模块
 
 ### 获取保养任务列表
