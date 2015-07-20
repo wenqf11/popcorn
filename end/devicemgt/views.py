@@ -184,7 +184,7 @@ def operate_user(request):
     if _id:
         theuser = k_user.objects.filter(id=_id)[0]
         key_list = ['username', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
-                    'idcard', 'idcardtype','contactmobile', 'content', 'memo', 'birthday']
+                    'idcard', 'idcardtype', 'contact','contactmobile', 'content', 'memo', 'birthday']
         for key in key_list:
             userdata[key] = eval('theuser.' + key)
 
@@ -230,7 +230,7 @@ def useradd(request):
                 address=request.POST['address'],
                 zipcode=request.POST['zipcode'],
                 gender=request.POST['gender'],
-                birthday=datetime.strptime(request.POST['birthday'], '%Y年%m月%d日').date(),
+                birthday=datetime.strptime(request.POST['birthday'], '%Y-%m-%d').date(),
                 idcard=request.POST['idcard'],
                 idcardtype=0,
                 content=request.POST['content'],
@@ -280,7 +280,7 @@ def useradd(request):
             user.gender = request.POST['gender']
             user.zipcode = request.POST['zipcode']
             user.address = request.POST['address']
-            user.birthday = datetime.strptime(request.POST['birthday'], '%Y年%m月%d日').date()
+            user.birthday = datetime.strptime(request.POST['birthday'], '%Y-%m-%d').date()
             user.idcard = request.POST['idcard']
             user.idcardtype = request.POST['idcardtype']
             user.content = request.POST['content']
