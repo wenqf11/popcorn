@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="cn.edu.tsinghua.thss.popcorn.UserInfoActivity" >
+    <item
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:id="@+id/close_btn"
+        android:showAsAction="always"
+        android:title="关闭"/>
+</menu>

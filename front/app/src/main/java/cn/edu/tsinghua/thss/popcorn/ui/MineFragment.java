@@ -1,32 +1,32 @@
 package cn.edu.tsinghua.thss.popcorn.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-
+import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cn.edu.tsinghua.thss.popcorn.AboutInfoActivity;
 import cn.edu.tsinghua.thss.popcorn.ChangePasswordActivity;
 import cn.edu.tsinghua.thss.popcorn.FeedBackActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
-import cn.edu.tsinghua.thss.popcorn.RecordListActivity;
+import cn.edu.tsinghua.thss.popcorn.UserInfoActivity;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
@@ -44,6 +44,14 @@ public class MineFragment extends Fragment {
 
     @ViewInject(R.id.mine_username)
     private TextView myUserName;
+
+    @OnClick(R.id.mine_user_info)
+    private void onShowUserInfo(View v){
+        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+        Bundle bundle = new Bundle();
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     @OnClick(R.id.change_password)
     private void onChangePsdClick(View v) {
@@ -94,7 +102,51 @@ public class MineFragment extends Fragment {
     }
 
     private void setMineView(){
-        myUserName.setText("用户名："+Config.DEBUG_USERNAME);
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.GET_USER_INFO_URL,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+
+
+                            if (status.equals("ok")) {
+                                JSONObject userInfo = jsonObject.getJSONObject("data");
+                                String name = userInfo.getString("name");
+                                myName.setText(name);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        myUserName.setText(Config.DEBUG_USERNAME);
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getActivity().getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

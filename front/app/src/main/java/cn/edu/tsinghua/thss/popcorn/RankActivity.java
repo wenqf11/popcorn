@@ -1,15 +1,10 @@
 package cn.edu.tsinghua.thss.popcorn;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +34,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -158,7 +152,8 @@ public class RankActivity extends Activity {
                 Map<String, Object> map = new HashMap<String, Object>();
                 try {
                     JSONObject tempObject = RankList.getJSONObject(i);
-                    map.put("name", tempObject.getString("username"));
+                    map.put("username", tempObject.getString("username"));
+                    map.put("name", tempObject.getString("name"));
                     map.put("score", tempObject.getString("score"));
                     list.add(map);
                 } catch (Exception e) {
@@ -224,10 +219,9 @@ public class RankActivity extends Activity {
             }
 
             holder.name.setText((String) mData.get(position).get("name"));
-            //holder.rank.setText((String)mData.get(position).get("rank"));
             holder.score.setText((String) mData.get(position).get("score"));
             holder.rank.setText(String.valueOf(position + 1));
-            if(holder.name.getText().equals(Config.DEBUG_USERNAME)) {
+            if(mData.get(position).get("username").equals(Config.DEBUG_USERNAME)) {
                 holder.linearLayoutBg.setBackgroundColor(Color.parseColor("#E1FFFF"));
             }else{
                 holder.linearLayoutBg.setBackgroundColor(Color.WHITE);
