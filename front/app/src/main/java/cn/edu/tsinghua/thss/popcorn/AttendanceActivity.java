@@ -220,7 +220,10 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
 
                                     SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
                                     String checkIn = sp.getString("checkin", "");
-                                    if (!checkIn.equals("")){
+                                    String date = sp.getString("date", "");
+                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    String today = dateFormat.format(new Date());
+                                    if (!checkIn.equals("")&& date.equals(today)){
                                         mTextViewOnWork.setText(checkIn);
                                         mButtonOnWork.setVisibility(View.GONE);
                                         mButtonOffWork.setVisibility(View.VISIBLE);
@@ -316,13 +319,17 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                     mButtonOnWork.setVisibility(View.GONE);
                     mTextViewOnWork.setText(checkinInfo);
                     mButtonOffWork.setVisibility(View.VISIBLE);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String today = dateFormat.format(new Date());
                     SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("checkin", checkinInfo);
+                    editor.putString("date", today);
                     editor.apply();
                 }else{
                     mStatus = true;
-                    Toast.makeText(getApplicationContext(), "无法定位，请检查网络状态是否正常", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "无法定位，请检查网络是否正常", Toast.LENGTH_SHORT).show();
                 }
             }else{
                 if(!mAddress.equals("无法定位")){
@@ -368,7 +375,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                                 }
                             });
                 }else{
-                    Toast.makeText(getApplicationContext(), "无法定位，请检查网络状态是否正常", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "无法定位，请检查网络是否正常", Toast.LENGTH_SHORT).show();
                 }
             }
             super.onPostExecute(o);

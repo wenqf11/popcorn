@@ -9,10 +9,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
 public class BonusActivity extends Activity {
@@ -26,23 +38,7 @@ public class BonusActivity extends Activity {
 
     @OnClick(R.id.id_get_lottery_btn)
     private void getLotteryButtonClick(View v) {
-        progressDialog.show();
-
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                try {
-                    Thread.sleep(1000);
-                    progressDialog.cancel();
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
+        getBonus();
     }
 
 
@@ -57,13 +53,64 @@ public class BonusActivity extends Activity {
         progressDialog.setMessage("请稍候...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
-        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                mTextViewResult.setText("很遗憾，您没有中奖，下次再来！");
-                mButtonGetLottery.setVisibility(View.GONE);
-            }
-        });
+    }
+
+    private void getBonus(){
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        progressDialog.show();
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.GET_BONUS_URL,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+
+
+                            if (status.equals("ok")) {
+                                JSONObject userInfo = jsonObject.getJSONObject("data");
+                                String result = userInfo.getString("result");
+                                String bonus = userInfo.getString("bonus");
+                                mButtonGetLottery.setVisibility(View.GONE);
+                                if(result.equals("false")){
+                                    mTextViewResult.setText("很遗憾，您没有中奖，下次再来！");
+                                }
+                                else{
+                                    mTextViewResult.setText("恭喜中奖！金额为"+bonus+"元。");
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), "网络连接出错", Toast.LENGTH_SHORT).show();
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        progressDialog.hide();
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        progressDialog.hide();
+                    }
+                });
     }
 
     @Override

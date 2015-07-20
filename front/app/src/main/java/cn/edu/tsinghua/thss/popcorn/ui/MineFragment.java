@@ -1,6 +1,8 @@
 package cn.edu.tsinghua.thss.popcorn.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -79,6 +81,12 @@ public class MineFragment extends Fragment {
 
     @OnClick(R.id.log_out)
     private void onLogOutClick(View v){
+        SharedPreferences sp = getActivity().getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("USERNAME", "");
+        editor.putString("PASSWORD", "");
+        editor.putString("ACCESS_TOKEN", "");
+        editor.apply();
         getActivity().finish();
     }
 

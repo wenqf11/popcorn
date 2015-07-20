@@ -30,6 +30,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -262,6 +272,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         private final String mUsername;
         private final String mPassword;
+        private boolean isDone;
+        private boolean isLogedIn;
 
         UserLoginTask(String username, String password) {
             mUsername = username;
@@ -272,21 +284,76 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+            RequestParams param = new RequestParams();
+            param.addQueryStringParameter("username", mUsername);
+            param.addQueryStringParameter("password", mPassword);
+
+            isDone = false;
+            isLogedIn = false;
+            HttpUtils http = new HttpUtils();
+            http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+            http.send(HttpRequest.HttpMethod.GET,
+                    Config.LOGIN_URL,
+                    param,
+                    new RequestCallBack<String>() {
+
+                        @Override
+                        public void onStart() {
+                        }
+
+                        @Override
+                        public void onLoading(long total, long current, boolean isUploading) {
+                        }
+
+                        @Override
+                        public void onSuccess(ResponseInfo<String> responseInfo) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseInfo.result);
+                                String status = jsonObject.getString("status");
+
+
+                                if (status.equals("ok")) {
+                                    isLogedIn = true;
+                                    String accessToken = jsonObject.getString("data");
+                                    SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putString("ACCESS_TOKEN", accessToken);
+                                    editor.apply();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "网络连接出错", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            isDone = true;
+                        }
+
+
+                        @Override
+                        public void onFailure(HttpException error, String msg) {
+                            Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                            isDone = true;
+                        }
+                    });
 
             // TODO: register the new account here.
-            SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString("USERNAME", mUsername);
-            editor.putString("PASSWORD",mPassword);
-            editor.apply();
 
-            return true;
+            try {
+                while(!isDone)
+                    Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (isLogedIn) {
+                SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("USERNAME", mUsername);
+                editor.putString("PASSWORD", mPassword);
+                editor.apply();
+            }
+
+            return isLogedIn;
         }
 
         @Override

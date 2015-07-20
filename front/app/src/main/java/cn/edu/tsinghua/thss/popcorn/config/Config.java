@@ -16,6 +16,8 @@ public class Config {
     public static String GET_ALL_DEVICE_BRIEF_URL = LOCAL_IP + "/app/device/brief/";
     public static String GET_DEVICE_INFO_URL = LOCAL_IP + "/app/device/info/";
     public static String GET_USER_INFO_URL = LOCAL_IP + "/app/userinfo/";
+    public static String GET_BONUS_URL = LOCAL_IP + "/app/egg/";
+    public static String LOGIN_URL = LOCAL_IP +"app/login/";
 
     public static String WILL_WINGS_ORG_WEBSITE = "http://www.willwings.com";
     public static String DEBUG_USERNAME = "";
