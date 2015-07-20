@@ -94,9 +94,6 @@ public class BonusActivity extends Activity {
                                 else{
                                     mTextViewResult.setText("恭喜中奖！金额为"+bonus+"元。");
                                 }
-                            } else {
-                                Toast.makeText(getApplicationContext(), "网络连接出错", Toast.LENGTH_SHORT).show();
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

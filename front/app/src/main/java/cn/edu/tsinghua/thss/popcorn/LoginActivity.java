@@ -319,8 +319,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                     SharedPreferences.Editor editor = sp.edit();
                                     editor.putString("ACCESS_TOKEN", accessToken);
                                     editor.apply();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "网络连接出错", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
