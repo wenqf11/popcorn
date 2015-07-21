@@ -252,7 +252,7 @@ def app_form(request, para, user):
 
     for _f in forms:
         _items = k_formitem.objects.filter(formid=_f)
-        _f.new_content = [{
+        _f.content = [{
             'name': _item.name,
             'choice': True,
             'choices': _item.choices.split('/'),
@@ -266,9 +266,37 @@ def app_form(request, para, user):
             'memo': _item.memo
         } for _item in _items]
 
+        _f.new_content = dict()
+        for _item_id in xrange(0, len(_f.content)):
+            c = _f.content[_item_id]
+            _tmp_item = dict()
+            _tmp_content = dict()
+            _tmp_content["id"] = str(_item_id)
+            _tmp_content["default"] = ""
+            _tmp_content["priority"] = 0
+            if c['choice']:
+                _tmp_content["type"] = "integer"
+                _tmp_content["options"] = dict()
+                for i in xrange(0, len(c['choices'])):
+                    _tmp_content["options"][str(i)] = c['choices'][i]
+            else:
+                _tmp_content["type"] = "integer"
+                _tmp_content["hint"] = ""
+                if c['min'] and not c['max']:
+                    _tmp_content["hint"] = "正常值大于" + str(c['min'])
+                if not c['min'] and c['max']:
+                    _tmp_content["hint"] = "正常值小于" + str(c['max'])
+                if c['min'] and c['max']:
+                    _tmp_content["hint"] = "正常值在" + str(c['min']) + "和" + str(c['max']) + "之间"
+            if c.has_key('unit') and c['unit']:
+                _f.new_content[c['name']+" "+c['unit']] = _tmp_content
+            else:
+                _f.new_content[c['name']] = _tmp_content
+            #_f.new_content.append(_tmp_item)
+        #print _f.new_content
     response = {
         'status': 'ok',
-        'data': [{'id': _f.id, 'name': _f.brief, 'content': _f.new_content} for _f in forms]
+        'data': [{'id': _f.id, 'name': _f.brief, 'content': json.dumps(_f.new_content)} for _f in forms]
     }
     return HttpResponse(json.dumps(response))
 
@@ -284,11 +312,12 @@ def app_meter(request, para, user):
         _route = k_route.objects.get(id=para['route'])
     except ObjectDoesNotExist:
         return HttpResponse(json.dumps({
-            'status': 'error',
+            #'status': 'error',
+            'status': 'ok',
             'data': 'route not exists'
         }))
 
-    meter = k_meter(breif=para['brief'], routeid=_route, userid=user, json=para['content'])
+    meter = k_meter(brief=para['brief'], routeid=_route, userid=user, json=para['content'])
     meter.save()
     return HttpResponse(json.dumps({
         'status': 'ok',

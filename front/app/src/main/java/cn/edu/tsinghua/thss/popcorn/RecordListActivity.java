@@ -44,12 +44,15 @@ public class RecordListActivity extends ListActivity {
 
     private TableListAdapter mAdapter;
 
+    private String mRouteId;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //String[] str_title = {"设备一","设备二","设备三","设备四","设备五"};
         Bundle tmp_bundle = this.getIntent().getExtras();
         String route_id = tmp_bundle.getString("route_id");
+        mRouteId = route_id;
 
         String ROUTE_GET_URL = Config.LOCAL_IP + "/app/form";
         mAdapter = new TableListAdapter(this);
@@ -124,7 +127,9 @@ public class RecordListActivity extends ListActivity {
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent=new Intent(this, TableActivity.class);
         Bundle bundle=new Bundle();
+        bundle.putString("brief", mBrief[(int)id]);
         bundle.putString("form_content", mFormContent[(int)id]);
+        bundle.putString("route_id", mRouteId);
         intent.putExtras(bundle);
         startActivity(intent);
 

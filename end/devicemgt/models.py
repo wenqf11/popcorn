@@ -345,7 +345,7 @@ class k_route(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_meter(models.Model):
-    breif = models.CharField(max_length=50)
+    brief = models.CharField(max_length=50)
     routeid = models.ForeignKey(k_route)
     userid = models.ForeignKey(k_user)
     metertime = models.DateTimeField(auto_now_add=True)

@@ -24,14 +24,18 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import cn.edu.tsinghua.thss.popcorn.QRcode.QRcodeActivity;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 import cn.edu.tsinghua.thss.popcorn.formgenerator.FormActivity;
 
 public class TableActivity extends FormActivity{
-    private static String FORM_RESULT_SUBMIT_URL = Config.LOCAL_IP + "/app/maintain/update/";
     static private int REQUEST_CODE = 2;
     private String  result;
+    private String mRouteId;
+    private String mBrief;
     private TextView resultTextView;
     private ProgressDialog progressDialog;
 
@@ -46,13 +50,20 @@ public class TableActivity extends FormActivity{
         RequestParams params = new RequestParams();
         params.addBodyParameter("username", Config.DEBUG_USERNAME);
         params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
-        params.addBodyParameter("maintain_id", id);
-        //params.addBodyParameter("note", note);
+        params.addBodyParameter("route_id", mRouteId);
+        params.addBodyParameter("brief", mBrief);
+        params.addBodyParameter("content", json.toString());
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = df.format(new Date());
+        params.addBodyParameter("timestamp", time);
+
         progressDialog.show();
 
         HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.POST,
-                FORM_RESULT_SUBMIT_URL,
+                Config.SUBMIT_METER_URL,
                 params,
                 new RequestCallBack<String>() {
 
@@ -91,56 +102,30 @@ public class TableActivity extends FormActivity{
                 });
     }
 
+    private String wrap_form_content(String raw) {
+        String form_content_json = raw;
+        return form_content_json;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle tmp_bundle = this.getIntent().getExtras();
-        String form_content_json = tmp_bundle.getString("form_content");
-        //generateForm{json)
-        String item_json = "{\n" +
-                "    \"meta\": {\n" +
-                "        \"type\": \"meta\",\n" +
-                "        \"name\": \"Music Album\"\n" +
-                "    },\n" +
-                "    \"冷供水温度  ℃\": {\n" +
-                "        \"type\": \"integer\",\n" +
-                "        \"id\": \"0\",\n" +
-                "        \"default\": \"\",\n" +
-                "        \"priority\": \"0\",\n" +
-                "        \"hint\":\"7-12\"\n" +
-                "    },\n" +
-                "    \"冷供水压力  Mpa\": {\n" +
-                "        \"type\": \"integer\",\n" +
-                "        \"id\": \"1\",\n" +
-                "        \"default\": \"\",\n" +
-                "        \"priority\": \"1\"\n" +
-                "    },\n" +
-                "    \"冷回水压力  Mpa\": {\n" +
-                "        \"type\": \"integer\",\n" +
-                "        \"id\": \"2\",\n" +
-                "        \"default\": \"\",\n" +
-                "        \"priority\": \"2\"\n" +
-                "    },\n" +
-                "    \"热供水温度  ℃\": {\n" +
-                "        \"type\": \"integer\",\n" +
-                "        \"id\": \"3\",\n" +
-                "        \"default\": \"\",\n" +
-                "        \"priority\": \"3\"\n" +
-                "    },\n" +
-                "    \"水位\": {\n" +
-                "        \"type\": \"integer\",\n" +
-                "        \"id\": \"4\",\n" +
-                "        \"default\": \"0\",\n" +
-                "        \"priority\": \"4\",\n" +
-                "        \"options\": {\n" +
-                "            \"0\": \"偏高\",\n" +
-                "            \"1\": \"中等\",\n" +
-                "            \"2\": \"偏低\"\n" +
-                "        }\n" +
-                "    }\n" +
-                "}";
+        String form_content_raw = tmp_bundle.getString("form_content");
+        mBrief = tmp_bundle.getString("brief");
+        mRouteId = tmp_bundle.getString("route_id");
+        String form_content_json = wrap_form_content(form_content_raw);
+
+        progressDialog = new ProgressDialog(TableActivity.this, R.style.buffer_dialog);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("抄表数据提交中...");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCancelable(false);
 
         //LinearLayout container = generateForm( FormActivity.parseFileToString( this, "schemas.json" ) );
+        if (form_content_json.length() < 10) {
+            form_content_json = "{\"未添加抄表表单\":{\"id\":\"1\",\"type\":\"integer\",\"hint\":\"未添加抄表表单\"}}";
+        }
         LinearLayout container = generateForm( form_content_json );
 
         LinearLayout list = new LinearLayout(this);
@@ -172,7 +157,10 @@ public class TableActivity extends FormActivity{
             public void onClick(View view) {
                 JSONObject json = save();
                 String qrcode = (String)resultTextView.getText();
-                //submitButtonClick(json);
+                if (qrcode.length() > 0) {
+                    //json.put("qrcode", qrcode);
+                }
+                submitButtonClick(json);
             }
         });
         container.addView(submitBtn);
