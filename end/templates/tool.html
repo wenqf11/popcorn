@@ -22,6 +22,7 @@
                     <thead>
                         <tr>
                             <th>所属</th>
+                            <th>使用班组</th>
                             <th>工具全称</th>
                             <th>简称</th>
                             <th>型号</th>
@@ -46,6 +47,7 @@
                         {% for dataitem in data %}
                         <tr>
                             <td>{{ dataitem.classname }}</td>
+                            <td>{{ dataitem.ownername }}</td>
                             <td>{{ dataitem.name }}</td>
                             <td>{{ dataitem.brief }}</td>
                             <td>{{ dataitem.model }}</td>

@@ -2592,6 +2592,7 @@ def view_tool(request):
         dataitem['memo'] = _tool.memo
         dataitem['creator'] = _creator.name
         dataitem['createdatetime'] = _tool.createdatetime
+        dataitem['ownername'] = _tool.ownerid.name
 
         if _tool.editorid != 0:
             _editor = k_user.objects.get(id=_tool.editorid)
@@ -2642,6 +2643,7 @@ def operate_tool(request):
         _data["content"] = _tool.content
         _data["memo"] = _tool.memo
         _data['classname'] = _tool.classid.name
+        _data['ownername'] = _tool.ownerid.name
     else:
         _data["isNew"] = True
     _classes = []
@@ -2685,6 +2687,7 @@ def submit_tool(request):
     _name = request.GET.get('name')
     _brief = request.GET.get('brief')
     _model = request.GET.get('model')
+    _ownername = request.GET.get('ownername')
     _minimum = request.GET.get('minimum')
     _content = request.GET.get('content')
     _memo = request.GET.get('memo')
@@ -2699,6 +2702,7 @@ def submit_tool(request):
     _class = k_class.objects.get(name=_classname)
     _producer = k_producer.objects.get(name=_producer)
     _supplier = k_supplier.objects.get(name=_supplier)
+    _owner = k_class.objects.get(name=_ownername)
     if _id:
         _tool = k_tool.objects.get(id=_id)
         _tools = k_tool.objects.filter(name=_name)
@@ -2715,6 +2719,7 @@ def submit_tool(request):
         _tool.classid = _class
         _tool.producerid = _producer
         _tool.supplierid = _supplier
+        _tool.ownerid = _owner
     else:
         _tools = k_tool.objects.filter(name=_name)
         if len(_tools) > 0:
@@ -2724,7 +2729,7 @@ def submit_tool(request):
         if len(_tools) > 0:
             server_msg = '简称为'+_tools[0].brief+'的工具已存在！'
             return HttpResponseRedirect('/operate_tool/?msg='+server_msg)
-        _tool = k_tool.objects.create(classid=_class, producerid=_producer, supplierid=_supplier)
+        _tool = k_tool.objects.create(classid=_class, producerid=_producer, supplierid=_supplier, ownerid=_owner)
         _tool.creatorid = _user.id
         _tool.createdatetime = get_current_date()
     _tool.brand = _brand
