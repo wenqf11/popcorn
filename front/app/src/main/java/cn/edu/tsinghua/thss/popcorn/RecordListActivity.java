@@ -91,7 +91,7 @@ public class RecordListActivity extends ListActivity {
                                 for (int i = 0; i < results.length(); ++i) {
                                     JSONObject result = results.getJSONObject(i);
                                     String name = result.getString("name");
-                                    String form_content = result.getString("form_content");
+                                    String form_content = result.getString("content");
                                     tmp_title.add(name);
                                     tmp_form_content.add(form_content);
                                 }
