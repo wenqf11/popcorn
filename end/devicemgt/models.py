@@ -1,5 +1,6 @@
-__author__ = 'LY'
 # -*- coding: utf-8 -*-
+__author__ = 'LY'
+
 
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured

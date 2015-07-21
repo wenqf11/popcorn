@@ -1,5 +1,6 @@
-__author__ = 'LY'
 # -*- coding: utf-8 -*-
+__author__ = 'LY'
+
 
 import settings
 import time
