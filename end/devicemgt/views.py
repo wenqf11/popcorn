@@ -365,6 +365,11 @@ def devicemgt(request):
             deviceinfo['brief'] = device.brief
             deviceinfo['name']  = device.name
             deviceinfo['position'] = device.position
+            devicetype = k_devicetype.objects.filter(id=device.typeid_id)
+            if len(devicetype) == 1:
+                deviceinfo['devicetype'] = devicetype[0].name
+            else:
+                deviceinfo['devicetype'] = "未指定设备分类"
             owner = k_user.objects.filter(id=device.ownerid)
             if len(owner) == 1:
                 deviceinfo['owner'] = owner[0].username
