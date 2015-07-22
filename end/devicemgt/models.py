@@ -1,5 +1,6 @@
-__author__ = 'LY'
 # -*- coding: utf-8 -*-
+__author__ = 'LY'
+
 
 from django.db import models
 from django.core.exceptions import ImproperlyConfigured
@@ -521,7 +522,7 @@ class k_sparecount(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_tool(models.Model):
-    classid = models.ForeignKey(k_class, related_name='tool_set')
+    classid = models.ForeignKey(k_class, related_name='toolclass_set')
     name = models.CharField(max_length=50) #项目本级内唯一
     brief = models.CharField(max_length=50) #编号，项目内本级唯一
     brand = models.CharField(max_length=50)
@@ -540,7 +541,7 @@ class k_tool(models.Model):
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    ownerid = models.PositiveIntegerField(default=0)
+    ownerid = models.ForeignKey(k_class, related_name='toolowner_set')
 
 class k_tooluse(models.Model):
     classid = models.ForeignKey(k_class, related_name='tooluse_set')

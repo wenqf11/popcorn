@@ -108,14 +108,21 @@
                         <input name="model" type="text" class="span6 m-wrap" value="{{ data.model }}" required/>
                     </div>
                 </div>
-                <!--
+                
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">责任人<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <input name="owner" type="text" class="span6 m-wrap" value="{{ data.owner }}"/>
+                    <label class="col-sm-3 control-label no-padding-right">使用班组<span class="required">*</span></label>
+                    <div class="col-sm-5">
+                        <select class="chosen-select" name="ownername">
+                            {% for class in classes %}
+                                {% ifequal class data.ownername %}
+                                    <option value="{{ class }}" selected="selected">{{ class }}</option>
+                                {% else %}
+                                    <option value="{{ class }}">{{ class }}</option>
+                                {% endifequal %}
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
-                -->
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">内容<span class="required">*</span></label>
