@@ -10,7 +10,7 @@ from django.utils.crypto import get_random_string
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from datetime import date
+from datetime import date, datetime
 from django.contrib.auth.hashers import (
     check_password, make_password, is_password_usable)
 
@@ -152,7 +152,7 @@ class k_user(models.Model):
         ('1', '男'),
     )
     CARD_TYPE = (
-        ('1','身份证'),
+        ('1', '身份证'),
     )
     classid = models.ForeignKey(k_class, related_name='user_set')
     roles = models.ManyToManyField(k_role)
@@ -162,6 +162,15 @@ class k_user(models.Model):
     name = models.CharField(max_length=50)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='1')
     face = models.CharField(max_length=50)
+
+    def content_file_name(instance, filename):
+        return 'user_avatar/{0}/{1}_{2}'.format(
+            instance.username,
+            datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
+            filename
+        )
+    avatar = models.FileField(upload_to=content_file_name)
+
     mobile = models.CharField(max_length=50, default='0')
     email = models.EmailField(_('e-mail address'))
     address = models.CharField(max_length=100)

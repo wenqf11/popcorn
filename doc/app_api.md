@@ -46,6 +46,29 @@
 			data: "wrong password"
 		}
 
+### 上传用户头像
+
+- 请求地址：http://domain.com/app/avatar/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **avatar**，`file`，用户头像的图像文件
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：是否上传成功
+- json示例：
+
+		{
+			status: "ok",
+			data: "avatar upload success"
+		}
+	或
+
+		{
+			status: "error",
+			data: "avatar upload failed"
+		}
+
 ### 获取用户信息
 
 - 请求地址：http://domain.com/app/userinfo/

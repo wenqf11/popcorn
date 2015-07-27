@@ -13,7 +13,7 @@ import json, random
 # wrapper that require the request to be GET type
 def get_required(func):
     def checker(request):
-        if not request.GET:
+        if not request.method == 'GET':
             return HttpResponse(json.dumps({
                 'status': 'error',
                 'data': 'GET request required'
@@ -26,7 +26,7 @@ def get_required(func):
 # wrapper that require the request to be POST type
 def post_required(func):
     def checker(request):
-        if not request.POST:
+        if not request.method == 'POST':
             return HttpResponse(json.dumps({
                 'status': 'error',
                 'data': 'POST request required'
@@ -39,39 +39,37 @@ def post_required(func):
 # wrapper that require correct token
 # passing 'para'
 # passing 'user'
-def token_required(request_type):
-    def wrapper(func):
-        def checker(request):
-            body = request.GET if request_type == 'GET' else request.POST
-            para = {
-                'username': body.get('username'),
-                'token': body.get('access_token'),
-                'timestamp': body.get('timestamp')
-            }
+def token_required(func):
+    def checker(request):
+        body = request.GET if request.method == 'GET' else request.POST
+        para = {
+            'username': body.get('username'),
+            'token': body.get('access_token'),
+            'timestamp': body.get('timestamp')
+        }
 
-            try:
-                user = k_user.objects.get(username=para['username'])
-            except ObjectDoesNotExist:
-                return HttpResponse(json.dumps({
-                    'status': 'error',
-                    'data': 'user not exists'
-                }))
-            except Exception:
-                return HttpResponse(json.dumps({
-                    'status': 'error',
-                    'data': "can't connect to database"
-                }))
+        try:
+            user = k_user.objects.get(username=para['username'])
+        except ObjectDoesNotExist:
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'user not exists'
+            }))
+        except Exception:
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': "can't connect to database"
+            }))
 
-            # if not para['token'] == user.token
-            if not para['token'] == 'hello_world':
-                return HttpResponse(json.dumps({
-                    'status': 'error',
-                    'data': 'unauthorized user'
-                }))
+        # if not para['token'] == user.token
+        if not para['token'] == 'hello_world':
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'unauthorized user'
+            }))
 
-            return func(request, user=user, para=para)
-        return checker
-    return wrapper
+        return func(request, user=user, para=para)
+    return checker
 
 
 # test view, a html page
@@ -113,7 +111,7 @@ def app_login(request):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_password(request, para, user):
     para['password'] = request.POST.get('password')
     para['new_password'] = request.POST.get('new_password')
@@ -139,7 +137,7 @@ def app_password(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_userinfo(request, para, user):
     return HttpResponse(json.dumps({
         'status': 'ok',
@@ -167,7 +165,7 @@ def app_userinfo(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_score(request, para, user):
     para['year'] = request.GET.get('year')
     para['month'] = request.GET.get('month')
@@ -200,7 +198,7 @@ def app_score(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_score_rank(request, para, user):
     para['year'] = request.GET.get('year')
     para['month'] = request.GET.get('month')
@@ -217,7 +215,7 @@ def app_score_rank(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_route(request, para, user):
     schedules = k_schedule.objects.filter(user=user, date=date.today())
     if not schedules.exists():
@@ -235,7 +233,7 @@ def app_route(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_form(request, para, user):
     try:
         route = k_route.objects.get(id=int(request.GET.get('route_id')))
@@ -302,7 +300,7 @@ def app_form(request, para, user):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_meter(request, para, user):
     para['route'] = int(request.POST.get('route_id'))
     para['brief'] = request.POST.get('brief')
@@ -326,7 +324,7 @@ def app_meter(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_checkinfo(request, para, user):
     para['date'] = request.GET.get('date')
     d = datetime.strptime(para['date'], '%Y-%m-%d').date()
@@ -358,7 +356,7 @@ def app_checkinfo(request, para, user):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_check(request, para, user):
     para['date'] = request.POST.get('date')
     para['checkin'] = request.POST.get('checkin')
@@ -387,7 +385,7 @@ def app_check(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_maintain_list_1(request, para, user):
     tasks = k_maintenance.objects.filter(
         mtype=1,
@@ -414,7 +412,7 @@ def app_maintain_list_1(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_maintain_list_2(request, para, user):
     tasks = k_maintenance.objects.filter(
         mtype=2,
@@ -441,7 +439,7 @@ def app_maintain_list_2(request, para, user):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_maintain_add(request, para, user):
     para['device_brief'] = request.POST.get('device_brief')
     para['title'] = request.POST.get('title')
@@ -475,7 +473,7 @@ def app_maintain_add(request, para, user):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_maintain_confirm(request, para, user):
     para['maintain_id'] = int(request.POST.get('maintain_id'))
 
@@ -502,7 +500,7 @@ def app_maintain_confirm(request, para, user):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_maintain_update(request, para, user):
     para['maintain_id'] = int(request.POST.get('maintain_id'))
     para['note'] = request.POST.get('note')
@@ -530,7 +528,7 @@ def app_maintain_update(request, para, user):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_maintain_submit(request, para, user):
     para['maintain_id'] = int(request.POST.get('maintain_id'))
 
@@ -551,7 +549,7 @@ def app_maintain_submit(request, para, user):
 
 
 @post_required
-@token_required('POST')
+@token_required
 def app_feedback(request, para, user):
     para['feedback'] = request.POST.get('feedback')
 
@@ -570,7 +568,7 @@ def app_feedback(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_device_brief(request, para, user):
     devices = k_device.objects.all()
     return HttpResponse(json.dumps({
@@ -580,7 +578,7 @@ def app_device_brief(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_device_info(request, para, user):
     para['device_brief'] = request.GET.get('device_brief')
 
@@ -615,7 +613,7 @@ def app_version(request):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_egg(request, para, user):
     # query whether already tried to get an egg today
     egginfo = k_staffegginfo.objects.filter(userid=user, time=date.today())
@@ -649,7 +647,7 @@ def app_egg(request, para, user):
 
 
 @get_required
-@token_required('GET')
+@token_required
 def app_egg_info(request, para, user):
     para['date'] = request.GET.get('date')
 
@@ -673,5 +671,24 @@ def app_egg_info(request, para, user):
             'result': _info.state == 1
         }
     }))
+
+
+@post_required
+@token_required
+def app_avatar(request, para, user):
+    _fs = request.FILES
+
+    if _fs:
+        user.avatar = _fs['avatar']
+        user.save()
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': 'avatar upload success'
+        }))
+    else:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'avatar upload failed'
+        }))
 
 
