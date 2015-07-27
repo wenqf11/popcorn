@@ -23,6 +23,7 @@ urlpatterns = patterns(
     url(r'^app/login/$', app_login),
     url(r'^app/password/$', app_password),
     url(r'^app/userinfo/$', app_userinfo),
+    url(r'^app/userinfo/submit/$', app_userinfo_submit),
     url(r'^app/score/$', app_score),
     url(r'^app/score/rank/$', app_score_rank),
 

@@ -104,6 +104,38 @@
 			}
 		}
 
+### 修改用户信息
+
+- 请求地址：http://domain.com/app/userinfo/submit/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **name**，`string`，昵称
+	- **mobile**，`string`，手机号
+	- **email**，`string`，电子邮件
+	- **address**，`string`，地址
+	- **zipcode**，`string`，邮编
+	- **birthday**，`string`，生日
+	- **id_card**，`string`，身份证号
+	- **memo**，`string`，备注
+	- **contact**，`string`，紧急联系人
+	- **contact_mobile**，`string`，联系人手机号
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：是否修改成功
+- json示例：
+
+		{
+			status: "ok",
+			data: "user info modified"
+		}
+	或
+
+		{
+			status: "error",
+			data: "operation failed"
+		}
+
 ### 获取积分
 
 - 请求地址：http://domain.com/app/score/

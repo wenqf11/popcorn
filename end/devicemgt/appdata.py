@@ -164,6 +164,26 @@ def app_userinfo(request, para, user):
     }))
 
 
+@post_required
+@token_required
+def app_userinfo_submit(request, para, user):
+    _d = request.POST
+
+    for _k in ['name', 'mobile', 'email', 'address', 'zipcode',
+               'id_card', 'memo', 'contact', 'contact_mobile']:
+        if _k in _d:
+            setattr(user, _k, _d[_k])
+
+    if 'birthday' in _d:
+        user.birthday = datetime.strptime(_d['birthday'], '%Y-%m-%d').date()
+
+    user.save()
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'user info modified'
+    }))
+
+
 @get_required
 @token_required
 def app_score(request, para, user):

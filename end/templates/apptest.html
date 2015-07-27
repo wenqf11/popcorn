@@ -19,12 +19,11 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.post('/app/meter/', {
+            $.post('/app/userinfo/submit/', {
                 username: 'syb1001',
                 access_token: 'hello_world',
-                brief: 'kz939922',
-                route_id: 2,
-                content: '{meter: 5, data: "hheiid"}',
+                mobile: '13521306535',
+                birthday: '1992-10-01',
                 timestamp: 1383712332,
             }, function(data) {
                 console.log(data);
