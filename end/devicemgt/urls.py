@@ -16,7 +16,8 @@ urlpatterns = patterns(
 
     url(r'^app/route/$', app_route),
     url(r'^app/form/$', app_form),
-    url(r'app/meter/$', app_meter),
+    url(r'^app/meter/$', app_meter),
+    url(r'^app/image/$', app_image),
 
     url(r'^app/login/$', app_login),
     url(r'^app/password/$', app_password),
@@ -81,6 +82,7 @@ urlpatterns = patterns(
     url(r'^view_role/$', view_role),
     url(r'^operate_role/$', operate_role),
     url(r'^submit_role/(\d*)/$', submit_role),
+    url(r'^submit_role/$', submit_role),
     url(r'^delete_role/$', delete_role),
 
     url(r'^view_route/$', view_route),

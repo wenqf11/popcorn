@@ -1057,7 +1057,7 @@ def delete_role(request):
 
 
 @login_required
-def submit_role(request, _id):
+def submit_role(request, _id=''):
     _classname = request.GET.get('classname')
     _name = request.GET.get('name')
     _editdatetime = get_current_date()
