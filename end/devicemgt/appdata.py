@@ -147,6 +147,7 @@ def app_userinfo(request, para, user):
             'department': user.classid.name,
             'state': user.state,
             'gender': user.gender,
+            'avatar': user.avatar.url,
             'mobile': user.mobile,
             'email': user.email,
             'address': user.address,

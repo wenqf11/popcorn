@@ -1,6 +1,10 @@
 from django.conf.urls import patterns, include, url
+from django.conf import settings
 from views import *
 from appdata import *
+
+from django.conf.urls.static import static
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -150,4 +154,4 @@ urlpatterns = patterns(
     url(r'^score/$', score),
     url(r'^egg/$', egg),
     url(r'^egg/submit/$', egg_submit),
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

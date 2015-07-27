@@ -88,6 +88,7 @@
 				department: "空调组",
 				state: "在岗",
 				gender: "男",
+				avatar: "/media/user_avatar/syb1001/2015-07-27-14-09-12_test.jpg",
 				mobile: "18810651000",
 				email: "yanglei11@mails.tsinghua.edu.cn",
 				address: "紫荆1#404A",
