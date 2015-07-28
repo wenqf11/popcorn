@@ -169,7 +169,7 @@ class k_user(models.Model):
             datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
             filename
         )
-    avatar = models.FileField(upload_to=content_file_name)
+    avatar = models.FileField(upload_to=content_file_name, default='user_avatar/undefined.png')
 
     mobile = models.CharField(max_length=50, default='0')
     email = models.EmailField(_('e-mail address'))
@@ -382,7 +382,14 @@ class k_maintenance(models.Model):
     state = models.CharField(max_length=1, choices=MAINTENANCE_STATUS, default='1')
     title = models.CharField(max_length=50)
     createcontent = models.CharField(max_length=200)
-    image = models.CharField(max_length=50)
+
+    def content_file_name(instance, filename):
+        return 'maintance_image/{0}_{1}'.format(
+            datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
+            filename
+        )
+    image = models.FileField(upload_to=content_file_name)
+
     editcontent = models.CharField(max_length=200)
     factor = models.PositiveIntegerField(default=1)
     memo = models.CharField(max_length=100)

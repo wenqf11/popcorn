@@ -113,6 +113,7 @@
 	- username，`string`，用户名
 	- access_token，`string`，用户认证用的token
 	- **name**，`string`，昵称
+	- **gender**，`int`，性别，0表示女，1表示男
 	- **mobile**，`string`，手机号
 	- **email**，`string`，电子邮件
 	- **address**，`string`，地址
@@ -598,18 +599,42 @@
 	- **image**，`string`，图片URL，先传好图片再新建报修
 	- **memo**，`string`，备注
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：新建维修任务是否成功，失败则返回失败原因
+- 返回结果：新建维修任务是否成功，成功返回维修任务id（用于图片上传），失败则返回失败原因
 - json示例：
 
 		{
 			status: "ok",
-			data: "maintain task added"
+			data: 12
 		}
 	或
 
 		{
 			status: "error",
 			data: "device not exist"
+		}
+
+### 上传报修图像
+
+- 请求地址：http://domain.com/app/maintain/image/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **id**，`int`，所要上传图片的维修任务id，新建维修任务时返回此id
+	- **image**，`file`，报修图像文件
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：是否上传成功
+- json示例：
+
+		{
+			status: "ok",
+			data: "image upload success"
+		}
+	或
+
+		{
+			status: "error",
+			data: "image upload failed"
 		}
 
 ### 获取维修任务列表

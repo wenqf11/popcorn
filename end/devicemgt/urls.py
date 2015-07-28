@@ -37,6 +37,7 @@ urlpatterns = patterns(
     url(r'^app/maintain/list/1/$', app_maintain_list_1),
     url(r'^app/maintain/list/2/$', app_maintain_list_2),
     url(r'^app/maintain/add/$', app_maintain_add),
+    url(r'^app/maintain/image/$', app_maintain_image),
     url(r'^app/maintain/confirm/$', app_maintain_confirm),
     url(r'^app/maintain/update/$', app_maintain_update),
     url(r'^app/maintain/submit/$', app_maintain_submit),

@@ -438,6 +438,7 @@ img {
 <li>username，<code>string</code>，用户名</li>
 <li>access_token，<code>string</code>，用户认证用的token</li>
 <li><strong>name</strong>，<code>string</code>，昵称</li>
+<li><strong>gender</strong>，<code>int</code>，性别，0表示女，1表示男</li>
 <li><strong>mobile</strong>，<code>string</code>，手机号</li>
 <li><strong>email</strong>，<code>string</code>，电子邮件</li>
 <li><strong>address</strong>，<code>string</code>，地址</li>
@@ -1044,12 +1045,12 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：新建维修任务是否成功，失败则返回失败原因</li>
+<li>返回结果：新建维修任务是否成功，成功返回维修任务id（用于图片上传），失败则返回失败原因</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
     status: &quot;ok&quot;,
-    data: &quot;maintain task added&quot;
+    data: 12
 }
 </code></pre>
 
@@ -1057,6 +1058,38 @@ img {
 <pre><code>{
     status: &quot;error&quot;,
     data: &quot;device not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>上传报修图像</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain/image/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>id</strong>，<code>int</code>，所要上传图片的维修任务id，新建维修任务时返回此id</li>
+<li><strong>image</strong>，<code>file</code>，报修图像文件</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：是否上传成功</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;image upload success&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;image upload failed&quot;
 }
 </code></pre>
 

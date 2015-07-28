@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.11 (64 bit)
-MySQL - 5.6.10 : Database - devicemgtdb
+SQLyog Trial v12.12 (64 bit)
+MySQL - 5.6.23-log : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -397,7 +397,7 @@ CREATE TABLE `devicemgt_k_maintenance` (
   `state` varchar(1) NOT NULL,
   `title` varchar(50) NOT NULL,
   `createcontent` varchar(100) NOT NULL,
-  `image` varchar(30) NOT NULL,
+  `image` varchar(100) NOT NULL,
   `editcontent` varchar(100) NOT NULL,
   `factor` int(10) unsigned NOT NULL,
   `memo` varchar(100) NOT NULL,
@@ -897,10 +897,10 @@ CREATE TABLE `devicemgt_k_tool` (
   KEY `devicemgt_k_tool_5c5fdea6` (`producerid_id`),
   KEY `devicemgt_k_tool_69308dea` (`supplierid_id`),
   KEY `devicemgt_k_tool_c128a093` (`ownerid_id`),
-  CONSTRAINT `supplierid_id_refs_id_ea0efb3f` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`),
   CONSTRAINT `classid_id_refs_id_67fdcf25` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `ownerid_id_refs_id_67fdcf25` FOREIGN KEY (`ownerid_id`) REFERENCES `devicemgt_k_class` (`id`),
-  CONSTRAINT `producerid_id_refs_id_1d6747ec` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`)
+  CONSTRAINT `producerid_id_refs_id_1d6747ec` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
+  CONSTRAINT `supplierid_id_refs_id_ea0efb3f` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_tool` */
@@ -1000,6 +1000,7 @@ CREATE TABLE `devicemgt_k_user` (
   `status` varchar(1) NOT NULL,
   `todo` int(10) unsigned NOT NULL,
   `onlinetime` int(10) unsigned NOT NULL,
+  `avatar` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_user_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_6b588af6` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
@@ -1007,7 +1008,7 @@ CREATE TABLE `devicemgt_k_user` (
 
 /*Data for the table `devicemgt_k_user` */
 
-insert  into `devicemgt_k_user`(`id`,`classid_id`,`state`,`username`,`password`,`name`,`gender`,`face`,`mobile`,`email`,`address`,`zipcode`,`birthday`,`idcard`,`idcardtype`,`content`,`memo`,`contact`,`contactmobile`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`todo`,`onlinetime`) values (1,1,'','hahehi','pbkdf2_sha256$12000$fbLvT2mV7bcZ$UgljjZePlWiXO83O5fBCY/iLDAp+BBhClOSiAyEOMyw=','zhangsan','1','../static/images/user.png','15959540000','hahehi@qq.com','406B','100084','1992-09-01','','','','','','',0,'2015-04-29',1,'2015-07-21',0,'2015-04-29','',0,0),(2,2,'','syb1001','pbkdf2_sha256$15000$K9T73jen4wHH$LyqQHJblrPwXsak+/Hnl18vjSdBPkoTYKFGb3jKT+bE=','lisi','1','../static/images/user.png','132********','syb@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(3,3,'','yl-1993','yl','wangwu','1','../static/images/user.png','yl188','yl@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(4,3,'','wenqf11','wqf','chenliu','1','../static/images/user.png','wqf188','wqf@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0),(5,5,'1','test1','123','','1','../static/images/user.png','','','','','1993-05-28','','0','','','','',0,'2015-05-01',1,'2015-05-23',0,'2015-05-01','0',0,0),(6,5,'1','user1','pbkdf2_sha256$10000$ykDJrrNndgrZ$l0SFaaQhZP8VDTd6CJGljWkIYKQtcyRersT/xopxKhM=','user1','1','../static/images/user.png','18810305385','691@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(7,2,'1','user2','pbkdf2_sha256$10000$PSfY4NA9p7Ga$ZYJGpjWR2m05ynL4+DSVTIoh1wIH/KsDOm9PlYAu7Hg=','user2','1','../static/images/user.png','18810305383','691w@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(8,7,'1','user3','pbkdf2_sha256$10000$DmZNtTUwnxw4$8ubToZomThUK9wBk/mGiIyVChRpXHcLUMKCItDAya5Y=','user3','1','../static/images/user.png','18810305382','69@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(9,8,'1','user4','pbkdf2_sha256$10000$pH2ghR1OiXOo$tvom0zCO9G6rZnDVqt50xAPgHNvJpQdzkBcKbJfqDeQ=','user4','1','../static/images/user.png','18810305381','6987@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0),(10,2,'1','wenqingfu','pbkdf2_sha256$12000$NvuVjfuvXiSx$wURHFD4oqXuI3WSaXyTxTkcuFjpuTl9M0IncCEQ3HuU=','文庆福','1','../static/images/user.png','13681332621','thssvince@163.com','','','1993-02-04','431224199302041099','0','','','李某某','13681332222',0,'2015-07-20',0,'2015-07-20',0,'2015-07-20','0',0,0);
+insert  into `devicemgt_k_user`(`id`,`classid_id`,`state`,`username`,`password`,`name`,`gender`,`face`,`mobile`,`email`,`address`,`zipcode`,`birthday`,`idcard`,`idcardtype`,`content`,`memo`,`contact`,`contactmobile`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`todo`,`onlinetime`,`avatar`) values (1,1,'','hahehi','pbkdf2_sha256$12000$fbLvT2mV7bcZ$UgljjZePlWiXO83O5fBCY/iLDAp+BBhClOSiAyEOMyw=','zhangsan','1','../static/images/user.png','15959540000','hahehi@qq.com','406B','100084','1992-09-01','','','','','','',0,'2015-04-29',1,'2015-07-21',0,'2015-04-29','',0,0,''),(2,2,'','syb1001','pbkdf2_sha256$15000$K9T73jen4wHH$LyqQHJblrPwXsak+/Hnl18vjSdBPkoTYKFGb3jKT+bE=','lisi','1','../static/images/user.png','132********','syb@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0,''),(3,3,'','yl-1993','yl','wangwu','1','../static/images/user.png','yl188','yl@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0,''),(4,3,'','wenqf11','wqf','chenliu','1','../static/images/user.png','wqf188','wqf@qq.com','','','2015-04-29','','','','','','',0,'2015-04-29',0,'2015-04-29',0,'2015-04-29','',0,0,''),(5,5,'1','test1','123','','1','../static/images/user.png','','','','','1993-05-28','','0','','','','',0,'2015-05-01',1,'2015-05-23',0,'2015-05-01','0',0,0,''),(6,5,'1','user1','pbkdf2_sha256$10000$ykDJrrNndgrZ$l0SFaaQhZP8VDTd6CJGljWkIYKQtcyRersT/xopxKhM=','user1','1','../static/images/user.png','18810305385','691@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0,''),(7,2,'1','user2','pbkdf2_sha256$10000$PSfY4NA9p7Ga$ZYJGpjWR2m05ynL4+DSVTIoh1wIH/KsDOm9PlYAu7Hg=','user2','1','../static/images/user.png','18810305383','691w@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0,''),(8,7,'1','user3','pbkdf2_sha256$10000$DmZNtTUwnxw4$8ubToZomThUK9wBk/mGiIyVChRpXHcLUMKCItDAya5Y=','user3','1','../static/images/user.png','18810305382','69@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0,''),(9,8,'1','user4','pbkdf2_sha256$10000$pH2ghR1OiXOo$tvom0zCO9G6rZnDVqt50xAPgHNvJpQdzkBcKbJfqDeQ=','user4','1','../static/images/user.png','18810305381','6987@qq.com','','','1993-05-28','','0','','','','',0,'2015-05-01',0,'2015-05-01',0,'2015-05-01','0',0,0,''),(10,2,'1','wenqingfu','pbkdf2_sha256$12000$NvuVjfuvXiSx$wURHFD4oqXuI3WSaXyTxTkcuFjpuTl9M0IncCEQ3HuU=','文庆福','1','../static/images/user.png','13681332621','thssvince@163.com','','','1993-02-04','431224199302041099','0','','','李某某','13681332222',0,'2015-07-20',0,'2015-07-20',0,'2015-07-20','0',0,0,'');
 
 /*Table structure for table `devicemgt_k_user_roles` */
 

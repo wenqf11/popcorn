@@ -170,8 +170,8 @@ def app_userinfo(request, para, user):
 def app_userinfo_submit(request, para, user):
     _d = request.POST
 
-    for _k in ['name', 'mobile', 'email', 'address', 'zipcode',
-               'id_card', 'memo', 'contact', 'contact_mobile']:
+    for _k in ['name', 'gender', 'mobile', 'email', 'address',
+               'zipcode', 'id_card', 'memo', 'contact', 'contact_mobile']:
         if _k in _d:
             setattr(user, _k, _d[_k])
 
@@ -465,7 +465,7 @@ def app_maintain_add(request, para, user):
     para['device_brief'] = request.POST.get('device_brief')
     para['title'] = request.POST.get('title')
     para['description'] = request.POST.get('description')
-    para['image'] = request.POST.get('image')
+    # para['image'] = request.POST.get('image')
     para['memo'] = request.POST.get('memo')
 
     try:
@@ -480,7 +480,7 @@ def app_maintain_add(request, para, user):
     task.state = 1
     task.title = para['title']
     task.createcontent = para['description']
-    task.image = para['image']
+    # task.image = para['image']
     task.memo = para['memo']
     task.mtype = 2
     task.creatorid = user.id
@@ -489,7 +489,7 @@ def app_maintain_add(request, para, user):
     task.save()
     return HttpResponse(json.dumps({
         'status': 'ok',
-        'data': 'maintain task added'
+        'data': task.id
     }))
 
 
@@ -710,6 +710,34 @@ def app_avatar(request, para, user):
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'avatar upload failed'
+        }))
+
+
+@post_required
+@token_required
+def app_maintain_image(request, para, user):
+    para['id'] = int(request.POST.get('id'))
+    try:
+        _t = k_maintenance.objects.get(id=para['id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'maintain task not exist'
+        }))
+
+    _fs = request.FILES
+
+    if _fs:
+        _t.image = _fs['image']
+        _t.save()
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': 'image upload success'
+        }))
+    else:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'iamge upload failed'
         }))
 
 
