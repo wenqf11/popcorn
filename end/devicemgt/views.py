@@ -58,7 +58,7 @@ def get_leaf(leaf_list):
     result = list()
     for leaf in leaf_list:
         userdata = dict()
-        userdata["text"] = leaf.username.encode('utf8')
+        userdata["text"] = leaf.username
         userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     return result
@@ -68,12 +68,12 @@ def get_node(child_leaf_list, child_node_list):
     result = list()
     for leaf in child_leaf_list:
         userdata = dict()
-        userdata["text"] = leaf.username.encode('utf8')
+        userdata["text"] = leaf.username
         userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     for c in child_node_list:
         userdata = dict()
-        userdata["text"] = c.name.encode('utf8')
+        userdata["text"] = c.name
         sub_child_list = k_class.objects.filter(parentid = c.id)
         sub_leaf_list = k_user.objects.filter(classid_id=c.id)
         if sub_child_list:
@@ -102,12 +102,12 @@ def usermgt(request):
         leaf_list = k_user.objects.filter(classid_id=current_class_id)
         for leaf in leaf_list:
             userdata = dict()
-            userdata["text"] = leaf.username.encode('utf8')
+            userdata["text"] = leaf.username
             userdata["href"] = "/user?id=" + str(leaf.id)
             userdatas.append(userdata)
         for c in class_set:
             userdata = dict()
-            userdata["text"] = c.name.encode('utf8')
+            userdata["text"] = c.name
             child_list = k_class.objects.filter(parentid = c.id)
             leaf_list = k_user.objects.filter(classid_id=c.id)
             if child_list:
@@ -118,7 +118,7 @@ def usermgt(request):
 
         cur_datas = dict()
         datas = list()
-        cur_datas["text"] = current_class.name.encode('utf8')
+        cur_datas["text"] = current_class.name
         cur_datas['nodes'] = userdatas
         datas.append(cur_datas)
 
@@ -646,6 +646,13 @@ def add_supplier(request):
     variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device'})
     return render_to_response('supplieradd.html', variables)
 
+@login_required
+def del_supplier(request):
+    _name = request.GET.get('name')
+    if _name:
+        _supplier = k_supplier.objects.get(name=_name)
+        _supplier.delete()
+    return HttpResponseRedirect('/supplier/')
 
 @login_required
 def submit_supplier(request):
@@ -704,6 +711,15 @@ def add_producer(request):
     user = User.objects.get(username=request.user.username)
     variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device'})
     return render_to_response('produceradd.html', variables)
+
+
+@login_required
+def del_producer(request):
+    _name = request.GET.get('name')
+    if _name:
+        _producer = k_producer.objects.get(name=_name)
+        _producer.delete()
+    return HttpResponseRedirect('/producer/')
 
 
 @login_required

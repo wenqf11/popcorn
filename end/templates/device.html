@@ -117,12 +117,15 @@
   		$(function() {
 
         var reg1=new RegExp("&quot;","g");
-        var reg2=new RegExp("&#39;","g");
+        var reg2=new RegExp("u&#39;","g");
+        var reg3=new RegExp("&#39;","g");
         var defaultData = '[';
+
         {% for d in data %}
             var tmpdata = '{{ d }}';
             tmpdata = tmpdata.replace(reg1,"\'");
             tmpdata = tmpdata.replace(reg2,"\"");
+            tmpdata = tmpdata.replace(reg3,"\"");
             defaultData += tmpdata + ',';
         {% endfor %}
         defaultData = defaultData.substr(0,defaultData.length-1);
