@@ -104,12 +104,16 @@ public class MineFragment extends Fragment {
         }
         ViewUtils.inject(this, mineView);
 
-        setMineView();
-
         return mineView;
     }
 
-    private void setMineView(){
+    @Override
+    public void onStart(){
+        super.onStart();
+        getUserInfo();
+    }
+
+    private void getUserInfo(){
         RequestParams params = new RequestParams();
         params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);

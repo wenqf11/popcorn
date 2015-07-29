@@ -4,6 +4,27 @@
     android:stretchColumns="*"
     android:shrinkColumns="*">
 
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/mine_user_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:clickable="true"
+            android:background="@drawable/layout_selector"
+            >
+            <ImageView
+                android:id="@+id/user_info_avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/logo"
+                android:layout_centerVertical="true"/>
+
+        </LinearLayout>
+    </TableRow>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -14,6 +35,8 @@
         android:layout_height="wrap_content"
         >
         <LinearLayout
+            android:id="@+id/user_info_name_ll"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="15dp"
@@ -42,6 +65,8 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/user_info_gender_ll"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="15dp"
@@ -69,6 +94,8 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/user_info_birthday_ll"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="15dp"
@@ -98,6 +125,8 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/user_info_mobile_ll"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="15dp"
@@ -127,6 +156,8 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/user_info_email_ll"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="15dp"
@@ -141,6 +172,37 @@
 
             <TextView
                 android:id="@+id/user_info_email"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"/>
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DCDCDC" />
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/user_info_address_ll"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:background="@drawable/layout_selector"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:text="住址："/>
+
+            <TextView
+                android:id="@+id/user_info_address"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="false"/>
@@ -175,36 +237,6 @@
                 android:singleLine="false"/>
         </LinearLayout>
     </TableRow>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DCDCDC" />
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15dp"
-            android:background="@drawable/layout_selector"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:text="住址："/>
-
-            <TextView
-                android:id="@+id/user_info_address"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="false"/>
-        </LinearLayout>
-    </TableRow>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
