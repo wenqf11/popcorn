@@ -1178,7 +1178,7 @@ def operate_route(request):
 
 
 @login_required
-def submit_route(request, _id):
+def submit_route(request, _id=''):
     _user = k_user.objects.get(username=request.user.username)
     _editor = _user.id
     _forms = request.GET.get('routeString')
