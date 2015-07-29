@@ -154,7 +154,7 @@ class k_user(models.Model):
     CARD_TYPE = (
         ('1', '身份证'),
     )
-    classid = models.ForeignKey(k_class, related_name='user_set')
+    classid = models.ForeignKey(k_class, related_name='user_set',blank=True, null=True, on_delete=models.SET_NULL)
     roles = models.ManyToManyField(k_role)
     state = models.CharField(max_length=1, choices=USER_STATUS, default='0')
     username = models.CharField(max_length=50)
@@ -239,13 +239,13 @@ class k_producer(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
 
 class k_spare(models.Model):
-    classid = models.ForeignKey(k_class, related_name='spare_set')
+    classid = models.ForeignKey(k_class, related_name='spare_set',blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=50) #项目本级内唯一
     brief = models.CharField(max_length=50) #编号，项目内本级唯一
     brand = models.CharField(max_length=50)
-    producerid = models.ForeignKey(k_producer, related_name='spare_set')
+    producerid = models.ForeignKey(k_producer, related_name='spare_set',blank=True, null=True, on_delete=models.SET_NULL)
     model = models.CharField(max_length=50)
-    supplierid = models.ForeignKey(k_supplier, related_name='spare_set')
+    supplierid = models.ForeignKey(k_supplier, related_name='spare_set',blank=True, null=True, on_delete=models.SET_NULL)
     content = models.CharField(max_length=200)
     memo = models.CharField(max_length=100)
     minimum = models.PositiveIntegerField(default=0)
@@ -268,11 +268,11 @@ class k_device(models.Model):
         ('4', '维修'),
         ('5', '保养'),
     )
-    classid = models.ForeignKey(k_class, related_name='device_set')
+    classid = models.ForeignKey(k_class, related_name='device_set',blank=True, null=True, on_delete=models.SET_NULL)
     brand = models.CharField(max_length=50)
-    producerid = models.ForeignKey(k_producer, related_name='device_set')
-    typeid = models.ForeignKey(k_devicetype, related_name='device_set')
-    supplierid = models.ForeignKey(k_supplier, related_name='device_set')
+    producerid = models.ForeignKey(k_producer, related_name='device_set',blank=True, null=True, on_delete=models.SET_NULL)
+    typeid = models.ForeignKey(k_devicetype, related_name='device_set',blank=True, null=True, on_delete=models.SET_NULL)
+    supplierid = models.ForeignKey(k_supplier, related_name='device_set',blank=True, null=True, on_delete=models.SET_NULL)
     state = models.CharField(max_length=1, choices=DEVICE_STATUS, default='0')
     name = models.CharField(max_length=50) #分类内唯一
     brief = models.CharField(max_length=50) #编号，项目内唯一
@@ -302,7 +302,7 @@ class k_device(models.Model):
     ownerid = models.PositiveIntegerField()
 
 class k_form(models.Model):
-    classid = models.ForeignKey(k_class, related_name='form_set')
+    classid = models.ForeignKey(k_class, related_name='form_set',blank=True, null=True, on_delete=models.SET_NULL)
     content = models.CharField(max_length=200)
     brief = models.CharField(max_length=50)
     creatorid = models.PositiveIntegerField(default=0)
@@ -318,7 +318,7 @@ class k_formitem(models.Model):
         ('0', '数值'),
         ('1', '选择'),
     )
-    classid = models.ForeignKey(k_class, related_name='formitem_set')
+    classid = models.ForeignKey(k_class, related_name='formitem_set',blank=True, null=True, on_delete=models.SET_NULL)
     formid = models.ForeignKey(k_form, related_name='formitem_set')
     name = models.CharField(max_length=50)
     datatype = models.CharField(max_length=1, choices=FORM_DATATYPE, default='0')
@@ -341,7 +341,7 @@ class k_formitem(models.Model):
 Route, Meter, Maintenance, Task
 """
 class k_route(models.Model):
-    classid = models.ForeignKey(k_class, related_name='route_set')
+    classid = models.ForeignKey(k_class, related_name='route_set',blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=100)
     formid = models.CharField(max_length=100)
     starttime = models.TimeField()
@@ -356,8 +356,8 @@ class k_route(models.Model):
 
 class k_meter(models.Model):
     brief = models.CharField(max_length=50)
-    routeid = models.ForeignKey(k_route)
-    userid = models.ForeignKey(k_user)
+    routeid = models.ForeignKey(k_route, related_name="meter_set",blank=True, null=True, on_delete=models.SET_NULL)
+    userid = models.ForeignKey(k_user, related_name="meter_set",blank=True, null=True, on_delete=models.SET_NULL)
     metertime = models.DateTimeField(auto_now_add=True)
     json = models.TextField()
 
@@ -378,7 +378,7 @@ class k_maintenance(models.Model):
         ('2', '重要'),
         ('3', '紧急'),
     )
-    deviceid = models.ForeignKey(k_device, related_name='maintenance_set')
+    deviceid = models.ForeignKey(k_device, related_name='maintenance_set',blank=True, null=True, on_delete=models.SET_NULL)
     state = models.CharField(max_length=1, choices=MAINTENANCE_STATUS, default='1')
     title = models.CharField(max_length=50)
     createcontent = models.CharField(max_length=200)
@@ -418,8 +418,8 @@ class k_deviceplan(models.Model):
         ("year", "年"),
         ("twoyear", "两年"),
     )
-    deviceid = models.ForeignKey(k_device, related_name='deviceplan_set')
-    maintenanceid = models.ForeignKey(k_maintenance, related_name='deviceplan_set')
+    deviceid = models.ForeignKey(k_device, related_name='deviceplan_set',blank=True, null=True, on_delete=models.SET_NULL)
+    maintenanceid = models.ForeignKey(k_maintenance, related_name='deviceplan_set',blank=True, null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=50)
     period = models.CharField(max_length=15, choices=DEVICEPLAN_PERIODS, default='0')
     createcontent = models.CharField(max_length=200)
@@ -471,7 +471,7 @@ class k_taskitem(models.Model):
     )
     state = models.CharField(max_length=1, choices=TASK_STATUS, default='1')
     title = models.CharField(max_length=50)
-    taskid = models.ForeignKey(k_task, related_name='taskitem_set')
+    taskid = models.ForeignKey(k_task, related_name='taskitem_set',blank=True, null=True, on_delete=models.SET_NULL)
     createcontent = models.CharField(max_length=200)
     editcontent = models.CharField(max_length=200)
     auditcontent = models.CharField(max_length=200)
@@ -492,8 +492,8 @@ class k_taskitem(models.Model):
 Stock Management
 """
 class k_sparebill(models.Model):
-    classid = models.ForeignKey(k_class, related_name='sparebill_set')
-    spareid = models.ForeignKey(k_spare, related_name='sparebill_set')
+    classid = models.ForeignKey(k_class, related_name='sparebill_set',blank=True, null=True, on_delete=models.SET_NULL)
+    spareid = models.ForeignKey(k_spare, related_name='sparebill_set',blank=True, null=True, on_delete=models.SET_NULL)
     using = models.PositiveIntegerField(default=0)
     returned = models.PositiveIntegerField(default=0)
     depleted = models.PositiveIntegerField(default=0)
@@ -522,9 +522,9 @@ class k_sparecount(models.Model):
         ('1', '合格'),
         ('2', '不合格'),
     )
-    classid = models.ForeignKey(k_class, related_name='sparecount_set')
+    classid = models.ForeignKey(k_class, related_name='sparecount_set',blank=True, null=True, on_delete=models.SET_NULL)
     sparebillid = models.PositiveIntegerField(default=0)
-    spareid = models.ForeignKey(k_spare)
+    spareid = models.ForeignKey(k_spare,related_name='sparecount_set',blank=True, null=True, on_delete=models.SET_NULL)
     count = models.IntegerField(default=0)
     state = models.CharField(max_length=1, choices=SPARECOUNT_STATUS, default='1')
     iseligible = models.CharField(max_length=1, choices=ELIGIBLE_STATUS, default='1')
@@ -538,13 +538,13 @@ class k_sparecount(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_tool(models.Model):
-    classid = models.ForeignKey(k_class, related_name='toolclass_set')
+    classid = models.ForeignKey(k_class, related_name='toolclass_set',blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=50) #项目本级内唯一
     brief = models.CharField(max_length=50) #编号，项目内本级唯一
     brand = models.CharField(max_length=50)
-    producerid = models.ForeignKey(k_producer, related_name='tool_set')
+    producerid = models.ForeignKey(k_producer, related_name='tool_set',blank=True, null=True, on_delete=models.SET_NULL)
     model = models.CharField(max_length=50)
-    supplierid = models.ForeignKey(k_supplier, related_name='tool_set')
+    supplierid = models.ForeignKey(k_supplier, related_name='tool_set',blank=True, null=True, on_delete=models.SET_NULL)
     content = models.CharField(max_length=200)
     memo = models.CharField(max_length=100)
     minimum = models.PositiveIntegerField(default=0)
@@ -557,11 +557,11 @@ class k_tool(models.Model):
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
-    ownerid = models.ForeignKey(k_class, related_name='toolowner_set')
+    ownerid = models.ForeignKey(k_class, related_name='toolowner_set',blank=True, null=True, on_delete=models.SET_NULL)
 
 class k_tooluse(models.Model):
-    classid = models.ForeignKey(k_class, related_name='tooluse_set')
-    toolid = models.ForeignKey(k_tool, related_name='tooluse_set')
+    classid = models.ForeignKey(k_class, related_name='tooluse_set',blank=True, null=True, on_delete=models.SET_NULL)
+    toolid = models.ForeignKey(k_tool, related_name='tooluse_set',blank=True, null=True, on_delete=models.SET_NULL)
     using = models.PositiveIntegerField(default=0)
     returned = models.PositiveIntegerField(default=0)
     depleted = models.PositiveIntegerField(default=0)
@@ -590,9 +590,9 @@ class k_toolcount(models.Model):
         ('1', '合格'),
         ('2', '不合格'),
     )
-    classid = models.ForeignKey(k_class, related_name='toolcount_set')
+    classid = models.ForeignKey(k_class, related_name='toolcount_set',blank=True, null=True, on_delete=models.SET_NULL)
     tooluseid = models.PositiveIntegerField(default=0)
-    toolid = models.ForeignKey(k_tool)
+    toolid = models.ForeignKey(k_tool, related_name='toolcount_set',blank=True, null=True, on_delete=models.SET_NULL)
     count = models.IntegerField(default=0)
     state = models.CharField(max_length=1, choices=TOOLCOUNT_STATUS, default='1')
     iseligible = models.CharField(max_length=1, choices=ELIGIBLE_STATUS, default='1')
@@ -611,7 +611,7 @@ class k_toolcount(models.Model):
 Others
 """
 class k_project(models.Model):
-    classid = models.ForeignKey(k_class, related_name='project_set')
+    classid = models.ForeignKey(k_class, related_name='project_set',blank=True, null=True, on_delete=models.SET_NULL)
     meterscore = models.PositiveIntegerField()
     maintenancescore = models.PositiveIntegerField()
     taskscore = models.PositiveIntegerField()

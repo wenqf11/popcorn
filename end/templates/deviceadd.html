@@ -161,7 +161,8 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">购买时间<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="buytime" id="buytime" type="text" class="span6 m-wrap" value="{{ data.buytime |date:"Y-m-d" }}"/>
+                        <input name="buytime" id="buytime" type="text" class="span6 m-wrap"  placeholder="2015-01-01"
+                               value="{{ data.buytime |date:"Y-m-d" }}"/>
                     </div>
                 </div>
 
@@ -213,19 +214,22 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">上次保养时间</label>
                     <div class="col-sm-9">
-                        <input name="lastmaintenance" id="lastmaintenance" type="text" class="span6 m-wrap" value="{{ data.lastmaintenance |date:"Y年m月d日" }}" readonly/>
+                        <input name="lastmaintenance" id="lastmaintenance" type="text" class="span6 m-wrap"  placeholder=""
+                               value="{{ data.lastmaintenance |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">下次保养时间</label>
                     <div class="col-sm-9">
-                        <input name="nextmaintenance" id="nextmaintenance" type="text" class="span6 m-wrap" value="{{ data.nextmaintenance |date:"Y年m月d日" }}" readonly/>
+                        <input name="nextmaintenance" id="nextmaintenance" type="text" class="span6 m-wrap"  placeholder=""
+                               value="{{ data.nextmaintenance |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">上次维修时间</label>
                     <div class="col-sm-9">
-                        <input name="lastrepaire" id="lastrepaire" type="text" class="span6 m-wrap" value="{{ data.lastrepaire |date:"Y年m月d日" }}" readonly/>
+                        <input name="lastrepaire" id="lastrepaire" type="text" class="span6 m-wrap"  placeholder=""
+                               value="{{ data.lastrepaire |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
 
@@ -233,7 +237,8 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">最后抄表时间</label>
                     <div class="col-sm-9">
-                        <input name="lastmeter" id="lastmeter" type="text" class="span6 m-wrap" value="{{ data.lastmeter |date:"Y年m月d日" }}" readonly/>
+                        <input name="lastmeter" id="lastmeter" type="text" class="span6 m-wrap"  placeholder=""
+                               value="{{ data.lastmeter |date:"Y年m月d日" }}" readonly/>
                     </div>
                 </div>
 

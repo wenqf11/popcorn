@@ -323,8 +323,9 @@ def userdel(request):
             return HttpResponseRedirect('/user/?msg="不能删除用户本身"')
         if _id:
             users = k_user.objects.get(id=_id)
+            str = "成功删除用户" + users.username
             users.delete()
-        return HttpResponseRedirect('/user/')
+        return HttpResponseRedirect('/user/?msg='+str)
     else:
         return HttpResponseRedirect('/login/')
 
@@ -553,7 +554,7 @@ def devicedel(request):
             device.delete()
         else:
             return HttpResponseRedirect('/device/?msg="删除设备失败"')
-    return HttpResponseRedirect('/user/')
+    return HttpResponseRedirect('/device/')
 
 
 @login_required

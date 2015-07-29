@@ -1,6 +1,6 @@
 /*
-SQLyog Trial v12.12 (64 bit)
-MySQL - 5.6.23-log : Database - devicemgtdb
+SQLyog Ultimate v11.28 (64 bit)
+MySQL - 5.5.25a : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.6.23-log : Database - devicemgtdb
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `devicemgtdb`;
 
@@ -88,7 +88,7 @@ CREATE TABLE `auth_user` (
 
 /*Data for the table `auth_user` */
 
-insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$uZvi0CMdVTtZ$KV4AYQ790cmuDXN7ktWaiEy5zcISUgHIR9ID+Od6jdo=','2015-07-21 11:16:12',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28'),(2,'pbkdf2_sha256$10000$fPkfeuFWOm7Q$mRRgi1LIiStJXdXye76dm3yfHlCnXlL+TrN7vjmRQ+0=','2015-05-01 07:09:01',0,'test1','','','',0,1,'2015-05-01 07:09:01'),(3,'pbkdf2_sha256$10000$R5fRnnAB92qP$8kGYC+W8/XszspeA+nTsqkYjA6gTj4TfImMlqKKYW2w=','2015-05-01 08:24:07',0,'user1','','','',0,1,'2015-05-01 08:24:07'),(4,'pbkdf2_sha256$10000$N7LQP7QhVHm8$ws8tLd5n09/pIGLqx8s5m2B/D6OBNEDvlIC9xJgtbkM=','2015-05-01 08:25:37',0,'user2','','','',0,1,'2015-05-01 08:25:37'),(5,'pbkdf2_sha256$10000$bzbxw7d6Zwt3$yqLH7e75JDMQWZEUpMVxyeIbxTz3jY3Ku4lfXBE+dnA=','2015-05-01 08:35:40',0,'user3','','','',0,1,'2015-05-01 08:35:40'),(6,'pbkdf2_sha256$10000$8fCR4xNap1N3$aCEUSvEGNcrfyTiIIMKf1ZeYl16M+gOG4uU3FboC5u0=','2015-05-01 09:18:27',0,'user4','','','',0,1,'2015-05-01 09:18:27'),(9,'pbkdf2_sha256$12000$Q1bhiangj3Sx$HeRObo51+SZE0EFOhioecWjxEUE7ZPfby1XIRB8Mdgk=','2015-07-20 12:34:49',0,'wenqingfu','','','thssvince@163.com',0,1,'2015-07-20 12:34:49');
+insert  into `auth_user`(`id`,`password`,`last_login`,`is_superuser`,`username`,`first_name`,`last_name`,`email`,`is_staff`,`is_active`,`date_joined`) values (1,'pbkdf2_sha256$12000$uZvi0CMdVTtZ$KV4AYQ790cmuDXN7ktWaiEy5zcISUgHIR9ID+Od6jdo=','2015-07-29 05:27:24',1,'hahehi','','','hhyysbg@163.com',1,1,'2015-04-12 13:44:28'),(2,'pbkdf2_sha256$10000$fPkfeuFWOm7Q$mRRgi1LIiStJXdXye76dm3yfHlCnXlL+TrN7vjmRQ+0=','2015-05-01 07:09:01',0,'test1','','','',0,1,'2015-05-01 07:09:01'),(3,'pbkdf2_sha256$10000$R5fRnnAB92qP$8kGYC+W8/XszspeA+nTsqkYjA6gTj4TfImMlqKKYW2w=','2015-05-01 08:24:07',0,'user1','','','',0,1,'2015-05-01 08:24:07'),(4,'pbkdf2_sha256$10000$N7LQP7QhVHm8$ws8tLd5n09/pIGLqx8s5m2B/D6OBNEDvlIC9xJgtbkM=','2015-05-01 08:25:37',0,'user2','','','',0,1,'2015-05-01 08:25:37'),(5,'pbkdf2_sha256$10000$bzbxw7d6Zwt3$yqLH7e75JDMQWZEUpMVxyeIbxTz3jY3Ku4lfXBE+dnA=','2015-05-01 08:35:40',0,'user3','','','',0,1,'2015-05-01 08:35:40'),(6,'pbkdf2_sha256$10000$8fCR4xNap1N3$aCEUSvEGNcrfyTiIIMKf1ZeYl16M+gOG4uU3FboC5u0=','2015-05-01 09:18:27',0,'user4','','','',0,1,'2015-05-01 09:18:27'),(9,'pbkdf2_sha256$12000$Q1bhiangj3Sx$HeRObo51+SZE0EFOhioecWjxEUE7ZPfby1XIRB8Mdgk=','2015-07-20 12:34:49',0,'wenqingfu','','','thssvince@163.com',0,1,'2015-07-20 12:34:49');
 
 /*Table structure for table `auth_user_groups` */
 
@@ -427,27 +427,17 @@ DROP TABLE IF EXISTS `devicemgt_k_meter`;
 
 CREATE TABLE `devicemgt_k_meter` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `deviceid_id` int(11) NOT NULL,
-  `state` varchar(1) NOT NULL,
-  `title` varchar(50) NOT NULL,
-  `content` varchar(100) NOT NULL,
-  `memo` varchar(100) NOT NULL,
-  `orderedtime` time NOT NULL,
+  `brief` varchar(50) NOT NULL,
+  `routeid_id` int(11) DEFAULT NULL,
+  `userid_id` int(11) DEFAULT NULL,
   `metertime` datetime NOT NULL,
-  `routeid_id` int(11) NOT NULL,
-  `creatorid` int(10) unsigned NOT NULL,
-  `createdatetime` date NOT NULL,
-  `editorid` int(10) unsigned NOT NULL,
-  `editdatetime` date NOT NULL,
-  `auditorid` int(10) unsigned NOT NULL,
-  `auditdatetime` date NOT NULL,
-  `status` varchar(1) NOT NULL,
+  `json` longtext NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `devicemgt_k_meter_72537f95` (`deviceid_id`),
-  KEY `routeid_id` (`routeid_id`),
-  CONSTRAINT `deviceid_id_refs_id_ff1ae68d` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`),
-  CONSTRAINT `devicemgt_k_meter_ibfk_1` FOREIGN KEY (`routeid_id`) REFERENCES `devicemgt_k_route` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `devicemgt_k_meter_8154c9fe` (`routeid_id`),
+  KEY `devicemgt_k_meter_936913d1` (`userid_id`),
+  CONSTRAINT `routeid_id_refs_id_030bd83d` FOREIGN KEY (`routeid_id`) REFERENCES `devicemgt_k_route` (`id`),
+  CONSTRAINT `userid_id_refs_id_76082153` FOREIGN KEY (`userid_id`) REFERENCES `devicemgt_k_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `devicemgt_k_meter` */
 
@@ -1099,7 +1089,7 @@ CREATE TABLE `django_session` (
 
 /*Data for the table `django_session` */
 
-insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('3m1r0wtvvbctg0hkc77hvvpp3e99cl4a','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-07-07 13:38:24'),('8gj8uf37xj44aer1ucn5mzy38nekzmt0','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-08-04 11:16:12'),('8lhsh9oulqek6tpblczdm5occoug3mqf','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-14 07:58:02'),('bdsp4ls3yt2wlje64pyxw1e89db2fqld','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-06-13 03:27:08'),('eioghmljg0d33i6hhay1rrnh93nuojpo','ODNjZjBkY2Q5ZTU4ZGEzOWZiMGVlZDZjYzI0ZmZiOGQ1NjlkMTY1MzqAAn1xAShVDV9hdXRoX3VzZXJfaWSKAQFVEl9hdXRoX3VzZXJfYmFja2VuZFUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxAnUu','2015-06-06 03:07:17'),('if0bcle58w0z5crrktpqypg8dtj2a8jz','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-26 12:00:49'),('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('l4hjep2nt19rl1uw84p1t8syla3jjvan','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-08-03 12:18:15'),('le6stkwdheqyvtwi5uj5mi3or35lug6p','NjI1ZDIxMzk4ZmEyMjdkZTViZTBlMjJlMTVhMmM0Y2MzN2MzMzUxNDp7Il9hdXRoX3VzZXJfaGFzaCI6IjkxY2M3YTQ2NzI4ODEzOWM4MDM1N2FjNzdlYWU5YmQ1MzAxOWJmZmEiLCJfYXV0aF91c2VyX2lkIjoxLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9','2015-08-01 04:20:40'),('p3uo1lg5ave4shjekcmxhekwnto4a49g','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-05-08 14:33:28'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24'),('un4cbhq8i8zup2egzqtflzuuwhomxzy6','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-11 07:52:20'),('vgxpruqu8f7cbgiu3ythrn5h86lzl168','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-08-03 12:18:54'),('zxdvlyja9lkxzc96jwyo50gxffs853ae','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-06-19 02:26:43');
+insert  into `django_session`(`session_key`,`session_data`,`expire_date`) values ('3m1r0wtvvbctg0hkc77hvvpp3e99cl4a','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-07-07 13:38:24'),('8gj8uf37xj44aer1ucn5mzy38nekzmt0','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-08-04 11:16:12'),('8lhsh9oulqek6tpblczdm5occoug3mqf','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-14 07:58:02'),('bdsp4ls3yt2wlje64pyxw1e89db2fqld','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-06-13 03:27:08'),('cvdapyh4653ibwt4lgdl3jay8o79lht4','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-08-12 05:27:24'),('eioghmljg0d33i6hhay1rrnh93nuojpo','ODNjZjBkY2Q5ZTU4ZGEzOWZiMGVlZDZjYzI0ZmZiOGQ1NjlkMTY1MzqAAn1xAShVDV9hdXRoX3VzZXJfaWSKAQFVEl9hdXRoX3VzZXJfYmFja2VuZFUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxAnUu','2015-06-06 03:07:17'),('if0bcle58w0z5crrktpqypg8dtj2a8jz','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-26 12:00:49'),('j7ayg5ybca30nafokphrvxdfmkb0qr3h','ZWMzNTg1OTk1NDBjZWEzZTBjYjQ1MTE1ZGI2ZTc0MjAyZTY3ZTFlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjdjZTQyZWMzNjY5NWIyYTc4MzBjYjgxZjk2YWY3N2ZiNmZlMjdlZTgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOjF9','2015-05-05 13:47:54'),('l4hjep2nt19rl1uw84p1t8syla3jjvan','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-08-03 12:18:15'),('le6stkwdheqyvtwi5uj5mi3or35lug6p','NjI1ZDIxMzk4ZmEyMjdkZTViZTBlMjJlMTVhMmM0Y2MzN2MzMzUxNDp7Il9hdXRoX3VzZXJfaGFzaCI6IjkxY2M3YTQ2NzI4ODEzOWM4MDM1N2FjNzdlYWU5YmQ1MzAxOWJmZmEiLCJfYXV0aF91c2VyX2lkIjoxLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9','2015-08-01 04:20:40'),('p3uo1lg5ave4shjekcmxhekwnto4a49g','N2IyMmU0MDc1OTg3NWY3YmEzMmUzNTk0YzNjNzkzODA4Y2E4OWUwNTqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==','2015-05-08 14:33:28'),('qnycv2lb6i7mymhaaemqbzaval2fl8h2','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-04-27 12:18:19'),('skw8slv7enk0sxdgzhacbp241p9amjbc','NDIzYmFjOWNlY2NkNzRmYTViMTQ1ZjY1ZGE3OTIwNTg2YTU5Yjk1Mjp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2015-05-05 13:31:24'),('un4cbhq8i8zup2egzqtflzuuwhomxzy6','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-05-11 07:52:20'),('vgxpruqu8f7cbgiu3ythrn5h86lzl168','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-08-03 12:18:54'),('zxdvlyja9lkxzc96jwyo50gxffs853ae','ZmFlYTJlMDA5NzA2MTQyNTZjNjUwMWFjNGViNDdiOTJkOGUwOTQ0ZDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=','2015-06-19 02:26:43');
 
 /*Table structure for table `django_site` */
 
