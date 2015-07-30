@@ -451,7 +451,7 @@ def app_maintain_list_2(request, para, user):
             'creator': k_user.objects.get(id=task.creatorid).name,
             'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
             'description': task.createcontent,
-            'image': task.image,
+            'image': task.image.url,
             'memo': task.memo,
             'confirmed': (task.state == 3),
             'note': task.editcontent

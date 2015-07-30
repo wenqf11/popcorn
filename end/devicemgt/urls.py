@@ -97,6 +97,7 @@ urlpatterns = patterns(
     url(r'^view_route/$', view_route),
     url(r'^operate_route/$', operate_route),
     url(r'^submit_route/(\d*)/$', submit_route),
+    url(r'^submit_route/$', submit_route),
     url(r'^delete_route/$', delete_route),
 
     url(r'^view_form/$', view_form),
