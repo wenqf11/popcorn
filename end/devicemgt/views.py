@@ -1957,30 +1957,30 @@ def submit_taskitem(request):
     _taskid = request.GET.get('taskid')
     _editor = request.GET.get('editor')
     _submittype = request.GET.get('submittype')
+    _title = request.GET.get('title')
+    _createcontent = request.GET.get('createcontent')
+    _priority = request.GET.get('priority')
+    _memo = request.GET.get('memo')
+    _factor = request.GET.get('factor')
+    _user = k_user.objects.get(username=request.user.username)
+
     #权限判断
     if _submittype == "1":
         _msg = check_purview(request.user.username, 38)
         if _msg != 0:
             return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
-    else:
+    elif _submittype == "2":
         _msg = check_purview(request.user.username, 37)
         if _msg != 0:
             return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+
         _taskitem = k_taskitem.objects.get(id=_id)
+
         _tasker = k_user.objects.get(name=_editor)
         if _taskitem.editorid != _tasker.id:
             _msg = check_purview(request.user.username, 36)
             if _msg != 0:
                 return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
-
-    _title = request.GET.get('title')
-    _createcontent = request.GET.get('createcontent')
-    _priority = request.GET.get('priority')
-    _memo = request.GET.get('memo')
-
-    _factor = request.GET.get('factor')
-
-    _user = k_user.objects.get(username=request.user.username)
 
     if _submittype == "1":
         _taskitem = k_taskitem.objects.get(id=_id)
