@@ -58,7 +58,7 @@ def get_leaf(leaf_list):
     result = list()
     for leaf in leaf_list:
         userdata = dict()
-        userdata["text"] = leaf.username.decode('utf-8')
+        userdata["text"] = leaf.name.decode('utf-8')
         userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     return result
@@ -68,7 +68,7 @@ def get_node(child_leaf_list, child_node_list):
     result = list()
     for leaf in child_leaf_list:
         userdata = dict()
-        userdata["text"] = leaf.username.decode('utf-8')
+        userdata["text"] = leaf.name.decode('utf-8')
         userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     for c in child_node_list:
@@ -102,7 +102,7 @@ def usermgt(request):
         leaf_list = k_user.objects.filter(classid_id=current_class_id)
         for leaf in leaf_list:
             userdata = dict()
-            userdata["text"] = leaf.username.decode('utf-8')
+            userdata["text"] = leaf.name.decode('utf-8')
             userdata["href"] = "/user?id=" + str(leaf.id)
             userdatas.append(userdata)
         for c in class_set:
@@ -110,8 +110,8 @@ def usermgt(request):
             userdata["text"] = c.name.decode('utf-8')
             child_list = k_class.objects.filter(parentid = c.id)
             leaf_list = k_user.objects.filter(classid_id=c.id)
-            if child_list:
-                userdata["nodes"] = get_node(leaf_list, child_list)
+            
+            userdata["nodes"] = get_node(leaf_list, child_list)
             #elif leaf_list:
             #    userdata["nodes"] = get_leaf(leaf_list)
             userdatas.append(userdata)
