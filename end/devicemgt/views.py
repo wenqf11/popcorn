@@ -58,7 +58,7 @@ def get_leaf(leaf_list):
     result = list()
     for leaf in leaf_list:
         userdata = dict()
-        userdata["text"] = leaf.username
+        userdata["text"] = leaf.username.decode('utf-8')
         userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     return result
@@ -68,12 +68,12 @@ def get_node(child_leaf_list, child_node_list):
     result = list()
     for leaf in child_leaf_list:
         userdata = dict()
-        userdata["text"] = leaf.username
+        userdata["text"] = leaf.username.decode('utf-8')
         userdata["href"] = "/user?id=" + str(leaf.id)
         result.append(userdata)
     for c in child_node_list:
         userdata = dict()
-        userdata["text"] = c.name
+        userdata["text"] = c.name.decode('utf-8')
         sub_child_list = k_class.objects.filter(parentid = c.id)
         sub_leaf_list = k_user.objects.filter(classid_id=c.id)
         if sub_child_list:
@@ -102,12 +102,12 @@ def usermgt(request):
         leaf_list = k_user.objects.filter(classid_id=current_class_id)
         for leaf in leaf_list:
             userdata = dict()
-            userdata["text"] = leaf.username
+            userdata["text"] = leaf.username.decode('utf-8')
             userdata["href"] = "/user?id=" + str(leaf.id)
             userdatas.append(userdata)
         for c in class_set:
             userdata = dict()
-            userdata["text"] = c.name
+            userdata["text"] = c.name.decode('utf-8')
             child_list = k_class.objects.filter(parentid = c.id)
             leaf_list = k_user.objects.filter(classid_id=c.id)
             if child_list:
@@ -118,7 +118,7 @@ def usermgt(request):
 
         cur_datas = dict()
         datas = list()
-        cur_datas["text"] = current_class.name
+        cur_datas["text"] = current_class.name.decode('utf-8')
         cur_datas['nodes'] = userdatas
         datas.append(cur_datas)
 

@@ -34,11 +34,11 @@ def get_device_node(devicetypes, parent):
     for type in devicetypes:
         if type.parentid == parent:
             cur_data = dict()
-            cur_data['text'] = type.name
+            cur_data['text'] = type.name.decode('utf-8')
             device_list = list()
             devices = k_device.objects.filter(typeid_id = type.id)
             for d in devices:
-                device_list.append({"text":d.name, "href":"/device?id=" + str(d.id)})
+                device_list.append({"text":d.name.decode('utf-8'), "href":"/device?id=" + str(d.id)})
             sub_nodes = get_device_node(devicetypes, type.id)
             if len(sub_nodes) > 0 and len(device_list) > 0:
                 cur_data['nodes'] = device_list
@@ -58,7 +58,7 @@ def get_type_node(devicetypes, parent):
     for type in devicetypes:
         if type.parentid == parent:
             cur_data = dict()
-            cur_data['text'] = type.name
+            cur_data['text'] = type.name.decode('utf-8')
             tmp = get_type_node(devicetypes, type.id)
             if len(tmp) > 0:
                 cur_data['nodes'] = tmp
