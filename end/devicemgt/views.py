@@ -110,7 +110,7 @@ def usermgt(request):
             userdata["text"] = c.name.decode('utf-8')
             child_list = k_class.objects.filter(parentid = c.id)
             leaf_list = k_user.objects.filter(classid_id=c.id)
-            
+            #if child_list:
             userdata["nodes"] = get_node(leaf_list, child_list)
             #elif leaf_list:
             #    userdata["nodes"] = get_leaf(leaf_list)
