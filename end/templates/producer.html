@@ -152,7 +152,7 @@
 {% block tailjs %}
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
-    <script src="../static/TableTools/js/dataTables.tableTools.min.js"></script>
+    <script src="../static/TableTools/js/dataTables.tableTools.min.js" charset="utf-8" ></script>
 <script>
     $(function(){
         var purview_msg = "{{ purview_msg }}";
@@ -200,7 +200,7 @@
             "aButtons": [
                 "copy",
                 "xls",
-                "pdf",
+                //"pdf",
                 "print"
             ]
         } );
