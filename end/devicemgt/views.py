@@ -3152,11 +3152,71 @@ def department(request):
         if purview_msg == None:
            purview_msg = ''
         #, 'purview_msg': purview_msg
-
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
+        _id = request.GET.get('id')
+        if _id:
+            department_info = {}
+            _departs = k_class.objects.filter(id=_id)
+            if len(_departs) == 1:
+                department_info["id"] = _id
+                department_info["name"] = _departs[0].name
+                department_info["phone"] = _departs[0].phone
+                department_info["address"] = _departs[0].address
+                department_info["zipcode"] = _departs[0].zipcode
+                department_info["code"] = _departs[0].code
+                department_info["license"] = _departs[0].license
+                variables=RequestContext(request,{'username':user.username, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg,
+                                              'department_info':department_info})
+            else:
+                variables=RequestContext(request,{'username':user.username, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
+        else:
+            variables=RequestContext(request,{'username':user.username, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
         return render_to_response('department.html',variables)
     else:
         return HttpResponseRedirect('/login/')
+
+@login_required
+def department_revise(request):
+    _id = request.GET.get('id')
+    if _id:
+        user=User.objects.get(username=request.user.username)
+        datas = dict()
+        k_classes = k_class.objects.all()
+        class_list = list()
+        for c in k_classes:
+            class_list.append(c.name)
+        k_roles = k_role.objects.all()
+        role_list = list()
+        for r in k_roles:
+            role_list.append(r.name)
+        datas['class_list'] = class_list
+        datas['role_list'] = role_list
+        datas['isNew'] = True
+
+        _tmp_class = k_class.objects.filter(id=_id)
+        if len(_tmp_class) == 1:
+            _existed_info = _tmp_class[0]
+            datas["name"] = _existed_info.name
+            datas["code"] = _existed_info.code
+            datas["logo"] = _existed_info.logo
+            datas["address"] = _existed_info.address
+            datas["zipcode"] = _existed_info.zipcode
+            datas["phone"] = _existed_info.phone
+            datas["license"] = _existed_info.license
+            datas["content"] = _existed_info.content
+            datas["memo"] = _existed_info.memo
+            if datas['class_list'].count(_existed_info.name) > 0:
+                datas['class_list'].remove(_existed_info.name)
+
+        #非法权限信息
+        purview_msg = request.GET.get('msg')
+        if purview_msg == None:
+           purview_msg = ''
+        #, 'purview_msg': purview_msg
+
+        variables=RequestContext(request,{'username':user.username,  'data':datas, 'purview_msg': purview_msg})
+        return render_to_response('departmentadd.html',variables)
+    else:
+        HttpResponseRedirect('/department/?msg="非法访问！"')
 
 
 @login_required
@@ -3180,7 +3240,7 @@ def departmentadd(request):
            purview_msg = ''
         #, 'purview_msg': purview_msg
 
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'depatment', 'data':datas, 'purview_msg': purview_msg})
+        variables=RequestContext(request,{'username':user.username, 'data':datas, 'purview_msg': purview_msg})
         return render_to_response('departmentadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -3188,20 +3248,19 @@ def departmentadd(request):
 
 @login_required
 def department_submit(request):
-    if not k_class.objects.filter(name = request.GET.get('name')):
-        _parentname = request.GET.get('parentname')
-        _name = request.GET.get('name')
-        _license = request.GET.get('license')
-        _logo = request.GET.get('logo')
-        _address = request.GET.get('address')
-        _zipcode = request.GET.get('zipcode')
-        _phone = request.GET.get('phone')
-        _license = request.GET.get('license')
-        _licensetype = request.GET.get('licensetype')
-        _content = request.GET.get('content')
-        _memo = request.GET.get('memo')
-        _id = 0
-        _depth = 0
+    _parentname = request.GET.get('parentname')
+    _name = request.GET.get('name')
+    _code = request.GET.get('code')
+    _logo = request.GET.get('logo')
+    _address = request.GET.get('address')
+    _zipcode = request.GET.get('zipcode')
+    _phone = request.GET.get('phone')
+    _license = request.GET.get('license')
+    _licensetype = request.GET.get('licensetype')
+    _content = request.GET.get('content')
+    _memo = request.GET.get('memo')
+    _tmp_class = k_class.objects.filter(name = request.GET.get('name'))
+    if not _tmp_class:
         if len(_parentname) > 0:
             _parent = k_class.objects.filter(name=_parentname)
             if len(_parent) == 1:
@@ -3210,7 +3269,7 @@ def department_submit(request):
             else:
                 return HttpResponseRedirect('/department/?msg="父级类别有误！"')
 
-            _class = k_class.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo,
+            _class = k_class.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo, code=_code,
                                             license=_license, logo=_logo, address=_address, zipcode=_zipcode,
                                             phone=_phone, licensetype=_licensetype,content=_content,
                                             creatorid = request.user.id, createdatetime=get_current_date(),
@@ -3218,7 +3277,32 @@ def department_submit(request):
             _class.save()
             return HttpResponseRedirect('/department/')
     else:
-        return HttpResponseRedirect('/department/?msg="该部门名称已存在！"')
+        if len(_tmp_class) == 1:
+            _tmp_class[0].name = _name
+            _tmp_class[0].license = _license
+            _tmp_class[0].code = _code
+            _tmp_class[0].logo = _logo
+            _tmp_class[0].address = _address
+            _tmp_class[0].zipcode = _zipcode
+            _tmp_class[0].phone = _phone
+            _tmp_class[0].licensetype = _licensetype
+            _tmp_class[0].content = _content
+            _tmp_class[0].memo = _memo
+            _tmp_class[0].save()
+            return HttpResponseRedirect('/department/?msg="修改部门（"'+_name+'"）成功！"')
+        else:
+            return HttpResponseRedirect('/department/?msg="修改部门信息失败！"')
+
+@login_required
+def department_del(request):
+    _id = request.GET.get('id')
+    if _id:
+        _department = k_class.objects.get(id=_id)
+        msg = "成功删除部门："+_department.name
+        _department.delete()
+        return HttpResponseRedirect('/department/?msg='+msg)
+    else:
+        return HttpResponseRedirect('/department/')
 
 '''部门设置结束'''
 

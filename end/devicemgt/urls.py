@@ -154,6 +154,8 @@ urlpatterns = patterns(
     url(r'^department/$', department),
     url(r'^departmentadd/$', departmentadd),
     url(r'^department_submit/$', department_submit),
+    url(r'^department_revise/$', department_revise),
+    url(r'^department_del/$', department_del),
 
     url(r'^score/$', score),
     url(r'^egg/$', egg),

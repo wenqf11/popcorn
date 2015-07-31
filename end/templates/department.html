@@ -21,7 +21,81 @@
 <div class="col-xs-5">
     <div id="treeview6"></div>
 </div>
+
+{% if department_info %}
+<div class="col-xs-7">
+    <div class="profile-users clearfix">
+        <div class="itemdiv memberdiv">
+            <div class="inline pos-rel">
+                <div class="user">
+                    <a href="#">
+                        <img src="../static/images/user.png" >
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2>
+            {{ department_info.name }}
+        </h2>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-phone info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              电话：{{ department_info.phone }}
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-envelope info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              地址：{{ department_info.address }}
+        </h5>
+    </div>
+    <hr style="margin: 10px" />
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-trophy info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              邮政编码：{{ department_info.zipcode }}
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-child info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              分类识别码：{{ department_info.code }}
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-child info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              营业执照代码：{{ department_info.license }}
+        </h5>
+    </div>
+    <hr style="margin: 10px"/>
+
+    <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/department_del?id={{department_info.id}}">
+        <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
+    </a>
+    <span style="float:right">&nbsp;&nbsp;</span>
+    <a class="btn btn-white btn-info btn-bold" style="float:right" href="/department_revise/?id={{department_info.id}}">
+        <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+    </a>
+</div>
+    {% endif %}
 {% endblock %}
+
 
 {% block tailjs %}
 <script>
