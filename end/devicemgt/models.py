@@ -653,5 +653,5 @@ class k_feedback(models.Model):
 class k_config(models.Model):
     # a table to store global variable of the server
     # remember always to get the element of id=1
-    eggbonus = models.FloatField()
-    eggprobability = models.FloatField()
+    eggbonus = models.FloatField(default=0.0)
+    eggprobability = models.FloatField(default=0.0)
