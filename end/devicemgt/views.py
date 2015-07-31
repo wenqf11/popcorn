@@ -3314,7 +3314,14 @@ def score(request):
 
 @login_required
 def egg(request):
-    config = k_config.objects.get(id=1)
+    configs = k_config.objects.all()
+    config = list(configs[0:1])
+
+    if not config:
+        config = k_config.objects.create(eggbonus=0.0, eggprobability=0.0)
+    else:
+        config = config[0]
+
     return render_to_response('egg.html', {'data': {'bonus': config.eggbonus, 'probability': config.eggprobability}})
 
 
@@ -3322,11 +3329,18 @@ def egg_submit(request):
     bonus = request.POST.get('bonus')
     probability = request.POST.get('probability')
 
-    _c = k_config.objects.get(id=1)
-    _c.eggbonus = bonus
-    _c.eggprobability = probability
-    _c.save()
+    configs = k_config.objects.all()
+    config = list(configs[0:1])
 
-    return HttpResponseRedirect('/egg/')
+    if not config:
+        config = k_config()
+    else:
+        config = config[0]
+
+    config.eggbonus = bonus
+    config.eggprobability = probability
+    config.save()
+
+    return HttpResponseRedirect('/egg/?msg=修改成功')
 
 
