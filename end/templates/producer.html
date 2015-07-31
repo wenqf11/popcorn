@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
     <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/TableTools/css/dataTables.tableTools.min.css" />
 {% endblock %}
 
 {% block pageheader %}
@@ -94,6 +95,7 @@
     <!-- block -->
    <p>
         <a class="btn btn-success" href="/add_producer">+新厂家</a>
+        <a id="tabletools"></a>
    </p>
    <div class="block">
         <div class="block-content collapse in">
@@ -150,6 +152,7 @@
 {% block tailjs %}
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
+    <script src="../static/TableTools/js/dataTables.tableTools.min.js"></script>
 <script>
     $(function(){
         var purview_msg = "{{ purview_msg }}";
@@ -164,7 +167,7 @@
 </script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $('#maintenance').DataTable({
+        var table = $('#maintenance').DataTable({
             columns: [
                 ,
                 ,
@@ -192,6 +195,16 @@
             divs[5].childNodes[3].childNodes[1].value = dataline[4].innerHTML;
             divs[6].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
         });
+        var tableTools = new $.fn.dataTable.TableTools( table, {
+            "sSwfPath": "../static/TableTools/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [
+                "copy",
+                "xls",
+                "pdf",
+                "print"
+            ]
+        } );
+        $( tableTools.fnContainer() ).insertAfter($('#tabletools'));
     });
     </script>
 <script>
