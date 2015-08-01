@@ -3,6 +3,7 @@ __author__ = 'LY'
 
 
 from django.shortcuts import render_to_response
+from django.core import serializers
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -94,7 +95,7 @@ def usermgt(request):
     current_class = k_class.objects.get(id=current_class_id)
     server_msg = request.GET.get('msg')
     if server_msg == None:
-       server_msg = ''
+        server_msg = ''
 
     if current_class:
         userdatas = list()
@@ -143,15 +144,24 @@ def usermgt(request):
         for i in xrange(0,user_class_len):
             user_class += user_class_list[user_class_len - i - 1] + "-"
         user_class = user_class[0:len(user_class) - 1]
-        variables = RequestContext(request, {
-            'username': user.username,
-            'clicked_item': 'user',
-            'data': datas,
-            'userinfo': user_info,
-            'user_role': user_role,
-            'user_class': user_class,
-            'server_msg': server_msg
-        })
+        # variables = RequestContext(request, {
+        #     'username': user.username,
+        #     'clicked_item': 'user',
+        #     'data': datas,
+        #     'userinfo': user_info,
+        #     'user_role': user_role,
+        #     'user_class': user_class,
+        #     'server_msg': server_msg
+        # })
+        temp = serializers.serialize('json', [user_info,])
+        struct = json.loads(temp)
+        res_user_info = struct[0]
+
+        res_user_role = list()
+        for role in user_role:
+            res_user_role.append(role.name)
+
+        return HttpResponse(json.dumps({"info": res_user_info, "role": res_user_role, "class": user_class}), content_type="application/json")
     else:
         variables = RequestContext(request, {
             'username': user.username,
@@ -159,7 +169,7 @@ def usermgt(request):
             'data': datas,
             'server_msg': server_msg
         })
-    return render_to_response('user.html', variables)
+        return render_to_response('user.html', variables)
 
 
 @login_required
