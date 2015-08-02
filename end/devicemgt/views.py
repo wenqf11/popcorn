@@ -144,15 +144,6 @@ def usermgt(request):
         for i in xrange(0,user_class_len):
             user_class += user_class_list[user_class_len - i - 1] + "-"
         user_class = user_class[0:len(user_class) - 1]
-        # variables = RequestContext(request, {
-        #     'username': user.username,
-        #     'clicked_item': 'user',
-        #     'data': datas,
-        #     'userinfo': user_info,
-        #     'user_role': user_role,
-        #     'user_class': user_class,
-        #     'server_msg': server_msg
-        # })
         temp = serializers.serialize('json', [user_info,])
         struct = json.loads(temp)
         res_user_info = struct[0]
@@ -208,9 +199,9 @@ def operate_user(request):
 
     server_msg = request.GET.get('msg')
     if server_msg:
-        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg': server_msg})
+        variables = RequestContext(request, {'username': user.username, 'data': userdata, 'server_msg': server_msg})
     else:
-        variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata})
+        variables = RequestContext(request, {'username': user.username, 'data': userdata})
     return render_to_response('useradd.html', variables)
 
 
@@ -346,9 +337,27 @@ def userset(request):
     # user = k_user.objects.get(username=request.user.username)
     user = User.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user'})
+    variables = RequestContext(request, {'username': user.username})
     return render_to_response('userset.html', variables)
 
+@login_required
+def userbatch_add(request):
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    return render_to_response('userbatchadd.html', variables)
+
+
+@login_required
+def userbatch_submit(request):
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    return render_to_response('userbatchadd.html', variables)
 
 '''
 用户管理结束

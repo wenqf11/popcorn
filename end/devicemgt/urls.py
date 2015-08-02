@@ -59,6 +59,8 @@ urlpatterns = patterns(
     url(r'^register/$', register),
     url(r'^user/$', usermgt),
     url(r'^useradd/$', useradd),
+    url(r'^userbatch_add/$', userbatch_add),
+    url(r'^userbatch_submit/$', userbatch_submit),
     url(r'^user_operate/$', operate_user),
     url(r'^userdel/$', userdel),
     url(r'^userset/$', userset),

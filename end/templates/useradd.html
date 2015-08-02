@@ -8,7 +8,7 @@
 {% endblock %}
 {% block pageheader %}
     {% if data.isNew %}
-        添加用户
+        添加用户 <a class="btn btn-success" style="border:0px;float:right;margin-right: 30px;" href="/userbatch_add">批量导入</a>
     {% else %}
         编辑用户
     {% endif %}
