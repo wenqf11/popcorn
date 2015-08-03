@@ -9,7 +9,7 @@
 {% endblock %}
 {% block pageheader %}
     {% if data.isNew %}
-        添加设备
+        添加设备<a class="btn btn-success" style="border:0px;float:right;margin-right: 30px;" href="/devicebatch_add">批量导入</a>
     {% else %}
         编辑设备
     {% endif %}

@@ -577,6 +577,25 @@ def devicedel(request):
 
 
 @login_required
+def devicebatch_add(request):
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    return render_to_response('devicebatchadd.html', variables)
+
+@login_required
+def devicebatch_submit(request):
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    return render_to_response('devicebatchadd.html', variables)
+
+
+@login_required
 def device_type(request):
     user = User.objects.get(username=request.user.username)
     devicetypes = k_devicetype.objects.all()
@@ -2253,6 +2272,25 @@ def delete_spare(request):
         _sparebills.delete()
         _sparecounts.delete()
     return HttpResponseRedirect('/view_spare')
+
+
+@login_required
+def sparebatch_add(request):
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    return render_to_response('sparebatchadd.html', variables)
+
+@login_required
+def sparebatch_submit(request):
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    user = User.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    return render_to_response('sparebatchadd.html', variables)
 
 
 def view_sparebill(request):

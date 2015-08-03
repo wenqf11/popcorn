@@ -68,6 +68,8 @@ urlpatterns = patterns(
 
     url(r'^device/$', devicemgt),
     url(r'^deviceadd/$', deviceadd),
+    url(r'^devicebatch_add/$', devicebatch_add),
+    url(r'^devicebatch_submit/$', devicebatch_submit),
     url(r'^devicedel/$', devicedel),
     url(r'^device_type/$', device_type),
     url(r'^device_type_add/$', device_type_add),
@@ -141,6 +143,8 @@ urlpatterns = patterns(
     url(r'^view_sparecount/$', view_sparecount),
     url(r'^submit_sparecount/$', submit_sparecount),
     url(r'^delete_sparecount/$', delete_sparecount),
+    url(r'^sparebatch_add/$', sparebatch_add),
+    url(r'^sparebatch_submit/$', sparebatch_submit),
     
     url(r'^view_tool/$', view_tool),
     url(r'^operate_tool/$', operate_tool),
