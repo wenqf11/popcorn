@@ -251,7 +251,7 @@ function process_wb(wb) {
             for (var key in obj) {
                 data_array.push(obj[key]);
             }
-            if (data_array.length == 16) {
+            if (data_array.length == 10) {
                 $('#maintenance').dataTable().fnAddData(data_array);
             } else {
                 $.gritter.add({
