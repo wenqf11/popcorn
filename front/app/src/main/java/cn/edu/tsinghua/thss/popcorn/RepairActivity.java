@@ -140,16 +140,22 @@ public class RepairActivity extends Activity {
         String faultDescription = "";
         String repairMemo = "";
         String repairResult = "";
+        String creator = "";
+        String create_time = "";
         try{
             title = repairTask.getString("title");
             deviceNumber = repairTask.getString("device_brief");
             faultDescription = repairTask.getString("description");
+            creator = repairTask.getString("creator");
+            create_time = repairTask.getString("create_time");
             repairMemo = repairTask.getString("memo");
             repairResult = repairTask.getString("note");
         }catch (Exception e){
         }
 
         reportTitleTextView.setText(title);
+        reporterTextView.setText(creator);
+        reportDatetimeTextView.setText(create_time);
         deviceNumberTextView.setText(deviceNumber);
         faultDescriptionTextView.setText(faultDescription);
         repairMemoTextView.setText(repairMemo);

@@ -127,8 +127,8 @@ public class MineFragment extends Fragment {
     private void getUserInfo(){
         Bitmap photo = getDiskBitmap(Config.AVATAR_FILE_PATH);
         if(photo!=null){
-            Drawable drawable = new BitmapDrawable(this.getResources(),photo);
-            mineAvatar.setImageDrawable(drawable);
+            //Drawable drawable = new BitmapDrawable(this.getResources(),photo);
+            mineAvatar.setImageBitmap(photo);
         }
 
         RequestParams params = new RequestParams();

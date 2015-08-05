@@ -198,11 +198,11 @@ public class UserInfoActivity extends Activity {
         Bundle extras = data.getExtras();
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
-            Drawable drawable = new BitmapDrawable(this.getResources(),photo);
-            userInfoAvatar.setImageDrawable(drawable);
+           // Drawable drawable = new BitmapDrawable(this.getResources(),photo);
+            userInfoAvatar.setImageBitmap(photo);
             saveBitmap(photo, Config.AVATAR_FILE_PATH);
-            RequestParams params = new RequestParams();
 
+            RequestParams params = new RequestParams();
             params.addBodyParameter("username", Config.DEBUG_USERNAME);
             params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
             params.addBodyParameter("avatar", new File(Config.AVATAR_FILE_PATH));
@@ -576,8 +576,8 @@ public class UserInfoActivity extends Activity {
     private void getUserInfo(){
         Bitmap photo = getDiskBitmap(Config.AVATAR_FILE_PATH);
         if(photo!=null){
-            Drawable drawable = new BitmapDrawable(this.getResources(),photo);
-            userInfoAvatar.setImageDrawable(drawable);
+            //Drawable drawable = new BitmapDrawable(this.getResources(),photo);
+            userInfoAvatar.setImageBitmap(photo);
         }
 
         RequestParams params = new RequestParams();

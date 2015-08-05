@@ -58,7 +58,7 @@
                 android:text="@string/device_number"/>
 
             <EditText
-                android:id="@+id/tab_report_device_id"
+                android:id="@+id/tab_report_device_brief"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:ems="8"
@@ -188,8 +188,7 @@
         <ImageView android:id="@+id/tab_report_img"
             android:contentDescription="@string/picture"
             android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/logo"/>
+            android:layout_height="120dp"/>
     </TableRow>
 
     <LinearLayout

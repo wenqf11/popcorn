@@ -35,10 +35,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 
 import cn.edu.tsinghua.thss.popcorn.MainActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
+import cn.edu.tsinghua.thss.popcorn.UserInfoActivity;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 /**
@@ -51,7 +54,6 @@ public class ReportFragment extends Fragment {
 //    private static String ACCESS_TOKEN = "hello_world";
     private static final int TAKE_PICTURE = 1;
     private static final int BROWSE = 2;
-    private String REPORT_URL =  Config.LOCAL_IP + "/app/maintain/add/";
 
     private ProgressDialog progressDialog;
 
@@ -61,7 +63,7 @@ public class ReportFragment extends Fragment {
     String file_str = Environment.getExternalStorageDirectory().getPath();
     String file_path = file_str + "/willwings/photos";
     File mars_file = new File(file_path);
-    File file_go = null;
+    File file_go = new File(file_path+"/origin.jpg");
 
     @ViewInject(R.id.tab_report_camera)
     private Button cameraButton;
@@ -75,8 +77,8 @@ public class ReportFragment extends Fragment {
     @ViewInject(R.id.tab_report_title)
     private EditText reportTitleText;
 
-    @ViewInject(R.id.tab_report_device_id)
-    private EditText deviceIdText;
+    @ViewInject(R.id.tab_report_device_brief)
+    private EditText deviceBriefText;
 
     @ViewInject(R.id.tab_report_fault_description)
     private EditText faultDescriptionText;
@@ -89,7 +91,7 @@ public class ReportFragment extends Fragment {
 
     @OnClick(R.id.tab_report_submit_btn)
     private void submitButtonClick(View v){
-        String deviceId = deviceIdText.getText().toString();
+        String deviceBrief = deviceBriefText.getText().toString();
         String reportTitle = reportTitleText.getText().toString();
         String faultDescription = faultDescriptionText.getText().toString();
         String reportMemo = reportMemoText.getText().toString();
@@ -98,10 +100,9 @@ public class ReportFragment extends Fragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter("username", Config.DEBUG_USERNAME);
         params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
-        params.addBodyParameter("device_id", deviceId);
+        params.addBodyParameter("device_brief", deviceBrief);
         params.addBodyParameter("title", reportTitle);
         params.addBodyParameter("description", faultDescription);
-        params.addBodyParameter("image", imgURL);
         params.addBodyParameter("memo", reportMemo);
 
         progressDialog.setMessage("数据发送中...");
@@ -109,7 +110,7 @@ public class ReportFragment extends Fragment {
 
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
-                REPORT_URL,
+                Config.REPORT_URL,
                 params,
                 new RequestCallBack<String>() {
 
@@ -119,18 +120,65 @@ public class ReportFragment extends Fragment {
 
                     @Override
                     public void onLoading(long total, long current, boolean isUploading) {
-
                     }
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        Toast.makeText(getActivity().getApplicationContext(), responseInfo.result, Toast.LENGTH_SHORT).show();
                         progressDialog.hide();
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+
+
+                            if (status.equals("ok")) {
+                                String repairTaskId = jsonObject.getString("data");
+                                if(image_view.getDrawable() != null){
+                                    RequestParams params = new RequestParams();
+                                    params.addBodyParameter("username", Config.DEBUG_USERNAME);
+                                    params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
+                                    params.addBodyParameter("id", repairTaskId);
+                                    params.addBodyParameter("image", new File(Config.REPORT_FILE_PATH));
+
+                                    HttpUtils http = new HttpUtils();
+                                    http.send(HttpRequest.HttpMethod.POST,
+                                            Config.SUBMIT_REPOET_IMAGE_URL,
+                                            params,
+                                            new RequestCallBack<String>() {
+
+                                                @Override
+                                                public void onStart() {
+                                                }
+
+                                                @Override
+                                                public void onLoading(long total, long current, boolean isUploading) {
+
+                                                }
+
+                                                @Override
+                                                public void onSuccess(ResponseInfo<String> responseInfo) {
+                                                    Toast.makeText(getActivity().getApplicationContext(), "报修成功", Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onFailure(HttpException error, String msg) {
+                                                }
+                                            }
+                                    );
+                                }
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(), "数据提交失败，请重试", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getActivity().getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "数据提交失败，请重试", Toast.LENGTH_SHORT).show();
                         progressDialog.hide();
                     }
                 });
@@ -141,13 +189,11 @@ public class ReportFragment extends Fragment {
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
             // 先创建父目录，如果新创建一个文件的时候，父目录没有存在，那么必须先创建父目录，再新建文件。
-            boolean isSuccessful = true;
             if (!mars_file.exists()) {
-                isSuccessful  = mars_file.mkdirs();
+                mars_file.mkdirs();
             }
             // 设置跳转的系统拍照的activity为：MediaStore.ACTION_IMAGE_CAPTURE ;
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            file_go = new File(file_path+"/"+System.currentTimeMillis()+".jpg");
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file_go));
             //跳转到拍照界面;
             startActivityForResult(intent, TAKE_PICTURE);
@@ -201,18 +247,37 @@ public class ReportFragment extends Fragment {
                 options.inSampleSize = 2;
                 Bitmap bmpDefaultPic = BitmapFactory.decodeFile(file_go.getPath(), options);
                 image_view.setImageBitmap(bmpDefaultPic);
+                saveBitmap(bmpDefaultPic, Config.REPORT_FILE_PATH);
             }else if(requestCode == BROWSE) {
                 Uri uri = data.getData();
                 ContentResolver cr = getActivity().getContentResolver();
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                     image_view.setImageBitmap(bitmap);
+                    saveBitmap(bitmap, Config.REPORT_FILE_PATH);
                 } catch (FileNotFoundException e) {
                     Log.e("Exception", e.getMessage(),e);
                 }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void saveBitmap(Bitmap bm, String path) {
+        File f = new File(path);
+        try {
+            FileOutputStream out = new FileOutputStream(f);
+            bm.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 	
 	@Override
