@@ -3,11 +3,17 @@ package cn.edu.tsinghua.thss.popcorn.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +29,8 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import cn.edu.tsinghua.thss.popcorn.AboutInfoActivity;
 import cn.edu.tsinghua.thss.popcorn.ChangePasswordActivity;
@@ -40,6 +48,9 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 public class MineFragment extends Fragment {
 
     private View mineView;
+
+    @ViewInject(R.id.id_tab_mine_avatar)
+    private ImageView mineAvatar;
 
     @ViewInject(R.id.mine_name)
     private TextView myName;
@@ -114,6 +125,12 @@ public class MineFragment extends Fragment {
     }
 
     private void getUserInfo(){
+        Bitmap photo = getDiskBitmap(Config.AVATAR_FILE_PATH);
+        if(photo!=null){
+            Drawable drawable = new BitmapDrawable(this.getResources(),photo);
+            mineAvatar.setImageDrawable(drawable);
+        }
+
         RequestParams params = new RequestParams();
         params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
@@ -164,5 +181,22 @@ public class MineFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+    }
+
+    private Bitmap getDiskBitmap(String pathString)
+    {
+        Bitmap bitmap = null;
+        try
+        {
+            File file = new File(pathString);
+            if(file.exists())
+            {
+                bitmap = BitmapFactory.decodeFile(pathString);
+            }
+        } catch (Exception e)
+        {
+            // TODO: handle exception
+        }
+        return bitmap;
     }
 }

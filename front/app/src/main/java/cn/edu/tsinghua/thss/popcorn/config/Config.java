@@ -1,5 +1,7 @@
 package cn.edu.tsinghua.thss.popcorn.config;
 
+import android.os.Environment;
+
 /**
  * Created by LY on 2015/6/4.
  */
@@ -8,7 +10,7 @@ public class Config {
     public static String ACCESS_TOKEN = "hello_world";
 
     //public static String LOCAL_IP = "http://192.168.1.102";//"http://192.168.1.103";
-    public static String LOCAL_IP = "http://59.66.93.157";
+    public static String LOCAL_IP = "http://59.66.93.185";
     public static String REPAIR_TASK_LIST_URL =  Config.LOCAL_IP + "/app/maintain/list/2/";
     public static String MAINTAIN_TASK_LIST_URL = Config.LOCAL_IP + "/app/maintain/list/1/";
 
@@ -21,8 +23,10 @@ public class Config {
     public static String LOGIN_URL = LOCAL_IP +"/app/login/";
     public static String SUBMIT_METER_URL = LOCAL_IP + "/app/meter/";
     public static String SUBMIT_USER_INFO_URL = LOCAL_IP + "/app/userinfo/submit/";
+    public static String SUBMIT_AVATAR_URL = LOCAL_IP + "/app/avatar/";
 
     public static String WILL_WINGS_ORG_WEBSITE = "http://www.willwings.com";
+    public static String AVATAR_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/willwings/avatar/avatar.jpg";
     public static String DEBUG_USERNAME = "";
     public static int MAX_NETWORK_TIME = 5000;
 

@@ -152,7 +152,11 @@ def usermgt(request):
         for role in user_role:
             res_user_role.append(role.name)
 
-        return HttpResponse(json.dumps({"info": res_user_info, "role": res_user_role, "class": user_class}), content_type="application/json")
+        return HttpResponse(json.dumps({
+            "info": res_user_info,
+            "role": res_user_role,
+            "class": user_class}
+        ), content_type="application/json")
     else:
         variables = RequestContext(request, {
             'username': user.username,
