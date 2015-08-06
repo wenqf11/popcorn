@@ -55,19 +55,19 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">用户名<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="username" type="text" class="span6 m-wrap" value="{{ data.username }}" />
+                        <input name="username" type="text" class="span6 m-wrap" value="{{ data.username }}" placeholder="不要多余20个字符"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">密码<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="password" type="password" class="span6 m-wrap" value="{{ data.password }}" />
+                        <input name="password" type="password" class="span6 m-wrap" value="{{ data.password }}" placeholder="不要多余20个字符"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">确认密码<span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <input name="confirmpassword" type="password" class="span6 m-wrap" value="{{ data.password }}" />
+                        <input name="confirm_password" type="password" class="span6 m-wrap" value="{{ data.password }}" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -129,7 +129,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">电子邮箱<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">电子邮箱</label>
                     <div class="col-sm-9">
                         <input name="email" type="text" class="span6 m-wrap" value="{{ data.email }}"/>
                     </div>
@@ -147,20 +147,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">出生年月日<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">出生日期<span class="required">*</span></label>
                     <div class="col-sm-9">
                         <input name="birthday" id="birthday" type="text" class="span6 m-wrap" placeholder="2015-01-01"
                                value="{{ data.birthday |date:"Y-m-d"}}"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">证件号码<span class="required">*</span></label>
-                    <div class="col-sm-9">
-                        <input name="idcard" type="text" class="span6 m-wrap" value="{{ data.idcard }}"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">有效证件类型<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">有效证件类型</label>
                     <div class="col-sm-5">
                         <select class="chosen-select" name="idcardtype">
                             <option value="">身份证</option>
@@ -168,13 +162,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">紧急联系人<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">证件号码</label>
+                    <div class="col-sm-9">
+                        <input name="idcard" type="text" class="span6 m-wrap" value="{{ data.idcard }}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right">紧急联系人</label>
                     <div class="col-sm-9">
                         <input name="contact" type="text" class="span6 m-wrap" value="{{ data.contact }}"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">紧急联系人手机<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">紧急联系人手机</label>
                     <div class="col-sm-9">
                         <input name="contactmobile" type="text" class="span6 m-wrap" value="{{ data.contactmobile }}"/>
                     </div>
@@ -243,8 +243,9 @@
     <script>
     $(function(){
         $('#birthday').datepicker({
-            format: 'yyyy-mm-dd'
-        });
+            format: 'yyyy-mm-dd',
+            startView: 2
+        }).datepicker('setDate', new Date(1980, 1, 1));
         var server_msg="{{ server_msg }}";
         if (server_msg) {
             $.gritter.add({
@@ -305,28 +306,70 @@
     </script>
     <script>
         function checkvalid() {
-           var username = $("[name='username']").val();
-           var password = $("[name='password']").val();
-           var role = $("[name='role']").val();
-           if(username.length < 1 || username.length > 20) {
+            var username = $("[name='username']").val();
+            var password = $("[name='password']").val();
+            var confirm_password = $("[name='confirm_password']").val();
+            var name = $("[name='name']").val();
+            var mobile = $("[name='mobile']").val();
+            mobile_re = /^1\d{10}$/;
+            var birthday = $("[name='birthday']").val();
+            birthday_re = /^(\d{4})-(\d{2})-(\d{2})$/
+            var role = $("[name='role']").val();
+            if(username.length < 1 || username.length > 20) {
                 $("[name='username']").select();
                 $.gritter.add({
                     title: '添加用户失败！',
-                    text: '请填写用户名！',
+                    text: '用户名格式有误！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
-           }
-           else if(password.length < 1 || password.length > 20) {
+            }
+            else if(password.length < 1 || password.length > 20) {
                 $("[name='password']").select();
                 $.gritter.add({
                     title: '添加用户失败！',
-                    text: '请填写密码！',
+                    text: '密码格式有误！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
-           }
-           else if(!role) {
+            }
+            else if(password != confirm_password) {
+                $("[name='password']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '两次密码不一致！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(name.length < 1) {
+                $("[name='name']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '真实姓名不能为空！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(!mobile_re.test(mobile)) {
+                $("[name='mobile']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '手机号格式有误！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(!birthday_re.test(birthday)) {
+                $("[name='mobile']").select();
+                $.gritter.add({
+                    title: '添加用户失败！',
+                    text: '日期格式有误！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            else if(!role) {
                $("[name='role']").select();
                $.gritter.add({
                     title: '添加用户失败！',
@@ -334,7 +377,7 @@
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
-           }
+            }
             return true;
         }
     </script>

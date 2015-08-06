@@ -7,7 +7,7 @@ from django.core import serializers
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, logout as auth_logout,login as auth_login
 from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
@@ -858,9 +858,18 @@ def login(request):
                 auth_login(request, user)
                 return render_to_response('index.html', {'username': username})
             else:
-                return HttpResponseRedirect('/login/')
+                variables = RequestContext(request, {'msg': "用户名不存在或密码错误！"})
+                return render_to_response('login.html', variables)
+        else:
+                variables = RequestContext(request, {'msg': "用户名不存在或密码错误！"})
+                return render_to_response('login.html', variables)
     else:
         return render_to_response('login.html')
+
+
+def logout(request):
+    auth_logout(request)
+    return HttpResponseRedirect('/login/')
 
 
 def deviceall(request):
