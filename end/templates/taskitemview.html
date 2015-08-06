@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
     <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 
 {% block pageheader %}
@@ -84,7 +85,7 @@
                                                         <a class="green" id="{{ dataitem.id }}" href="#my-modal1" data-toggle="modal">
                                                             <i class="ace-icon fa fa-pencil bigger-130 fa-pencil1"></i>
                                                         </a>
-                                                        <a class="red" href="/delete_taskitem?id={{ dataitem.id }}">
+                                                        <a class="red" href="/delete_taskitem?id={{ dataitem.id }}" onclick="delcfm()">
                                                             <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                                         </a>
                                                         {% endifequal %}
@@ -138,7 +139,7 @@
                         <label class="col-sm-3 control-label no-padding-top">优先级</label>
                         <div class="col-sm-9">
                             <select id="priority" name="priority" form="taskitemform1">
-                                <option value="1" selected="selected">一般</option>
+                                <option value="1">一般</option>
                                 <option value="2">重要</option>
                                 <option value="3">紧急</option>
                             </select>
@@ -153,7 +154,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">指派执行人</label>
                         <div class="col-sm-9">
-                            <select id="editor" name="editor" form="taskitemform1">
+                            <select class="chosen-select" id="editor" name="editor" form="taskitemform1">
                                 {% for tasker in taskers %}
                                 <option value="{{ tasker }}">{{ tasker }}</option>
                                 {% endfor %}
@@ -262,6 +263,40 @@
     <script src="../static/assets/js/dataTables.colVis.min.js"></script>
     <script src="../static/assets/js/ace-elements.min.js"></script>
     <script src="../static/assets/js/ace.min.js"></script>-->
+    <script src="../static/assets/js/chosen.jquery.min.js"></script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
+                
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()*2});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                });
+
+
+                $('#chosen-multiple-style .btn').on('click', function(e){
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                     else $('#form-field-select-4').removeClass('tag-input-style');
+                });
+            }
+        });
+    </script>
 <script>
     $(function(){
         var purview_msg = "{{ purview_msg }}";
@@ -336,29 +371,31 @@
                 divs[0].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
                 divs[1].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
 
-                var maintainers = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
-                var mlength = maintainers.length;
-                var themaintainer = dataline[4].innerHTML;
-                for(var i = 0; i < mlength; i++) {
-                    if(maintainers[i].value == themaintainer) {
-                        maintainers[i].setAttribute("selected", "selected");
-                    }
-                    else {
-                        maintainers[i].removeAttribute("selected");
-                    }
-                }
-
-                divs[3].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
-
-                var priorities = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var priorities = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
                 var plength = priorities.length;
-                var thepriority = dataline[6].innerHTML;
+                var thepriority = dataline[4].innerHTML;
                 for(var i = 0; i < plength; i++) {
                     if(priorities[i].innerHTML == thepriority) {
                         priorities[i].setAttribute("selected", "selected");
                     }
                     else {
                         priorities[i].removeAttribute("selected");
+                    }
+                }
+
+                divs[3].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
+
+                var maintainers = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var mlength = maintainers.length;
+                var themaintainer = dataline[7].innerHTML;
+                for(var i = 0; i < mlength; i++) {
+                    if(maintainers[i].value == themaintainer) {
+                        maintainers[i].setAttribute("selected", "selected");
+                        var show = divs[4].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                        show.innerHTML = themaintainer;
+                    }
+                    else {
+                        maintainers[i].removeAttribute("selected");
                     }
                 }
 
