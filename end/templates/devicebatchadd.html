@@ -61,9 +61,10 @@ function clickUpload() {
     <!-- /block -->
 </div>
 <p>
-    <a class="btn btn-warning" href="/userbatch_submit">开始导入</a>
+    <a id="begin_import" class="btn btn-warning" >开始导入</a>
 </p>
 <pre id="out" style="display: none;"></pre>
+<p id="batch_data" style="display: none;"></p>
 {% endblock %}
 
 {% block tailjs %}
@@ -86,7 +87,24 @@ function clickUpload() {
     });
 </script>
     <script type="text/javascript">
+    function update_page() {
+        console.log("success");
+    }
+
     $(document).ready(function() {
+      $('#begin_import').click(function (){
+      //var params=$('out').serialize(); //序列化表单的值
+      var batchdata = document.getElementById('batch_data').value;
+      //alert(batchdata);
+      $.ajax({
+           url:'/devicebatch_submit/', //后台处理程序
+           type:'post',         //数据发送方式
+           dataType:'json',     //接受数据格式
+           data:batchdata,         //要传递的数据
+           success:update_page //回传函数(这里是函数名)
+         });
+       });
+
         var table = $('#maintenance').DataTable({
             scrollX: "100%",
             oLanguage : {
@@ -262,6 +280,7 @@ function process_wb(wb) {
 	if(out.innerText === undefined) out.textContent = output;
 	else out.innerText = output;
 
+    document.getElementById('batch_data').value = output;
     var i;
     var data_array = [];
     var obj_map = JSON.parse(output);

@@ -396,7 +396,7 @@ def devicemgt(request):
                 deviceinfo['devicetype'] = "未指定设备分类"
             owner = k_user.objects.filter(id=device.ownerid)
             if len(owner) == 1:
-                deviceinfo['owner'] = owner[0].username
+                deviceinfo['owner'] = owner[0].name
             else:
                 deviceinfo['owner'] = "未指定负责人"
             _c = k_class.objects.filter(id=device.classid_id)
@@ -596,7 +596,59 @@ def devicebatch_submit(request):
     user = User.objects.get(username=request.user.username)
     # 读取权限，显示内容
     variables = RequestContext(request, {'username': user.username})
-    return render_to_response('devicebatchadd.html', variables)
+    if request.method == "POST":
+        raw_post_data = request.body
+        json_data = json.loads(raw_post_data)
+        for json_key in json_data:
+            obj_datas = json_data[json_key]
+            for obj_data in obj_datas:
+                _brief = obj_data['brief']
+                _name = obj_data['name']
+                _classname = obj_data['classname']
+                _classid = k_class.objects.get(name=_classname)
+                _typeid = k_devicetype.objects.get(name=obj_data['typename'])
+                _producerid = k_producer.objects.get(name=obj_data['producer'])
+                _supplierid = k_supplier.objects.get(name=obj_data['supplier'])
+                _ownerid = k_user.objects.get(username=obj_data['owner'])
+                _devs = k_device.objects.filter(brief=_brief)
+                _devs = _devs.filter(name=_name)
+                if len(_devs) > 0:
+                    _dev = _devs[0]
+                    server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备已存在！'
+                    return HttpResponseRedirect('/user_operate/?msg='+server_msg)
+
+                _state = 0
+                if obj_data['state'] == '正常':
+                    _state = 1
+
+                _device = k_device.objects.create(
+                    classid=_classid,
+                    typeid=_typeid,
+                    producerid=_producerid,
+                    supplierid=_supplierid,
+                    ownerid=_ownerid.id,
+                    name=obj_data['name'],
+                    brief=obj_data['brief'],
+                    brand=obj_data['brand'],
+                    state=_state,
+                    serial=obj_data['serial'],
+                    model=obj_data['model'],
+                    buytime=obj_data['buytime'],
+                    content=obj_data['content'],
+                    position=obj_data['position'],
+                    memo=obj_data['memo'],
+                    spare=obj_data['spare'],
+                    notice=obj_data['notice'],
+                    maintenanceperiod = 1,
+                    status=2,
+                    creatorid=request.user.id,
+                    createdatetime=get_current_date(),
+                    editorid=request.user.id,
+                    editdatetime=get_current_date()
+                )
+                _device.save()
+                server_msg = '批量添加设备成功！'
+        return HttpResponseRedirect('/devicebatch_add/?msg='+server_msg)
 
 
 @login_required
