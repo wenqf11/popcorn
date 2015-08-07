@@ -7,7 +7,7 @@ from django.core import serializers
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, logout as auth_logout,login as auth_login
 from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
@@ -910,9 +910,18 @@ def login(request):
                 auth_login(request, user)
                 return render_to_response('index.html', {'username': username})
             else:
-                return HttpResponseRedirect('/login/')
+                variables = RequestContext(request, {'msg': "用户名不存在或密码错误！"})
+                return render_to_response('login.html', variables)
+        else:
+                variables = RequestContext(request, {'msg': "用户名不存在或密码错误！"})
+                return render_to_response('login.html', variables)
     else:
         return render_to_response('login.html')
+
+
+def logout(request):
+    auth_logout(request)
+    return HttpResponseRedirect('/login/')
 
 
 def deviceall(request):
@@ -1641,12 +1650,24 @@ def submit_maintenance(request):
         _msg = check_purview(request.user.username, 33)
         if _msg != 0:
             return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
-        _maintenance = k_maintenance.objects.get(id=_id)
-        _maintainer = k_user.objects.get(name=_editor)
-        if _maintenance.editorid != _maintainer.id:
-            _msg = check_purview(request.user.username, 32)
-            if _msg != 0:
-                return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+        if _id:
+            _maintenance = k_maintenance.objects.get(id=_id)
+            if _editor == "nopersonchosen":
+                if _maintenance.editorid != 0:
+                    _msg = check_purview(request.user.username, 32)
+                    if _msg != 0:
+                        return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+            else:
+                _maintainer = k_user.objects.get(name=_editor)
+                if _maintenance.editorid != _maintainer.id:
+                    _msg = check_purview(request.user.username, 32)
+                    if _msg != 0:
+                        return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+        else:
+            if _editor != "nopersonchosen":
+                _msg = check_purview(request.user.username, 32)
+                if _msg != 0:
+                    return HttpResponseRedirect('/add_maintenance/?msg='+_msg)
     
     _title = request.GET.get('title')
     _brief = request.GET.get('brief')
@@ -1665,15 +1686,20 @@ def submit_maintenance(request):
         return HttpResponseRedirect('/view_maintained/')
     elif _id:
         _maintenance = k_maintenance.objects.get(id=_id)
-        _maintainer = k_user.objects.get(name=_editor)
+        if _editor != "nopersonchosen":
+            _maintainer = k_user.objects.get(name=_editor)
+            _maintenance.editorid = _maintainer.id
+            _maintenance.assignorid = _user.id
+            _maintenance.assigndatetime = get_current_date()
+            _maintenance.state = 2
+        else:
+            _maintenance.editorid = 0
+            _maintenance.assignorid = 0
+            _maintenance.state = 1           
         _maintenance.title = _title
         _maintenance.createcontent = _createcontent
         _maintenance.priority = _priority
         _maintenance.memo = _memo
-        _maintenance.assignorid = _user.id
-        _maintenance.assigndatetime = get_current_date()
-        _maintenance.editorid = _maintainer.id
-        _maintenance.state = 2
     else:
         _device = k_device.objects.filter(brief=_brief)
 
@@ -2068,13 +2094,21 @@ def submit_taskitem(request):
         if _msg != 0:
             return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
 
-        _taskitem = k_taskitem.objects.get(id=_id)
+        # _taskitem = k_taskitem.objects.get(id=_id)
 
-        _tasker = k_user.objects.get(name=_editor)
-        if _taskitem.editorid != _tasker.id:
-            _msg = check_purview(request.user.username, 36)
-            if _msg != 0:
-                return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+        # _tasker = k_user.objects.get(name=_editor)
+        # if _taskitem.editorid != _tasker.id:
+        #     _msg = check_purview(request.user.username, 36)
+        #     if _msg != 0:
+        #         return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+    else:
+        _msg = check_purview(request.user.username, 37)
+        if _msg != 0:
+            return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+        # _msg = check_purview(request.user.username, 36)
+        # if _msg != 0:
+        #     return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+
 
     if _submittype == "1":
         _taskitem = k_taskitem.objects.get(id=_id)
@@ -2310,7 +2344,10 @@ def submit_spare(request):
     _spare.memo = _memo
     _spare.save()
 
-    return HttpResponseRedirect('/view_spare')
+    if _id:
+        return HttpResponseRedirect('/view_spare')
+    else:
+        return HttpResponseRedirect('/view_spare/?msg=您可在“库存”->“备件出入库”中先进行备件入库')
 
 
 def delete_spare(request):
@@ -2876,7 +2913,10 @@ def submit_tool(request):
     _tool.memo = _memo
     _tool.save()
 
-    return HttpResponseRedirect('/view_tool')
+    if _id:
+        return HttpResponseRedirect('/view_tool')
+    else:
+        return HttpResponseRedirect('/view_tool/?msg=您可在“库存”->“工具出入库”中先进行工具入库')
 
 
 def delete_tool(request):

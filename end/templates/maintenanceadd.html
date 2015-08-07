@@ -1,35 +1,49 @@
 {% extends 'userframe.html' %}
 {% block css %}
+<!--
     <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
     <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+-->
+    <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 
 {% block pageheader %}
-    添加维修计划
+    添加维修任务
 {% endblock %}
 
 {% block maincontent %}
 <div class="row">
     <div class="col-xs-12">
-        <form class="form-horizontal" action="/submit_maintenance/" role="form" id="maintenanceform">
+        <form class="form-horizontal" action="/submit_maintenance/" role="form" id="maintenanceform" enctype="multipart/form-data">
+            <fieldset>
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">维修标题</label>
                 <div class="col-sm-9">
                     <input type="text" name="title" value="">
                 </div>
-            </div>
+            </div><!--
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">设备简称</label>
                 <div class="col-sm-9">
                     <input id="brief" name="brief" type="text" data-provide="typeahead">
                 </div>
+            </div>-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">设备简称</label>
+                <div class="col-sm-2">
+                    <select class="chosen-select" id="brief" name="brief" type="text">
+                        {% for brief in briefs %}
+                        <option value="{{ brief }}">{{ brief }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
-                <div class="col-sm-9">
-                    <select id="editor" name="editor" form="maintenanceform">
+                <div class="col-sm-2">
+                    <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
                         <option value="nopersonchosen" selected="selected"></option>
                         {% for maintainer in maintainers %}
                         <option value="{{ maintainer }}">{{ maintainer }}</option>
@@ -72,6 +86,7 @@
                     </button>
                 </div>
             </div>
+            </fieldset>
         </form>
     </div>
 </div>
@@ -79,7 +94,9 @@
 {% endblock %}
 
 {% block tailjs %}
-    <script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>
+<!--
+    <script src="../static/bootstrap/js/bootstrap-typeahead.js"></script>-->
+    <script src="../static/assets/js/chosen.jquery.min.js"></script>
 <script>
     $(function(){
         var purview_msg = "{{ purview_msg }}";
@@ -92,14 +109,47 @@
         }
     });
 </script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
+
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                });
+
+
+                $('#chosen-multiple-style .btn').on('click', function(e){
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                     else $('#form-field-select-4').removeClass('tag-input-style');
+                });
+            }
+        });
+    </script>
     <script type="text/javascript">
-        var subjects = new Array();
+        /*var subjects = new Array();
         var x = 0;
         {% for brief in briefs %}
             subjects[x++] = "{{ brief }}"; 
         {% endfor %}
         $('#brief').typeahead({source: subjects});
-
+*/
         function checkvalid() {
             var title = $("[name='title']").val();
             var brief = $("[name='brief']").val();
@@ -108,12 +158,13 @@
             if(title.length < 1 || title.length > 40) {
                 $("[name='title']").select();
                 $.gritter.add({
-                title: '添加维修计划失败！',
+                title: '添加维修任务失败！',
                 text: '维修标题长度为1-40个字符！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;
             }
+            /*
             var correctb = 0;
             for(var subject in subjects) {
                 if(brief == subjects[subject])
@@ -122,16 +173,17 @@
             if(correctb == 0) {
                 $("[name='brief']").select();
                 $.gritter.add({
-                title: '添加维修计划失败！',
+                title: '添加维修任务失败！',
                 text: '请输入正确的设备简称！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;
             }
+            */
             if(createcontent.length < 1 || createcontent.length > 80) {
                 $("[name='createcontent']").select();
                 $.gritter.add({
-                title: '添加维修计划失败！',
+                title: '添加维修任务失败！',
                 text: '故障描述长度为1-80个字符！',
                 class_name: 'gritter-error gritter-center'
                 });
@@ -140,7 +192,7 @@
             if(memo.length > 80) {
                 $("[name='memo']").select();
                 $.gritter.add({
-                    title: '添加维修计划失败！',
+                    title: '添加维修任务失败！',
                     text: '备注长度为0-80个字符！',
                     class_name: 'gritter-error gritter-center'
                 });
