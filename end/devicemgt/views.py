@@ -169,51 +169,104 @@ def usermgt(request):
 
 @login_required
 def operate_user(request):
-    # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
-    # 读取权限，显示内容
-    _id = request.GET.get('id')
-    userdata = dict()
-    class_list = list()
-    classes = k_class.objects.all()
-    for c in classes:
-        class_list.append(c.name)
-    role_list = list()
-    roles = k_role.objects.all()
-    for role in roles:
-        role_list.append(role.name)
+    """ update user information
+    """
+    if request.method == 'GET':
+        user = User.objects.get(username=request.user.username)
+        # 读取权限，显示内容
+        _id = request.GET.get('id')
+        userdata = dict()
+        class_list = list()
+        classes = k_class.objects.all()
+        for c in classes:
+            class_list.append(c.name)
+        role_list = list()
+        roles = k_role.objects.all()
+        for role in roles:
+            role_list.append(role.name)
 
-    userdata['class_list'] = class_list
-    userdata['role_list'] = role_list
-    if _id:
-        theuser = k_user.objects.filter(id=_id)[0]
-        key_list = ['username', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
-                    'idcard', 'idcardtype', 'contact','contactmobile', 'content', 'memo', 'birthday']
-        for key in key_list:
-            userdata[key] = eval('theuser.' + key)
+        userdata['class_list'] = class_list
+        userdata['role_list'] = role_list
+        if _id:
+            theuser = k_user.objects.filter(id=_id)[0]
+            key_list = ['state', 'username', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
+                        'idcard', 'idcardtype', 'contact','contactmobile', 'content', 'memo', 'birthday']
+            for key in key_list:
+                userdata[key] = eval('theuser.' + key)
 
-        k_chosed_roles = k_role.objects.filter(k_user=_id)
-        chosed_roles = []
-        for k_chosed_role in k_chosed_roles:
-            chosed_roles.append(k_chosed_role.name)
-        userdata['chosen_roles'] = chosed_roles
+            userdata['class_name'] = theuser.classid.name
+
+            k_chosed_roles = k_role.objects.filter(k_user=_id)
+            chosed_roles = []
+            for k_chosed_role in k_chosed_roles:
+                chosed_roles.append(k_chosed_role.name)
+            userdata['chosen_roles'] = chosed_roles
+        else:
+            userdata['isNew'] = True
+
+        server_msg = request.GET.get('msg')
+        if server_msg:
+            variables = RequestContext(request, {'username': user.username, 'data': userdata, 'server_msg': server_msg})
+        else:
+            variables = RequestContext(request, {'username': user.username, 'data': userdata})
+        return render_to_response('useroperate.html', variables)
     else:
-        userdata['isNew'] = True
+        user = k_user.objects.filter(username=request.POST['username'])
+        if len(user) == 1:
+            user = user[0]
+            cur_user_id = user.id
+            _d_username = user.username
 
-    server_msg = request.GET.get('msg')
-    if server_msg:
-        variables = RequestContext(request, {'username': user.username, 'data': userdata, 'server_msg': server_msg})
-    else:
-        variables = RequestContext(request, {'username': user.username, 'data': userdata})
-    return render_to_response('useradd.html', variables)
+            _c = k_class.objects.get(name=request.POST['classname'])
+            if _c:
+                user.classid = _c
+
+            raw_password = request.POST['password']
+            user.email = request.POST['email']
+            user.name = request.POST['name']
+            user.mobile = request.POST['mobile']
+            user.gender = request.POST['gender']
+            user.zipcode = request.POST['zipcode']
+            user.address = request.POST['address']
+            user.birthday = datetime.strptime(request.POST['birthday'], '%Y-%m-%d').date()
+            user.idcard = request.POST['idcard']
+            user.idcardtype = request.POST['idcardtype']
+            user.content = request.POST['content']
+            user.memo = request.POST['memo']
+            user.contact = request.POST['contact']
+            user.contactmobile = request.POST['contactmobile']
+            user.editorid = request.user.id
+            user.editdatetime = get_current_date()
+            tmp_urs = user.roles.filter(k_user=user.id)
+            for ur in tmp_urs:
+                user.roles.remove(ur)
+            # 建立user和role的关系
+            roles_name = request.POST.getlist('role')
+            for r_name in roles_name:
+                roles = k_role.objects.filter(name=r_name)
+                for role in roles:
+                    user.roles.add(role.id)
+            user.editorid = request.user.id
+            user.editdatetime=get_current_date()
+
+            if raw_password != "":
+                user.set_password(raw_password)
+                _d_user = User.objects.get(username=_d_username)
+                _d_user.set_password(raw_password)
+                _d_user.save()
+            user.save()
+
+            server_msg = '修改用户资料成功！'
+            return HttpResponseRedirect('/user_operate/?id=' + str(cur_user_id) + '&msg=' + server_msg)
+        else:
+            server_msg = "用户名不存在！"
+            return HttpResponseRedirect('/user_operate/?msg=' + server_msg)
 
 
-# 提交表单，添加用户
 @login_required
 def useradd(request):
-    # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
+    """ add new user
+    """
     server_msg = ''
     cur_user_id = 0
     if request.method == 'POST':
@@ -268,10 +321,60 @@ def useradd(request):
             for role in roles:
                 user.roles.add(role.id)
             server_msg = '添加用户成功！'
-        elif len(user) == 1:
+        else:
+            server_msg = "用户名已存在！"
+        return HttpResponseRedirect('/useradd/?msg=' + server_msg)
+    else:
+        user = User.objects.get(username=request.user.username)
+        # 读取权限，显示内容
+        _id = request.GET.get('id')
+        userdata = dict()
+        class_list = list()
+        classes = k_class.objects.all()
+        for c in classes:
+            class_list.append(c.name)
+        role_list = list()
+        roles = k_role.objects.all()
+        for role in roles:
+            role_list.append(role.name)
+
+        userdata['class_list'] = class_list
+        userdata['role_list'] = role_list
+        if _id:
+            theuser = k_user.objects.filter(id=_id)[0]
+            key_list = ['username', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
+                        'idcard', 'idcardtype', 'contact','contactmobile', 'content', 'memo', 'birthday']
+            for key in key_list:
+                userdata[key] = eval('theuser.' + key)
+
+            k_chosed_roles = k_role.objects.filter(k_user=_id)
+            chosed_roles = []
+            for k_chosed_role in k_chosed_roles:
+                chosed_roles.append(k_chosed_role.name)
+            userdata['chosen_roles'] = chosed_roles
+        else:
+            userdata['isNew'] = True
+        server_msg = request.GET.get('msg')
+        if server_msg:
+            variables = RequestContext(request, {'username': user.username, 'data': userdata, 'server_msg': server_msg})
+        else:
+            variables = RequestContext(request, {'username': user.username, 'data': userdata})
+        return render_to_response('useradd.html',variables)
+
+
+@login_required
+def update_user(request):
+    '''修改用户信息
+    '''
+    # 登陆成功
+    # user = k_user.objects.get(username=request.user.username)
+    server_msg = ''
+    cur_user_id = 0
+    if request.method == 'POST':
+        user = k_user.objects.filter(username=request.POST['username'])
+        if len(user) == 1:
             user = user[0]
             cur_user_id = user.id
-
             _d_username = user.username
 
             _c = k_class.objects.get(name=request.POST['classname'])
@@ -315,10 +418,12 @@ def useradd(request):
             _d_user.save()
 
             server_msg = '修改用户资料成功！'
-            # 更新用户成功
+            return HttpResponseRedirect('/user_operate/?id=' + str(cur_user_id) + '&msg=' + server_msg)
         else:
-            server_msg = "数据库中有重名用户！"
-    return HttpResponseRedirect('/user_operate/?id=' + str(cur_user_id) + '&msg=' + server_msg)
+            server_msg = "用户名不存在！"
+            return HttpResponseRedirect('/user_operate/?msg=' + server_msg)
+    else:
+        return HttpResponseRedirect('/user_operate/')
 
 
 def userdel(request):
@@ -510,7 +615,7 @@ def deviceadd(request):
             if len(_devs) > 0:
                 _dev = _devs[0]
                 server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备已存在！'
-                return HttpResponseRedirect('/user_operate/?msg='+server_msg)
+                return HttpResponseRedirect('/device_operate/?msg='+server_msg)
 
             _device = k_device.objects.create(
                 classid=_classid,

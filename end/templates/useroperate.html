@@ -7,7 +7,7 @@
     <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 {% block pageheader %}
-    添加用户 <a class="btn btn-success" style="border:0px;float:right;margin-right: 30px;" href="/userbatch_add">批量导入</a>
+        编辑用户
 {% endblock %}
 {% block maincontent %}
          <!-- validation -->
@@ -23,9 +23,8 @@
                         </div>
 
         <!-- BEGIN FORM-->
-            <form action="/useradd/" class="form-horizontal col-sm-12" enctype="multipart/form-data" method="POST">
+            <form action="/user_operate/" class="form-horizontal col-sm-12" enctype="multipart/form-data" method="POST">
             <fieldset>
-
                 <h4 class="header blue bolder smaller">基本信息</h4>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">真实姓名<span class="required">*</span></label>
@@ -38,7 +37,7 @@
                     <div class="col-sm-5">
                         <select class="chosen-select" name="classname">
                             {% for class in data.class_list %}
-                            <option value="{{ class }}">{{ class }}</option>
+                            <option value="{{ class }}"{% ifequal data.class_name class%}selected="true" {% endifequal %}>{{ class }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -47,10 +46,10 @@
                     <label class="col-sm-3 control-label no-padding-right">用户状态<span class="required">*</span></label>
                     <div class="col-sm-5">
                         <select class="chosen-select" name="state">
-                            <option value="0">锁定</option>
-                            <option value="1">在岗</option>
-                            <option value="2">长假</option>
-                            <option value="3">离职</option>
+                            <option value="0"{% ifequal data.state "0"%}selected="true"{% endifequal %}>锁定</option>
+                            <option value="1"{% ifequal data.state "1"%}selected="true"{% endifequal %}>在岗</option>
+                            <option value="2"{% ifequal data.state "2"%}selected="true"{% endifequal %}>长假</option>
+                            <option value="3"{% ifequal data.state "3"%}selected="true"{% endifequal %}>离职</option>
                         </select>
                     </div>
                 </div>
@@ -316,15 +315,6 @@
                 $.gritter.add({
                     title: '添加用户失败！',
                     text: '用户名格式有误！',
-                    class_name: 'gritter-error gritter-center'
-                });
-                return false;
-            }
-            else if(password.length < 1 || password.length > 20) {
-                $("[name='password']").select();
-                $.gritter.add({
-                    title: '添加用户失败！',
-                    text: '密码格式有误！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;

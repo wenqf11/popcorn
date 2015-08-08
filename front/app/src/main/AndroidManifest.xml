@@ -122,6 +122,14 @@
             android:label="@string/title_activity_user_info"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".TaskActivity"
+            android:label="@string/title_activity_task" >
+        </activity>
+        <activity
+            android:name=".TaskListActivity"
+            android:label="@string/title_activity_task_list" >
+        </activity>
     </application>
 
 </manifest>

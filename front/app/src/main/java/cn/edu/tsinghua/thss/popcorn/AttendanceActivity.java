@@ -246,7 +246,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
                         progressDialog.hide();
                     }
                 });
@@ -366,7 +366,7 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                                     SharedPreferences.Editor editor = sp.edit();
                                     editor.putString("checkin", "");
                                     editor.apply();
-                                    Toast.makeText(getApplicationContext(), responseInfo.result, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "今日打卡成功", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override

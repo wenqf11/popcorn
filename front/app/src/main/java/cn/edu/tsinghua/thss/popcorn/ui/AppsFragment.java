@@ -16,6 +16,8 @@ import cn.edu.tsinghua.thss.popcorn.MaintainListActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
 import cn.edu.tsinghua.thss.popcorn.RankActivity;
 import cn.edu.tsinghua.thss.popcorn.RepairListActivity;
+import cn.edu.tsinghua.thss.popcorn.TaskActivity;
+import cn.edu.tsinghua.thss.popcorn.TaskListActivity;
 
 /**
  * @author wenqingfu
@@ -121,6 +123,17 @@ public class AppsFragment extends Fragment {
         mAppsBonusLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent=new Intent(getActivity(), BonusActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        //任务
+        View mAppsTaskLayout = appsView.findViewById(R.id.id_apps_task_ll);
+        mAppsTaskLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), TaskListActivity.class);
                 Bundle bundle=new Bundle();
                 intent.putExtras(bundle);
                 startActivity(intent);
