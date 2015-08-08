@@ -89,8 +89,7 @@ function clickUpload() {
            dataType:'json',     //接受数据格式
            data:batchdata,         //要传递的数据
            success:function(msg) {
-               alert(msg)
-               alert('hi')
+               alert(msg.test)
            } //回传函数(这里是函数名)
          });
          // $.post('/sparebatch_submit/',batchdata);

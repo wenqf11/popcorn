@@ -2518,9 +2518,13 @@ def sparebatch_submit(request):
     # user = k_user.objects.get(username=request.user.username)
     user = User.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username})
-    return render_to_response('sparebatchadd.html', variables)
-
+    #variables = RequestContext(request, {'username': user.username})
+    #return render_to_response('sparebatchadd.html', variables)
+    return HttpResponse(json.dumps({
+                "username": user.username,
+                "test":"test"
+                }
+            ), content_type="application/json")
 
 def view_sparebill(request):
     #权限判断
