@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.11 (64 bit)
-MySQL - 5.6.10 : Database - devicemgtdb
+SQLyog Ultimate v11.28 (64 bit)
+MySQL - 5.5.25a : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.6.10 : Database - devicemgtdb
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `devicemgtdb`;
 
@@ -199,9 +199,9 @@ CREATE TABLE `devicemgt_k_device` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `classid_id` int(11) NOT NULL,
   `brand` varchar(30) NOT NULL,
-  `producerid_id` int(11) NOT NULL,
+  `producerid_id` int(11) DEFAULT NULL,
   `typeid_id` int(11) NOT NULL,
-  `supplierid_id` int(11) NOT NULL,
+  `supplierid_id` int(11) DEFAULT NULL,
   `state` varchar(1) NOT NULL,
   `name` varchar(30) NOT NULL,
   `brief` varchar(30) NOT NULL,

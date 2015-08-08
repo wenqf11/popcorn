@@ -84,6 +84,14 @@ function clickUpload() {
                 class_name: 'gritter-error gritter-center'
             });
         }
+        var server_msg="{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '系统消息',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
     });
 </script>
     <script type="text/javascript">
@@ -101,7 +109,10 @@ function clickUpload() {
            type:'post',         //数据发送方式
            dataType:'json',     //接受数据格式
            data:batchdata,         //要传递的数据
-           success:update_page //回传函数(这里是函数名)
+           success:function(msg) {
+               alert(msg)
+               alert('hi')
+           } //回传函数(这里是函数名)
          });
        });
 

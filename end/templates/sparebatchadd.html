@@ -53,9 +53,10 @@ function clickUpload() {
     <!-- /block -->
 </div>
 <p>
-    <a class="btn btn-warning" href="/userbatch_submit">开始导入</a>
+    <a id="begin_import" class="btn btn-warning" >开始导入</a>
 </p>
 <pre id="out" style="display: none;"></pre>
+<p id="batch_data" style="display: none;"></p>
 {% endblock %}
 
 {% block tailjs %}
@@ -79,6 +80,22 @@ function clickUpload() {
 </script>
     <script type="text/javascript">
     $(document).ready(function() {
+
+      $('#begin_import').click(function (){
+        var batchdata = document.getElementById('batch_data').value;
+        $.ajax({
+           url:'/sparebatch_submit/', //后台处理程序
+           type:'post',         //数据发送方式
+           dataType:'json',     //接受数据格式
+           data:batchdata,         //要传递的数据
+           success:function(msg) {
+               alert(msg)
+               alert('hi')
+           } //回传函数(这里是函数名)
+         });
+         // $.post('/sparebatch_submit/',batchdata);
+      });
+
         var table = $('#maintenance').DataTable({
             scrollX: "100%",
             oLanguage : {
