@@ -732,7 +732,9 @@ def devicebatch_submit(request):
                         _dev = _devs[0]
                         server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
                         server_msg += _classname+'中'+_dev.name+'('+_dev.brief+')的设备已存在！'
-                        return HttpResponseRedirect('/operate_device/?msg='+server_msg)
+                        return HttpResponse(json.dumps({
+                            "server_msg":server_msg
+                            }), content_type="application/json")
 
                     _state = 0
                     if obj_data['state'] == '正常':
@@ -779,13 +781,21 @@ def devicebatch_submit(request):
                         _device.producerid = _producerid
                     _device.save()
                     success_num += 1
-            server_msg = '批量添加'+str(success_num)+'设备成功！'
-            return HttpResponseRedirect('/device/?msg='+server_msg)
+            server_msg = '成功添加'+str(success_num)+'条设备信息！'
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
         except Exception as e:
-            server_msg = '第'+str(success_num+1)+'条数据添加有误!'
+            server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门、设备类别和责任人用户名是否正确！'
             print e
-            return HttpResponseRedirect('/devicebatch_add/?msg='+server_msg)
-    return HttpResponseRedirect('/devicebatch_add/')
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+    server_msg = "导入失败，请检查数据格式是否符合模板要求！"
+    return HttpResponse(json.dumps({
+        "username": user.username,
+        "server_msg":server_msg
+        }), content_type="application/json")
 
 @login_required
 def device_type(request):

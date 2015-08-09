@@ -95,9 +95,6 @@ function clickUpload() {
     });
 </script>
     <script type="text/javascript">
-    function update_page() {
-        console.log("success");
-    }
 
     $(document).ready(function() {
       $('#begin_import').click(function (){
@@ -109,9 +106,14 @@ function clickUpload() {
            type:'post',         //数据发送方式
            dataType:'json',     //接受数据格式
            data:batchdata,         //要传递的数据
-           success:function(msg) {
-               alert(msg)
-               alert('hi')
+          success:function(data) {
+              if (data.server_msg) {
+                    $.gritter.add({
+                        title: '系统消息',
+                        text: data.server_msg,
+                        class_name: 'gritter-error gritter-center'
+                    });
+                }
            } //回传函数(这里是函数名)
          });
        });
