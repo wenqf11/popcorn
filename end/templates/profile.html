@@ -1,4 +1,4 @@
-{% extends 'frame.html' %}
+ {% extends 'frame.html' %}
 
 {% block js %}
     <script src="../static/assets/js/bootstrap-datepicker.min.js"></script>
@@ -30,7 +30,7 @@
                         <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                             <i class="ace-icon fa fa-circle light-green"></i>
                             &nbsp;
-                            <span class="white">{{ username }}</span>
+                            <span class="white">{{ user.username }}</span>
                         </a>
                     </div>
                 </div>
@@ -40,8 +40,8 @@
 
         </div>
 
+
         <div class="col-xs-12 col-sm-9">
-            <form class="form-horizontal">
         <div class="tabbable">
             <ul class="nav nav-tabs padding-16">
                 <li class="active">
@@ -60,41 +60,39 @@
 
             <div class="tab-content profile-edit-tab-content">
                 <div id="edit-basic" class="tab-pane in active">
+                    <form action="/profile/" method="POST" class="form-horizontal">
                     <h4 class="header blue bolder smaller">基本信息</h4>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-username">用户名</label>
 
-                    <div class="row">
-
-                        <div class="vspace-12-sm"></div>
-
-                        <div class="col-xs-12 col-sm-8">
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label no-padding-right" for="form-field-username">用户名</label>
-
-                                <div class="col-sm-8">
-                                    <input class="col-xs-12 col-sm-10" type="text" id="form-field-username" placeholder="Username" value="{{ username }}" />
-                                </div>
-                            </div>
-
-                            <div class="space-4"></div>
-
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label no-padding-right" for="form-field-first">昵称</label>
-
-                                <div class="col-sm-8">
-                                    <input class="col-xs-12 col-sm-10" type="text" id="form-field-first" placeholder="First Name" value="dh" />
-                                </div>
-                            </div>
+                        <div class="col-sm-9">
+                            <span class="input-icon input-icon-right">
+                                <input class="input-medium input-mask-phone" type="text" id="form-field-username" name="username" value="{{ user.username }}" readonly/>
+                                <i class="ace-icon fa fa-user fa-flip-horizontal"></i>
+                            </span>
                         </div>
                     </div>
 
-                    <hr />
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-username">姓名</label>
+                        <div class="col-sm-9">
+                            <span class="input-icon input-icon-right">
+                                <input class="input-medium input-mask-phone" type="text" id="form-field-name" name="name"   value="{{ user.name }}"/>
+                                <i class="ace-icon fa fa-star fa-flip-horizontal"></i>
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <div class="space-4"></div>
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-date">出生年月</label>
-
                         <div class="col-sm-9">
                             <div class="input-medium">
                                 <div class="input-group">
-                                    <input class="input-medium date-picker" id="birthday" type="text" data-date-format="dd-mm-yyyy" placeholder="dd-mm-yyyy" />
+                                    <input class="input-medium date-picker" id="birthday" name="birthday" type="text" value="{{ user.birthday | date:'Y-m-d' }}" data-date-format="yyyy-mm-dd" />
                                     <span class="input-group-addon">
                                         <i class="ace-icon fa fa-calendar"></i>
                                     </span>
@@ -110,65 +108,84 @@
 
                         <div class="col-sm-9">
                             <label class="inline">
-                                <input name="form-field-radio" type="radio" class="ace" />
+                                <input type="radio" name="gender"value="1"  class="ace" {% ifequal user.gender "1"%}checked{% endifequal %}/>
                                 <span class="lbl middle"> 男</span>
                             </label>
 
-                            &nbsp; &nbsp; &nbsp;
+                            &nbsp; &nbsp;
                             <label class="inline">
-                                <input name="form-field-radio" type="radio" class="ace" />
+                                <input type="radio" name="gender" value="0" class="ace" {% ifequal user.gender "0"%}checked{% endifequal %}/>
                                 <span class="lbl middle"> 女</span>
                             </label>
                         </div>
                     </div>
 
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-comment">个性签名</label>
-
-                        <div class="col-sm-9">
-                            <textarea id="form-field-comment"></textarea>
-                        </div>
-                    </div>
-
                     <div class="space"></div>
-                    <h4 class="header blue bolder smaller">联系信息</h4>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-email">邮件</label>
-
-                        <div class="col-sm-9">
-                            <span class="input-icon input-icon-right">
-                                <input type="email" id="form-field-email" value="alexdoe@gmail.com" />
-                                <i class="ace-icon fa fa-envelope"></i>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="space-4"></div>
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-phone">手机</label>
 
                         <div class="col-sm-9">
                             <span class="input-icon input-icon-right">
-                                <input class="input-medium input-mask-phone" type="text" id="form-field-phone" />
+                                <input class="input-medium input-mask-phone" type="text" name="mobile" id="form-field-phone" value="{{ user.mobile }}"/>
                                 <i class="ace-icon fa fa-phone fa-flip-horizontal"></i>
                             </span>
                         </div>
                     </div>
 
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-email">邮箱</label>
+
+                        <div class="col-sm-9">
+                            <span class="input-icon input-icon-right">
+                                <input type="email" id="form-field-email"  name="email" value="{{ user.email }}" />
+                                <i class="ace-icon fa fa-envelope"></i>
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">联系地址</label>
+                        <div class="col-sm-9">
+                            <span class="input-icon input-icon-right">
+                                <input name="address" type="text"  value="{{ user.address }}"/>
+                                <i class="ace-icon fa fa-home"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="clearfix form-actions">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button class="btn btn-info" type="submit" onclick="return validate_for_userinfo()">
+                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                      确定
+                            </button>
+                        </div>
+                    </div>
+                    </form>
                 </div>
 
                 <div id="edit-password" class="tab-pane">
+                    <form class="form-horizontal" method="POST" action="/change_password/">
                     <div class="space-10"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">旧密码</label>
+
+                        <div class="col-sm-9">
+                            <input type="password" id="form-field-pass0" name="old-password"/>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">新密码</label>
 
                         <div class="col-sm-9">
-                            <input type="password" id="form-field-pass1" />
+                            <input type="password" id="form-field-pass1" name="new-password"/>
                         </div>
                     </div>
 
@@ -178,28 +195,21 @@
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-pass2">确认密码</label>
 
                         <div class="col-sm-9">
-                            <input type="password" id="form-field-pass2" />
+                            <input type="password" id="form-field-pass2" name="confirm-password"/>
                         </div>
                     </div>
+
+                    <div class="clearfix form-actions">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button class="btn btn-info" type="submit" onclick="return validate_for_passwd();">
+                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                      确定
+                            </button>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <div class="clearfix form-actions">
-            <div class="col-md-offset-3 col-md-9">
-                <button class="btn btn-info" type="button">
-                    <i class="ace-icon fa fa-check bigger-110"></i>
-                    保存
-                </button>
-
-                &nbsp; &nbsp;
-                <button class="btn" type="reset">
-                    <i class="ace-icon fa fa-undo bigger-110"></i>
-                    重置
-                </button>
-            </div>
-        </div>
-    </form>
         </div>
     </div>
 </div>
@@ -243,16 +253,11 @@
             $('#signup').editable({
                 type: 'adate',
                 date: {
-                    //datepicker plugin options
-                        format: 'yyyy/mm/dd',
+                    format: 'yyyy/mm/dd',
                     viewformat: 'yyyy/mm/dd',
-                     weekStart: 1
-
-                    //,nativeUI: true//if true and browser support input[type=date], native browser control will be used
-                    //,format: 'yyyy-mm-dd',
-                    //viewformat: 'yyyy-mm-dd'
+                    weekStart: 1
                 }
-            })
+            });
 
             $('#age').editable({
                 type: 'spinner',
@@ -404,108 +409,87 @@
     </script>
     <script>
     $(function(){
-        $('#birthday').datepicker();
+        $('#birthday').datepicker({
+            format: 'yyyy-mm-dd',
+            startView: 2
+        });
         var server_msg="{{ server_msg }}";
         if (server_msg) {
             $.gritter.add({
                 title: '系统消息',
                 text: server_msg,
-                class_name: 'gritter-error gritter-center'
+                class_name: 'gritter-error gritter-center',
+                time: 1500
             });
         }
     })
     </script>
     <script type="text/javascript">
-    function checkvalid() {
-        var username = $("[name='username']").val();
-        var oldpassword = $("[name='oldpassword']").val();
-        var newpassword = $("[name='newpassword']").val();
-        var confirmnewpassword = $("[name='confirmnewpassword']").val();
-        var mobile_patrn = /^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$/;
+    function validate_for_userinfo() {
+        var name = $("[name='name']").val();
         var mobile = $("[name='mobile']").val();
-        var email_patrn = /\w@\w*\.\w/;
-        var email = $("[name='email']").val();
-        var address = $("[name='address']").val();
-        var zipcode_patrn = /^[a-zA-Z0-9 ]{3,12}$/;
-        var zipcode = $("[name='zipcode']").val();
-        var idcardtype = $("[name='idcardtype']");
-        var birthday_patrn = /^(19|20)\d\d(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])$/;
+        mobile_re = /^1\d{10}$/;
         var birthday = $("[name='birthday']").val();
-        var contact = $("[name='contact']").val();
-        var contactmobile = $("[name='contactmobile']").val();
-        if(username.length < 5 || username.length > 20) {
-            $("[name='username']").select();
+        birthday_re = /^(\d{4})-(\d{2})-(\d{2})$/
+        if(name.length < 1) {
+            $("[name='name']").select();
+            $.gritter.add({
+                title: '修改用户信息失败！',
+                text: '姓名不能为空！',
+                class_name: 'gritter-error gritter-center',
+                time: 1500
+            });
             return false;
         }
-        if(oldpassword != "666666") {
-            $("[name='oldpassword']").select();
-            $("[name='oldpassword_help']").css('display','block');
-            return false;
-        }
-        else {
-            $("[name='oldpassword_help']").css('display','none');
-        }
-        if(newpassword.length < 6 || newpassword.length > 20) {
-            $("[name='newpassword']").select();
-            return false;
-        }
-        if(newpassword != confirmnewpassword) {
-            $("[name='confirmnewpassword']").select();
-            $("[name='confirmnewpassword_help']").css('display','block');
-            return false;
-        }
-        else {
-            $("[name='confirmnewpassword_help']").css('display','none');
-        }
-        if (!mobile_patrn.exec(mobile)) {
+        else if(!mobile_re.test(mobile)) {
             $("[name='mobile']").select();
-            $("[name='mobile_help']").css('display','block');
+            $.gritter.add({
+                title: '修改用户信息失败！',
+                text: '手机号格式有误！',
+                class_name: 'gritter-error gritter-center',
+                time: 1500
+            });
             return false;
         }
-        else {
-            $("[name='mobile_help']").css('display','none');
-        }
-        if (!email_patrn.exec(email)) {
-            $("[name='email']").select();
-            $("[name='email_help']").css('display','block');
+        else if(!birthday_re.test(birthday)) {
+            $("[name='mobile']").select();
+            $.gritter.add({
+                title: '修改用户信息失败！',
+                text: '日期格式有误！',
+                class_name: 'gritter-error gritter-center',
+                time: 1500
+            });
             return false;
-        }
-        else {
-            $("[name='email_help']").css('display','none');
-        }
-        if(address.length < 1 || address.length > 60) {
-            $("[name='address']").select();
-            return false;
-        }
-        if (!zipcode_patrn.exec(zipcode)) {
-            $("[name='zipcode']").select();
-            $("[name='zipcode_help']").css('display','block');
-            return false;
-        }
-        else {
-            $("[name='zipcode_help']").css('display','none');
-        }
-        if (idcardtype.val() == "") {
-            // $("[name='idcardtype']").find("option:selected").text();
-            return false;
-        }
-        if (!birthday_patrn.exec(birthday)) {
-            $("[name='birthday']").select();
-            return false;
-        }
-        if(contact.length < 2 || contact.length > 20) {
-            $("[name='contact']").select();
-            return false;
-        }
-        if (!mobile_patrn.exec(contactmobile)) {
-            $("[name='contactmobile']").select();
-            $("[name='contactmobile_help']").css('display','block');
-            return false;
-        }
-        else {
-            $("[name='contactmobile_help']").css('display','none');
         }
         return true;
     }
+
+    function validate_for_passwd() {
+        var new_password = $("[name='new-password']").val();
+        var confirm_password = $("[name='confirm-password']").val();
+        if(new_password != confirm_password) {
+            $("[name='new-password']").select();
+            $.gritter.add({
+                title: '修改密码失败！',
+                text: '两次密码不一致！',
+                class_name: 'gritter-error gritter-center',
+                time: 1500
+            });
+            return false;
+        }
+        return true;
+    }
+
+    $(function(){
+        var msg = "{{ msg }}";
+        if (msg) {
+            $.gritter.add({
+                title: '提示',
+                text: msg,
+                class_name: 'gritter-error gritter-center',
+                time: 1500
+            });
+        }
+    });
     </script>
 {% endblock %}

@@ -169,7 +169,8 @@ def usermgt(request):
 
 @login_required
 def operate_user(request):
-    """ update user information
+    """
+        update user information
     """
     if request.method == 'GET':
         user = User.objects.get(username=request.user.username)
@@ -235,8 +236,6 @@ def operate_user(request):
             user.memo = request.POST['memo']
             user.contact = request.POST['contact']
             user.contactmobile = request.POST['contactmobile']
-            user.editorid = request.user.id
-            user.editdatetime = get_current_date()
             tmp_urs = user.roles.filter(k_user=user.id)
             for ur in tmp_urs:
                 user.roles.remove(ur)
@@ -1027,12 +1026,56 @@ def submit_producer(request):
 # 个人信息
 @login_required
 def profile(request):
-    # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
-    # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username})
-    return render_to_response('profile.html', variables)
+    if request.method == "GET":
+        user = k_user.objects.get(username=request.user.username)
+        #user = User.objects.get(username=request.user.username)
+
+        return render_to_response('profile.html', {
+            'user': user
+        }, context_instance=RequestContext(request))
+    else:
+        user = k_user.objects.filter(username=request.POST['username'])
+        if len(user) == 1:
+            user = user[0]
+            user.name = request.POST['name']
+            user.email = request.POST['email']
+            user.mobile = request.POST['mobile']
+            user.gender = request.POST['gender']
+            user.address = request.POST['address']
+            user.birthday = datetime.strptime(request.POST['birthday'], '%Y-%m-%d').date()
+            user.editorid = request.user.id
+            user.editdatetime = get_current_date()
+            user.save()
+            msg = "修改用户信息成功！"
+        else:
+            msg = "用户名不存在，修改用户信息失败！"
+
+        user = k_user.objects.get(username=request.user.username)
+        return render_to_response('profile.html', {
+            'user': user,
+            "msg": msg
+        }, context_instance=RequestContext(request))
+
+
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST['old-password']
+        new_password = request.POST['new-password']
+        user = authenticate(username=request.user.username, password=old_password)
+        if user is not None:
+            user.set_password(new_password)
+            user.save()
+            msg = "修改密码成功！"
+        else:
+            msg = "旧密码错误，修改密码失败！"
+
+        user = k_user.objects.get(username=request.user.username)
+        return render_to_response('profile.html', {
+            'user': user,
+            "msg": msg
+        }, context_instance=RequestContext(request))
+    else:
+        return HttpResponseRedirect("/profile/")
 
 
 @login_required
