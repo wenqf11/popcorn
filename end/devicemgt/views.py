@@ -567,7 +567,7 @@ def operate_device(request):
     people = k_user.objects.all()
     for p in people:
         person = dict()
-        person["name"] = p.username
+        person["name"] = p.name
         _c = k_class.objects.get(id=p.classid_id)
         person["position"] = _c.name
         people_list.append(person)
@@ -582,14 +582,20 @@ def operate_device(request):
                     'lastmaintenance', 'nextmaintenance','maintenanceperiod', 'lastrepaire', 'spare','lastmeter', 'notice']
         for key in key_list:
             userdata[key] = eval('thedevice.'+key)
-        userdata['chosen_producer'] = thedevice.producerid.name
-        userdata['chosen_supplier'] = thedevice.supplierid.name
+        if thedevice.producerid:
+            userdata['chosen_producer'] = thedevice.producerid.name
+        else:
+            userdata['chosen_producer'] = '无'
+        if thedevice.supplierid:
+            userdata['chosen_supplier'] = thedevice.supplierid.name
+        else:
+            userdata['chosen_supplier'] = '无'
         userdata['chosen_class'] = thedevice.classid.name
         userdata['chosen_type'] = thedevice.typeid.name
         _owner = k_user.objects.filter(id=thedevice.ownerid)
         if len(_owner) == 1:
             _owner = _owner[0]
-            userdata['chosen_owner'] = _owner.username
+            userdata['chosen_owner'] = _owner.name
     else:
         userdata['isNew'] = True
     variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg': server_msg})
@@ -606,9 +612,24 @@ def deviceadd(request):
         _classname = request.POST['classname']
         _classid = k_class.objects.get(name=_classname)
         _typeid = k_devicetype.objects.get(name=request.POST['typename'])
-        _producerid = k_producer.objects.get(name=request.POST['producer'])
-        _supplierid = k_supplier.objects.get(name=request.POST['supplier'])
-        _ownerid = k_user.objects.get(username=request.POST['owner'])
+        if request.POST['producer'] != "":
+            _producerid = k_producer.objects.get(name=request.POST['producer'])
+        else:
+            _producerid = ''
+        if request.POST['supplier'] != "":
+            _supplierid = k_supplier.objects.get(name=request.POST['supplier'])
+        else:
+            _supplierid = ''
+        _ownerid = ''
+        tmp_name_dept = request.POST['owner'].split('#')
+        if len(tmp_name_dept) == 2:
+            tmp_name_classid = k_class.objects.get(name = tmp_name_dept[1])
+            _ownerid_list = k_user.objects.filter(name=tmp_name_dept[0], classid=tmp_name_classid)
+            if len(_ownerid_list) == 1:
+                _ownerid = _ownerid_list[0]
+        if _ownerid == '':
+            server_msg = '责任人信息填写有误！'
+            return HttpResponseRedirect('/operate_device/?msg='+server_msg)
         _devs = k_device.objects.filter(brief=_brief)
         _devs = _devs.filter(name=_name)
         if request.POST['phase'] == 'NEW':
@@ -620,8 +641,8 @@ def deviceadd(request):
             _device = k_device.objects.create(
                 classid=_classid,
                 typeid=_typeid,
-                producerid=_producerid,
-                supplierid=_supplierid,
+                #producerid=_producerid,
+                #supplierid=_supplierid,
                 ownerid=_ownerid.id,
                 name=request.POST['name'],
                 brief=request.POST['brief'],
@@ -642,6 +663,10 @@ def deviceadd(request):
                 editorid=request.user.id,
                 editdatetime=get_current_date()
             )
+            if _supplierid != '':
+                _device.supplierid = _supplierid
+            if _producerid != '':
+                _device.producerid = _producerid
             _device.save()
             server_msg = '添加设备成功！'
             return HttpResponseRedirect('/operate_device/?id='+str(_device.id)+'&msg='+server_msg)
@@ -660,8 +685,10 @@ def deviceadd(request):
             _dev.editorid = request.user.id
             _dev.editdatetime = get_current_date()
             _dev.classid = _classid
-            _dev.producerid = _producerid
-            _dev.supplierid = _supplierid
+            if _producerid != '':
+                _dev.producerid = _producerid
+            if _supplierid != '':
+                _dev.supplierid = _supplierid
             _dev.typeid = _typeid
             _dev.ownerid = _ownerid.id
             _dev.save()

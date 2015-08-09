@@ -81,6 +81,7 @@
                     <label class="col-sm-3 control-label no-padding-right">供应商<span class="required">*</span></label>
                     <div class="col-sm-5">
                         <select class="chosen-select" name="supplier">
+                            <option value="">无</option>
                             {% for supplier in data.supplier_list %}
                                 {% if supplier in data.chosen_supplier %}
                                     <option value="{{ supplier }}" selected="selected">{{ supplier }}</option>
@@ -95,6 +96,7 @@
                     <label class="col-sm-3 control-label no-padding-right">生产厂家<span class="required">*</span></label>
                     <div class="col-sm-5">
                         <select class="chosen-select" name="producer">
+                            <option value="">无</option>
                             {% for producer in data.producer_list %}
                                 {% if producer in data.chosen_producer %}
                                     <option value="{{ producer }}" selected="selected">{{ producer }}</option>
@@ -192,10 +194,10 @@
                     <div class="col-sm-5">
                         <select class="chosen-select" name="owner" data-placeholder="请选择责任人">
                             {% for p in data.people %}
-                                {% if p.name in data.chosen_owner %}
-                                    <option value="{{ p.name }}" selected="selected">{{ p.name }}({{ p.position }})</option>
+                                {% if p.name == data.chosen_owner %}
+                                    <option value="{{ p.name }}#{{ p.position }}" selected="selected">{{ p.name }}({{ p.position }})</option>
                                 {% else %}
-                                    <option value="{{ p.name }}">{{ p.name }}({{ p.position }})</option>
+                                    <option value="{{ p.name }}#{{ p.position }}">{{ p.name }}({{ p.position }})</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
