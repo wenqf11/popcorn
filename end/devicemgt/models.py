@@ -474,6 +474,7 @@ class k_taskitem(models.Model):
     taskid = models.ForeignKey(k_task, related_name='taskitem_set',blank=True, null=True, on_delete=models.SET_NULL)
     createcontent = models.CharField(max_length=200)
     editcontent = models.CharField(max_length=200)
+    helpersid = models.CharField(max_length=200)
     auditcontent = models.CharField(max_length=200)
     factor = models.PositiveIntegerField(default=1)
     memo = models.CharField(max_length=100)

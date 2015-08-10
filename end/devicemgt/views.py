@@ -2253,6 +2253,12 @@ def view_taskitem(request):
 
         _creator = k_user.objects.get(id=_taskitem.creatorid)
         _editor = k_user.objects.get(id=_taskitem.editorid)
+        _helpersid = _taskitem.helpersid.split(";")
+        _helpers = []
+        if _helpersid != ['']:
+            for _helperid in _helpersid:
+                _helper = k_user.objects.get(id=int(_helperid))
+                _helpers.append(_helper.name)
         dataitem['id'] = _taskitem.id
         dataitem['title'] = _taskitem.title
         dataitem['createcontent'] = _taskitem.createcontent
@@ -2261,6 +2267,7 @@ def view_taskitem(request):
         dataitem['priority'] = _taskitem.get_priority_display()
         dataitem['memo'] = _taskitem.memo
         dataitem['editor'] = _editor.name
+        dataitem['helpers'] = ";".join(_helpers)
         dataitem['state'] = _taskitem.get_state_display()
 
         if _taskitem.state == "3" or _taskitem.state == "4":
@@ -2359,7 +2366,17 @@ def submit_taskitem(request):
     _taskitem.memo = _memo
     _tasker = k_user.objects.get(name=_editor)
     _taskitem.editorid = _tasker.id
-
+    _helpers = request.GET.get('helpersstring')
+    _helpers = _helpers.split(";")
+    _helpersid = []
+    if _helpers != ['']:
+        for _helper in _helpers:
+            _thehelper = k_user.objects.get(name=_helper)
+            _helpersid.append(str(_thehelper.id))
+        _taskitem.helpersid = ";".join(_helpersid)
+    else:
+        _taskitem.helpersid = ""
+        
     _taskitem.save()
     return HttpResponseRedirect('/view_taskitem?id='+_taskid)
 

@@ -42,6 +42,7 @@
                                                 <th>备注</th>
                                                 <th>执行描述</th>
                                                 <th>执行人</th>
+                                                <th>协助者</th>
                                                 <th>完成时间</th>
                                                 <th>给分系数</th>
                                                 <th>审核人</th>
@@ -74,6 +75,7 @@
                                                 <td>{{ dataitem.memo }}</td>
                                                 <td>{{ dataitem.editcontent }}</td>
                                                 <td>{{ dataitem.editor }}</td>
+                                                <td>{{ dataitem.helpers }}</td>
                                                 <td>{{ dataitem.editdatetime }}</td>
                                                 <td>{{ dataitem.factor }}</td>
                                                 <td>{{ dataitem.auditor }}</td>
@@ -161,6 +163,19 @@
                             </select>
                         </div>
                     </div>
+                    <!--协助者-->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">指派协助者</label>
+
+                        <div class="col-sm-9">
+                            <select multiple="" class="chosen-select form-control" id="helpers" data-placeholder="选择协助者" name="helpers">
+                                {% for helper in taskers %}
+                                    <option value="{{ helper }}">{{ helper }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group" style="display:none">
                         <label class="col-sm-3 control-label no-padding-top">任务id</label>
                         <div class="col-sm-9">
@@ -177,6 +192,12 @@
                         <label class="col-sm-3 control-label no-padding-top">type</label>
                         <div class="col-sm-9">
                             <input type="text" name="submittype" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top"></label>
+                        <div class="col-sm-9">
+                            <input type="text" name="helpersstring" value="" />
                         </div>
                     </div>
                 </div>
@@ -341,6 +362,15 @@
                 });
                 return false;
             }
+            var helpers = $("#helpers option:selected");
+            var hlength = helpers.length;
+            console.log(helpers[0].value);
+            console.log(helpers[1].value);
+            var harray = new Array();
+            for(var i = 0; i < hlength; i++)
+                harray[i] = helpers[i].value;
+            console.log(harray.join(";"));
+            $("[name='helpersstring']").val(harray.join(";"));
             return true;
         }
         function delcfm() {
@@ -359,9 +389,9 @@
                 divs[2].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
                 divs[3].childNodes[3].childNodes[1].value = "";
                 divs[4].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
-                divs[5].childNodes[3].childNodes[1].value = {{ taskid }};
-                divs[6].childNodes[3].childNodes[1].value = "";
-                divs[7].childNodes[3].childNodes[1].value = "3";
+                divs[6].childNodes[3].childNodes[1].value = {{ taskid }};
+                divs[7].childNodes[3].childNodes[1].value = "";
+                divs[8].childNodes[3].childNodes[1].value = "3";
                 $(".taskitemtitle").text("添加子任务");
             };
             $(".fa-pencil1").click(function() {
@@ -399,9 +429,36 @@
                     }
                 }
 
-                divs[5].childNodes[3].childNodes[1].value = {{ taskid }};
-                divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
-                divs[7].childNodes[3].childNodes[1].value = "2";
+                var helpers = divs[5].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var hlength = helpers.length;
+                var thehelper = dataline[8].innerHTML;
+                var thehelpers = thehelper.split(";");
+                for(var i = 0; i < hlength; i++) {
+                    if(helpers[i].value == themaintainer) {
+                        helpers[i].setAttribute("disabled", "");
+                    }
+                    else if($.inArray(helpers[i].value, thehelpers) >= 0) {
+                        helpers[i].setAttribute("selected", "selected");
+                        maintainers[i].setAttribute("disabled", "");
+                    }
+                    else {
+                        helpers[i].removeAttribute("selected");
+                    }
+                }
+                $("#editor").trigger("chosen:updated");
+                $("#helpers").trigger("chosen:updated");
+
+                // for(var i = 0; i < hlength; i++) {
+                //     if(helpers[i].value == themaintainer) {
+                //         $(divs[5].childNodes[3].childNodes[1].nextSibling.childNodes[0]).click();
+                //         var show2 = divs[5].childNodes[3].childNodes[1].nextSibling.childNodes[1].childNodes[0].getElementsByTagName("li");
+                //         show2[i].setAttribute("class", "disabled-result");
+                //     }
+                // }
+
+                divs[6].childNodes[3].childNodes[1].value = {{ taskid }};
+                divs[7].childNodes[3].childNodes[1].value = this.parentNode.id;
+                divs[8].childNodes[3].childNodes[1].value = "2";
                 $(".taskitemtitle").text("修改子任务");
             });
             $(".fa-pencil2").click(function() {
@@ -409,6 +466,38 @@
                 var divs = factor.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
                 divs[1].childNodes[3].childNodes[1].value = this.parentNode.id;
                 divs[2].childNodes[3].childNodes[1].value = "1";
+            });
+
+            $("#editor").chosen().change(function() {
+                var helpers = $("#helpers").children("option");
+                var hlength = helpers.length;
+                for(var i = 0; i < hlength; i++) {
+                    if(helpers[i].value == $("#editor option:selected").text()) {
+                        helpers[i].removeAttribute("selected");
+                        helpers[i].setAttribute("disabled", "");
+                    }
+                    else {
+                        helpers[i].removeAttribute("disabled");
+                    }
+                }
+                $("#helpers").trigger("chosen:updated");
+            });
+            $("#helpers").chosen().change(function() {
+                var helpers = $("#helpers option:selected");
+                var editor = $("#editor").children("option");
+                var hlength = helpers.length;
+                var elength = editor.length;
+                var j = 0;
+                for(var i = 0; i < elength; i++) {
+                    if(j < hlength && editor[i].value == helpers[j].value) {
+                        editor[i].setAttribute("disabled", "");
+                        j++;
+                    }
+                    else {
+                        editor[i].removeAttribute("disabled");
+                    }
+                }
+                $("#editor").trigger("chosen:updated");
             });
         });
     </script>
