@@ -48,6 +48,7 @@ def get_device_node(devicetypes, parent):
                 cur_data['nodes'] = device_list
             elif len(sub_nodes) > 0 and len(device_list) == 0:
                 cur_data['nodes'] = sub_nodes
+            cur_data['text'] += '(设备数:' + str(len(device_list)) + ')'
             datas.append(cur_data)
 
     return datas
