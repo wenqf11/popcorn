@@ -472,6 +472,22 @@ def userbatch_submit(request):
 设备管理开始
 '''
 
+@login_required
+def devicebyclass(request):
+    user = k_user.objects.get(username=request.user.username)
+    #_class = k_class.objects.get(id=_user.classid)
+    parents = user.classid
+    classes = k_class.objects.all()
+    datas = list()
+    data = dict()
+    data['text'] = parents.name
+    data['nodes'] = get_type_node(classes, parents.id)
+    if data['nodes']:
+        datas.append(data)
+        variables=RequestContext(request,{'username':user.username, 'data':datas})
+        return render_to_response('devicebyclass.html',variables)
+    else:
+        return HttpResponseRedirect('/device/')
 
 @login_required
 def devicemgt(request):

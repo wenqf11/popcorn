@@ -69,6 +69,7 @@ urlpatterns = patterns(
     url(r'^profile/$', profile),
 
     url(r'^device/$', devicemgt),
+    url(r'^devicebyclass/$', devicebyclass),
     url(r'^deviceadd/$', deviceadd),
     url(r'^devicebatch_add/$', devicebatch_add),
     url(r'^devicebatch_submit/$', devicebatch_submit),
