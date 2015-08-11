@@ -204,7 +204,7 @@
 			// $('#modal').modal('hide');
 		});
 
-		$.post('/get_schedule/', function(json){
+		$.post('/view_schedule/', function(json){
 			for (var day in json.shifts){
 				dayinfo = json.shifts[day];
 				for(var routeindex in dayinfo){

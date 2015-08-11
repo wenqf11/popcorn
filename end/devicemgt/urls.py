@@ -91,10 +91,9 @@ urlpatterns = patterns(
     url(r'^setting/$', setting),
     url(r'^deviceall/$', deviceall),
     url(r'^purview/$', purview),
-    url(r'^schedule/$', schedule),
+    url(r'^view_schedule/$', view_schedule),
     url(r'^add_schedule/$', add_schedule),
     url(r'^delete_schedule/$', delete_schedule),
-    url(r'^get_schedule/$', get_schedule),
 
     url(r'^view_role/$', view_role),
     url(r'^operate_role/$', operate_role),

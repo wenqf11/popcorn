@@ -1275,56 +1275,38 @@ def delete_schedule(request):
     }))
 
 
-def get_schedule(request):
-    routes = k_route.objects.all()
-    route_data = [{'id': _r.id, 'name': _r.name, 'startTime': str(_r.starttime), 'period': _r.period} for _r in routes]
-    available_shifts = k_schedule.objects.all()
-    existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
-    shift_data = {}
-    for day in existed_dates:
-        day_shifts = []
-        available_day_shifts = available_shifts.filter(date=day)
-        for r in route_data:
-            try:
-                available_day_route_shifts = available_day_shifts.filter(route=r['id'])
-            except Exception, e:
-                print e
-            if available_day_route_shifts.exists():
-                r['users'] = [dd['user'] for dd in available_day_route_shifts.values('user').distinct()]
-                day_shifts.append(r.copy())
-        shift_data[str(day)] = day_shifts
-    return HttpResponse(json.dumps({'shifts': shift_data}))
+def view_schedule(request):
+    if request.method == 'GET':
+        users = k_user.objects.all() # 此处应取对应班组的用户
+        user_data = [{'id': user.id, 'name': user.username} for user in users]
 
+        routes = k_route.objects.all()
+        route_data = [{'id': r.id, 'name': r.name, 'startTime': r.starttime, 'period': r.period} for r in routes]
 
-def schedule(request):
-    users = k_user.objects.all()
-    user_data = [{'id':  user.id, 'name': user.username} for user in users]
-    routes = k_route.objects.all()
-    route_data = []
-    for r in routes:
-        route = {
-            'id': r.id,
-            'name': r.name,
-            'startTime': r.starttime,
-            'period': r.period
-        }
-        route_data.append(route)
+        return render_to_response('schedule.html', {'routes': route_data, 'users': user_data})
+    else:
+        routes = k_route.objects.all()
+        route_data = [{'id': _r.id, 'name': _r.name, 'startTime': str(_r.starttime), 'period': _r.period} for _r in routes]
 
-    available_shifts = k_schedule.objects.filter(date__range=[date.today() - timedelta(days=30), date.today()])
-    existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
-    existed_routes = [_d['route'] for _d in available_shifts.values('route').distinct()]
+        available_shifts = k_schedule.objects.filter(
+            date__range=[date.today() - timedelta(days=30), date.today() + timedelta(days=30)]
+        )
+        existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
 
-    shift_data = {}
-    for day in existed_dates:
-        day_shifts = {}
-        available_day_shifts = available_shifts.filter(date=day)
-        for r in existed_routes:
-            available_day_route_shifts = available_day_shifts.filter(route=r)
-            if available_day_route_shifts.exists():
-                day_shifts[str(r)] = [_d['user'] for _d in available_day_route_shifts.values('user').distinct()]
-        shift_data[str(day)] = day_shifts
-
-    return render_to_response('schedule.html', {'routes': route_data, 'shifts': shift_data, 'users': user_data})
+        shift_data = {}
+        for day in existed_dates:
+            day_shifts = []
+            available_day_shifts = available_shifts.filter(date=day)
+            for r in route_data:
+                try:
+                    available_day_route_shifts = available_day_shifts.filter(route=r['id'])
+                except Exception, e:
+                    print e
+                if available_day_route_shifts.exists():
+                    r['users'] = [dd['user'] for dd in available_day_route_shifts.values('user').distinct()]
+                    day_shifts.append(r.copy())
+            shift_data[str(day)] = day_shifts
+        return HttpResponse(json.dumps({'shifts': shift_data}))
 
 
 @login_required
