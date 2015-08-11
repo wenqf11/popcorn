@@ -1734,14 +1734,19 @@ def view_maintaining(request):
     data = []
     for _maintaining in _maintainings:
         _device = _maintaining.deviceid
+        _db = _dn = _dp = ""
+        if _device != None:
+            _db = _device.brief
+            _dn = _device.name
+            _dp = _device.position
         _creator = k_user.objects.get(id=_maintaining.creatorid)
         if _maintaining.assignorid == 0:
             data.append({
                 'id': _maintaining.id,
                 'title': _maintaining.title,
-                'brief': _device.brief,
-                'name': _device.name,
-                'position': _device.position,
+                'brief': _db,
+                'name': _dn,
+                'position': _dp,
                 'creator': _creator.name,
                 'createdatetime': _maintaining.createdatetime,
                 'createcontent': _maintaining.createcontent,
@@ -1755,9 +1760,9 @@ def view_maintaining(request):
             data.append({
                 'id': _maintaining.id,
                 'title': _maintaining.title,
-                'brief': _device.brief,
-                'name': _device.name,
-                'position': _device.position,
+                'brief': _db,
+                'name': _dn,
+                'position': _dp,
                 'creator': _creator.name,
                 'createdatetime': _maintaining.createdatetime,
                 'assignor': _assignor.name,
@@ -1791,6 +1796,11 @@ def view_maintained(request):
     data = []
     for _maintained in _maintaineds:
         _device = _maintained.deviceid
+        _db = _dn = _dp = ""
+        if _device != None:
+            _db = _device.brief
+            _dn = _device.name
+            _dp = _device.position
         _creator = k_user.objects.get(id=_maintained.creatorid)
         _assignor = k_user.objects.get(id=_maintained.assignorid)
         _editor = k_user.objects.get(id=_maintained.editorid)
@@ -1798,9 +1808,9 @@ def view_maintained(request):
             data.append({
                 'id': _maintained.id,
                 'title': _maintained.title,
-                'brief': _device.brief,
-                'name': _device.name,
-                'position': _device.position,
+                'brief': _db,
+                'name': _dn,
+                'position': _dp,
                 'creator': _creator.name,
                 'createdatetime': _maintained.createdatetime,
                 'assignor': _assignor.name,
@@ -1818,9 +1828,9 @@ def view_maintained(request):
             data.append({
                 'id': _maintained.id,
                 'title': _maintained.title,
-                'brief': _device.brief,
-                'name': _device.name,
-                'position': _device.position,
+                'brief': _db,
+                'name': _dn,
+                'position': _dp,
                 'creator': _creator.name,
                 'createdatetime': _maintained.createdatetime,
                 'assignor': _assignor.name,
@@ -1933,13 +1943,8 @@ def submit_maintenance(request):
         _maintenance.priority = _priority
         _maintenance.memo = _memo
     else:
-        if _brief == 'nopersonchosen':
-            _brief = ""
-        _device = k_device.objects.filter(brief=_brief)
-
         _maintenance = k_maintenance.objects.create(
             title=_title,
-            deviceid=_device[0],
             createcontent=_createcontent,
             priority=_priority,
             memo=_memo,
@@ -1948,6 +1953,9 @@ def submit_maintenance(request):
             state=1,
             mtype=2
         )
+        if _brief != 'nopersonchosen':
+            _device = k_device.objects.filter(brief=_brief)
+            _maintenance.deviceid=_device[0]
         if _editor != 'nopersonchosen':
             _maintenance.assignorid = _user.id
             _maintenance.assigndatetime = get_current_date()

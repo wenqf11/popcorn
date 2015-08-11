@@ -468,15 +468,18 @@ def app_maintain_add(request, para, user):
     # para['image'] = request.POST.get('image')
     para['memo'] = request.POST.get('memo')
 
-    try:
-        device = k_device.objects.get(brief=para['device_brief'])
-    except ObjectDoesNotExist:
-        return HttpResponse(json.dumps({
-            'status': 'error',
-            'data': 'device not exist'
-        }))
+    if para['device_brief'] != "":
+        try:
+            device = k_device.objects.get(brief=para['device_brief'])
+        except ObjectDoesNotExist:
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'device not exist'
+            }))
 
-    task = k_maintenance.objects.create(deviceid=device)
+    task = k_maintenance.objects.create()
+    if para['device_brief'] != "":
+        task.deviceid=device
     task.state = 1
     task.title = para['title']
     task.createcontent = para['description']
