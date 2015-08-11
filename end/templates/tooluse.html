@@ -122,25 +122,25 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">已归还</label>
+                        <label class="col-sm-3 control-label no-padding-top">已归还<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="number" min="0" name="returned" oninput="setNotreturned()" form="billform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">消耗</label>
+                        <label class="col-sm-3 control-label no-padding-top">消耗<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="number" min="0" name="depleted" oninput="setNotreturned()" form="billform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">损坏</label>
+                        <label class="col-sm-3 control-label no-padding-top">损坏<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="number" min="0" name="damaged" oninput="setNotreturned()" form="billform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">不合格品处置</label>
+                        <label class="col-sm-3 control-label no-padding-top">不合格品处置<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="number" min="0" name="rejected" oninput="setNotreturned()" form="billform" value="" required/>
                         </div>
@@ -152,7 +152,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">领用人</label>
+                        <label class="col-sm-3 control-label no-padding-top">领用人<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="user" form="billform" value="" required/>
                         </div>
@@ -202,7 +202,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">工具简称</label>
+                        <label class="col-sm-3 control-label no-padding-top">工具简称<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="brief2" name="brief" onchange="setMax()" form="countform" data-placeholder="请选择工具">
                                 {% for b in briefinfos %}
@@ -213,7 +213,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">出入库状态</label>
+                        <label class="col-sm-3 control-label no-padding-top">出入库状态<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select id="state" name="state" form="countform">
                                 <option value="5" selected="selected">领用出库</option>
@@ -221,7 +221,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">合格或不合格品</label>
+                        <label class="col-sm-3 control-label no-padding-top">合格或不合格品<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select id="iseligible" name="iseligible" form="countform">
                                 <option value="1" selected="selected">合格</option>
@@ -229,13 +229,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">数量</label>
+                        <label class="col-sm-3 control-label no-padding-top">数量<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="number" min="1" name="count" form="countform" value="" required/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">领用人</label>
+                        <label class="col-sm-3 control-label no-padding-top">领用人<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="user" form="countform" value="" required/>
                         </div>
@@ -259,11 +259,6 @@
                         <button class="btn btn-info" type="submit" onclick="return checkvalid2();">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
-                        </button>
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>
-                            重置
                         </button>
                     </div>
                 </div>

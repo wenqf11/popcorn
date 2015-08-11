@@ -95,13 +95,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">保养标题</label>
+                        <label class="col-sm-3 control-label no-padding-top">保养标题<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="title" value="" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">保养周期</label>
+                        <label class="col-sm-3 control-label no-padding-top">保养周期<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select id="period" name="period" form="maintenanceform">
                                 <option value="day">天</option>
@@ -118,13 +118,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">计划描述</label>
+                        <label class="col-sm-3 control-label no-padding-top">计划描述<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="createcontent" value="" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">指派保养人</label>
+                        <label class="col-sm-3 control-label no-padding-top">指派保养人<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
                                 {% for maintainer in maintainers %}
@@ -158,11 +158,6 @@
                         <button class="btn btn-info" type="submit" onclick="return checkvalid();">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
-                        </button>
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>
-                            重置
                         </button>
                     </div>
                 </div>

@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">给分系数</label>
+                        <label class="col-sm-3 control-label no-padding-top">给分系数<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select id="factor" name="factor" form="maintenanceform">
                                 <option value="0">0</option>
@@ -54,11 +54,6 @@
                         <button class="btn btn-info" type="submit">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
-                        </button>
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>
-                            重置
                         </button>
                     </div>
                 </div>
@@ -94,6 +89,7 @@
                             <th>审核人</th>
                             <th>审核时间</th>
                             <th>给分系数</th>
+                            <th>状态</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -118,6 +114,11 @@
                             <td>{{ dataitem.auditor }}</td>
                             <td>{{ dataitem.auditdatetime }}</td>
                             <td>{{ dataitem.factor }}</td>
+                            {% ifequal dataitem.state '4' %}
+                            <td>未审核</td>
+                            {% else %}
+                            <td>已审核</td>
+                            {% endifequal %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '4' %}

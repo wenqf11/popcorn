@@ -19,7 +19,7 @@
         <form class="form-horizontal" action="/submit_maintenance/" role="form" id="maintenanceform" enctype="multipart/form-data">
             <fieldset>
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">维修标题</label>
+                <label class="col-sm-3 control-label no-padding-top">维修标题<span class="required">*</span></label>
                 <div class="col-sm-9">
                     <input type="text" name="title" value="">
                 </div>
@@ -34,6 +34,7 @@
                 <label class="col-sm-3 control-label no-padding-top">设备简称</label>
                 <div class="col-sm-2">
                     <select class="chosen-select" id="brief" name="brief" type="text">
+                        <option value="nopersonchosen" selected="selected"></option>
                         {% for brief in briefs %}
                         <option value="{{ brief }}">{{ brief }}</option>
                         {% endfor %}
@@ -52,13 +53,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">故障描述</label>
+                <label class="col-sm-3 control-label no-padding-top">故障描述<span class="required">*</span></label>
                 <div class="col-sm-9">
                     <input type="text" name="createcontent" value="">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">优先级</label>
+                <label class="col-sm-3 control-label no-padding-top">优先级<span class="required">*</span></label>
                 <div class="col-sm-9">
                     <select id="priority" name="priority" form="maintenanceform">
                         <option value="1" selected="selected">一般</option>

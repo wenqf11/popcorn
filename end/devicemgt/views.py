@@ -1933,6 +1933,8 @@ def submit_maintenance(request):
         _maintenance.priority = _priority
         _maintenance.memo = _memo
     else:
+        if _brief == 'nopersonchosen':
+            _brief = ""
         _device = k_device.objects.filter(brief=_brief)
 
         _maintenance = k_maintenance.objects.create(

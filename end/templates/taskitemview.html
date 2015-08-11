@@ -126,19 +126,19 @@
 
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">子任务标题</label>
+                        <label class="col-sm-3 control-label no-padding-top">子任务标题<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="title" value="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">子任务描述</label>
+                        <label class="col-sm-3 control-label no-padding-top">子任务描述<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="createcontent" value="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">优先级</label>
+                        <label class="col-sm-3 control-label no-padding-top">优先级<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select id="priority" name="priority" form="taskitemform1">
                                 <option value="1">一般</option>
@@ -154,7 +154,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">指派执行人</label>
+                        <label class="col-sm-3 control-label no-padding-top">指派执行人<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="editor" name="editor" form="taskitemform1">
                                 {% for tasker in taskers %}
@@ -208,11 +208,6 @@
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
                         </button>
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>
-                            重置
-                        </button>
                     </div>
                 </div>
             </form>
@@ -230,7 +225,7 @@
 
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">给分系数</label>
+                        <label class="col-sm-3 control-label no-padding-top">给分系数<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select id="factor" name="factor" form="taskitemform2">
                                 <option value="0">0</option>
@@ -261,11 +256,6 @@
                         <button class="btn btn-info" type="submit">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
-                        </button>
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>
-                            重置
                         </button>
                     </div>
                 </div>
@@ -388,7 +378,26 @@
                 divs[1].childNodes[3].childNodes[1].value = "";
                 divs[2].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
                 divs[3].childNodes[3].childNodes[1].value = "";
-                divs[4].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
+                // var maintainers = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
+                // var mlength = maintainers.length;
+                // maintainers[0].setAttribute("selected", "selected");
+                // maintainers[0].removeAttribute("disabled");
+                // for(var i = 1; i < mlength; i++) {
+                //     maintainers[i].removeAttribute("selected");
+                //     maintainers[i].removeAttribute("disabled");
+                // }
+                // $("#editor").trigger("chosen:updated");
+
+                // var helpers = divs[5].childNodes[3].childNodes[1].getElementsByTagName("option");
+                // var hlength = helpers.length;
+                // helpers[0].setAttribute("disabled", "");
+                // helpers[0].removeAttribute("selected");
+                // for(var i = 1; i < hlength; i++) {
+                //     helpers[i].removeAttribute("selected");
+                //     helpers[i].removeAttribute("disabled");
+                // }
+                // $("#helpers").trigger("chosen:updated");
+
                 divs[6].childNodes[3].childNodes[1].value = {{ taskid }};
                 divs[7].childNodes[3].childNodes[1].value = "";
                 divs[8].childNodes[3].childNodes[1].value = "3";

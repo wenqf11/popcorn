@@ -31,6 +31,7 @@
                             <th>保养人</th>
                             <th>计划描述</th>
                             <th>备注</th>
+                            <th>状态</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,6 +47,11 @@
                             <td>{{ dataitem.editor }}</td>
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.memo }}</td>
+                            {% ifequal dataitem.state '2' %}
+                            <td>已指派</td>
+                            {% else %}
+                            <td>保养中</td>
+                            {% endifequal %}
                         </tr>
                         {% endfor %}
                     </tbody>

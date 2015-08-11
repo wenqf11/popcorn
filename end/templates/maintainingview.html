@@ -30,13 +30,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">维修标题</label>
+                        <label class="col-sm-3 control-label no-padding-top">维修标题<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="title" value="" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
+                        <label class="col-sm-3 control-label no-padding-top">指派维修人<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
                                 <option value="nopersonchosen" selected="selected"></option>
@@ -47,13 +47,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">故障描述</label>
+                        <label class="col-sm-3 control-label no-padding-top">故障描述<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="createcontent" value="" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-top">优先级</label>
+                        <label class="col-sm-3 control-label no-padding-top">优先级<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select id="priority" name="priority" form="maintenanceform">
                                 <option value="1" selected="selected">一般</option>
@@ -81,11 +81,6 @@
                         <button class="btn btn-info" type="submit" onclick="return checkvalid();">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
-                        </button>
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset">
-                            <i class="ace-icon fa fa-undo bigger-110"></i>
-                            重置
                         </button>
                     </div>
                 </div>
@@ -115,6 +110,7 @@
                             <th>故障描述</th>
                             <th>优先级</th>
                             <th>备注</th>
+                            <th>状态</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -133,6 +129,15 @@
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.priority }}</td>
                             <td>{{ dataitem.memo }}</td>
+                            {% ifequal dataitem.state '1' %}
+                            <td>未指派</td>
+                            {% else %}
+                                {% ifequal dataitem.state '2' %}
+                                <td>已指派</td>
+                                {% else %}
+                                <td>维修中</td>
+                                {% endifequal %}
+                            {% endifequal %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '3' %}
