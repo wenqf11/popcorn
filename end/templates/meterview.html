@@ -1,0 +1,69 @@
+{% extends 'userframe.html' %}
+
+{% block js %}
+{% endblock %}
+
+{% block css %}
+<link href="../static/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
+{% endblock %}
+
+{% block pageheader %}
+	抄表数据
+{% endblock %}
+
+{% block maincontent %}
+<div class="row-fluid">
+	<div class="col-sm-12">
+		<table id="datatable" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>抄表时间</th>
+					<th>抄表人</th>
+					<th>抄表路线</th>
+					<th>设备简称</th>
+					<th>表单内容</th>
+				</tr>
+				<tbody>
+					{% for meter in meters %}
+					<tr>
+						<td>{{ meter.time | date:"Y年m月d日  H:i:s" }}</td>
+						<td>{{ meter.user }}</td>
+						<td>{{ meter.route }}</td>
+						<td>{{ meter.brief }}</td>
+{#						<td>{{ meter.content | truncatechars:30 }}</td>#}
+						<td>{{ meter.content }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</thead>
+		</table>
+	</div>
+</div>
+{% endblock %}
+
+{% block tailjs %}
+<script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../static/assets/DT_bootstrap.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#datatable').DataTable({
+			order: [[0, 'desc']],
+			oLanguage : {
+				"sLengthMenu" : "每页显示 _MENU_ 条记录",
+				"sZeroRecords" : "对不起，没有匹配的数据",
+				"sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
+				"sInfoEmpty" : "没有数据",
+				"sInfoFiltered" : "(数据表中共 _MAX_ 条记录)",
+				"sProcessing" : "正在加载中...",
+				"sSearch" : "搜索：",
+				"oPaginate" : {
+					"sFirst" : "第一页",
+					"sPrevious" : " 上一页 ",
+					"sNext" : " 下一页 ",
+					"sLast" : " 最后一页 "
+				}
+			}
+		});
+	});
+</script>
+{% endblock %}

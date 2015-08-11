@@ -166,6 +166,10 @@ urlpatterns = patterns(
     url(r'^department_revise/$', department_revise),
     url(r'^department_del/$', department_del),
 
+    url(r'^meter/$', meter),
+    url(r'^meter_device/$', meter_device),
+    url(r'^meter_date/$', meter_date),
+
     url(r'^score/$', score),
     url(r'^egg/$', egg),
     url(r'^egg/submit/$', egg_submit),

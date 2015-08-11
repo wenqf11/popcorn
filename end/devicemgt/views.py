@@ -3763,3 +3763,48 @@ def egg_submit(request):
     return HttpResponseRedirect('/egg/?msg=修改成功')
 
 
+def meter(request):
+    if request.method == 'GET':
+        return render_to_response('meter.html')
+
+
+def meter_device(request):
+    brief = request.GET.get('brief')
+
+    # try:
+    #     k_device.objects.get(brief=brief)
+    # except ObjectDoesNotExist:
+    #     return HttpResponseRedirect('/meter/')
+
+    meters = k_meter.objects.filter(brief=brief)
+    data = [{
+        'brief': brief,
+        'route': m.routeid.name,
+        'user': m.userid.username,
+        'time': m.metertime,
+        'content': m.json
+    } for m in meters]
+
+    return render_to_response('meterview.html', {'meters': data})
+
+
+def meter_date(request):
+    year = request.GET.get('year')
+    month = request.GET.get('month')
+    day = request.GET.get('day')
+
+    date_string = year + '-' + month + '-' + day
+    _date = datetime.strptime(date_string, '%Y-%m-%d').date()
+
+    meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)))
+    data = [{
+        'brief': m.brief,
+        'route': m.routeid.name,
+        'user': m.userid.username,
+        'time': m.metertime,
+        'content': m.json
+    } for m in meters]
+
+    return render_to_response('meterview.html', {'meters': data})
+
+
