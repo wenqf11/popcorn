@@ -308,7 +308,17 @@
     </script>
     <script type="text/javascript">
         function checkvalid() {
+           var brief = $("[name='brief']").val();
            var memo = $("[name='memo']").val();
+           if(!brief) {
+                $("[name='brief']").select();
+                $.gritter.add({
+                    title: '增加出入库失败！',
+                    text: '您没有可操作的备件',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
            if(memo.length > 80) {
                 $("[name='memo']").select();
                 $.gritter.add({

@@ -2570,8 +2570,10 @@ def view_spare(request):
         dataitem['id'] = _spare.id
         dataitem['classname'] = _spare.classid.name
         dataitem['brand'] = _spare.brand
-        dataitem['producer'] = _spare.producerid.name
-        dataitem['supplier'] = _spare.supplierid.name
+        if _spare.producerid:
+            dataitem['producer'] = _spare.producerid.name
+        if _spare.supplierid:
+            dataitem['supplier'] = _spare.supplierid.name
         dataitem['name'] = _spare.name
         dataitem['brief'] = _spare.brief
         dataitem['model'] = _spare.model
@@ -2623,8 +2625,10 @@ def operate_spare(request):
         _data["id"] = _id
         _data["isNew"] = False
         _data["brand"] = _spare.brand
-        _data["producer"] = _spare.producerid.name
-        _data["supplier"] = _spare.supplierid.name
+        if _spare.producerid:
+            _data['producer'] = _spare.producerid.name
+        if _spare.supplierid:
+            _data['supplier'] = _spare.supplierid.name
         _data["name"] = _spare.name
         _data["brief"] = _spare.brief
         _data["model"] = _spare.model
@@ -2692,8 +2696,14 @@ def submit_spare(request):
         _spare.save()
         return HttpResponseRedirect('/view_spare')
     _class = k_class.objects.get(name=_classname)
-    _producer = k_producer.objects.get(name=_producer)
-    _supplier = k_supplier.objects.get(name=_supplier)
+    if _producer != "":
+        _producer = k_producer.objects.get(name=_producer)
+    else:
+        _producer = None
+    if _supplier != "":
+        _supplier = k_supplier.objects.get(name=_supplier)
+    else:
+        _supplier = None
     if _id:
         _spare = k_spare.objects.get(id=_id)
         _spares = k_spare.objects.filter(name=_name)
@@ -2708,8 +2718,6 @@ def submit_spare(request):
         _spare.editdatetime = get_current_date()
         _spare.auditorid = 0
         _spare.classid = _class
-        _spare.producerid = _producer
-        _spare.supplierid = _supplier
     else:
         _spares = k_spare.objects.filter(name=_name)
         if len(_spares) > 0:
@@ -2719,9 +2727,11 @@ def submit_spare(request):
         if len(_spares) > 0:
             server_msg = '简称为'+_spares[0].brief+'的备件已存在！'
             return HttpResponseRedirect('/operate_spare/?msg='+server_msg)
-        _spare = k_spare.objects.create(classid=_class, producerid=_producer, supplierid=_supplier)
+        _spare = k_spare.objects.create(classid=_class)
         _spare.creatorid = _user.id
         _spare.createdatetime = get_current_date()
+    _spare.producerid = _producer
+    _spare.supplierid = _supplier
     _spare.brand = _brand
     _spare.name = _name
     _spare.brief = _brief
@@ -3160,8 +3170,10 @@ def view_tool(request):
         dataitem['id'] = _tool.id
         dataitem['classname'] = _tool.classid.name
         dataitem['brand'] = _tool.brand
-        dataitem['producer'] = _tool.producerid.name
-        dataitem['supplier'] = _tool.supplierid.name
+        if _tool.producerid:
+            dataitem['producer'] = _tool.producerid.name
+        if _tool.supplierid:
+            dataitem['supplier'] = _tool.supplierid.name
         dataitem['name'] = _tool.name
         dataitem['brief'] = _tool.brief
         dataitem['model'] = _tool.model
@@ -3214,8 +3226,10 @@ def operate_tool(request):
         _data["id"] = _id
         _data["isNew"] = False
         _data["brand"] = _tool.brand
-        _data["producer"] = _tool.producerid.name
-        _data["supplier"] = _tool.supplierid.name
+        if _tool.producerid:
+            _data['producer'] = _tool.producerid.name
+        if _tool.supplierid:
+            _data['supplier'] = _tool.supplierid.name
         _data["name"] = _tool.name
         _data["brief"] = _tool.brief
         _data["model"] = _tool.model
@@ -3285,8 +3299,14 @@ def submit_tool(request):
         _tool.save()
         return HttpResponseRedirect('/view_tool')
     _class = k_class.objects.get(name=_classname)
-    _producer = k_producer.objects.get(name=_producer)
-    _supplier = k_supplier.objects.get(name=_supplier)
+    if _producer != "":
+        _producer = k_producer.objects.get(name=_producer)
+    else:
+        _producer = None
+    if _supplier != "":
+        _supplier = k_supplier.objects.get(name=_supplier)
+    else:
+        _supplier = None
     _owner = k_class.objects.get(name=_ownername)
     if _id:
         _tool = k_tool.objects.get(id=_id)
@@ -3302,8 +3322,6 @@ def submit_tool(request):
         _tool.editdatetime = get_current_date()
         _tool.auditorid = 0
         _tool.classid = _class
-        _tool.producerid = _producer
-        _tool.supplierid = _supplier
         _tool.ownerid = _owner
     else:
         _tools = k_tool.objects.filter(name=_name)
@@ -3314,9 +3332,11 @@ def submit_tool(request):
         if len(_tools) > 0:
             server_msg = '简称为'+_tools[0].brief+'的工具已存在！'
             return HttpResponseRedirect('/operate_tool/?msg='+server_msg)
-        _tool = k_tool.objects.create(classid=_class, producerid=_producer, supplierid=_supplier, ownerid=_owner)
+        _tool = k_tool.objects.create(classid=_class, ownerid=_owner)
         _tool.creatorid = _user.id
         _tool.createdatetime = get_current_date()
+    _tool.producerid = _producer
+    _tool.supplierid = _supplier
     _tool.brand = _brand
     _tool.name = _name
     _tool.brief = _brief

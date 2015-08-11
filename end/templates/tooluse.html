@@ -406,6 +406,7 @@
             return true;
         }
         function checkvalid2() {
+           var brief = $($("[name='brief']")[1]).val();
            var user = $($("[name='user']")[1]).val();
            var memo = $($("[name='memo']")[1]).val();
            if(user.length < 1 || user.length > 40) {
@@ -413,6 +414,15 @@
                 $.gritter.add({
                     title: '增加使用表单失败！',
                     text: '领用人名字长度为1-40个字符！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+           if(!brief) {
+                $("[name='brief']").select();
+                $.gritter.add({
+                    title: '增加使用表单失败！',
+                    text: '您没有可操作的工具',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;

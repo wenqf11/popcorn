@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.28 (64 bit)
-MySQL - 5.5.25a : Database - devicemgtdb
+SQLyog Ultimate v11.11 (64 bit)
+MySQL - 5.6.10 : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.5.25a : Database - devicemgtdb
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`devicemgtdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `devicemgtdb`;
 
@@ -528,11 +528,11 @@ CREATE TABLE `devicemgt_k_role` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_role_432947aa` (`classid_id`),
   CONSTRAINT `classid_id_refs_id_fdd4c13d` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_role` */
 
-insert  into `devicemgt_k_role`(`id`,`classid_id`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'purview_design','312',1,'2015-04-07',1,'2015-04-21',1,'2015-04-15','3'),(2,1,'information_audition','31232',1,'2015-04-15',1,'2015-04-15',1,'2015-04-17','3'),(6,1,'123','',1,'2015-06-05',1,'2015-06-23',0,'2015-06-05','0'),(7,6,'12345','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(8,5,'ffff','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(9,1,'所有查看','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(10,1,'所有添加/编辑','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(11,1,'所有审核/删除','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(12,1,'所有权限','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0');
+insert  into `devicemgt_k_role`(`id`,`classid_id`,`name`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,'purview_design','312',1,'2015-04-07',1,'2015-04-21',1,'2015-04-15','3'),(2,1,'information_audition','31232',1,'2015-04-15',1,'2015-04-15',1,'2015-04-17','3'),(6,1,'123','',1,'2015-06-05',1,'2015-06-23',0,'2015-06-05','0'),(7,6,'12345','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(8,5,'ffff','',1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(9,1,'所有查看','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(10,1,'所有添加/编辑','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(11,1,'所有审核/删除','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(12,1,'所有权限','',1,'2015-06-26',1,'2015-06-26',0,'2015-06-26','0'),(13,2,'分类管理','',1,'2015-08-12',1,'2015-08-12',0,'2015-08-12','0');
 
 /*Table structure for table `devicemgt_k_role_purviews` */
 
@@ -548,11 +548,11 @@ CREATE TABLE `devicemgt_k_role_purviews` (
   KEY `devicemgt_k_role_purviews_7b0e22a5` (`k_purview_id`),
   CONSTRAINT `k_purview_id_refs_id_f7485864` FOREIGN KEY (`k_purview_id`) REFERENCES `devicemgt_k_purview` (`id`),
   CONSTRAINT `k_role_id_refs_id_21374a3f` FOREIGN KEY (`k_role_id`) REFERENCES `devicemgt_k_role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_role_purviews` */
 
-insert  into `devicemgt_k_role_purviews`(`id`,`k_role_id`,`k_purview_id`) values (12,1,1),(11,1,2),(10,1,3),(6,2,1),(9,2,2),(7,2,3),(36,6,34),(17,7,1),(32,8,1),(33,8,2),(35,8,3),(48,9,1),(49,9,4),(50,9,7),(37,9,10),(38,9,13),(40,9,16),(41,9,19),(39,9,22),(51,9,25),(42,9,28),(43,9,31),(47,9,35),(46,9,39),(45,9,42),(44,9,45),(63,10,2),(64,10,5),(65,10,8),(52,10,11),(55,10,14),(56,10,17),(54,10,20),(57,10,23),(53,10,26),(60,10,29),(58,10,33),(59,10,37),(61,10,40),(62,10,43),(75,11,3),(77,11,6),(78,11,9),(67,11,12),(68,11,15),(70,11,18),(69,11,21),(66,11,24),(74,11,27),(72,11,30),(73,11,34),(76,11,38),(79,11,41),(71,11,44),(96,12,1),(98,12,2),(97,12,3),(100,12,4),(99,12,5),(102,12,6),(101,12,7),(104,12,8),(103,12,9),(108,12,10),(107,12,11),(106,12,12),(105,12,13),(112,12,14),(111,12,15),(114,12,16),(113,12,17),(116,12,18),(115,12,19),(86,12,20),(87,12,21),(88,12,22),(89,12,23),(82,12,24),(83,12,25),(84,12,26),(85,12,27),(92,12,28),(81,12,29),(118,12,30),(117,12,31),(124,12,32),(123,12,33),(122,12,34),(121,12,35),(119,12,37),(110,12,38),(109,12,39),(94,12,40),(95,12,41),(80,12,42),(93,12,43),(90,12,44),(91,12,45);
+insert  into `devicemgt_k_role_purviews`(`id`,`k_role_id`,`k_purview_id`) values (12,1,1),(11,1,2),(10,1,3),(6,2,1),(9,2,2),(7,2,3),(36,6,34),(17,7,1),(32,8,1),(33,8,2),(35,8,3),(48,9,1),(49,9,4),(50,9,7),(37,9,10),(38,9,13),(40,9,16),(41,9,19),(39,9,22),(51,9,25),(42,9,28),(43,9,31),(47,9,35),(46,9,39),(45,9,42),(44,9,45),(63,10,2),(64,10,5),(65,10,8),(52,10,11),(55,10,14),(56,10,17),(54,10,20),(57,10,23),(53,10,26),(60,10,29),(58,10,33),(59,10,37),(61,10,40),(62,10,43),(75,11,3),(77,11,6),(78,11,9),(67,11,12),(68,11,15),(70,11,18),(69,11,21),(66,11,24),(74,11,27),(72,11,30),(73,11,34),(76,11,38),(79,11,41),(71,11,44),(96,12,1),(98,12,2),(97,12,3),(100,12,4),(99,12,5),(102,12,6),(101,12,7),(104,12,8),(103,12,9),(108,12,10),(107,12,11),(106,12,12),(105,12,13),(112,12,14),(111,12,15),(114,12,16),(113,12,17),(116,12,18),(115,12,19),(86,12,20),(87,12,21),(88,12,22),(89,12,23),(82,12,24),(83,12,25),(84,12,26),(85,12,27),(92,12,28),(81,12,29),(118,12,30),(117,12,31),(124,12,32),(123,12,33),(122,12,34),(121,12,35),(119,12,37),(110,12,38),(109,12,39),(94,12,40),(95,12,41),(80,12,42),(93,12,43),(90,12,44),(91,12,45),(125,13,1),(127,13,2),(126,13,3);
 
 /*Table structure for table `devicemgt_k_route` */
 
@@ -614,9 +614,9 @@ CREATE TABLE `devicemgt_k_spare` (
   `name` varchar(30) NOT NULL,
   `brief` varchar(30) NOT NULL,
   `brand` varchar(30) NOT NULL,
-  `producerid_id` int(11) NOT NULL,
+  `producerid_id` int(11) DEFAULT NULL,
   `model` varchar(30) NOT NULL,
-  `supplierid_id` int(11) NOT NULL,
+  `supplierid_id` int(11) DEFAULT NULL,
   `content` varchar(200) NOT NULL,
   `memo` varchar(100) NOT NULL,
   `minimum` int(10) unsigned NOT NULL,
@@ -636,11 +636,11 @@ CREATE TABLE `devicemgt_k_spare` (
   CONSTRAINT `classid_id_refs_id_0b558ac8` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_9fd74a5a` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_b2e6caa3` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_spare` */
 
-insert  into `devicemgt_k_spare`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (11,7,'spare1','s1_1','b1',1,'mo1',1,'c1','me1',20,30,0,1,'2015-05-24',1,'2015-06-05',0,'2015-05-24','0'),(12,6,'s12','s11','b1',3,'m1',3,'c1','',3,0,0,1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(13,1,'是','是','是',1,'是',1,'是','',12,0,0,1,'2015-07-21',0,'2015-07-21',0,'2015-07-21','0');
+insert  into `devicemgt_k_spare`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (11,7,'spare1','s1_1','b1',1,'mo1',1,'c1','me1',20,30,0,1,'2015-05-24',1,'2015-06-05',0,'2015-05-24','0'),(12,6,'s12','s11','b1',3,'m1',3,'c1','',3,1,0,1,'2015-06-05',1,'2015-06-05',0,'2015-06-05','0'),(13,1,'是','是','是',1,'是',1,'是','',12,0,0,1,'2015-07-21',1,'2015-08-12',0,'2015-07-21','0'),(19,1,'432','432','34',NULL,'432',NULL,'432','',22,0,0,1,'2015-08-12',1,'2015-08-12',0,'2015-08-12','0');
 
 /*Table structure for table `devicemgt_k_sparebill` */
 
@@ -669,9 +669,11 @@ CREATE TABLE `devicemgt_k_sparebill` (
   KEY `devicemgt_k_sparebill_12fc9209` (`spareid_id`),
   CONSTRAINT `classid_id_refs_id_4ffbefc7` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `spareid_id_refs_id_8eee649a` FOREIGN KEY (`spareid_id`) REFERENCES `devicemgt_k_spare` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_sparebill` */
+
+insert  into `devicemgt_k_sparebill`(`id`,`classid_id`,`spareid_id`,`using`,`returned`,`depleted`,`damaged`,`rejected`,`user`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,2,12,1,0,0,0,0,'55','',1,'2015-08-12',0,'2015-08-12',0,'2015-08-12','0');
 
 /*Table structure for table `devicemgt_k_sparecount` */
 
@@ -698,9 +700,11 @@ CREATE TABLE `devicemgt_k_sparecount` (
   KEY `devicemgt_k_sparecount_12fc9209` (`spareid_id`),
   CONSTRAINT `classid_id_refs_id_9a8f3ea4` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `spareid_id_refs_id_c63e4168` FOREIGN KEY (`spareid_id`) REFERENCES `devicemgt_k_spare` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_sparecount` */
+
+insert  into `devicemgt_k_sparecount`(`id`,`classid_id`,`sparebillid`,`spareid_id`,`count`,`state`,`iseligible`,`memo`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,2,0,12,2,'1','1','',1,'2015-08-12',0,'2015-08-12',0,'2015-08-12','0'),(2,2,1,12,-1,'5','1','',1,'2015-08-12',0,'2015-08-12',0,'2015-08-12','0');
 
 /*Table structure for table `devicemgt_k_sparecount_maintenanceid` */
 
@@ -867,9 +871,9 @@ CREATE TABLE `devicemgt_k_tool` (
   `name` varchar(50) NOT NULL,
   `brief` varchar(50) NOT NULL,
   `brand` varchar(50) NOT NULL,
-  `producerid_id` int(11) NOT NULL,
+  `producerid_id` int(11) DEFAULT NULL,
   `model` varchar(50) NOT NULL,
-  `supplierid_id` int(11) NOT NULL,
+  `supplierid_id` int(11) DEFAULT NULL,
   `content` varchar(200) NOT NULL,
   `memo` varchar(100) NOT NULL,
   `minimum` int(10) unsigned NOT NULL,
@@ -892,11 +896,11 @@ CREATE TABLE `devicemgt_k_tool` (
   CONSTRAINT `ownerid_id_refs_id_67fdcf25` FOREIGN KEY (`ownerid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `producerid_id_refs_id_1d6747ec` FOREIGN KEY (`producerid_id`) REFERENCES `devicemgt_k_producer` (`id`),
   CONSTRAINT `supplierid_id_refs_id_ea0efb3f` FOREIGN KEY (`supplierid_id`) REFERENCES `devicemgt_k_supplier` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_tool` */
 
-insert  into `devicemgt_k_tool`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`ownerid_id`) values (1,1,'tool1','t1','b1',1,'m1',1,'123','',30,0,0,1,'2015-07-21',1,'2015-07-21',0,'2015-07-21','0',3);
+insert  into `devicemgt_k_tool`(`id`,`classid_id`,`name`,`brief`,`brand`,`producerid_id`,`model`,`supplierid_id`,`content`,`memo`,`minimum`,`eligiblestock`,`ineligiblestock`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`ownerid_id`) values (1,1,'tool1','t1','b1',1,'m1',1,'123','',30,0,0,1,'2015-07-21',1,'2015-07-21',0,'2015-07-21','0',3),(2,1,'rew','re','rew',NULL,'re',NULL,'ewr','',132,0,0,1,'2015-08-12',1,'2015-08-12',0,'2015-08-12','0',1);
 
 /*Table structure for table `devicemgt_k_toolcount` */
 
