@@ -40,7 +40,7 @@ class UserManager(models.Manager):
 
     def create_user(self, classid, state, username, password, name, face, mobile, email, address, zipcode, birthday,
                     idcard, idcardtype, content, memo, contact, contactmobile, creatorid, createdatetime, editorid,
-                    editdatetime, auditorid, auditdatetime, gender):#status, 
+                    editdatetime, auditorid, auditdatetime, status, gender):
         """
         Creates and saves a User with the given username, email and password.
         """
@@ -52,7 +52,7 @@ class UserManager(models.Manager):
             password=password, name=name, face=face, mobile = mobile, email=email, address=address, zipcode=zipcode,
             birthday=birthday, idcard=idcard, idcardtype=idcardtype, content=content, memo=memo, contact=contact, contactmobile=contactmobile,
             creatorid=creatorid, createdatetime=createdatetime, editorid=editorid, editdatetime=editdatetime,
-            auditorid=auditorid, auditdatetime=auditdatetime, gender=gender)#status=status, 
+            auditorid=auditorid, auditdatetime=auditdatetime, status=status, gender=gender)
         user.set_password(password)
         return user
 
@@ -108,7 +108,7 @@ class k_class(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_purview(models.Model):
     classid = models.ForeignKey(k_class, related_name='purview_set')
@@ -121,7 +121,7 @@ class k_purview(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_role(models.Model):
     classid = models.ForeignKey(k_class, related_name='role_set')
@@ -134,7 +134,7 @@ class k_role(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_classrole(models.Model):
     classid = models.ForeignKey(k_class, related_name='classrole_set')
@@ -189,7 +189,7 @@ class k_user(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     #? loginlog = models.CharField(max_length=100)
     todo = models.PositiveIntegerField(default=0)
     onlinetime = models.PositiveIntegerField(default=0)
@@ -212,7 +212,7 @@ class k_devicetype(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_supplier(models.Model):
     name = models.CharField(max_length=50)
@@ -257,7 +257,7 @@ class k_spare(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_device(models.Model):
     DEVICE_STATUS = (
@@ -277,7 +277,7 @@ class k_device(models.Model):
     name = models.CharField(max_length=50) #分类内唯一
     brief = models.CharField(max_length=50) #编号，项目内唯一
     serial = models.CharField(max_length=100)
-    model = models.CharField(max_length=50)
+    model = models.CharField(max_length=1000)
     buytime = models.DateField()
     content = models.CharField(max_length=200)
     qrcode = models.CharField(max_length=625)
@@ -289,7 +289,7 @@ class k_device(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     lastmaintenance = models.DateField(null=True,blank=True)
     nextmaintenance = models.DateField(null=True,blank=True)
     maintenanceperiod = models.PositiveIntegerField(default=1)
@@ -311,7 +311,7 @@ class k_form(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_formitem(models.Model):
     FORM_DATATYPE = (
@@ -333,7 +333,7 @@ class k_formitem(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 
 
@@ -352,7 +352,7 @@ class k_route(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_meter(models.Model):
     brief = models.CharField(max_length=50)
@@ -403,7 +403,7 @@ class k_maintenance(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_deviceplan(models.Model):
     DEVICEPLAN_PERIODS = (
@@ -430,7 +430,7 @@ class k_deviceplan(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_task(models.Model):
     TASK_STATUS = (
@@ -455,7 +455,7 @@ class k_task(models.Model):
     createdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_taskitem(models.Model):
     TASK_STATUS = (
@@ -485,7 +485,7 @@ class k_taskitem(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 
 
@@ -508,7 +508,7 @@ class k_sparebill(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_sparecount(models.Model):
     SPARECOUNT_STATUS = (
@@ -536,7 +536,7 @@ class k_sparecount(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_tool(models.Model):
     classid = models.ForeignKey(k_class, related_name='toolclass_set',blank=True, null=True, on_delete=models.SET_NULL)
@@ -557,7 +557,7 @@ class k_tool(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
     ownerid = models.ForeignKey(k_class, related_name='toolowner_set',blank=True, null=True, on_delete=models.SET_NULL)
 
 class k_tooluse(models.Model):
@@ -576,7 +576,7 @@ class k_tooluse(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_toolcount(models.Model):
     TOOLCOUNT_STATUS = (
@@ -604,7 +604,7 @@ class k_toolcount(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    #status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 
 

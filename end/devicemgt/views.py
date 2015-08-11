@@ -16,6 +16,14 @@ from helper import handle_uploaded_file, get_current_time, get_current_date, get
 import json
 
 
+# 查找分类集合
+def get_class_set(result, current_class):
+    children_class = k_class.objects.filter(parentid=current_class)
+    for child_class in children_class:
+        result.append(child_class.id)
+        get_class_set(result, child_class.id)
+
+
 # 权限判断
 def check_purview(username, pid):
     _user = k_user.objects.get(username=username)
@@ -177,12 +185,17 @@ def operate_user(request):
         # 读取权限，显示内容
         _id = request.GET.get('id')
         userdata = dict()
+
+        #分类筛选
+        user = k_user.objects.get(username=request.user.username)
+        result = [user.classid.id]
+        get_class_set(result, user.classid.id)
         class_list = list()
-        classes = k_class.objects.all()
+        classes = k_class.objects.filter(id__in=result)
         for c in classes:
             class_list.append(c.name)
         role_list = list()
-        roles = k_role.objects.all()
+        roles = k_role.objects.filter(classid__in=result)
         for role in roles:
             role_list.append(role.name)
 
@@ -328,12 +341,17 @@ def useradd(request):
         # 读取权限，显示内容
         _id = request.GET.get('id')
         userdata = dict()
+
+        #分类筛选
+        user = k_user.objects.get(username=request.user.username)
+        result = [user.classid.id]
+        get_class_set(result, user.classid.id)
         class_list = list()
-        classes = k_class.objects.all()
+        classes = k_class.objects.filter(id__in=result)
         for c in classes:
             class_list.append(c.name)
         role_list = list()
-        roles = k_role.objects.all()
+        roles = k_role.objects.filter(classid__in=result)
         for role in roles:
             role_list.append(role.name)
 
@@ -561,13 +579,18 @@ def operate_device(request):
     if server_msg == None:
         server_msg = ''
     _id = request.GET.get('id')
+
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
     userdata = dict()
     class_list = list()
     type_list = list()
     supplier_list = list()
     producer_list = list()
     people_list = list()
-    classes = k_class.objects.all()
+    classes = k_class.objects.filter(id__in=result)
     for c in classes:
         class_list.append(c.name)
     types = k_devicetype.objects.all()
@@ -579,7 +602,7 @@ def operate_device(request):
     producers = k_producer.objects.all()
     for p in producers:
         producer_list.append(p.name)
-    people = k_user.objects.all()
+    people = k_user.objects.filter(classid__in=result)
     for p in people:
         person = dict()
         person["name"] = p.name
@@ -1305,8 +1328,12 @@ def schedule(request):
 
 @login_required
 def view_role(request):
+    #分类筛选
     user = k_user.objects.get(username=request.user.username)
-    allrole = k_role.objects.all()
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    allrole = k_role.objects.filter(classid__in=result)
+
     roledata = []
     for p in allrole:
         onerole = {}
@@ -1352,8 +1379,13 @@ def operate_role(request):
     server_msg = request.GET.get('msg')
     if server_msg == None:
         server_msg = ""
+
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
     _classes = []
-    _allclasses = k_class.objects.all()
+    _allclasses = k_class.objects.filter(id__in=result)
     for _class in _allclasses:
         _classes.append(_class.name)
     user = k_user.objects.get(username=request.user.username)
@@ -1650,7 +1682,12 @@ def view_deviceplan(request):
             'assigndatetime': _deviceplan.assigndatetime,
             'editor': _editor.name
         })
-    _users = k_user.objects.all()
+
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _users = k_user.objects.filter(classid__in=result)
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
@@ -1729,8 +1766,14 @@ def view_maintaining(request):
     _msg = check_purview(request.user.username, 31)
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
-    
+
+    #分类筛选
+    # user = k_user.objects.get(username=request.user.username)
+    # result = [user.classid.id]
+    # get_class_set(result, user.classid.id)
+    # _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=2, state__lte=3)
     _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=3)
+
     data = []
     for _maintaining in _maintainings:
         _device = _maintaining.deviceid
@@ -1773,7 +1816,12 @@ def view_maintaining(request):
                 'priority': _maintaining.get_priority_display(),
                 'state': _maintaining.state
             })
-    _users = k_user.objects.all()
+
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _users = k_user.objects.filter(classid__in=result)
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
@@ -1791,8 +1839,14 @@ def view_maintained(request):
     _msg = check_purview(request.user.username, 31)
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
-    
+
+    #分类筛选
+    # user = k_user.objects.get(username=request.user.username)
+    # result = [user.classid.id]
+    # get_class_set(result, user.classid.id)
+    # _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=2, state__gte=4)
     _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=4)
+
     data = []
     for _maintained in _maintaineds:
         _device = _maintained.deviceid
@@ -1861,11 +1915,15 @@ def add_maintenance(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
     
-    _users = k_user.objects.all()
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _users = k_user.objects.filter(classid__in=result)
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
-    _devices = k_device.objects.all()
+    _devices = k_device.objects.filter(classid__in=result)
     _briefs = []
     for _device in _devices:
         _briefs.append(_device.brief)
@@ -1993,8 +2051,14 @@ def view_upkeeping(request):
     _msg = check_purview(request.user.username, 28)
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
-    
+
+    #分类筛选
+    # user = k_user.objects.get(username=request.user.username)
+    # result = [user.classid.id]
+    # get_class_set(result, user.classid.id)
+    # _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=1, state__lte=3)
     _maintainings = k_maintenance.objects.filter(mtype=1, state__lte=3)
+
     data = []
     for _maintaining in _maintainings:
         _device = _maintaining.deviceid
@@ -2015,7 +2079,12 @@ def view_upkeeping(request):
             'memo': _maintaining.memo,
             'state': _maintaining.state
         })
-    _users = k_user.objects.all()
+    
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _users = k_user.objects.filter(classid__in=result)
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
@@ -2034,7 +2103,13 @@ def view_upkeeped(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
 
+    #分类筛选
+    # user = k_user.objects.get(username=request.user.username)
+    # result = [user.classid.id]
+    # get_class_set(result, user.classid.id)
+    # _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=1, state__gte=4)
     _maintaineds = k_maintenance.objects.filter(mtype=1, state__gte=4)
+
     data = []
     for _maintained in _maintaineds:
         _device = _maintained.deviceid
@@ -2135,8 +2210,14 @@ def view_tasking(request):
     _msg = check_purview(request.user.username, 35)
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
-        
+
+    #分类筛选
+    # user = k_user.objects.get(username=request.user.username)
+    # result = [user.classid.id]
+    # get_class_set(result, user.classid.id)
+    # _maintainings = k_task.objects.filter(classid__in=result, state__lte=2)
     _maintainings = k_task.objects.filter(state__lte=2)
+
     data = []
     for _maintaining in _maintainings:
         _creator = k_user.objects.get(id=_maintaining.creatorid)
@@ -2165,8 +2246,14 @@ def view_tasked(request):
     _msg = check_purview(request.user.username, 35)
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
-        
-    _maintaineds = k_task.objects.filter(state__gte=3)
+
+    #分类筛选
+    # user = k_user.objects.get(username=request.user.username)
+    # result = [user.classid.id]
+    # get_class_set(result, user.classid.id)
+    # _maintaineds = k_task.objects.filter(state__gte=3)
+    _maintaineds = k_task.objects.filter(classid__in=result, state__gte=3)
+
     data = []
     for _maintained in _maintaineds:
         _creator = k_user.objects.get(id=_maintained.creatorid)
@@ -2306,9 +2393,13 @@ def view_taskitem(request):
             dataitem['auditdatetime'] = _taskitem.auditdatetime
             dataitem['factor'] = _taskitem.factor
         data.append(dataitem)
-
+    
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
     _taskers = []
-    _users = k_user.objects.all()
+    _users = k_user.objects.filter(classid__in=result)
     for _user in _users:
         _taskers.append(_user.name)
     #非法权限信息
@@ -2438,7 +2529,12 @@ def view_spare(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
 
-    _spares = k_spare.objects.all()
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _spares = k_spare.objects.filter(classid__in=result)
+
     data = []
     for _spare in _spares:
         dataitem = {}
@@ -2511,8 +2607,13 @@ def operate_spare(request):
         _data['classname'] = _spare.classid.name
     else:
         _data["isNew"] = True
+
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
     _classes = []
-    _allclasses = k_class.objects.all()
+    _allclasses = k_class.objects.filter(id__in=result)
     for _class in _allclasses:
         _classes.append(_class.name)
     _producers = []
@@ -2655,7 +2756,12 @@ def view_sparebill(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
 
-    _sparebills = k_sparebill.objects.all()
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _sparebills = k_sparebill.objects.filter(classid__in=result)
+
     data = []
     for _sparebill in _sparebills:
         dataitem = {}
@@ -2689,7 +2795,8 @@ def view_sparebill(request):
             dataitem['audit'] = 'audit'
         data.append(dataitem)
 
-    _spares = k_spare.objects.all()
+    #分类筛选
+    _spares = k_spare.objects.filter(classid__in=result)
     #_briefs = []
     #for _spare in _spares:
         #_briefs.append(_spare.brief)
@@ -2826,7 +2933,12 @@ def view_sparecount(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
 
-    _sparecounts = k_sparecount.objects.all()
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _sparecounts = k_sparecount.objects.filter(classid__in=result)
+
     data = []
     for _sparecount in _sparecounts:
         dataitem = {}
@@ -2865,7 +2977,8 @@ def view_sparecount(request):
         """
         data.append(dataitem)
 
-    _spares = k_spare.objects.all()
+    #分类筛选
+    _spares = k_spare.objects.filter(classid__in=result)
     #_briefs = []
     #for _spare in _spares:
         #_briefs.append(_spare.brief)
@@ -3006,7 +3119,12 @@ def view_tool(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
 
-    _tools = k_tool.objects.all()
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _tools = k_tool.objects.filter(classid__in=result)
+
     data = []
     for _tool in _tools:
         dataitem = {}
@@ -3081,8 +3199,13 @@ def operate_tool(request):
         _data['ownername'] = _tool.ownerid.name
     else:
         _data["isNew"] = True
+
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
     _classes = []
-    _allclasses = k_class.objects.all()
+    _allclasses = k_class.objects.filter(id__in=result)
     for _class in _allclasses:
         _classes.append(_class.name)
     _producers = []
@@ -3205,7 +3328,12 @@ def view_tooluse(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
 
-    _tooluses = k_tooluse.objects.all()
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _tooluses = k_tooluse.objects.filter(classid__in=result)
+
     data = []
     for _tooluse in _tooluses:
         dataitem = {}
@@ -3239,7 +3367,8 @@ def view_tooluse(request):
             dataitem['audit'] = 'audit'
         data.append(dataitem)
 
-    _tools = k_tool.objects.all()
+    #分类筛选
+    _tools = k_tool.objects.filter(classid__in=result)
     #_briefs = []
     #for _tool in _tools:
         #_briefs.append(_tool.brief)
@@ -3376,7 +3505,12 @@ def view_toolcount(request):
     if _msg != 0:
         return HttpResponseRedirect('/?msg='+_msg)
 
-    _toolcounts = k_toolcount.objects.all()
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _toolcounts = k_toolcount.objects.filter(classid__in=result)
+
     data = []
     for _toolcount in _toolcounts:
         dataitem = {}
@@ -3415,7 +3549,8 @@ def view_toolcount(request):
         """
         data.append(dataitem)
 
-    _tools = k_tool.objects.all()
+    #分类筛选
+    _tools = k_tool.objects.filter(classid__in=result)
     #_briefs = []
     #for _tool in _tools:
         #_briefs.append(_tool.brief)
@@ -3594,13 +3729,16 @@ def department(request):
 def department_revise(request):
     _id = request.GET.get('id')
     if _id:
+        #分类筛选
         user=User.objects.get(username=request.user.username)
+        result = [user.classid.id]
+        get_class_set(result, user.classid.id)
         datas = dict()
-        k_classes = k_class.objects.all()
+        k_classes = k_class.objects.filter(id__in=result)
         class_list = list()
         for c in k_classes:
             class_list.append(c.name)
-        k_roles = k_role.objects.all()
+        k_roles = k_role.objects.filter(classid__in=result)
         role_list = list()
         for r in k_roles:
             role_list.append(r.name)
@@ -3638,13 +3776,16 @@ def department_revise(request):
 @login_required
 def departmentadd(request):
     if request.user.is_authenticated():
+        #分类筛选
         user=User.objects.get(username=request.user.username)
+        result = [user.classid.id]
+        get_class_set(result, user.classid.id)
         datas = dict()
-        k_classes = k_class.objects.all()
+        k_classes = k_class.objects.filter(id__in=result)
         class_list = list()
         for c in k_classes:
             class_list.append(c.name)
-        k_roles = k_role.objects.all()
+        k_roles = k_role.objects.filter(classid__in=result)
         role_list = list()
         for r in k_roles:
             role_list.append(r.name)
