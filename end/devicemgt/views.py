@@ -300,7 +300,7 @@ def useradd(request):
                 editdatetime=get_current_date(),
                 auditorid=0,
                 auditdatetime=get_current_date(),
-                status=0,
+                #status=0,
             )
             # 给roles和user也增加一条记录
             olduser = User.objects.create_user(
@@ -672,7 +672,7 @@ def deviceadd(request):
                 spare=request.POST['spare'],
                 notice=request.POST['notice'],
                 maintenanceperiod = 1,
-                status=2,
+                #status=2,
                 creatorid=request.user.id,
                 createdatetime=get_current_date(),
                 editorid=request.user.id,
@@ -811,7 +811,7 @@ def devicebatch_submit(request):
                         spare=obj_data['spare'],
                         notice=obj_data['notice'],
                         maintenanceperiod = 1,
-                        status=2,
+                        #status=2,
                         creatorid=request.user.id,
                         createdatetime=get_current_date(),
                         editorid=request.user.id,
@@ -1466,7 +1466,7 @@ def view_route(request):
         route['editTime'] = r.editdatetime
         route['auditor'] = k_user.objects.get(id=r.auditorid).username
         route['auditTime'] = r.auditdatetime
-        route['status'] = r.status
+        #route['status'] = r.status
         data.append(route)
     return render_to_response('routeview.html', {'routes': data})
 
