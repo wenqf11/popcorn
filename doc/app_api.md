@@ -596,7 +596,6 @@
 	- **device_brief**，`int`，设备简称
 	- **title**，`string`，报修标题
 	- **description**，`string`，情况描述
-	- **image**，`string`，图片URL，先传好图片再新建报修
 	- **memo**，`string`，备注
 	- timestamp，`int`，时间戳，暂时没有用
 - 返回结果：新建维修任务是否成功，成功返回维修任务id（用于图片上传），失败则返回失败原因

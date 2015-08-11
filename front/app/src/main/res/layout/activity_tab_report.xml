@@ -94,10 +94,13 @@
                 android:id="@+id/tab_report_fault_description"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:ems="8"
                 android:background="@null"
                 android:textSize="14sp"
                 android:hint=""/>
         </LinearLayout>
+
+
     </TableRow>
 
     <View

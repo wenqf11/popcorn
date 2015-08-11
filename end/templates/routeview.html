@@ -14,7 +14,7 @@
         <div class="panel-heading" role="tab" id="route-{{ route.id }}">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ route.id }}" aria-expanded="true" aria-controls={{ route.id }}>
-                路线名称：{{ route.name }}　　抄表周期：{{ route.period }}小时　　起始时间：{{ route.startTime }}
+                路线名称：{{ route.name }}　　抄表周期：{{ route.period }}小时　　起始时间：{{ route.startTime | time:'H:i' }}
                 </a>
             </h4>
         </div>

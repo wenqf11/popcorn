@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,6 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
 public class MaintainActivity extends Activity {
-    private static String MAINTAIN_TASK_SUBMIT_URL = Config.LOCAL_IP + "/app/maintain/update/";
     private JSONObject maintainTask = null;
 
     ProgressDialog progressDialog;
@@ -49,12 +49,80 @@ public class MaintainActivity extends Activity {
     @ViewInject(R.id.maintain_result)
     private TextView maintainResultEditText;
 
+    @ViewInject(R.id.maintain_submit)
+    private Button maintainSubmitButton;
+
     @OnClick(R.id.maintain_submit)
     private void submitMaintainButtonClick(View v) {
+        if (maintainSubmitButton.getText().equals("提交")) {
+            submitData();
+        }else{
+            acceptTask();
+        }
+    }
+
+    private void acceptTask(){
         String id = "";
         try{
             id = maintainTask.getString("id");
         }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("username", Config.DEBUG_USERNAME);
+        params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
+        params.addBodyParameter("maintain_id", id);
+        progressDialog.show();
+
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                Config.MAINTAIN_TASK_CONFIRM_URL,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+
+                        try{
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if(status.equals("ok")) {
+                                Toast.makeText(getApplicationContext(), "成功接受保养任务", Toast.LENGTH_SHORT).show();
+                                maintainSubmitButton.setText("提交");
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "接受任务失败，请重新提交", Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                        progressDialog.hide();
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        progressDialog.hide();
+                    }
+                });
+    }
+
+    private void submitData(){
+        String id = "";
+        try{
+            id = maintainTask.getString("id");
+        }catch (Exception e){
+            e.printStackTrace();
         }
         String note = maintainResultEditText.getText().toString();
 
@@ -67,7 +135,7 @@ public class MaintainActivity extends Activity {
 
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
-                MAINTAIN_TASK_SUBMIT_URL,
+                Config.MAINTAIN_TASK_SUBMIT_URL,
                 params,
                 new RequestCallBack<String>() {
 
@@ -106,7 +174,6 @@ public class MaintainActivity extends Activity {
                 });
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,13 +200,16 @@ public class MaintainActivity extends Activity {
         String faultDescription = "";
         String repairMemo = "";
         String repairResult = "";
+        String confirmed = "";
         try{
             title = maintainTask.getString("title");
             deviceNumber = maintainTask.getString("device_brief");
             faultDescription = maintainTask.getString("description");
             repairMemo = maintainTask.getString("memo");
             repairResult = maintainTask.getString("note");
+            confirmed = maintainTask.getString("confirmed");
         }catch (Exception e){
+            e.printStackTrace();
         }
 
         maintainTitleTextView.setText(title);
@@ -147,6 +217,11 @@ public class MaintainActivity extends Activity {
         maintainDescriptionTextView.setText(faultDescription);
         maintainMemoTextView.setText(repairMemo);
         maintainResultEditText.setText(repairResult);
+        if(confirmed.equals("true")) {
+            maintainSubmitButton.setText("提交");
+        }else{
+            maintainSubmitButton.setText("接受任务");
+        }
     }
 
     @Override

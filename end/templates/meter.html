@@ -1,0 +1,47 @@
+{% extends 'userframe.html' %}
+
+{% block js %}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block pageheader %}
+	抄表数据
+{% endblock %}
+
+{% block maincontent %}
+<div class="container">
+	<div class="row-fluid" style="width: 80%;">
+		<div class="col-sm-5 col-sm-offset-1 well">
+			<form action="/meter_device/" class="form-horizontal" method="GET">
+				<h4 class="header blue bolder smaller">按设备查找</h4>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">设备简称</label>
+					<div class="col-sm-9">
+						<input name="brief" type="text" class="span8 m-wrap" value="" />
+						<button type="submit" class="btn btn-primary" style="float: right;">查找</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-5 col-sm-offset-1 well">
+			<form action="/meter_date/" class="form-horizontal" method="GET">
+				<h4 class="header blue bolder smaller">按日期查找</h4>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">日期</label>
+					<div class="col-sm-10">
+						<input name="year" type="text" class="m-wrap" value="{% now "Y" %}" style="width: 60px;" />年
+						<input name="month" type="text" class="m-wrap" value="{% now "n" %}" style="width: 40px;" />月
+						<input name="day" type="text" class="m-wrap" value="{% now "j" %}" style="width: 40px;" />日
+						<button type="submit" class="btn btn-primary" style="float: right;">查找</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block tailjs %}
+{% endblock %}

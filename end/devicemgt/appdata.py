@@ -424,9 +424,8 @@ def app_maintain_list_1(request, para, user):
             'creator': k_user.objects.get(id=task.creatorid).name,
             'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
             'description': task.createcontent,
-            'image': task.image,
             'memo': task.memo,
-            'confirmed': (task.state == 3),
+            'confirmed': (task.state == "3"),
             'note': task.editcontent
         } for task in tasks]
     }))
@@ -453,7 +452,7 @@ def app_maintain_list_2(request, para, user):
             'description': task.createcontent,
             'image': task.image.url,
             'memo': task.memo,
-            'confirmed': (task.state == 3),
+            'confirmed': (task.state == "3"),
             'note': task.editcontent
         } for task in tasks]
     }))
@@ -468,18 +467,17 @@ def app_maintain_add(request, para, user):
     # para['image'] = request.POST.get('image')
     para['memo'] = request.POST.get('memo')
 
-    if para['device_brief'] != "":
+    task = k_maintenance()
+
+    if para['device_brief']:
         try:
             device = k_device.objects.get(brief=para['device_brief'])
+            task.deviceid = device
         except ObjectDoesNotExist:
             return HttpResponse(json.dumps({
                 'status': 'error',
                 'data': 'device not exist'
             }))
-
-    task = k_maintenance.objects.create()
-    if para['device_brief'] != "":
-        task.deviceid=device
     task.state = 1
     task.title = para['title']
     task.createcontent = para['description']
@@ -509,13 +507,13 @@ def app_maintain_confirm(request, para, user):
             'data': 'maintain task not exist'
         }))
 
-    if task.state == 3:
+    if task.state == "3":
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'already confirmed'
         }))
     else:
-        task.state = 3
+        task.state = "3"
         task.save()
         return HttpResponse(json.dumps({
             'status': 'ok',

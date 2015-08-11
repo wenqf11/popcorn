@@ -30,7 +30,6 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
 public class RepairActivity extends Activity {
-    private static String REPAIR_TASK_SUBMIT_URL = Config.LOCAL_IP + "/app/maintain/update/";
     private JSONObject repairTask = null;
 
     ProgressDialog progressDialog;
@@ -56,12 +55,80 @@ public class RepairActivity extends Activity {
     @ViewInject(R.id.repair_result)
     private TextView repairResultEditText;
 
+    @ViewInject(R.id.repair_submit)
+    private Button repairSubmitButton;
+
     @OnClick(R.id.repair_submit)
     private void submitRepairButtonClick(View v) {
+        if (repairSubmitButton.getText().equals("提交")) {
+            submitData();
+        }else{
+            acceptTask();
+        }
+    }
+
+    private void acceptTask(){
         String id = "";
         try{
             id = repairTask.getString("id");
         }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("username", Config.DEBUG_USERNAME);
+        params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
+        params.addBodyParameter("maintain_id", id);
+        progressDialog.show();
+
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                Config.REPAIR_TASK_CONFIRM_URL,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+
+                        try{
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if(status.equals("ok")) {
+                                Toast.makeText(getApplicationContext(), "成功接受维修任务", Toast.LENGTH_SHORT).show();
+                                repairSubmitButton.setText("提交");
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "接受任务失败，请重新提交", Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                        progressDialog.hide();
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        progressDialog.hide();
+                    }
+                });
+    }
+
+    private void submitData(){
+        String id = "";
+        try{
+            id = repairTask.getString("id");
+        }catch (Exception e){
+            e.printStackTrace();
         }
         String note = repairResultEditText.getText().toString();
 
@@ -74,7 +141,7 @@ public class RepairActivity extends Activity {
 
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
-                REPAIR_TASK_SUBMIT_URL,
+                Config.REPAIR_TASK_SUBMIT_URL,
                 params,
                 new RequestCallBack<String>() {
 
@@ -112,7 +179,6 @@ public class RepairActivity extends Activity {
                     }
                 });
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +208,7 @@ public class RepairActivity extends Activity {
         String repairResult = "";
         String creator = "";
         String create_time = "";
+        String confirmed = "";
         try{
             title = repairTask.getString("title");
             deviceNumber = repairTask.getString("device_brief");
@@ -150,7 +217,9 @@ public class RepairActivity extends Activity {
             create_time = repairTask.getString("create_time");
             repairMemo = repairTask.getString("memo");
             repairResult = repairTask.getString("note");
+            confirmed = repairTask.getString("confirmed");
         }catch (Exception e){
+            e.printStackTrace();
         }
 
         reportTitleTextView.setText(title);
@@ -160,6 +229,11 @@ public class RepairActivity extends Activity {
         faultDescriptionTextView.setText(faultDescription);
         repairMemoTextView.setText(repairMemo);
         repairResultEditText.setText(repairResult);
+        if(confirmed.equals("true")) {
+            repairSubmitButton.setText("提交");
+        }else{
+            repairSubmitButton.setText("接受任务");
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ __author__ = 'LY'
 
 from django.shortcuts import render_to_response
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -12,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
 from datetime import datetime, timedelta
-from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node
+from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class
 import json
 
 
@@ -499,7 +500,7 @@ def devicebyclass(request):
     datas = list()
     data = dict()
     data['text'] = parents.name
-    data['nodes'] = get_type_node(classes, parents.id)
+    data['nodes'] = get_device_by_class(classes, parents.id)
     if data['nodes']:
         datas.append(data)
         variables=RequestContext(request,{'username':user.username, 'data':datas})
@@ -785,11 +786,35 @@ def devicebatch_submit(request):
                     if obj_data['producer'] == "无":
                         _producerid = ''
                     else:
-                        _producerid = k_producer.objects.get(name=obj_data['producer'])
+                        _producer = k_producer.objects.filter(name=obj_data['producer'])
+                        if len(_producer) == 0:
+                            _producerid = k_producer.objects.create(
+                                name=obj_data['producer'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_producer) == 1:
+                            _producerid = _producer[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加生产厂家出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
                     if obj_data['supplier'] == "无":
                         _supplierid = ''
                     else:
-                        _supplierid = k_supplier.objects.get(name=obj_data['supplier'])
+                        _supplier = k_supplier.objects.filter(name=obj_data['supplier'])
+                        if len(_supplier) == 0:
+                            _supplierid = k_supplier.objects.create(
+                                name=obj_data['supplier'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_supplier) == 1:
+                            _supplierid = _supplier[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加供应商出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
                     _ownerid = k_user.objects.get(username=obj_data['owner'])
                     _devs = k_device.objects.filter(brief=_brief)
                     _devs = _devs.filter(name=_name)
@@ -1254,76 +1279,81 @@ def purview(request):
 
 
 @login_required
-def save_schedule(request):
-    error = []
-    if request.method == 'POST':
-        shifts = eval(request.POST["shifts"])
-        try:
-            k_schedule.objects.all().delete()
-            for shift in shifts:
-                for user in shift['users']:
-                    u = k_user.objects.get(id=user)
-                    route = k_route.objects.get(id=shift['route'])
-                    c = k_class.objects.get(id=1)
-                    s = k_schedule(route=route, user=u, date=shift['time'], classid=c)
-                    s.save()
-        except Exception, e:
-            print e
+def add_schedule(request):
+    current_user = k_user.objects.get(username=request.user.username)
+    _class = current_user.classid
+
+    route_id = int(request.POST.get('route_id'))
+    route = k_route.objects.get(id=route_id)
+
+    user_ids = request.POST.getlist('users')
+    users = [k_user.objects.get(id=int(user_id)) for user_id in user_ids]
+
+    _date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
+
+    schedules = k_schedule.objects.filter(route=route, date=_date)
+    for s in schedules:
+        s.delete()
+
+    for user in users:
+        k_schedule.objects.create(classid=_class, route=route, user=user, date=_date)
+
+    return HttpResponse(json.dumps({
+        'success': True,
+        'info': 'Add Schedule Success!'
+    }))
+
+
+@login_required
+def delete_schedule(request):
+    route_id = int(request.POST.get('route_id'))
+    route = k_route.objects.get(id=route_id)
+
+    _date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
+
+    schedules = k_schedule.objects.filter(route=route, date=_date)
+
+    for s in schedules:
+        s.delete()
+
+    return HttpResponse(json.dumps({
+        'success': True,
+        'info': 'Delete Schedule Success!'
+    }))
+
+
+def view_schedule(request):
+    if request.method == 'GET':
+        users = k_user.objects.all() # 此处应取对应班组的用户
+        user_data = [{'id': user.id, 'name': user.username} for user in users]
+
+        routes = k_route.objects.all()
+        route_data = [{'id': r.id, 'name': r.name, 'startTime': r.starttime, 'period': r.period} for r in routes]
+
+        return render_to_response('schedule.html', {'routes': route_data, 'users': user_data})
     else:
-        error.append("no data")
-    return HttpResponse(json.dumps(error))
+        routes = k_route.objects.all()
+        route_data = [{'id': _r.id, 'name': _r.name, 'startTime': str(_r.starttime), 'period': _r.period} for _r in routes]
 
+        available_shifts = k_schedule.objects.filter(
+            date__range=[date.today() - timedelta(days=30), date.today() + timedelta(days=30)]
+        )
+        existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
 
-def get_schedule(request):
-    routes = k_route.objects.all()
-    route_data = [{'id': _r.id, 'name': _r.name, 'startTime': str(_r.starttime), 'period': _r.period} for _r in routes]
-    available_shifts = k_schedule.objects.all()
-    existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
-    shift_data = {}
-    for day in existed_dates:
-        day_shifts = []
-        available_day_shifts = available_shifts.filter(date=day)
-        for r in route_data:
-            try:
-                available_day_route_shifts = available_day_shifts.filter(route=r['id'])
-            except Exception, e:
-                print e
-            if available_day_route_shifts.exists():
-                r['users'] = [dd['user'] for dd in available_day_route_shifts.values('user').distinct()]
-                day_shifts.append(r.copy())
-        shift_data[str(day)] = day_shifts
-    return HttpResponse(json.dumps({'shifts': shift_data}))
-
-
-def schedule(request):
-    users = k_user.objects.all()
-    user_data = [{'id':  user.id, 'name': user.name} for user in users]
-    routes = k_route.objects.all()
-    route_data = []
-    for r in routes:
-        route = {
-            'id': r.id,
-            'name': r.name,
-            'startTime': r.starttime,
-            'period': r.period
-        }
-        route_data.append(route)
-
-    available_shifts = k_schedule.objects.filter(date__range=[date.today() - timedelta(days=10), date.today()])
-    existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
-    existed_routes = [_d['route'] for _d in available_shifts.values('route').distinct()]
-
-    shift_data = {}
-    for day in existed_dates:
-        day_shifts = {}
-        available_day_shifts = available_shifts.filter(date=day)
-        for r in existed_routes:
-            available_day_route_shifts = available_day_shifts.filter(route=r)
-            if available_day_route_shifts.exists():
-                day_shifts[str(r)] = [_d['user'] for _d in available_day_route_shifts.values('user').distinct()]
-        shift_data[str(day)] = day_shifts
-
-    return render_to_response('schedule.html', {'routes': route_data, 'shifts': shift_data, 'users': user_data})
+        shift_data = {}
+        for day in existed_dates:
+            day_shifts = []
+            available_day_shifts = available_shifts.filter(date=day)
+            for r in route_data:
+                try:
+                    available_day_route_shifts = available_day_shifts.filter(route=r['id'])
+                except Exception, e:
+                    print e
+                if available_day_route_shifts.exists():
+                    r['users'] = [dd['user'] for dd in available_day_route_shifts.values('user').distinct()]
+                    day_shifts.append(r.copy())
+            shift_data[str(day)] = day_shifts
+        return HttpResponse(json.dumps({'shifts': shift_data}))
 
 
 @login_required
@@ -1548,21 +1578,18 @@ def operate_route(request):
 def submit_route(request, _id=''):
     _user = k_user.objects.get(username=request.user.username)
     _editor = _user.id
-    _forms = request.GET.get('routeString')
-    _name = request.GET.get('name')
-    _period = request.GET.get('period')
-    _start_time = request.GET.get('startTime')
+    _forms = request.POST.get('routeString')
+    _name = request.POST.get('name')
+    _period = request.POST.get('period')
+    # _start_time = request.GET.get('startTime')
+    _hour = request.POST.get('hour')
+    _minute = request.POST.get('minute')
+    _start_time = _hour + ':' + _minute
     _edit_time = get_current_date()
     if _id:
         route = k_route.objects.get(id=_id)
     else:
-        route = k_route.objects.create(
-            classid=_user.classid,
-            starttime=datetime.strptime('08:00', '%H:%M').time(),
-            period=0,
-            # audition not discussed
-            auditorid=1
-        )
+        route = k_route(classid=_user.classid)
         route.creatorid = _editor
     route.name = _name
     route.formid = _forms
@@ -3899,5 +3926,50 @@ def egg_submit(request):
     config.save()
 
     return HttpResponseRedirect('/egg/?msg=修改成功')
+
+
+def meter(request):
+    if request.method == 'GET':
+        return render_to_response('meter.html')
+
+
+def meter_device(request):
+    brief = request.GET.get('brief')
+
+    # try:
+    #     k_device.objects.get(brief=brief)
+    # except ObjectDoesNotExist:
+    #     return HttpResponseRedirect('/meter/')
+
+    meters = k_meter.objects.filter(brief=brief)
+    data = [{
+        'brief': brief,
+        'route': m.routeid.name,
+        'user': m.userid.username,
+        'time': m.metertime,
+        'content': m.json
+    } for m in meters]
+
+    return render_to_response('meterview.html', {'meters': data})
+
+
+def meter_date(request):
+    year = request.GET.get('year')
+    month = request.GET.get('month')
+    day = request.GET.get('day')
+
+    date_string = year + '-' + month + '-' + day
+    _date = datetime.strptime(date_string, '%Y-%m-%d').date()
+
+    meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)))
+    data = [{
+        'brief': m.brief,
+        'route': m.routeid.name,
+        'user': m.userid.username,
+        'time': m.metertime,
+        'content': m.json
+    } for m in meters]
+
+    return render_to_response('meterview.html', {'meters': data})
 
 
