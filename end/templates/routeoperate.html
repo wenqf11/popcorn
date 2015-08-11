@@ -15,7 +15,7 @@
 {% block maincontent %}
 <div class="row">
     <div class="col-xs-12">
-        <form class="form-horizontal" action="/submit_route/{{ data.id }}/" role="form" id="roleform">
+        <form class="form-horizontal" action="/submit_route/{{ data.id }}/" role="form" id="roleform" method="POST">
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">路线名称</label>
                 <div class="col-sm-9">
@@ -51,13 +51,14 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">抄表周期</label>
                 <div class="col-sm-9">
-                    <input type="text" name="period" value="{{ data.period }}">小时
+                    <input type="text" name="period" value="{{ data.period }}" style="width: 60px;">小时
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">起始时间</label>
                 <div class="col-sm-9">
-                    <input type="text" name="startTime" value="{{ data.startTime }}" placeholder="例如：08:00">
+                    <input type="text" name="hour" value="{{ data.startTime | time:'G' }}" style="width: 60px;">时
+                    <input type="text" name="minute" value="{{ data.startTime | time:'i' }}" style="width: 60px;">分
                 </div>
             </div>
             <div class="hr hr-16 hr-dotted"></div>

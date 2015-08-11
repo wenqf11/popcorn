@@ -4,32 +4,68 @@
 {% block css %}
 <link rel="stylesheet" type="text/css" href="../static/fullcalendar/css/fullcalendar.css">
 <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.custom.min.css">
+
+<style type="text/css">
+.fc-event-container {
+	cursor: pointer;
+}
+.external-event {
+	cursor: move;
+}
+</style>
 {% endblock %}
 {% block pageheader %}
 	排班表
 {% endblock %}
 {% block maincontent %}
-	<div class="row-fluid">
-		<div class="col-xs-9">
-			<div id="calendar"></div>
+
+<div class="row-fluid">
+	<div class="col-xs-9">
+		<div id="calendar"></div>
+	</div>
+	<div class="col-xs-3">
+		<div class="fc-toolbar">
+			<h2>班组抄表路线</h2>
 		</div>
-		<div class="col-xs-3">
-			<div class="fc-toolbar">
-				<h2>班组抄表路线</h2>
+		<div id="routes">
+			{% for route in routes %}
+			<div class="external-event label-info" data-id="{{ route.id }}" data-start="{{ route.startTime | date:"c" }}" data-name="{{ route.name }}">
+				<i class="ace-icon fa fa-arrows"></i>
+				{{ route.name }}
 			</div>
-			<div id="routes">
-				{% for route in routes %}
-				<div class="external-event label-success" data-id="{{ route.id }}" data-start="{{ route.startTime | date:"c" }}" data-name="{{ route.name }}">
-					<i class="ace-icon fa fa-arrows"></i>
-					{{ route.name }}
-				</div>
-				{% endfor %}
-			</div>
-            <div>
-                <button class="btn btn-sm btn-success" onclick="saveShifts()">保存</button>
-            </div>
+			{% endfor %}
 		</div>
 	</div>
+</div>
+
+<div class="modal fade" id="modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+				<h4 class="modal-title">路线设置</h4>
+			</div>
+			<div class="modal-body">
+				<div class="no-margin">
+					<h5>抄表人：</h5>
+					{% for user in users %}
+						<div class="checkbox">
+							<label><input type="checkbox" name="user-checkbox" data-id={{ user.id }}>{{ user.name }}</label>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-sm btn-danger" data-action="delete" style="float: left;"><i class="ace-icon fa fa-trash-o"></i>删除</button>
+				<button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i>保存</button>
+				<button type="button" class="btn btn-sm" data-dismiss="modal" data-action="cancel"><i class="ace-icon fa fa-times"></i>取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 {% endblock %}
 {% block tailjs %}
 <script type="text/javascript" src="../static/fullcalendar/lib/moment.min.js"></script>
@@ -38,17 +74,18 @@
 <script type="text/javascript" src="../static/js/jquery-ui.custom.min.js"></script>
 
 <script>
-    $(function(){
-        var purview_msg = "{{ purview_msg }}";
-        if (purview_msg) {
-            $.gritter.add({
-                title: '您没有权限进行此操作',
-                text: purview_msg,
-                class_name: 'gritter-error gritter-center'
-            });
-        }
-    });
+	$(function(){
+		var purview_msg = "{{ purview_msg }}";
+		if (purview_msg) {
+			$.gritter.add({
+				title: '您没有权限进行此操作',
+				text: purview_msg,
+				class_name: 'gritter-error gritter-center'
+			});
+		}
+	});
 </script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#routes div.external-event').each(function() {
@@ -60,7 +97,6 @@
 		});
 
 		$('#calendar').fullCalendar({
-			
 			height: 650,
 			aspectRatio: 1.2,
 			weekends: true,
@@ -82,106 +118,110 @@
 
 			drop: function(date) {
 				$('#calendar').fullCalendar('renderEvent', {
-					data_id: $(this).attr('data-id'),
-                    users: [],
+					// this是被拖动的dom元素
+					// date是松开鼠标时指向的日期
+					data_id: $(this).attr('data-id'), // 路线id
+					users: [], // 用户id数组
+					is_new: true, // 表示是新建的事件
 					title: $(this).attr('data-name'),
 					start: date,
-					color: '#82af6f',
+					color: 'orange',
 					textColor: 'white'
 				}, true);
 			},
-			eventClick: function(calEvent, jsEvent, view) {
-                $('#modal').attr('event-id', calEvent._id);
-                $("input[name='user-checkbox']").prop('checked', false);
-                $('#modal').modal('show');
 
-                for (var userindex in calEvent.users){
-                    var user_id = calEvent.users[userindex];
-                    $("input[data-id="+user_id+"]").prop('checked', true);
-                }
-                console.log(calEvent._id);
+			eventAfterRender: function(event, element, view) {
+				if (event.is_new) {
+					element.click();
+				}
+			},
+
+			eventClick: function(calEvent, jsEvent, view) {
+				$('#modal').attr('event-id', calEvent._id);
+				$("input[name='user-checkbox']").prop('checked', false);
+				$('#modal').modal('show');
+
+				for (var userindex in calEvent.users){
+					var user_id = calEvent.users[userindex];
+					$("input[data-id="+user_id+"]").prop('checked', true);
+				}
 			}
 		});
 
-        $('#modal').find('form').on('submit', function(ev){
-            ev.preventDefault();
-            var event = $('#calendar').fullCalendar('clientEvents', $('#modal').attr('event-id'))[0];
-            var users = []
-            $("input[name='user-checkbox']:checked").each(function(){
-                users.push($(this).attr('data-id'));
-            });
-            event.users = users;
-            $('#calendar').fullCalendar('updateEvent', event);
-            $('#modal').modal('hide');
-        });
+		$('#modal').find('button[type=submit]').on('click', function(ev){
+			// 获取当前模态框对应的事件
+			var event = $('#calendar').fullCalendar('clientEvents', $('#modal').attr('event-id'))[0];
+			// 判断复选框的值构造user列表
+			var users = []
+			$("input[name='user-checkbox']:checked").each(function(){
+				users.push($(this).attr('data-id'));
+			});
 
-        $('#modal').find('button[data-action=delete]').on('click', function() {
-            var event = $('#calendar').fullCalendar('removeEvents', $('#modal').attr('event-id'));
-            $('#modal').modal('hide');
-        });
-        console.log('start post');
-            url= '/get_schedule/'
-        $.post(url, function(json){
-            for (var day in json.shifts){
-                dayinfo = json.shifts[day];
-                for(var routeindex in dayinfo){
-                    routeinfo = dayinfo[routeindex];
-                    $('#calendar').fullCalendar('renderEvent', {
-                        title: routeinfo['name'],
-                        start: day+' '+routeinfo['startTime'],
-                        color: 'blue',
-                        textColor: 'white',
-                        data_id: routeinfo['id'],
-                        users: routeinfo['users']
-                    }, true);
-                }
-            }
+			// 添加新的排班记录到后台
+			$.post('/add_schedule/', $.param({route_id: event.data_id, users: users, date: event.start.format('YYYY-MM-DD')}, true), function(data) {
+				data = JSON.parse(data);
+				if (data.success) {
+					alert('排班成功');
+				} else {
+					alert('排班失败');
+				}
+				location.reload();
+			});
 
-        },'json');
+			$('#modal').modal('hide');
+		});
+
+		$('#modal').find('button[data-action=delete]').on('click', function() {
+			var event = $('#calendar').fullCalendar('clientEvents', $('#modal').attr('event-id'))[0];
+
+			if (event.is_new) {
+				// 新添加的事件还未提交到后台则在dom中删去
+				$('#calendar').fullCalendar('removeEvents', event._id);
+			} else {
+				// 已存在的事件提交到后台删除
+				$.post('/delete_schedule/', {route_id: event.data_id, date: event.start.format('YYYY-MM-DD')}, function(data) {
+					data = JSON.parse(data);
+					if (data.success) {
+						alert('删除成功');
+					} else {
+						alert('删除失败');
+					}
+					location.reload();
+				})
+			}
+
+			$('#modal').modal('hide');
+		});
+
+		$('#modal').find('button[data-action=cancel]').on('click', function() {
+			var event = $('#calendar').fullCalendar('clientEvents', $('#modal').attr('event-id'))[0];
+
+			if (event.is_new) {
+				// 新添加的事件还未提交到后台则在dom中删去
+				$('#calendar').fullCalendar('removeEvents', event._id);
+			}
+
+			// $('#modal').modal('hide');
+		});
+
+		$.post('/get_schedule/', function(json){
+			for (var day in json.shifts){
+				dayinfo = json.shifts[day];
+				for(var routeindex in dayinfo){
+					routeinfo = dayinfo[routeindex];
+					$('#calendar').fullCalendar('renderEvent', {
+						title: routeinfo['name'],
+						start: day+' '+routeinfo['startTime'],
+						color: '#82af6f',
+						textColor: 'white',
+						data_id: routeinfo['id'],
+						users: routeinfo['users']
+					}, true);
+				}
+			}
+		},'json');
 
 	});
-    function saveShifts(){
-        var event = $('#calendar').fullCalendar('clientEvents');
-        var url = '/save_schedule/';
-        var shifts = []
-        for (var shiftindex in event){
-            var shift = event[shiftindex];
-            shifts.push({'time': shift.start.format('YYYY-MM-DD'), 'route': shift.data_id, 'users': shift.users})
-        }
-        var data = JSON.stringify(shifts);
-        $.post(url, {"shifts" :data}, function(json){
-            alert("保存成功");
-        }, 'json');
-    }
 </script>
 
-<div class="modal fade" id="modal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span>&times;</span>
-				</button>
-				<h4 class="modal-title">路线设置</h4>
-			</div>
-			<div class="modal-body">
-				<form class="no-margin">
-					<label>抄表人：</label>
-                    {% for user in users %}
-                        <div class="checkbox">
-                            <label><input type="checkbox" name="user-checkbox" data-id={{ user.id }}>{{ user.name }}</label>
-                        </div>
-                    {% endfor %}
-					<button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i> 暂存</button>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i>删除路线</button>
-				<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i>取消</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 {% endblock %}
-

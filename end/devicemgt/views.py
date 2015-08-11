@@ -4,6 +4,7 @@ __author__ = 'LY'
 
 from django.shortcuts import render_to_response
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -1231,24 +1232,47 @@ def purview(request):
 
 
 @login_required
-def save_schedule(request):
-    error = []
-    if request.method == 'POST':
-        shifts = eval(request.POST["shifts"])
-        try:
-            k_schedule.objects.all().delete()
-            for shift in shifts:
-                for user in shift['users']:
-                    u = k_user.objects.get(id=user)
-                    route = k_route.objects.get(id=shift['route'])
-                    c = k_class.objects.get(id=1)
-                    s = k_schedule(route=route, user=u, date=shift['time'], classid=c)
-                    s.save()
-        except Exception, e:
-            print e
-    else:
-        error.append("no data")
-    return HttpResponse(json.dumps(error))
+def add_schedule(request):
+    current_user = k_user.objects.get(username=request.user.username)
+    _class = current_user.classid
+
+    route_id = int(request.POST.get('route_id'))
+    route = k_route.objects.get(id=route_id)
+
+    user_ids = request.POST.getlist('users')
+    users = [k_user.objects.get(id=int(user_id)) for user_id in user_ids]
+
+    _date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
+
+    schedules = k_schedule.objects.filter(route=route, date=_date)
+    for s in schedules:
+        s.delete()
+
+    for user in users:
+        k_schedule.objects.create(classid=_class, route=route, user=user, date=_date)
+
+    return HttpResponse(json.dumps({
+        'success': True,
+        'info': 'Add Schedule Success!'
+    }))
+
+
+@login_required
+def delete_schedule(request):
+    route_id = int(request.POST.get('route_id'))
+    route = k_route.objects.get(id=route_id)
+
+    _date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d').date()
+
+    schedules = k_schedule.objects.filter(route=route, date=_date)
+
+    for s in schedules:
+        s.delete()
+
+    return HttpResponse(json.dumps({
+        'success': True,
+        'info': 'Delete Schedule Success!'
+    }))
 
 
 def get_schedule(request):
@@ -1274,7 +1298,7 @@ def get_schedule(request):
 
 def schedule(request):
     users = k_user.objects.all()
-    user_data = [{'id':  user.id, 'name': user.name} for user in users]
+    user_data = [{'id':  user.id, 'name': user.username} for user in users]
     routes = k_route.objects.all()
     route_data = []
     for r in routes:
@@ -1286,7 +1310,7 @@ def schedule(request):
         }
         route_data.append(route)
 
-    available_shifts = k_schedule.objects.filter(date__range=[date.today() - timedelta(days=10), date.today()])
+    available_shifts = k_schedule.objects.filter(date__range=[date.today() - timedelta(days=30), date.today()])
     existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
     existed_routes = [_d['route'] for _d in available_shifts.values('route').distinct()]
 
@@ -1516,21 +1540,18 @@ def operate_route(request):
 def submit_route(request, _id=''):
     _user = k_user.objects.get(username=request.user.username)
     _editor = _user.id
-    _forms = request.GET.get('routeString')
-    _name = request.GET.get('name')
-    _period = request.GET.get('period')
-    _start_time = request.GET.get('startTime')
+    _forms = request.POST.get('routeString')
+    _name = request.POST.get('name')
+    _period = request.POST.get('period')
+    # _start_time = request.GET.get('startTime')
+    _hour = request.POST.get('hour')
+    _minute = request.POST.get('minute')
+    _start_time = _hour + ':' + _minute
     _edit_time = get_current_date()
     if _id:
         route = k_route.objects.get(id=_id)
     else:
-        route = k_route.objects.create(
-            classid=_user.classid,
-            starttime=datetime.strptime('08:00', '%H:%M').time(),
-            period=0,
-            # audition not discussed
-            auditorid=1
-        )
+        route = k_route(classid=_user.classid)
         route.creatorid = _editor
     route.name = _name
     route.formid = _forms
