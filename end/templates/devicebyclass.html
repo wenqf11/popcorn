@@ -1,0 +1,81 @@
+{% extends 'userframe.html' %}
+{% block js %}
+    <script src="../static/treeview/js/bootstrap-treeview.js"></script>
+{% endblock %}
+{% block css %}
+    <link href="../static/treeview/css/bootstrap-treeview.css" rel="stylesheet" media="screen">
+    <link href="../static/css/filetree.css" rel="stylesheet" media="screen">
+    <link href="../static/css/user.css" rel="stylesheet" media="screen">
+{% endblock %}
+
+{% block pageheader %}
+    选择部门查看设备
+{% endblock %}
+
+{% block maincontent %}
+<div class="col-xs-5">
+    <div id="treeview6"></div>
+</div>
+
+{% endblock %}
+
+
+{% block tailjs %}
+<script>
+    $(function(){
+        var purview_msg = "{{ purview_msg }}";
+        if (purview_msg) {
+            $.gritter.add({
+                title: '您没有权限进行此操作',
+                text: purview_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
+</script>
+<script>
+  		$(function() {
+
+        var reg1=new RegExp("&quot;","g");
+        var reg2=new RegExp("u&#39;","g");
+        var reg3=new RegExp("&#39;","g");
+        var defaultData = '[';
+
+        {% for d in data %}
+            var tmpdata = '{{ d }}';
+            tmpdata = tmpdata.replace(reg1,"\'");
+            tmpdata = tmpdata.replace(reg2,"\"");
+            tmpdata = tmpdata.replace(reg3,"\"");
+            defaultData += tmpdata + ',';
+        {% endfor %}
+        defaultData = defaultData.substr(0,defaultData.length-1);
+        defaultData += ']';
+
+        console.log(defaultData);
+
+        $('#treeview6').treeview({
+          color: "#428bca",
+          expandIcon: "glyphicon glyphicon-stop",
+          collapseIcon: "glyphicon glyphicon-unchecked",
+          nodeIcon: "glyphicon glyphicon-user",
+          showTags: true,
+          enableLinks: true,
+          data: defaultData
+        });
+
+  		});
+</script>
+<script>
+$(function(){
+    var server_msg="{{ server_msg }}";
+    if (server_msg) {
+        $.gritter.add({
+            title: '系统消息',
+            text: server_msg,
+            class_name: 'gritter-error gritter-center'
+        });
+    }
+})
+</script>
+
+{% endblock %}

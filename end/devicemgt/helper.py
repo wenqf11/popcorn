@@ -67,3 +67,18 @@ def get_type_node(devicetypes, parent):
             datas.append(cur_data)
 
     return datas
+
+
+def get_device_by_class(classes, parent):
+    datas = list()
+    for cls in classes:
+        if cls.parentid == parent:
+            cur_data = dict()
+            cur_data['text'] = cls.name.decode('utf-8')
+            cur_data['href'] = "/device"#?id=" + str(cls.id)
+            tmp = get_type_node(classes, cls.id)
+            if len(tmp) > 0:
+                cur_data['nodes'] = tmp
+            datas.append(cur_data)
+
+    return datas

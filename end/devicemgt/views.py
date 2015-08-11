@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
 from datetime import datetime, timedelta
-from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node
+from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class
 import json
 
 
@@ -482,7 +482,7 @@ def devicebyclass(request):
     datas = list()
     data = dict()
     data['text'] = parents.name
-    data['nodes'] = get_type_node(classes, parents.id)
+    data['nodes'] = get_device_by_class(classes, parents.id)
     if data['nodes']:
         datas.append(data)
         variables=RequestContext(request,{'username':user.username, 'data':datas})
@@ -763,11 +763,35 @@ def devicebatch_submit(request):
                     if obj_data['producer'] == "无":
                         _producerid = ''
                     else:
-                        _producerid = k_producer.objects.get(name=obj_data['producer'])
+                        _producer = k_producer.objects.filter(name=obj_data['producer'])
+                        if len(_producer) == 0:
+                            _producerid = k_producer.objects.create(
+                                name=obj_data['producer'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_producer) == 1:
+                            _producerid = _producer[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加生产厂家出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
                     if obj_data['supplier'] == "无":
                         _supplierid = ''
                     else:
-                        _supplierid = k_supplier.objects.get(name=obj_data['supplier'])
+                        _supplier = k_supplier.objects.filter(name=obj_data['supplier'])
+                        if len(_supplier) == 0:
+                            _supplierid = k_supplier.objects.create(
+                                name=obj_data['supplier'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_supplier) == 1:
+                            _supplierid = _supplier[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加供应商出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
                     _ownerid = k_user.objects.get(username=obj_data['owner'])
                     _devs = k_device.objects.filter(brief=_brief)
                     _devs = _devs.filter(name=_name)
