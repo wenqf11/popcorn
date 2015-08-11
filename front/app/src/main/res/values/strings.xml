@@ -52,4 +52,5 @@
     <string name="title_activity_user_info">用户信息</string>
     <string name="title_activity_task">任务</string>
     <string name="title_activity_task_list">任务列表</string>
+    <string name="accept_task">接受任务</string>
 </resources>

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -134,12 +135,11 @@ public class RepairListActivity extends ListActivity {
         JSONObject task = null;
         try {
             task = repairTaskList.getJSONObject(position);
+            bundle.putString("task", task.toString());
+            intent.putExtras(bundle);
+            startActivity(intent);
         } catch (Exception e) {
         }
-        bundle.putString("task", task.toString());
-        intent.putExtras(bundle);
-        startActivity(intent);
-
 
         super.onListItemClick(l, v, position, id);
     }
@@ -154,6 +154,7 @@ public class RepairListActivity extends ListActivity {
                 try {
                     JSONObject tempObject = repairTaskList.getJSONObject(i);
                     map.put("title", tempObject.getString("title"));
+                    map.put("confirmed", tempObject.getString("confirmed"));
                     list.add(map);
                 } catch (Exception e) {
                 }
