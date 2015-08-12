@@ -60,6 +60,20 @@ def get_type_node(devicetypes, parent):
         if type.parentid == parent:
             cur_data = dict()
             cur_data['text'] = type.name.decode('utf-8')
+            cur_data['href'] = "/device_type?id=" + str(type.id)
+            tmp = get_type_node(devicetypes, type.id)
+            if len(tmp) > 0:
+                cur_data['nodes'] = tmp
+            datas.append(cur_data)
+
+    return datas
+
+def get_dept_type_node(devicetypes, parent):
+    datas = list()
+    for type in devicetypes:
+        if type.parentid == parent:
+            cur_data = dict()
+            cur_data['text'] = type.name.decode('utf-8')
             cur_data['href'] = "/department?id=" + str(type.id)
             tmp = get_type_node(devicetypes, type.id)
             if len(tmp) > 0:

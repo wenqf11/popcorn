@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
 from datetime import datetime, timedelta
-from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class
+from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node
 import json
 
 
@@ -3741,7 +3741,7 @@ def department(request):
         user = User.objects.get(username=request.user.username)
         classes = k_class.objects.all()
         parents = 0
-        datas = get_type_node(classes, parents) #获取节点树
+        datas = get_dept_type_node(classes, parents) #获取节点树
         server_msg = request.GET.get("msg")
         if server_msg == None:
             server_msg = ""
