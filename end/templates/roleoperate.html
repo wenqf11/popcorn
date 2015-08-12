@@ -3,6 +3,7 @@
 {% endblock %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="../static/duallistbox/css/bootstrap-duallistbox.css">
+<link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
 {% endblock %}
 {% block pageheader %}
     {% if isNew %}
@@ -17,8 +18,8 @@
         <form class="form-horizontal" action="/submit_role/{{ data.id }}/" role="form" id="roleform">
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">所属部门<span class="required">*</span></label>
-                <div class="col-sm-9">
-                    <select name="classname">
+                <div class="col-sm-2">
+                    <select class="chosen-select" name="classname">
                         {% for class in classes %}
                             {% ifequal class data.classname %}
                                 <option value="{{ class }}" selected="selected">{{ class }}</option>
@@ -106,6 +107,7 @@
 
 {% block tailjs %}
 <script type="text/javascript" src="../static/duallistbox/js/jquery.bootstrap-duallistbox.js"></script>
+<script src="../static/assets/js/chosen.jquery.min.js"></script>
 <script>
     $(function(){
         var purview_msg = "{{ purview_msg }}";
@@ -130,6 +132,39 @@
         }
     })
 </script>
+    <script>
+        jQuery(function($) {
+            if(!ace.vars['touch']) {
+                $('.chosen-select').chosen({allow_single_deselect:true});
+                //resize the chosen on window resize
+
+                $(window)
+                .off('resize.chosen')
+                .on('resize.chosen', function() {
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                }).trigger('resize.chosen');
+                //resize chosen on sidebar collapse/expand
+                $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+                    if(event_name != 'sidebar_collapsed') return;
+                    $('.chosen-select').each(function() {
+                         var $this = $(this);
+                         $this.next().css({'width': $this.parent().width()});
+                    })
+                });
+
+
+                $('#chosen-multiple-style .btn').on('click', function(e){
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+                     else $('#form-field-select-4').removeClass('tag-input-style');
+                });
+            }
+        });
+    </script>
 <script type="text/javascript">
     $(document).ready(function() {
         dualListbox = $('#duallistbox').bootstrapDualListbox({
