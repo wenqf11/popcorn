@@ -314,7 +314,7 @@ def useradd(request):
                 editdatetime=get_current_date(),
                 auditorid=0,
                 auditdatetime=get_current_date(),
-                #status=0,
+                status=0,
             )
             # 给roles和user也增加一条记录
             olduser = User.objects.create_user(
