@@ -2278,8 +2278,8 @@ def view_tasked(request):
     # user = k_user.objects.get(username=request.user.username)
     # result = [user.classid.id]
     # get_class_set(result, user.classid.id)
-    # _maintaineds = k_task.objects.filter(state__gte=3)
-    _maintaineds = k_task.objects.filter(classid__in=result, state__gte=3)
+    # _maintaineds = k_task.objects.filter(classid__in=result, state__gte=3)
+    _maintaineds = k_task.objects.filter(state__gte=3)
 
     data = []
     for _maintained in _maintaineds:
