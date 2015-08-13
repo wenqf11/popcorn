@@ -15,10 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.InputStream;
@@ -37,9 +41,14 @@ public class AboutInfoActivity extends Activity {
     private final int GET_UNDATAINFO_ERROR = 2;
     private final int SDCARD_NOMOUNTED = 3;
     private final int DOWN_ERROR = 4;
+    private final int UPDATE_VERSION = 5;
     private Button getVersion;
     private UpdateInfo info;
-    private String localVersion;
+    private String localVersion="", remoteVersion="";
+
+
+    @ViewInject(R.id.update_hint)
+    private TextView updateHint;
 
     @OnClick(R.id.official_website_ll)
     private void onOfficialWebsiteClick(View v) {
@@ -68,6 +77,32 @@ public class AboutInfoActivity extends Activity {
         ViewUtils.inject(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkVersionUpdate();
+    }
+
+
+    private void checkVersionUpdate(){
+        try {
+            localVersion = getVersionName();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new Thread(){
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                super.run();
+                remoteVersion = UpdateInfoParser.getRemoteVersion();
+                Message message = new Message();
+                message.what = UPDATE_VERSION;
+                handler.sendMessage(message);
+            }
+        }.start();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,7 +124,7 @@ public class AboutInfoActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String getVersionName() throws Exception {
+    public String getVersionName() throws Exception {
         //getPackageName()是你当前类的包名，0代表是获取版本信息
         PackageManager packageManager = getPackageManager();
         PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),
@@ -149,6 +184,13 @@ public class AboutInfoActivity extends Activity {
                 case DOWN_ERROR:
                     //下载apk失败
                     Toast.makeText(getApplicationContext(), "下载新版本失败", Toast.LENGTH_SHORT).show();
+                    break;
+                case UPDATE_VERSION:
+                    if(remoteVersion.equals(localVersion)){
+                        updateHint.setVisibility(View.GONE);
+                    }else{
+                        updateHint.setVisibility(View.VISIBLE);
+                    }
                     break;
             }
         }

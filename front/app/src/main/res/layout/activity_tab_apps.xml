@@ -252,7 +252,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                fontawesometext:fa_icon="fa-bars"
+                fontawesometext:fa_icon="fa-clock-o"
                 android:textSize="48sp"
                 android:textColor="#669999"
                 android:layout_gravity="center|center_vertical"

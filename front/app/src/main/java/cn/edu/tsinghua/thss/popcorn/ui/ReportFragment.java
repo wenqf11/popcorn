@@ -1,7 +1,9 @@
 package cn.edu.tsinghua.thss.popcorn.ui;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -95,7 +97,21 @@ public class ReportFragment extends Fragment {
         String reportTitle = reportTitleText.getText().toString();
         String faultDescription = faultDescriptionText.getText().toString();
         String reportMemo = reportMemoText.getText().toString();
-        String imgURL = "";
+
+        if(reportTitle.equals("")){
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("报修标题不能为空！")
+                    .setPositiveButton("确定",null)
+                    .show();
+            return ;
+        }
+        if(faultDescription.equals("")){
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("故障描述不能为空！")
+                    .setPositiveButton("确定",null)
+                    .show();
+            return ;
+        }
 
         RequestParams params = new RequestParams();
         params.addBodyParameter("username", Config.DEBUG_USERNAME);
@@ -142,7 +158,7 @@ public class ReportFragment extends Fragment {
 
                                     HttpUtils http = new HttpUtils();
                                     http.send(HttpRequest.HttpMethod.POST,
-                                            Config.SUBMIT_REPOET_IMAGE_URL,
+                                            Config.SUBMIT_REPORT_IMAGE_URL,
                                             params,
                                             new RequestCallBack<String>() {
 

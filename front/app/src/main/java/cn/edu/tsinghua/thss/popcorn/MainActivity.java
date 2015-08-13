@@ -1,5 +1,8 @@
 package cn.edu.tsinghua.thss.popcorn;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -7,6 +10,8 @@ import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 
@@ -47,6 +52,8 @@ import cn.edu.tsinghua.thss.popcorn.ui.FragmentAdapter;
 import cn.edu.tsinghua.thss.popcorn.ui.MineFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.RecordFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
+import cn.edu.tsinghua.thss.popcorn.update.UpdateInfo;
+import cn.edu.tsinghua.thss.popcorn.update.UpdateInfoParser;
 
 /**
  * @author wenqingfu
@@ -55,12 +62,14 @@ import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
  */
 
 public class MainActivity extends FragmentActivity {
+    private static int UPDATE_MAINTENANCE = 1, UPDATE_VERSION = 2;
 	private ViewPager mPageVp;
-
+    private String localVersion = "", remoteVersion = "";
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
 	private FragmentAdapter mFragmentAdapter;
 
-	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv, mBodyRepairTv, mBodyMaintainTv,mbottomTabMeterTv, mbottomTabAppTv;
+	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv,
+            mBodyRepairTv, mBodyMaintainTv,mbottomTabMeterTv, mbottomTabAppTv, mbottomTabMineTv;
 
     private FontAwesomeText mTabRecordFat, mTabRepairFat, mTabAppsFat, mTabMineFat;
 
@@ -109,6 +118,40 @@ public class MainActivity extends FragmentActivity {
         timer.schedule(task, Config.MAIN_UPDATE_DELAY, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
 	}
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkVersionUpdate();
+    }
+
+    public String getVersionName() throws Exception {
+        //getPackageName()是你当前类的包名，0代表是获取版本信息
+        PackageManager packageManager = getPackageManager();
+        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),
+                0);
+        return packInfo.versionName;
+    }
+
+    private void checkVersionUpdate(){
+        try {
+            localVersion = getVersionName();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new Thread(){
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                super.run();
+                remoteVersion = UpdateInfoParser.getRemoteVersion();
+                Message message = new Message();
+                message.what = UPDATE_VERSION;
+                handler.sendMessage(message);
+            }
+        }.start();
+    }
+
     private void setLocalUsername(){
         SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         Config.DEBUG_USERNAME = sp.getString("USERNAME", "");
@@ -117,12 +160,13 @@ public class MainActivity extends FragmentActivity {
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            if (msg.what == 1) {
+            if (msg.what == UPDATE_MAINTENANCE) {
                 //接收消息后要做的处理
-                // 增加2个http请求分别用来统计未维修和未保养的数量
+                // 增加http请求分别用来统计未维修、未保养的数量
                 mRecordUnfinished = mRecordFg.unfinished;
                 getUnRepairNum();
                 getUnMaintainNum();
+
                 // 显示在界面上
                 if (mRecordUnfinished > 0 || mRepairUnfinished > 0 || mMaintainUnfinished > 0) {
                     mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished));
@@ -184,6 +228,12 @@ public class MainActivity extends FragmentActivity {
                     mBodyRepairTv.setVisibility(View.GONE);
                     mBodyMaintainTv.setVisibility(View.GONE);
                 }
+            }else if (msg.what == UPDATE_VERSION){
+                if(remoteVersion.equals(localVersion)){
+                    mbottomTabMineTv.setVisibility(View.GONE);
+                }else{
+                    mbottomTabMineTv.setVisibility(View.VISIBLE);
+                }
             }
             super.handleMessage(msg);
         };
@@ -195,7 +245,7 @@ public class MainActivity extends FragmentActivity {
         public void run() {
             // 需要做的事:发送消息
             Message message = new Message();
-            message.what = 1;
+            message.what = UPDATE_MAINTENANCE;
             handler.sendMessage(message);
         }
     };
@@ -217,6 +267,7 @@ public class MainActivity extends FragmentActivity {
         mTabMineLayout = this.findViewById(R.id.id_tab_mine_ll);
 
         mbottomTabMeterTv = (TextView)this.findViewById(R.id.main_bottom_tab_meter_id);
+        mbottomTabMineTv = (TextView)this.findViewById(R.id.main_bottom_tab_mine_id);
         mbottomTabAppTv = (TextView)this.findViewById(R.id.main_bottom_tab_app_id);
         mBodyMeterTv = (TextView)this.findViewById(R.id.main_body_app_meter_id);
         mBodyRepairTv = (TextView)this.findViewById(R.id.main_body_app_repair_id);
@@ -270,54 +321,54 @@ public class MainActivity extends FragmentActivity {
 
 		mPageVp.setOnPageChangeListener(new OnPageChangeListener() {
 
-			/**
-			 * state滑动中的状态 有三种状态（0，1，2） 1：正在滑动 2：滑动完毕 0：什么都没做。
-			 */
-			@Override
-			public void onPageScrollStateChanged(int state) {
+            /**
+             * state滑动中的状态 有三种状态（0，1，2） 1：正在滑动 2：滑动完毕 0：什么都没做。
+             */
+            @Override
+            public void onPageScrollStateChanged(int state) {
                 // code goes here
-			}
+            }
 
-			/**
-			 * position :当前页面，及你点击滑动的页面 offset:当前页面偏移的百分比
-			 * offsetPixels:当前页面偏移的像素位置
+            /**
+             * position :当前页面，及你点击滑动的页面 offset:当前页面偏移的百分比
+             * offsetPixels:当前页面偏移的像素位置
              * This method will be invoked when the current page is scrolled
-			 */
-			@Override
-			public void onPageScrolled(int position, float offset,
-					int offsetPixels) {
-				LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabLineIv
-						.getLayoutParams();
+             */
+            @Override
+            public void onPageScrolled(int position, float offset,
+                                       int offsetPixels) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabLineIv
+                        .getLayoutParams();
 
-				//Log.e("offset:", offset + "");
-				/**
-				 * 利用currentIndex(当前所在页面)和position(下一个页面)以及offset来
-				 * 设置mTabLineIv的左边距 滑动场景：
-				 * 记4个页面,
-				 * 从左到右分别为0,1,2, 3
-				 */
+                //Log.e("offset:", offset + "");
+                /**
+                 * 利用currentIndex(当前所在页面)和position(下一个页面)以及offset来
+                 * 设置mTabLineIv的左边距 滑动场景：
+                 * 记4个页面,
+                 * 从左到右分别为0,1,2, 3
+                 */
 
-				if (currentIndex == 0 && position == 0)// 0->1
-				{
-					lp.leftMargin = (int) (offset * (screenWidth * 1.0 / numOfTabs) + currentIndex
-							* (screenWidth / numOfTabs));
+                if (currentIndex == 0 && position == 0)// 0->1
+                {
+                    lp.leftMargin = (int) (offset * (screenWidth * 1.0 / numOfTabs) + currentIndex
+                            * (screenWidth / numOfTabs));
 
-				} else if (currentIndex == 1 && position == 0) // 1->0
-				{
-					lp.leftMargin = (int) (-(1 - offset)
-							* (screenWidth * 1.0 / numOfTabs) + currentIndex
-							* (screenWidth / numOfTabs));
+                } else if (currentIndex == 1 && position == 0) // 1->0
+                {
+                    lp.leftMargin = (int) (-(1 - offset)
+                            * (screenWidth * 1.0 / numOfTabs) + currentIndex
+                            * (screenWidth / numOfTabs));
 
-				} else if (currentIndex == 1 && position == 1) // 1->2
-				{
-					lp.leftMargin = (int) (offset * (screenWidth * 1.0 / numOfTabs) + currentIndex
-							* (screenWidth / numOfTabs));
-				} else if (currentIndex == 2 && position == 1) // 2->1
-				{
-					lp.leftMargin = (int) (-(1 - offset)
-							* (screenWidth * 1.0 / numOfTabs) + currentIndex
-							* (screenWidth / numOfTabs));
-				} else if (currentIndex == 2 && position == 2) // 2->3
+                } else if (currentIndex == 1 && position == 1) // 1->2
+                {
+                    lp.leftMargin = (int) (offset * (screenWidth * 1.0 / numOfTabs) + currentIndex
+                            * (screenWidth / numOfTabs));
+                } else if (currentIndex == 2 && position == 1) // 2->1
+                {
+                    lp.leftMargin = (int) (-(1 - offset)
+                            * (screenWidth * 1.0 / numOfTabs) + currentIndex
+                            * (screenWidth / numOfTabs));
+                } else if (currentIndex == 2 && position == 2) // 2->3
                 {
                     lp.leftMargin = (int) (offset * (screenWidth * 1.0 / numOfTabs) + currentIndex
                             * (screenWidth / numOfTabs));
@@ -326,20 +377,20 @@ public class MainActivity extends FragmentActivity {
                     lp.leftMargin = (int) (-(1 - offset)
                             * (screenWidth * 1.0 / numOfTabs) + currentIndex
                             * (screenWidth / numOfTabs));
-                }else if (currentIndex == 3 && position == 3) // 3->3
+                } else if (currentIndex == 3 && position == 3) // 3->3
                 {
                     lp.leftMargin = (int) (offset * (screenWidth * 1.0 / numOfTabs) + currentIndex
                             * (screenWidth / numOfTabs));
                 }
                 mTabLineIv.setLayoutParams(lp);
-			}
+            }
 
 
             // This method will be invoked when a new page becomes selected.
-			@Override
-			public void onPageSelected(int position) {
-				resetTabColor();
-				switch (position) {
+            @Override
+            public void onPageSelected(int position) {
+                resetTabColor();
+                switch (position) {
                     case 0:
                         mTabAppsTv.setTextColor(Color.parseColor("#33B5E5"));
                         mTabAppsFat.setTextColor(Color.parseColor("#33B5E5"));
@@ -357,10 +408,10 @@ public class MainActivity extends FragmentActivity {
                         mTabMineTv.setTextColor(Color.parseColor("#33B5E5"));
                         mTabMineFat.setTextColor(Color.parseColor("#33B5E5"));
                         break;
-				}
-				currentIndex = position;
-			}
-		});
+                }
+                currentIndex = position;
+            }
+        });
 
 	}
 

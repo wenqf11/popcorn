@@ -177,17 +177,36 @@
             android:orientation="vertical"
             android:padding="2dp" >
 
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:id="@+id/id_mine_fat"
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                fontawesometext:fa_icon="fa-user"
-                android:textSize="32sp"
-                android:textColor="#D3D3D3"
-                />
+                android:layout_height="wrap_content" >
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:id="@+id/id_mine_fat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    fontawesometext:fa_icon="fa-user"
+                    android:textSize="32sp"
+                    android:textColor="#D3D3D3"
+                    />
+                <FrameLayout
+                    android:id="@+id/main_bottom_tab_mine_fl_id"
+                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp">
+                    <TextView
+                        android:id="@+id/main_bottom_tab_mine_id"
+                        android:visibility = "gone"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/tips_circle"
+                        android:gravity="center" />
+                </FrameLayout>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/id_mine_tv"

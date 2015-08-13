@@ -3,12 +3,16 @@ package cn.edu.tsinghua.thss.popcorn.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +42,7 @@ import cn.edu.tsinghua.thss.popcorn.FeedBackActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
 import cn.edu.tsinghua.thss.popcorn.UserInfoActivity;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import cn.edu.tsinghua.thss.popcorn.update.UpdateInfoParser;
 
 
 /**
@@ -47,7 +52,9 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 public class MineFragment extends Fragment {
 
+    private static int UPDATE_VERSION = 2;
     private View mineView;
+    private String localVersion = "", remoteVersion = "";
 
     @ViewInject(R.id.id_tab_mine_avatar)
     private ImageView mineAvatar;
@@ -57,6 +64,9 @@ public class MineFragment extends Fragment {
 
     @ViewInject(R.id.mine_username)
     private TextView myUserName;
+
+    @ViewInject(R.id.tab_mine_about_hint)
+    private TextView aboutHint;
 
     @OnClick(R.id.mine_user_info)
     private void onShowUserInfo(View v){
@@ -121,9 +131,52 @@ public class MineFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
+        checkVersionUpdate();
         getUserInfo();
     }
 
+
+    public String getVersionName() throws Exception {
+        //getPackageName()是你当前类的包名，0代表是获取版本信息
+        PackageManager packageManager = getActivity().getPackageManager();
+        PackageInfo packInfo = packageManager.getPackageInfo(getActivity().getPackageName(),
+                0);
+        return packInfo.versionName;
+    }
+
+
+    private void checkVersionUpdate(){
+        try {
+            localVersion = getVersionName();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new Thread(){
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                super.run();
+                remoteVersion = UpdateInfoParser.getRemoteVersion();
+                Message message = new Message();
+                message.what = UPDATE_VERSION;
+                handler.sendMessage(message);
+            }
+        }.start();
+    }
+
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == UPDATE_VERSION){
+                if(remoteVersion.equals(localVersion)){
+                    aboutHint.setVisibility(View.GONE);
+                }else{
+                    aboutHint.setVisibility(View.VISIBLE);
+                }
+            }
+            super.handleMessage(msg);
+        };
+    };
     private void getUserInfo(){
         Bitmap photo = getDiskBitmap(Config.AVATAR_FILE_PATH);
         if(photo!=null){

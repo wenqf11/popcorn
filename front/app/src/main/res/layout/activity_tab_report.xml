@@ -32,7 +32,7 @@
                 android:singleLine="true"
                 android:background="@null"
                 android:textSize="14sp"
-                android:hint=""/>
+                android:hint="必填"/>
         </LinearLayout>
     </TableRow>
 
@@ -65,7 +65,7 @@
                 android:singleLine="true"
                 android:background="@null"
                 android:textSize="14sp"
-                android:hint="例如 'KJC1-1'"/>
+                android:hint="选填，例如 'KJC1-1'"/>
         </LinearLayout>
     </TableRow>
 
@@ -97,7 +97,7 @@
                 android:ems="8"
                 android:background="@null"
                 android:textSize="14sp"
-                android:hint=""/>
+                android:hint="必填"/>
         </LinearLayout>
 
 
@@ -132,7 +132,7 @@
                 android:singleLine="true"
                 android:background="@null"
                 android:textSize="14sp"
-                android:hint=""/>
+                android:hint="选填"/>
         </LinearLayout>
     </TableRow>
 
