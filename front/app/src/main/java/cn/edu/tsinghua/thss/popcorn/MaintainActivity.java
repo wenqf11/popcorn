@@ -29,6 +29,9 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 public class MaintainActivity extends Activity {
     private JSONObject maintainTask = null;
 
+    private int confirmedItem = -1;
+    private boolean isConfirmed = false;
+
     ProgressDialog progressDialog;
 
     @ViewInject(R.id.maintain_title)
@@ -98,6 +101,7 @@ public class MaintainActivity extends Activity {
                             if(status.equals("ok")) {
                                 Toast.makeText(getApplicationContext(), "成功接受保养任务", Toast.LENGTH_SHORT).show();
                                 maintainSubmitButton.setText("提交");
+                                isConfirmed = true;
                             }
                             else{
                                 Toast.makeText(getApplicationContext(), "接受任务失败，请重新提交", Toast.LENGTH_SHORT).show();
@@ -182,6 +186,7 @@ public class MaintainActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras();
         try {
             maintainTask = new JSONObject(bundle.getString("task"));
+            confirmedItem = bundle.getInt("position");
         }catch (Exception e) {
         }
         progressDialog = new ProgressDialog(MaintainActivity.this, R.style.buffer_dialog);
@@ -228,6 +233,16 @@ public class MaintainActivity extends Activity {
     protected  void onDestroy(){
         progressDialog.dismiss();
         super.onDestroy();
+    }
+
+    @Override
+    public void finish() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("confirmedItem", confirmedItem);
+        bundle.putBoolean("isConfirmed", isConfirmed);
+        MaintainActivity.this.setResult(RESULT_OK, MaintainActivity.this.getIntent().putExtras(bundle));
+
+        super.finish();
     }
 
     @Override

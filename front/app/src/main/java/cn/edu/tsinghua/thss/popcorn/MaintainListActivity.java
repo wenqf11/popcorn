@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.thss.popcorn;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -36,9 +37,11 @@ import org.json.JSONObject;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 public class MaintainListActivity extends ListActivity {
+    static private int REQUEST_CODE = 2;
     private List<Map<String, Object>> mData;
     JSONArray maintainTaskList = null;
     ProgressDialog progressDialog;
+    MaintainTaskListAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,7 @@ public class MaintainListActivity extends ListActivity {
                             if (status.equals("ok")) {
                                 maintainTaskList = jsonObject.getJSONArray("data");
                                 mData = getData();
-                                DeviceListAdapter adapter = new DeviceListAdapter(MaintainListActivity.this);
+                                adapter = new MaintainTaskListAdapter(MaintainListActivity.this);
                                 setListAdapter(adapter);
                             } else {
                                 Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
@@ -107,13 +110,35 @@ public class MaintainListActivity extends ListActivity {
         JSONObject task = null;
         try {
             task = maintainTaskList.getJSONObject(position);
+            bundle.putString("task", task.toString());
+            bundle.putInt("position", position);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_CODE);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        bundle.putString("task", task.toString());
-        intent.putExtras(bundle);
-        startActivity(intent);
 
         super.onListItemClick(l, v, position, id);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // super.onActivityResult(requestCode, resultCode, data);
+        //比对之前的请求编码，以及核对活动返回的编码是否是Activity.RESULT_OK
+        if (Activity.RESULT_OK == resultCode && requestCode == REQUEST_CODE) {
+            int position = data.getIntExtra("confirmedItem", -1);
+            boolean isConfirmed = data.getBooleanExtra("isConfirmed", false);
+            if (isConfirmed) {
+                try {
+                    JSONObject maintainTask = maintainTaskList.getJSONObject(position);
+                    maintainTask.put("confirmed", "true");
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 
@@ -139,10 +164,10 @@ public class MaintainListActivity extends ListActivity {
         public FontAwesomeText faText;
     }
 
-    public class DeviceListAdapter extends BaseAdapter {
+    public class MaintainTaskListAdapter extends BaseAdapter {
         private LayoutInflater mInflater = null;
 
-        public DeviceListAdapter(Context context) {
+        public MaintainTaskListAdapter(Context context) {
             super();
             mInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -169,20 +194,35 @@ public class MaintainListActivity extends ListActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder = null;
+            TextView maintainAcceptHint = null;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = mInflater.inflate(R.layout.listview_record, null);
+                convertView = mInflater.inflate(R.layout.listview_maintain, null);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.faText = (FontAwesomeText) convertView.findViewById(R.id.front_icon);
+                maintainAcceptHint = (TextView)convertView.findViewById(R.id.maintain_accept_hint);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.title.setText((String)mData.get(position).get("title"));
-            if(position == 1) {
-                holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
+            try {
+                JSONObject maintainTask = maintainTaskList.getJSONObject(position);
+                String repairResult = maintainTask.getString("note");
+                String confirmed = maintainTask.getString("confirmed");
+                if(repairResult.length() > 0) {
+                    holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
+                }else if(confirmed.equals("false")){
+                    maintainAcceptHint.setVisibility(View.VISIBLE);
+                }else{
+                    maintainAcceptHint.setVisibility(View.GONE);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             return convertView;
         }
     }

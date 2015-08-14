@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.thss.popcorn;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -45,6 +46,8 @@ public class RepairListActivity extends ListActivity {
     private List<Map<String, Object>> mData;
     JSONArray repairTaskList = null;
     ProgressDialog progressDialog;
+    static private int REQUEST_CODE = 2;
+    RepairTaskListAdapter adapter;
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -101,19 +104,18 @@ public class RepairListActivity extends ListActivity {
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        try{
+                        try {
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
-                            if(status.equals("ok")) {
+                            if (status.equals("ok")) {
                                 repairTaskList = jsonObject.getJSONArray("data");
                                 mData = getData();
-                                DeviceListAdapter adapter = new DeviceListAdapter (RepairListActivity.this);
+                                adapter = new RepairTaskListAdapter(RepairListActivity.this);
                                 setListAdapter(adapter);
-                            }
-                            else{
+                            } else {
                                 Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
                             }
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         //progressDialog.hide();
@@ -136,12 +138,34 @@ public class RepairListActivity extends ListActivity {
         try {
             task = repairTaskList.getJSONObject(position);
             bundle.putString("task", task.toString());
+            bundle.putInt("position", position);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE);
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         super.onListItemClick(l, v, position, id);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // super.onActivityResult(requestCode, resultCode, data);
+        //比对之前的请求编码，以及核对活动返回的编码是否是Activity.RESULT_OK
+        if (Activity.RESULT_OK == resultCode && requestCode == REQUEST_CODE) {
+            int position = data.getIntExtra("confirmedItem", -1);
+            boolean isConfirmed = data.getBooleanExtra("isConfirmed", false);
+            if (isConfirmed) {
+                try {
+                    JSONObject repairTask = repairTaskList.getJSONObject(position);
+                    repairTask.put("confirmed", "true");
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 
@@ -154,7 +178,6 @@ public class RepairListActivity extends ListActivity {
                 try {
                     JSONObject tempObject = repairTaskList.getJSONObject(i);
                     map.put("title", tempObject.getString("title"));
-                    map.put("confirmed", tempObject.getString("confirmed"));
                     list.add(map);
                 } catch (Exception e) {
                 }
@@ -168,10 +191,10 @@ public class RepairListActivity extends ListActivity {
         public FontAwesomeText faText;
     }
 
-    public class DeviceListAdapter extends BaseAdapter {
+    public class RepairTaskListAdapter extends BaseAdapter {
         private LayoutInflater mInflater = null;
 
-        public DeviceListAdapter(Context context) {
+        public RepairTaskListAdapter(Context context) {
             super();
             mInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -198,20 +221,36 @@ public class RepairListActivity extends ListActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder = null;
+            TextView repairAcceptHint = null;
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = mInflater.inflate(R.layout.listview_repair, null);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.faText = (FontAwesomeText) convertView.findViewById(R.id.front_icon);
+                repairAcceptHint = (TextView)convertView.findViewById(R.id.repair_accept_hint);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.title.setText((String)mData.get(position).get("title"));
-            if(position == 1) {
-                holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
+
+            try {
+                JSONObject maintainTask = repairTaskList.getJSONObject(position);
+                String repairResult = maintainTask.getString("note");
+                String confirmed = maintainTask.getString("confirmed");
+                if(repairResult.length() > 0) {
+                    holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
+                }else if(confirmed.equals("false")){
+                    repairAcceptHint.setVisibility(View.VISIBLE);
+                }else{
+                    repairAcceptHint.setVisibility(View.GONE);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             return convertView;
         }
     }

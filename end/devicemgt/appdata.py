@@ -416,13 +416,11 @@ def app_maintain_list_1(request, para, user):
         state__range=(2, 3)
     )
 
-    return HttpResponse(json.dumps({
-        'status': 'ok',
-        'data': [{
+    data = [{
             'id': task.id,
             'title': task.title,
-            'device_name': task.deviceid.name if task.deviceid else '',
-            'device_brief': task.deviceid.brief if task.deviceid else '',
+            'device_name': task.deviceid.name if task.deviceid else "",
+            'device_brief': task.deviceid.brief if task.deviceid else "",
             'creator': k_user.objects.get(id=task.creatorid).name,
             'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
             'assignor': k_user.objects.get(id=task.assignorid).name,
@@ -431,6 +429,10 @@ def app_maintain_list_1(request, para, user):
             'confirmed': (task.state == "3"),
             'note': task.editcontent
         } for task in tasks]
+    sorted_data = sorted(data, key = lambda x:(x['note'], x['confirmed'])) 
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': sorted_data
     }))
 
 
@@ -442,10 +444,7 @@ def app_maintain_list_2(request, para, user):
         editorid=user.id,
         state__range=(2, 3)
     )
-
-    return HttpResponse(json.dumps({
-        'status': 'ok',
-        'data': [{
+    data = [{
             'id': task.id,
             'title': task.title,
             'device_name': task.deviceid.name if task.deviceid  else "",
@@ -459,6 +458,10 @@ def app_maintain_list_2(request, para, user):
             'confirmed': (task.state == "3"),
             'note': task.editcontent
         } for task in tasks]
+    sorted_data = sorted(data, key = lambda x:(x['note'], x['confirmed'])) 
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': sorted_data
     }))
 
 
@@ -735,7 +738,7 @@ def app_device_info(request, para, user):
 
 
 def app_version(request):
-    return render_to_response('version.xml',mimetype="application/xml")
+    return render_to_response('version.xml',content_type="application/xml")
 
 
 @get_required

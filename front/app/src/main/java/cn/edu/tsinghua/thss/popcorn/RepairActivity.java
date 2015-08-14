@@ -31,7 +31,8 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 public class RepairActivity extends Activity {
     private JSONObject repairTask = null;
-
+    private int confirmedItem = -1;
+    private boolean isConfirmed = false;
     ProgressDialog progressDialog;
 
     @ViewInject(R.id.repair_report_title)
@@ -104,6 +105,7 @@ public class RepairActivity extends Activity {
                             if(status.equals("ok")) {
                                 Toast.makeText(getApplicationContext(), "成功接受维修任务", Toast.LENGTH_SHORT).show();
                                 repairSubmitButton.setText("提交");
+                                isConfirmed = true;
                             }
                             else{
                                 Toast.makeText(getApplicationContext(), "接受任务失败，请重新提交", Toast.LENGTH_SHORT).show();
@@ -188,6 +190,7 @@ public class RepairActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras();
         try {
             repairTask = new JSONObject(bundle.getString("task"));
+            confirmedItem = bundle.getInt("position");
         }catch (Exception e) {
         }
         progressDialog = new ProgressDialog(RepairActivity.this, R.style.buffer_dialog);
@@ -242,6 +245,15 @@ public class RepairActivity extends Activity {
         super.onDestroy();
     }
 
+    @Override
+    public void finish() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("confirmedItem", confirmedItem);
+        bundle.putBoolean("isConfirmed", isConfirmed);
+        RepairActivity.this.setResult(RESULT_OK, RepairActivity.this.getIntent().putExtras(bundle));
+
+        super.finish();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
