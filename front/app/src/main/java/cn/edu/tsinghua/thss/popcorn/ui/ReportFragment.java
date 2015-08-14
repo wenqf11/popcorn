@@ -105,6 +105,7 @@ public class ReportFragment extends Fragment {
                     .show();
             return ;
         }
+
         if(faultDescription.equals("")){
             new AlertDialog.Builder(getActivity())
                     .setTitle("故障描述不能为空！")

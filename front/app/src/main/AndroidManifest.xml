@@ -130,6 +130,10 @@
             android:name=".TaskListActivity"
             android:label="@string/title_activity_task_list" >
         </activity>
+        <activity
+            android:name=".QRcode.CheckinActivity"
+            android:label="@string/title_activity_checkin" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,9 @@
 package cn.edu.tsinghua.thss.popcorn.formgenerator;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,7 +37,7 @@ public class FormEditText extends FormWidget
 	public void setValue( String value ) {
 		_input.setText( value );
 	}
-	
+
 	@Override 
 	public void setHint( String value ){
 		_input.setHint( value );

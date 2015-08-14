@@ -293,6 +293,8 @@ def app_form(request, para, user):
             _tmp_content["id"] = str(_item_id)
             _tmp_content["default"] = ""
             _tmp_content["priority"] = 0
+            _tmp_content["max"] = c['max']
+            _tmp_content["min"] = c['min']
             if c['choice']:
                 _tmp_content["type"] = "integer"
                 _tmp_content["options"] = dict()
@@ -408,9 +410,10 @@ def app_check(request, para, user):
 @get_required
 @token_required
 def app_maintain_list_1(request, para, user):
+    
     tasks = k_maintenance.objects.filter(
         mtype=1,
-        assignorid=user.id,
+        editorid=user.id,
         state__range=(2, 3)
     )
 
@@ -436,7 +439,7 @@ def app_maintain_list_1(request, para, user):
 def app_maintain_list_2(request, para, user):
     tasks = k_maintenance.objects.filter(
         mtype=2,
-        assignorid=user.id,
+        editorid=user.id,
         state__range=(2, 3)
     )
 

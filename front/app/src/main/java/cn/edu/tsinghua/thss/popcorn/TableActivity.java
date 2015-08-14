@@ -1,6 +1,7 @@
 package cn.edu.tsinghua.thss.popcorn;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,8 +27,9 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 
-import cn.edu.tsinghua.thss.popcorn.QRcode.QRcodeActivity;
+import cn.edu.tsinghua.thss.popcorn.QRcode.CheckinActivity;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 import cn.edu.tsinghua.thss.popcorn.formgenerator.FormActivity;
 
@@ -122,7 +124,6 @@ public class TableActivity extends FormActivity{
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
 
-        //LinearLayout container = generateForm( FormActivity.parseFileToString( this, "schemas.json" ) );
         if (form_content_json.length() < 10) {
             form_content_json = "{\"未添加抄表表单\":{\"id\":\"1\",\"type\":\"integer\",\"hint\":\"未添加抄表表单\"}}";
         }
@@ -137,7 +138,7 @@ public class TableActivity extends FormActivity{
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(TableActivity.this, QRcodeActivity.class);
+                Intent intent = new Intent(TableActivity.this, CheckinActivity.class);
                 Bundle bundle = new Bundle();
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_CODE);
@@ -156,16 +157,44 @@ public class TableActivity extends FormActivity{
             @Override
             public void onClick(View view) {
                 JSONObject json = save();
-                String qrcode = (String)resultTextView.getText();
+                String qrcode = (String) resultTextView.getText();
                 if (qrcode.length() > 0) {
-                    //json.put("qrcode", qrcode);
+                    try {
+                        json.put("qrcode", qrcode);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+                boolean isEmpty = false;
+                try {
+                    Iterator<?> it = json.keys();
+                    String key = "";
+                    String value = "";
+                    while (it.hasNext()) {
+                        key = it.next().toString();
+                        value = json.getString(key);
+                        if (value.length() < 1) {
+                            isEmpty = true;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (isEmpty) {
+                    new AlertDialog.Builder(TableActivity.this)
+                            .setTitle("所有项都是必填的，不能为空！")
+                            .setPositiveButton("确定", null)
+                            .show();
+                    return;
+                }
+
                 submitButtonClick(json);
             }
         });
         container.addView(submitBtn);
 
-        container.setPadding(20,20,20,20);
+        container.setPadding(20, 20, 20, 20);
         setContentView(container);
     }
 
@@ -178,7 +207,7 @@ public class TableActivity extends FormActivity{
         // super.onActivityResult(requestCode, resultCode, data);
         //比对之前的请求编码，以及核对活动返回的编码是否是Activity.RESULT_OK
         if (Activity.RESULT_OK == resultCode && requestCode == REQUEST_CODE) {
-            result = data.getStringExtra("result");
+            result = data.getStringExtra("device_brief");
             resultTextView.setText(result);
         }
     }

@@ -1752,6 +1752,7 @@ def submit_deviceplan(request):
         _maintenance = k_maintenance.objects.create(mtype=1,deviceid_id=_deviceid,state=2)
         _deviceplan = k_deviceplan.objects.create(deviceid_id=_deviceid,maintenanceid=_maintenance)
 
+    _maintenance.creatorid = _user.id
     _maintenance.assignorid = _user.id
     _maintenance.assigndatetime = get_current_date()
     _maintenance.title = _title

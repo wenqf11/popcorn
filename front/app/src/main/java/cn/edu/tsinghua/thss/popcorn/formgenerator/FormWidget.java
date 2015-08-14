@@ -93,6 +93,14 @@ abstract class FormWidget
 	public void setModifiers( JSONObject modifiers ) {
 		// -- override
 	}
+
+
+	/**
+	 * sets an object that contains keys for special properties on an object
+	 */
+	public void setThresholdChecker(final String maxStr, final String minStr) {
+		// -- override
+	}
 	
 	// -----------------------------------------------
 	//

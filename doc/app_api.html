@@ -807,32 +807,35 @@ img {
         {
             id: 12,
             name: &quot;kt094732&quot;,
-            content: [
-                {
-                    name: &quot;设备状态&quot;,
-                    choice: true,
-                    choices: [&quot;正常&quot;, &quot;异常&quot;],
-                    memo: &quot;重要&quot;
-                },
-                {
-                    name: &quot;压力&quot;,
-                    choice: false,
-                    unit: &quot;MPa&quot;,
-                    min: &quot;12&quot;,
-                    max: &quot;18&quot;,
-                    memo: &quot;重要&quot;
+            content: {
+                    压强 Pa:
+                    {
+                        id: "0",
+                        default": "", 
+                        min: "", 
+                        max: "", 
+                        hint: "", 
+                        priority: 0, 
+                        type: "integer"
+                        
+                    }, 
+                    "温度 ℃": 
+                    {   
+                        id: "1",
+                        default: "", 
+                        min: "12", 
+                        max: "18", 
+                        hint: "正常值在12和18之间", 
+                        priority: 0, 
+                        type: "integer"
+                    }
                 }
-            ]
         },
         {
             id: 32,
             name: &quot;ms383831&quot;,
-            content: [
+            content: 
                 {
-                    name: &quot;设备状态&quot;,
-                    choice: true,
-                    choices: [&quot;正常&quot;, &quot;异常&quot;],
-                    memo: &quot;重要&quot;
                 }
             ]
         }

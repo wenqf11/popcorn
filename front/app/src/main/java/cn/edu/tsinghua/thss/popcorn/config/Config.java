@@ -9,7 +9,7 @@ public class Config {
 
     public static String ACCESS_TOKEN = "hello_world";
 
-    public static String LOCAL_IP = "http://166.111.82.29";
+    public static String LOCAL_IP = "http://d.willwings.com";
     public static String REPORT_URL =  Config.LOCAL_IP + "/app/maintain/add/";
     public static String REPAIR_TASK_LIST_URL =  Config.LOCAL_IP + "/app/maintain/list/2/";
     public static String MAINTAIN_TASK_LIST_URL = Config.LOCAL_IP + "/app/maintain/list/1/";

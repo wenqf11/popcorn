@@ -49,7 +49,6 @@ public class RecordListActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //String[] str_title = {"设备一","设备二","设备三","设备四","设备五"};
         Bundle tmp_bundle = this.getIntent().getExtras();
         String route_id = tmp_bundle.getString("route_id");
         mRouteId = route_id;
