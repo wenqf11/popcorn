@@ -3962,13 +3962,20 @@ def meter_device(request):
     #     return HttpResponseRedirect('/meter/')
 
     meters = k_meter.objects.filter(brief=brief)
-    data = [{
-        'brief': brief,
-        'route': m.routeid.name,
-        'user': m.userid.username,
-        'time': m.metertime,
-        'content': m.json
-    } for m in meters]
+    data = []
+    for m in meters:
+        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.username, 'time': m.metertime}
+        json_dict = json.loads(m.json)
+        if 'qrcode' in json_dict:
+            if json_dict['qrcode'] == m.brief:
+                d['check'] = u'已签到'
+            else:
+                d['check'] = u'签到错误'
+            del json_dict['qrcode']
+        else:
+            d['check'] = u'未签到'
+        d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
+        data.append(d)
 
     return render_to_response('meterview.html', {'meters': data})
 
@@ -3982,13 +3989,20 @@ def meter_date(request):
     _date = datetime.strptime(date_string, '%Y-%m-%d').date()
 
     meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)))
-    data = [{
-        'brief': m.brief,
-        'route': m.routeid.name,
-        'user': m.userid.username,
-        'time': m.metertime,
-        'content': m.json
-    } for m in meters]
+    data = []
+    for m in meters:
+        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.username, 'time': m.metertime}
+        json_dict = json.loads(m.json)
+        if 'qrcode' in json_dict:
+            if json_dict['qrcode'] == m.brief:
+                d['check'] = u'已签到'
+            else:
+                d['check'] = u'签到错误'
+            del json_dict['qrcode']
+        else:
+            d['check'] = u'未签到'
+        d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
+        data.append(d)
 
     return render_to_response('meterview.html', {'meters': data})
 

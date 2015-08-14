@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.11 (64 bit)
-MySQL - 5.6.10 : Database - devicemgtdb
+SQLyog Trial v12.12 (64 bit)
+MySQL - 5.6.23-log : Database - devicemgtdb
 *********************************************************************
 */
 
@@ -437,9 +437,11 @@ CREATE TABLE `devicemgt_k_meter` (
   KEY `devicemgt_k_meter_936913d1` (`userid_id`),
   CONSTRAINT `routeid_id_refs_id_030bd83d` FOREIGN KEY (`routeid_id`) REFERENCES `devicemgt_k_route` (`id`),
   CONSTRAINT `userid_id_refs_id_76082153` FOREIGN KEY (`userid_id`) REFERENCES `devicemgt_k_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_meter` */
+
+insert  into `devicemgt_k_meter`(`id`,`brief`,`routeid_id`,`userid_id`,`metertime`,`json`) values (1,'KCJ1-1',2,3,'2015-08-14 13:06:06','{\"压力 Pa\":\"11\",\"温度 ℃\":\"11\",\"qrcode\":\"KCJ1-1\"}'),(2,'KCJ1-1',1,1,'2015-08-14 13:28:27','{\"压力 Pa\":\"22\",\"温度 ℃\":\"22\"}');
 
 /*Table structure for table `devicemgt_k_producer` */
 
@@ -860,6 +862,22 @@ CREATE TABLE `devicemgt_k_taskitem` (
 /*Data for the table `devicemgt_k_taskitem` */
 
 insert  into `devicemgt_k_taskitem`(`id`,`state`,`title`,`taskid_id`,`createcontent`,`editcontent`,`auditcontent`,`factor`,`memo`,`priority`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`helpersid`) values (5,'2','sub3',6,'xilian','','',0,'354','3',1,'2015-05-12',6,'2015-05-12',0,'2015-05-12','1',''),(6,'3','sub4',6,'zaofan','chiwanle','',2,'0','2',1,'2015-05-12',3,'2015-05-12',1,'2015-05-12','1','2'),(7,'4','sub5',6,'shangban','shangwanle','',2,'9','2',1,'2015-05-12',6,'2015-05-12',1,'2015-05-13','1',''),(12,'1','sub6',6,'xiaban','','',1,'haha','3',1,'2015-08-11',3,'2015-05-13',0,'2015-05-13','0','4;5'),(13,'1','re',9,'ewr','','',1,'rew','2',1,'2015-05-13',9,'2015-05-13',0,'2015-05-13','0','');
+
+/*Table structure for table `devicemgt_k_test` */
+
+DROP TABLE IF EXISTS `devicemgt_k_test`;
+
+CREATE TABLE `devicemgt_k_test` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `test` double DEFAULT NULL,
+  `test2` int(11) DEFAULT NULL,
+  `test3` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+/*Data for the table `devicemgt_k_test` */
+
+insert  into `devicemgt_k_test`(`id`,`test`,`test2`,`test3`) values (1,NULL,NULL,7),(2,5.43,NULL,7);
 
 /*Table structure for table `devicemgt_k_tool` */
 
