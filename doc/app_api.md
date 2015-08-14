@@ -486,6 +486,7 @@
 					device_breif: "kt028462",
 					creator: "张三",
 					create_time: "2015-04-21 12:02:02",
+					assignor: "张三",
 					description: "积灰过多，需清灰",
 					image: "http://domain.com/static/05.jpg",
 					memo: "较重要，需优先处理",
@@ -499,6 +500,7 @@
 					device_breif: "gt135212",
 					creator: "李四",
 					create_time: "2015-05-04 21:06:01",
+					assignor: "王五",
 					description: "需进行某项操作",
 					image: "http://domain.com/static/23.jpg",
 					memo: "一般重要",
@@ -658,7 +660,7 @@
 					creator: "张三",
 					create_time: "2015-04-21 12:02:02",
 					description: "进风管损坏，需更换",
-					image: "http://domain.com/static/12.jpg",
+					image: "http://domain.com/static/12.jpg", // 若未上传图片则为空字符串
 					memo: "需携带配件",
 					confirmed: false,
 					note: ""
@@ -666,8 +668,8 @@
 				{
 					id: 20,
 					title: "空调04损坏",
-					device_name: "空调04",
-					device_brief: "kt999283",
+					device_name: "无相关设备",
+					device_brief: "无相关设备",
 					creator: "李四",
 					create_time: "2015-05-04 21:06:01",
 					description: "空调损坏，原因不明",
@@ -753,6 +755,125 @@
 		{
 			status: "error",
 			data: "maintain task not exist"
+		}
+
+## 任务模块
+
+### 获取子任务列表
+
+- 请求地址：http://domain.com/app/task/list/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：获取到的子任务列表，以数组形式返回
+- json示例：
+
+		{
+			status: "ok",
+			data: [
+				{
+					id: 18,
+					title: "子任务05",
+					description: "子任务描述",
+					super_title: "任务01",
+					super_description: "任务描述",
+					creator: "张三",
+					create_time: "2015-04-21 12:02:02",
+					memo: "需携带配件",
+					confirmed: false,
+					note: ""
+				},
+				{
+					id: 20,
+					title: "子任务01",
+					description: "子任务描述",
+					super_title: "任务03",
+					super_description: "任务描述",
+					creator: "李四",
+					create_time: "2015-05-04 21:06:01",
+					memo: "",
+					confirmed: true,
+					note: "初步进行完毕"
+				}
+			]
+		}
+	或
+
+		{
+			status: "ok",
+			data: []
+		}
+
+### 确认接受子任务
+
+- 请求地址：http://domain.com/app/task/confirm/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **task_id**，`int`，要接受的子任务id
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：确认子任务是否成功，失败则返回失败原因
+- json示例：
+
+		{
+			status: "ok",
+			data: "task confirmed"
+		}
+	或
+
+		{
+			status: "error",
+			data: "taskitem not exist"
+		}
+
+### 更新子任务进度
+
+- 请求地址：http://domain.com/app/task/update/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **task_id**，`int`，要更新的子任务id
+	- **note**，`string`，更新的子任务记录
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：更新子任务进度是否成功，失败则返回失败原因
+- json示例：
+
+		{
+			status: "ok",
+			data: "taskitem updated"
+		}
+	或
+
+		{
+			status: "error",
+			data: "taskitem not exist"
+		}
+
+### 完成子任务
+
+- 请求地址：http://domain.com/app/task/submit/
+- 请求方式：POST
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **task_id**，`int`，要提交的子任务id
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：提交子任务是否成功，失败则返回失败原因
+- json示例：
+
+		{
+			status: "ok",
+			data: "taskitem submitted"
+		}
+	或
+
+		{
+			status: "error",
+			data: "taskitem not exist"
 		}
 
 ## 意见反馈模块

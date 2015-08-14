@@ -42,6 +42,11 @@ urlpatterns = patterns(
     url(r'^app/maintain/update/$', app_maintain_update),
     url(r'^app/maintain/submit/$', app_maintain_submit),
 
+    url(r'^app/task/list/$', app_task_list),
+    url(r'^app/task/confirm/$', app_task_confirm),
+    url(r'^app/task/update$', app_task_update),
+    url(r'^app/task/submit/$', app_task_submit),
+
     url(r'^app/feedback/$', app_feedback),
     url(r'^app/egg/$', app_egg),
     url(r'^app/egg/info/$', app_egg_info),

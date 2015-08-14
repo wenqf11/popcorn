@@ -410,9 +410,8 @@ def app_check(request, para, user):
 @get_required
 @token_required
 def app_maintain_list_1(request, para, user):
-    
     tasks = k_maintenance.objects.filter(
-        mtype=1,
+        mtype='1',
         editorid=user.id,
         state__range=(2, 3)
     )
@@ -422,10 +421,11 @@ def app_maintain_list_1(request, para, user):
         'data': [{
             'id': task.id,
             'title': task.title,
-            'device_name': task.deviceid.name,
-            'device_brief': task.deviceid.brief,
+            'device_name': task.deviceid.name if task.deviceid else '无相关设备',
+            'device_brief': task.deviceid.brief if task.deviceid else '无相关设备',
             'creator': k_user.objects.get(id=task.creatorid).name,
             'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
+            'assignor': k_user.objects.get(id=task.assignorid).name,
             'description': task.createcontent,
             'memo': task.memo,
             'confirmed': (task.state == "3"),
@@ -438,7 +438,7 @@ def app_maintain_list_1(request, para, user):
 @token_required
 def app_maintain_list_2(request, para, user):
     tasks = k_maintenance.objects.filter(
-        mtype=2,
+        mtype='2',
         editorid=user.id,
         state__range=(2, 3)
     )
@@ -448,12 +448,13 @@ def app_maintain_list_2(request, para, user):
         'data': [{
             'id': task.id,
             'title': task.title,
-            'device_name': task.deviceid.name,
-            'device_brief': task.deviceid.brief,
+            'device_name': task.deviceid.name if task.deviceid else '无相关设备',
+            'device_brief': task.deviceid.brief if task.deviceid else '无相关设备',
             'creator': k_user.objects.get(id=task.creatorid).name,
             'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
+            'assignor': k_user.objects.get(id=task.assignorid).name,
             'description': task.createcontent,
-            'image': task.image.url,
+            'image': task.image.url if task.image else '',
             'memo': task.memo,
             'confirmed': (task.state == "3"),
             'note': task.editcontent
@@ -481,12 +482,12 @@ def app_maintain_add(request, para, user):
                 'status': 'error',
                 'data': 'device not exist'
             }))
-    task.state = 1
+    task.state = '1'
     task.title = para['title']
     task.createcontent = para['description']
     # task.image = para['image']
     task.memo = para['memo']
-    task.mtype = 2
+    task.mtype = '2'
     task.creatorid = user.id
     task.createdatetime = datetime.now()
 
@@ -510,13 +511,13 @@ def app_maintain_confirm(request, para, user):
             'data': 'maintain task not exist'
         }))
 
-    if task.state == "3":
+    if task.state == '3':
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'already confirmed'
         }))
     else:
-        task.state = "3"
+        task.state = '3'
         task.save()
         return HttpResponse(json.dumps({
             'status': 'ok',
@@ -538,7 +539,7 @@ def app_maintain_update(request, para, user):
             'data': 'maintain task not exist'
         }))
 
-    if task.state == 2:
+    if task.state == '2':
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'maintain task not confirmed yet'
@@ -565,11 +566,111 @@ def app_maintain_submit(request, para, user):
             'data': 'maintain task not exist'
         }))
 
-    task.state = 4
+    task.state = '4'
     task.save()
     return HttpResponse(json.dumps({
         'status': 'ok',
         'data': 'maintain task submitted'
+    }))
+
+
+@get_required
+@token_required
+def app_task_list(request, para, user):
+    tasks = k_taskitem.objects.filter(
+        editorid=user.id,
+        state__range=(1, 2)
+    )
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': [{
+            'id': task.id,
+            'title': task.title,
+            'description': task.createcontent,
+            'super_title': task.taskid.title,
+            'super_description': task.taskid.createcontent,
+            'creator': k_user.objects.get(id=task.creatorid).name,
+            'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
+            'memo': task.memo,
+            'confirmed': (task.state == '2'),
+            'note': task.editcontent
+        } for task in tasks]
+    }))
+
+
+@post_required
+@token_required
+def app_task_confirm(request, para, user):
+    para['task_id'] = int(request.POST.get('task_id'))
+
+    try:
+        task = k_taskitem.objects.get(id=para['task_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'taskitem not exists'
+        }))
+
+    if task.state == '2':
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'already confirmed'
+        }))
+    else:
+        task.state = '3'
+        task.save()
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': 'task confirmed'
+        }))
+
+
+@post_required
+@token_required
+def app_task_update(request, para, user):
+    para['task_id'] = int(request.POST.get('task_id'))
+    para['note'] = request.POST.get('note')
+
+    try:
+        task = k_taskitem.objects.get(id=para['task_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'taskitem not exists'
+        }))
+
+    if task.state == '2':
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'task not confirmed yet'
+        }))
+    else:
+        task.editcontent = para['note']
+        task.save()
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': 'task updated'
+        }))
+
+
+@post_required
+@token_required
+def app_task_submit(request, para, user):
+    para['task_id'] = int(request.POST.get('task_id'))
+
+    try:
+        task = k_taskitem.objects.get(id=para['task_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'taskitem not exists'
+        }))
+
+    task.state = '3'
+    task.save()
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': 'task submitted'
     }))
 
 

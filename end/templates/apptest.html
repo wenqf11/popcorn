@@ -20,11 +20,9 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.post('/app/userinfo/submit/', {
+            $.get('/app/task/list/', {
                 username: 'syb1001',
                 access_token: 'hello_world',
-                mobile: '13521306535',
-                birthday: '1992-10-01',
                 timestamp: 1383712332,
             }, function(data) {
                 console.log(data);

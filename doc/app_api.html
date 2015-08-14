@@ -807,35 +807,32 @@ img {
         {
             id: 12,
             name: &quot;kt094732&quot;,
-            content: {
-                    压强 Pa:
-                    {
-                        id: "0",
-                        default": "", 
-                        min: "", 
-                        max: "", 
-                        hint: "", 
-                        priority: 0, 
-                        type: "integer"
-                        
-                    }, 
-                    "温度 ℃": 
-                    {   
-                        id: "1",
-                        default: "", 
-                        min: "12", 
-                        max: "18", 
-                        hint: "正常值在12和18之间", 
-                        priority: 0, 
-                        type: "integer"
-                    }
+            content: [
+                {
+                    name: &quot;设备状态&quot;,
+                    choice: true,
+                    choices: [&quot;正常&quot;, &quot;异常&quot;],
+                    memo: &quot;重要&quot;
+                },
+                {
+                    name: &quot;压力&quot;,
+                    choice: false,
+                    unit: &quot;MPa&quot;,
+                    min: &quot;12&quot;,
+                    max: &quot;18&quot;,
+                    memo: &quot;重要&quot;
                 }
+            ]
         },
         {
             id: 32,
             name: &quot;ms383831&quot;,
-            content: 
+            content: [
                 {
+                    name: &quot;设备状态&quot;,
+                    choice: true,
+                    choices: [&quot;正常&quot;, &quot;异常&quot;],
+                    memo: &quot;重要&quot;
                 }
             ]
         }
@@ -904,6 +901,7 @@ img {
             device_breif: &quot;kt028462&quot;,
             creator: &quot;张三&quot;,
             create_time: &quot;2015-04-21 12:02:02&quot;,
+            assignor: &quot;张三&quot;,
             description: &quot;积灰过多，需清灰&quot;,
             image: &quot;http://domain.com/static/05.jpg&quot;,
             memo: &quot;较重要，需优先处理&quot;,
@@ -917,6 +915,7 @@ img {
             device_breif: &quot;gt135212&quot;,
             creator: &quot;李四&quot;,
             create_time: &quot;2015-05-04 21:06:01&quot;,
+            assignor: &quot;王五&quot;,
             description: &quot;需进行某项操作&quot;,
             image: &quot;http://domain.com/static/23.jpg&quot;,
             memo: &quot;一般重要&quot;,
@@ -1123,7 +1122,7 @@ img {
             creator: &quot;张三&quot;,
             create_time: &quot;2015-04-21 12:02:02&quot;,
             description: &quot;进风管损坏，需更换&quot;,
-            image: &quot;http://domain.com/static/12.jpg&quot;,
+            image: &quot;http://domain.com/static/12.jpg&quot;, // 若未上传图片则为空字符串
             memo: &quot;需携带配件&quot;,
             confirmed: false,
             note: &quot;&quot;
@@ -1131,8 +1130,8 @@ img {
         {
             id: 20,
             title: &quot;空调04损坏&quot;,
-            device_name: &quot;空调04&quot;,
-            device_brief: &quot;kt999283&quot;,
+            device_name: &quot;无相关设备&quot;,
+            device_brief: &quot;无相关设备&quot;,
             creator: &quot;李四&quot;,
             create_time: &quot;2015-05-04 21:06:01&quot;,
             description: &quot;空调损坏，原因不明&quot;,
@@ -1243,6 +1242,156 @@ img {
 <pre><code>{
     status: &quot;error&quot;,
     data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h2>任务模块</h2>
+<h3>获取子任务列表</h3>
+<ul>
+<li>请求地址：http://domain.com/app/task/list/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：获取到的子任务列表，以数组形式返回</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: [
+        {
+            id: 18,
+            title: &quot;子任务05&quot;,
+            description: &quot;子任务描述&quot;,
+            super_title: &quot;任务01&quot;,
+            super_description: &quot;任务描述&quot;,
+            creator: &quot;张三&quot;,
+            create_time: &quot;2015-04-21 12:02:02&quot;,
+            memo: &quot;需携带配件&quot;,
+            confirmed: false,
+            note: &quot;&quot;
+        },
+        {
+            id: 20,
+            title: &quot;子任务01&quot;,
+            description: &quot;子任务描述&quot;,
+            super_title: &quot;任务03&quot;,
+            super_description: &quot;任务描述&quot;,
+            creator: &quot;李四&quot;,
+            create_time: &quot;2015-05-04 21:06:01&quot;,
+            memo: &quot;&quot;,
+            confirmed: true,
+            note: &quot;初步进行完毕&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: []
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>确认接受子任务</h3>
+<ul>
+<li>请求地址：http://domain.com/app/task/confirm/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>task_id</strong>，<code>int</code>，要接受的子任务id</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：确认子任务是否成功，失败则返回失败原因</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;task confirmed&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;taskitem not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>更新子任务进度</h3>
+<ul>
+<li>请求地址：http://domain.com/app/task/update/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>task_id</strong>，<code>int</code>，要更新的子任务id</li>
+<li><strong>note</strong>，<code>string</code>，更新的子任务记录</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：更新子任务进度是否成功，失败则返回失败原因</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;taskitem updated&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;taskitem not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>完成子任务</h3>
+<ul>
+<li>请求地址：http://domain.com/app/task/submit/</li>
+<li>请求方式：POST</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>task_id</strong>，<code>int</code>，要提交的子任务id</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：提交子任务是否成功，失败则返回失败原因</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: &quot;taskitem submitted&quot;
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;taskitem not exist&quot;
 }
 </code></pre>
 
