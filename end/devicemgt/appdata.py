@@ -421,8 +421,8 @@ def app_maintain_list_1(request, para, user):
         'data': [{
             'id': task.id,
             'title': task.title,
-            'device_name': task.deviceid.name if task.deviceid else '无相关设备',
-            'device_brief': task.deviceid.brief if task.deviceid else '无相关设备',
+            'device_name': task.deviceid.name if task.deviceid else '',
+            'device_brief': task.deviceid.brief if task.deviceid else '',
             'creator': k_user.objects.get(id=task.creatorid).name,
             'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
             'assignor': k_user.objects.get(id=task.assignorid).name,
