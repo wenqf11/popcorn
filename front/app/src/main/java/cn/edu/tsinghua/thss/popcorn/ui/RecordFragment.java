@@ -69,8 +69,6 @@ public class RecordFragment extends ListFragment {
   //  Handler handler = new Handler() {
     public void updateRecord() {
             //接收消息后要做的处理
-            String ROUTE_GET_URL = Config.LOCAL_IP + "/app/route";
-
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String time = df.format(new Date());
             //Timestamp timestamp = Timestamp.valueOf(time);
@@ -85,7 +83,7 @@ public class RecordFragment extends ListFragment {
             HttpUtils http = new HttpUtils();
             http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
             http.send(HttpRequest.HttpMethod.GET,
-                    ROUTE_GET_URL,
+                    Config.ROUTE_GET_URL,
                     params,
                     new RequestCallBack<String>() {
 
@@ -148,7 +146,7 @@ public class RecordFragment extends ListFragment {
 
                         @Override
                         public void onFailure(HttpException error, String msg) {
-                            Toast.makeText(getActivity(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "网络故障", Toast.LENGTH_SHORT).show();
                             //progressDialog.hide();
                         }
                     });

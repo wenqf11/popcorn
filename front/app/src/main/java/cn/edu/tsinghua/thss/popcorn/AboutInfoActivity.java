@@ -186,7 +186,7 @@ public class AboutInfoActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "下载新版本失败", Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATE_VERSION:
-                    if(remoteVersion.equals(localVersion)){
+                    if(remoteVersion.equals("") || remoteVersion.equals(localVersion)){
                         updateHint.setVisibility(View.GONE);
                     }else{
                         updateHint.setVisibility(View.VISIBLE);
