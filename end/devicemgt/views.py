@@ -1526,8 +1526,6 @@ def view_route(request):
         route['createTime'] = r.createdatetime
         route['editor'] = k_user.objects.get(id=r.editorid).username
         route['editTime'] = r.editdatetime
-        route['auditor'] = k_user.objects.get(id=r.auditorid).username
-        route['auditTime'] = r.auditdatetime
         #route['status'] = r.status
         data.append(route)
     return render_to_response('routeview.html', {'routes': data})
