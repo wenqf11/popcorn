@@ -137,7 +137,6 @@ public class MineFragment extends Fragment {
 
 
     public String getVersionName() throws Exception {
-        //getPackageName()是你当前类的包名，0代表是获取版本信息
         PackageManager packageManager = getActivity().getPackageManager();
         PackageInfo packInfo = packageManager.getPackageInfo(getActivity().getPackageName(),
                 0);

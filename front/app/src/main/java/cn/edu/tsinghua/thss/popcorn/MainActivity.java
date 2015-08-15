@@ -106,6 +106,7 @@ public class MainActivity extends FragmentActivity {
     private int mRecordUnfinished = 0;
     private int mRepairUnfinished = 0;
     private int mMaintainUnfinished = 0;
+    private int mTaskUnfinished = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class MainActivity extends FragmentActivity {
 		init();
 		initTabLineWidth();
         setLocalUsername();
-        timer.schedule(task, Config.MAIN_UPDATE_DELAY, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+        //timer.schedule(task, Config.MAIN_UPDATE_DELAY, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
 	}
 
     @Override
@@ -294,6 +295,7 @@ public class MainActivity extends FragmentActivity {
         }
 		mPageVp.setAdapter(mFragmentAdapter);
 		mPageVp.setCurrentItem(0);
+        mPageVp.setOffscreenPageLimit(2);
 
         mTabAppsLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -392,6 +394,7 @@ public class MainActivity extends FragmentActivity {
                 resetTabColor();
                 switch (position) {
                     case 0:
+                        updateHint();
                         mTabAppsTv.setTextColor(Color.parseColor("#33B5E5"));
                         mTabAppsFat.setTextColor(Color.parseColor("#33B5E5"));
                         break;
@@ -415,6 +418,12 @@ public class MainActivity extends FragmentActivity {
 
 	}
 
+
+    private void updateHint(){
+        Message message = new Message();
+        message.what = UPDATE_MAINTENANCE;
+        handler.sendMessage(message);
+    }
 	/**
 	 * 设置滑动条的宽度为屏幕的1/4(根据Tab的个数而定)
 	 */

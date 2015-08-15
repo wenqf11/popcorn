@@ -620,7 +620,7 @@ def app_task_confirm(request, para, user):
             'data': 'already confirmed'
         }))
     else:
-        task.state = '3'
+        task.state = '2'
         task.save()
         return HttpResponse(json.dumps({
             'status': 'ok',
@@ -642,7 +642,7 @@ def app_task_update(request, para, user):
             'data': 'taskitem not exists'
         }))
 
-    if task.state == '2':
+    if task.state == '1':
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'task not confirmed yet'

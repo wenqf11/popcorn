@@ -1,7 +1,9 @@
 package cn.edu.tsinghua.thss.popcorn;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,9 +32,13 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
 public class RepairActivity extends Activity {
-    private JSONObject repairTask = null;
-    private int confirmedItem = -1;
+    private int position = -1;
     private boolean isConfirmed = false;
+    private boolean isUpdated = false;
+    private boolean isSubmitted = false;
+    private String updatedNote = "";
+
+    private JSONObject repairTask = null;
     ProgressDialog progressDialog;
 
     @ViewInject(R.id.repair_report_title)
@@ -56,13 +62,84 @@ public class RepairActivity extends Activity {
     @ViewInject(R.id.repair_result)
     private TextView repairResultEditText;
 
+    @ViewInject(R.id.repair_update)
+    private Button repairUpdateButton;
+
+    @OnClick(R.id.repair_update)
+    private void updateRepairButtonClick(View v){
+        String id = "";
+        try{
+            id = repairTask.getString("id");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String note = repairResultEditText.getText().toString();
+        updatedNote = note;
+
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("username", Config.DEBUG_USERNAME);
+        params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
+        params.addBodyParameter("maintain_id", id);
+        params.addBodyParameter("note", note);
+        progressDialog.show();
+
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                Config.REPAIR_TASK_UPDATE_URL,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+
+                        try{
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if(status.equals("ok")) {
+                                Toast.makeText(getApplicationContext(), "暂存成功", Toast.LENGTH_SHORT).show();
+                                isUpdated = true;
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "暂存失败，请重新提交", Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                        progressDialog.hide();
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        progressDialog.hide();
+                    }
+                });
+    }
+
     @ViewInject(R.id.repair_submit)
     private Button repairSubmitButton;
 
     @OnClick(R.id.repair_submit)
     private void submitRepairButtonClick(View v) {
         if (repairSubmitButton.getText().equals("提交")) {
-            submitData();
+            new AlertDialog.Builder(RepairActivity.this)
+                    .setTitle("提示")
+                    .setMessage("提交后内容将无法修改，是否确定提交？")
+                    .setNegativeButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialoginterface, int i) {
+                                    submitData();
+                                }
+                            }).setPositiveButton("取消", null).show();
         }else{
             acceptTask();
         }
@@ -105,6 +182,7 @@ public class RepairActivity extends Activity {
                             if(status.equals("ok")) {
                                 Toast.makeText(getApplicationContext(), "成功接受维修任务", Toast.LENGTH_SHORT).show();
                                 repairSubmitButton.setText("提交");
+                                repairUpdateButton.setVisibility(View.VISIBLE);
                                 isConfirmed = true;
                             }
                             else{
@@ -163,6 +241,8 @@ public class RepairActivity extends Activity {
                             String status = jsonObject.getString("status");
                             if(status.equals("ok")) {
                                 Toast.makeText(getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
+                                isSubmitted = true;
+                                RepairActivity.this.finish();
                             }
                             else{
                                 Toast.makeText(getApplicationContext(), "提交失败，请重新提交", Toast.LENGTH_SHORT).show();
@@ -190,7 +270,7 @@ public class RepairActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras();
         try {
             repairTask = new JSONObject(bundle.getString("task"));
-            confirmedItem = bundle.getInt("position");
+            position = bundle.getInt("position");
         }catch (Exception e) {
         }
         progressDialog = new ProgressDialog(RepairActivity.this, R.style.buffer_dialog);
@@ -234,6 +314,7 @@ public class RepairActivity extends Activity {
         repairResultEditText.setText(repairResult);
         if(confirmed.equals("true")) {
             repairSubmitButton.setText("提交");
+            repairUpdateButton.setVisibility(View.VISIBLE);
         }else{
             repairSubmitButton.setText("接受任务");
         }
@@ -248,8 +329,11 @@ public class RepairActivity extends Activity {
     @Override
     public void finish() {
         Bundle bundle = new Bundle();
-        bundle.putInt("confirmedItem", confirmedItem);
+        bundle.putInt("position", position);
         bundle.putBoolean("isConfirmed", isConfirmed);
+        bundle.putBoolean("isUpdated", isUpdated);
+        bundle.putBoolean("isSubmitted", isSubmitted);
+        bundle.putString("updatedNote", updatedNote);
         RepairActivity.this.setResult(RESULT_OK, RepairActivity.this.getIntent().putExtras(bundle));
 
         super.finish();

@@ -43,7 +43,6 @@ import org.json.JSONObject;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 public class RepairListActivity extends ListActivity {
-    private List<Map<String, Object>> mData;
     JSONArray repairTaskList = null;
     ProgressDialog progressDialog;
     static private int REQUEST_CODE = 2;
@@ -109,7 +108,6 @@ public class RepairListActivity extends ListActivity {
                             String status = jsonObject.getString("status");
                             if (status.equals("ok")) {
                                 repairTaskList = jsonObject.getJSONArray("data");
-                                mData = getData();
                                 adapter = new RepairTaskListAdapter(RepairListActivity.this);
                                 setListAdapter(adapter);
                             } else {
@@ -148,14 +146,57 @@ public class RepairListActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
     }
 
+    public static JSONArray remove(final int idx, final JSONArray from) {
+        final List<JSONObject> objs = asList(from);
+        objs.remove(idx);
+
+        final JSONArray ja = new JSONArray();
+        for (final JSONObject obj : objs) {
+            ja.put(obj);
+        }
+
+        return ja;
+    }
+
+    public static List<JSONObject> asList(final JSONArray ja) {
+        final int len = ja.length();
+        final ArrayList<JSONObject> result = new ArrayList<JSONObject>(len);
+        for (int i = 0; i < len; i++) {
+            final JSONObject obj = ja.optJSONObject(i);
+            if (obj != null) {
+                result.add(obj);
+            }
+        }
+        return result;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // super.onActivityResult(requestCode, resultCode, data);
         //比对之前的请求编码，以及核对活动返回的编码是否是Activity.RESULT_OK
         if (Activity.RESULT_OK == resultCode && requestCode == REQUEST_CODE) {
-            int position = data.getIntExtra("confirmedItem", -1);
+            int position = data.getIntExtra("position", -1);
             boolean isConfirmed = data.getBooleanExtra("isConfirmed", false);
-            if (isConfirmed) {
+            boolean isUpdated = data.getBooleanExtra("isUpdated", false);
+            boolean isSubmitted = data.getBooleanExtra("isSubmitted", false);
+            if(isSubmitted){
+                try {
+                    repairTaskList = remove(position, repairTaskList);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else if(isUpdated){
+                String updatedNote = data.getStringExtra("updatedNote");
+                try {
+                    JSONObject repairTask = repairTaskList.getJSONObject(position);
+                    repairTask.put("note", updatedNote);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else if (isConfirmed) {
                 try {
                     JSONObject repairTask = repairTaskList.getJSONObject(position);
                     repairTask.put("confirmed", "true");
@@ -168,23 +209,6 @@ public class RepairListActivity extends ListActivity {
         }
     }
 
-
-    private List<Map<String, Object>> getData() {
-        List<Map<String ,Object>> list = new ArrayList<Map<String,Object>>();
-
-        if (repairTaskList != null) {
-            for (int i = 0; i < repairTaskList.length(); i++) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                try {
-                    JSONObject tempObject = repairTaskList.getJSONObject(i);
-                    map.put("title", tempObject.getString("title"));
-                    list.add(map);
-                } catch (Exception e) {
-                }
-            }
-        }
-        return list;
-    }
 
     class ViewHolder {
         public TextView title;
@@ -202,7 +226,7 @@ public class RepairListActivity extends ListActivity {
 
         @Override
         public int getCount() {
-            return mData.size();
+            return repairTaskList.length();
         }
 
         @Override
@@ -233,12 +257,12 @@ public class RepairListActivity extends ListActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.title.setText((String)mData.get(position).get("title"));
-
             try {
-                JSONObject maintainTask = repairTaskList.getJSONObject(position);
-                String repairResult = maintainTask.getString("note");
-                String confirmed = maintainTask.getString("confirmed");
+                JSONObject repairTask = repairTaskList.getJSONObject(position);
+                holder.title.setText(repairTask.getString("title"));
+
+                String repairResult = repairTask.getString("note");
+                String confirmed = repairTask.getString("confirmed");
                 if(repairResult.length() > 0) {
                     holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
                 }else if(confirmed.equals("false")){
@@ -266,7 +290,7 @@ public class RepairListActivity extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.record, menu);
+        getMenuInflater().inflate(R.menu.repair_list, menu);
         return true;
     }
 

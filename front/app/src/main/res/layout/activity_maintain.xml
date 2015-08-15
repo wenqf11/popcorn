@@ -186,11 +186,20 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/maintain_update"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="@string/update"/>
         <Button
             android:id="@+id/maintain_submit"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1.0"
             android:text="@string/submit"/>
     </LinearLayout>
 

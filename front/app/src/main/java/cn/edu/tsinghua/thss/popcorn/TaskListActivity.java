@@ -6,9 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +16,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
 import com.lidroid.xutils.HttpUtils;
@@ -32,56 +34,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 
-
 public class TaskListActivity extends ListActivity {
-    private List<Map<String, Object>> mData;
-    JSONArray repairTaskList = null;
+    static private int REQUEST_CODE = 2;
+    JSONArray taskList = null;
     ProgressDialog progressDialog;
-
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            getRepairTaskList();
-            super.handleMessage(msg);
-        };
-    };
-    Timer timer = new Timer();
-    TimerTask task = new TimerTask() {
-
-        @Override
-        public void run() {
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
-        }
-    };
-
+    TaskListAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         progressDialog = new ProgressDialog(TaskListActivity.this, R.style.buffer_dialog);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage(" ˝æ›º”‘ÿ÷–...");
+        progressDialog.setMessage("Êï∞ÊçÆÂä†ËΩΩ‰∏≠...");
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
-        progressDialog.show();
-        //getRepairTaskList();
-        timer.schedule(task, Config.REPAIR_UPDATE_DELAY, Config.REPAIR_UPDATE_INTERVAL); // 1s∫Û÷¥––task,æ≠π˝2s‘Ÿ¥Œ÷¥––
-        progressDialog.hide();
+        gettaskList();
     }
 
-    private void getRepairTaskList(){
-
+    private void gettaskList(){
+        progressDialog.show();
         RequestParams params = new RequestParams();
         params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
@@ -89,7 +63,7 @@ public class TaskListActivity extends ListActivity {
         HttpUtils http = new HttpUtils();
         http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.GET,
-                Config.REPAIR_TASK_LIST_URL,
+                Config.TASK_LIST_URL,
                 params,
                 new RequestCallBack<String>() {
                     @Override
@@ -102,28 +76,26 @@ public class TaskListActivity extends ListActivity {
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        try{
+                        try {
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
-                            if(status.equals("ok")) {
-                                repairTaskList = jsonObject.getJSONArray("data");
-                                mData = getData();
-                                DeviceListAdapter adapter = new DeviceListAdapter (TaskListActivity.this);
+                            if (status.equals("ok")) {
+                                taskList = jsonObject.getJSONArray("data");
+                                adapter = new TaskListAdapter(TaskListActivity.this);
                                 setListAdapter(adapter);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ÊúçÂä°Âô®ÂÜÖÈÉ®Âá∫Èîô", Toast.LENGTH_SHORT).show();
                             }
-                            else{
-                                Toast.makeText(getApplicationContext(), "∑˛ŒÒ∆˜ƒ⁄≤ø≥ˆ¥Ì", Toast.LENGTH_SHORT).show();
-                            }
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        //progressDialog.hide();
+                        progressDialog.hide();
                     }
 
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        //progressDialog.hide();
+                        progressDialog.hide();
                         Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -131,48 +103,97 @@ public class TaskListActivity extends ListActivity {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(this, RepairActivity.class);
+        Intent intent = new Intent(this, TaskActivity.class);
         Bundle bundle = new Bundle();
         JSONObject task = null;
         try {
-            task = repairTaskList.getJSONObject(position);
+            task = taskList.getJSONObject(position);
             bundle.putString("task", task.toString());
+            bundle.putInt("position", position);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE);
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         super.onListItemClick(l, v, position, id);
     }
 
+    public static JSONArray remove(final int idx, final JSONArray from) {
+        final List<JSONObject> objs = asList(from);
+        objs.remove(idx);
 
-    private List<Map<String, Object>> getData() {
-        List<Map<String ,Object>> list = new ArrayList<Map<String,Object>>();
+        final JSONArray ja = new JSONArray();
+        for (final JSONObject obj : objs) {
+            ja.put(obj);
+        }
 
-        if (repairTaskList != null) {
-            for (int i = 0; i < repairTaskList.length(); i++) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                try {
-                    JSONObject tempObject = repairTaskList.getJSONObject(i);
-                    map.put("title", tempObject.getString("title"));
-                    map.put("confirmed", tempObject.getString("confirmed"));
-                    list.add(map);
-                } catch (Exception e) {
-                }
+        return ja;
+    }
+
+    public static List<JSONObject> asList(final JSONArray ja) {
+        final int len = ja.length();
+        final ArrayList<JSONObject> result = new ArrayList<JSONObject>(len);
+        for (int i = 0; i < len; i++) {
+            final JSONObject obj = ja.optJSONObject(i);
+            if (obj != null) {
+                result.add(obj);
             }
         }
-        return list;
+        return result;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //ÊØîÂØπ‰πãÂâçÁöÑËØ∑Ê±ÇÁºñÁ†ÅÔºå‰ª•ÂèäÊ†∏ÂØπÊ¥ªÂä®ËøîÂõûÁöÑÁºñÁ†ÅÊòØÂê¶ÊòØActivity.RESULT_OK
+        if (Activity.RESULT_OK == resultCode && requestCode == REQUEST_CODE) {
+            int position = data.getIntExtra("position", -1);
+            boolean isConfirmed = data.getBooleanExtra("isConfirmed", false);
+            boolean isUpdated = data.getBooleanExtra("isUpdated", false);
+            boolean isSubmitted = data.getBooleanExtra("isSubmitted", false);
+            if(isSubmitted){
+                try {
+                    taskList = remove(position, taskList);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else if(isUpdated){
+                String updatedNote = data.getStringExtra("updatedNote");
+                try {
+                    JSONObject task = taskList.getJSONObject(position);
+                    task.put("note", updatedNote);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else if (isConfirmed) {
+                try {
+                    JSONObject task = taskList.getJSONObject(position);
+                    task.put("confirmed", "true");
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+
 
     class ViewHolder {
         public TextView title;
         public FontAwesomeText faText;
     }
 
-    public class DeviceListAdapter extends BaseAdapter {
+    public class TaskListAdapter extends BaseAdapter {
         private LayoutInflater mInflater = null;
 
-        public DeviceListAdapter(Context context) {
+        public TaskListAdapter(Context context) {
             super();
             mInflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -180,7 +201,7 @@ public class TaskListActivity extends ListActivity {
 
         @Override
         public int getCount() {
-            return mData.size();
+            return taskList.length();
         }
 
         @Override
@@ -199,30 +220,44 @@ public class TaskListActivity extends ListActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder = null;
+            TextView taskAcceptHint = null;
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = mInflater.inflate(R.layout.listview_task, null);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.faText = (FontAwesomeText) convertView.findViewById(R.id.front_icon);
+                taskAcceptHint = (TextView)convertView.findViewById(R.id.task_accept_hint);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.title.setText((String)mData.get(position).get("title"));
-            if(position == 1) {
-                holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
+            try {
+                JSONObject task = taskList.getJSONObject(position);
+                holder.title.setText(task.getString("title"));
+
+                String taskResult = task.getString("note");
+                String confirmed = task.getString("confirmed");
+                if(taskResult.length() > 0) {
+                    holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
+                }else if(confirmed.equals("false")){
+                    taskAcceptHint.setVisibility(View.VISIBLE);
+                }else{
+                    taskAcceptHint.setVisibility(View.GONE);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             return convertView;
         }
     }
-
 
     @Override
     protected  void onDestroy(){
         progressDialog.dismiss();
         super.onDestroy();
-        timer.cancel();
     }
 
     @Override
@@ -238,12 +273,10 @@ public class TaskListActivity extends ListActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.close_btn) {
             TaskListActivity.this.finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

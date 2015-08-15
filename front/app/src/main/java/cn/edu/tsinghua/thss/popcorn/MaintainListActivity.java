@@ -38,7 +38,6 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 public class MaintainListActivity extends ListActivity {
     static private int REQUEST_CODE = 2;
-    private List<Map<String, Object>> mData;
     JSONArray maintainTaskList = null;
     ProgressDialog progressDialog;
     MaintainTaskListAdapter adapter;
@@ -82,7 +81,6 @@ public class MaintainListActivity extends ListActivity {
                             String status = jsonObject.getString("status");
                             if (status.equals("ok")) {
                                 maintainTaskList = jsonObject.getJSONArray("data");
-                                mData = getData();
                                 adapter = new MaintainTaskListAdapter(MaintainListActivity.this);
                                 setListAdapter(adapter);
                             } else {
@@ -121,14 +119,57 @@ public class MaintainListActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
     }
 
+    public static JSONArray remove(final int idx, final JSONArray from) {
+        final List<JSONObject> objs = asList(from);
+        objs.remove(idx);
+
+        final JSONArray ja = new JSONArray();
+        for (final JSONObject obj : objs) {
+            ja.put(obj);
+        }
+
+        return ja;
+    }
+
+    public static List<JSONObject> asList(final JSONArray ja) {
+        final int len = ja.length();
+        final ArrayList<JSONObject> result = new ArrayList<JSONObject>(len);
+        for (int i = 0; i < len; i++) {
+            final JSONObject obj = ja.optJSONObject(i);
+            if (obj != null) {
+                result.add(obj);
+            }
+        }
+        return result;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // super.onActivityResult(requestCode, resultCode, data);
         //比对之前的请求编码，以及核对活动返回的编码是否是Activity.RESULT_OK
         if (Activity.RESULT_OK == resultCode && requestCode == REQUEST_CODE) {
-            int position = data.getIntExtra("confirmedItem", -1);
+            int position = data.getIntExtra("position", -1);
             boolean isConfirmed = data.getBooleanExtra("isConfirmed", false);
-            if (isConfirmed) {
+            boolean isUpdated = data.getBooleanExtra("isUpdated", false);
+            boolean isSubmitted = data.getBooleanExtra("isSubmitted", false);
+            if(isSubmitted){
+                try {
+                    maintainTaskList = remove(position, maintainTaskList);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else if(isUpdated){
+                String updatedNote = data.getStringExtra("updatedNote");
+                try {
+                    JSONObject maintainTask = maintainTaskList.getJSONObject(position);
+                    maintainTask.put("note", updatedNote);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else if (isConfirmed) {
                 try {
                     JSONObject maintainTask = maintainTaskList.getJSONObject(position);
                     maintainTask.put("confirmed", "true");
@@ -138,26 +179,11 @@ public class MaintainListActivity extends ListActivity {
                     e.printStackTrace();
                 }
             }
+
         }
     }
 
 
-    private List<Map<String, Object>> getData() {
-        List<Map<String ,Object>> list = new ArrayList<Map<String,Object>>();
-
-        if (maintainTaskList != null) {
-            for (int i = 0; i < maintainTaskList.length(); i++) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                try {
-                    JSONObject tempObject = maintainTaskList.getJSONObject(i);
-                    map.put("title", tempObject.getString("title"));
-                    list.add(map);
-                } catch (Exception e) {
-                }
-            }
-        }
-        return list;
-    }
 
     class ViewHolder {
         public TextView title;
@@ -175,7 +201,7 @@ public class MaintainListActivity extends ListActivity {
 
         @Override
         public int getCount() {
-            return mData.size();
+            return maintainTaskList.length();
         }
 
         @Override
@@ -206,12 +232,13 @@ public class MaintainListActivity extends ListActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.title.setText((String)mData.get(position).get("title"));
             try {
                 JSONObject maintainTask = maintainTaskList.getJSONObject(position);
-                String repairResult = maintainTask.getString("note");
+                holder.title.setText(maintainTask.getString("title"));
+
+                String maintainResult = maintainTask.getString("note");
                 String confirmed = maintainTask.getString("confirmed");
-                if(repairResult.length() > 0) {
+                if(maintainResult.length() > 0) {
                     holder.faText.setTextColor(Color.parseColor("#D3D3D3"));
                 }else if(confirmed.equals("false")){
                     maintainAcceptHint.setVisibility(View.VISIBLE);
@@ -236,7 +263,7 @@ public class MaintainListActivity extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.record, menu);
+        getMenuInflater().inflate(R.menu.maintain_list, menu);
         return true;
     }
 

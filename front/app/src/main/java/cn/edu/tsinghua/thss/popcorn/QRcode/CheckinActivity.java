@@ -73,7 +73,7 @@ public class CheckinActivity extends Activity {
             public void onClick(View v) {
                 if (barcodeScanned) {
                     barcodeScanned = false;
-                    scanResult.setText("ÕıÔÚÉ¨ÃèÖĞ...");
+                    scanResult.setText("æ­£åœ¨æ‰«æä¸­...");
                     mCamera.setPreviewCallback(previewCb);
                     mCamera.startPreview();
                     previewing = true;
@@ -129,14 +129,14 @@ public class CheckinActivity extends Activity {
         public void onPreviewFrame(byte[] data, Camera camera) {
             Size size = camera.getParameters().getPreviewSize();
 
-            // ÕâÀïĞèÒª½«»ñÈ¡µÄdata·­×ªÒ»ÏÂ£¬ÒòÎªÏà»úÄ¬ÈÏÄÃµÄµÄºáÆÁµÄÊı¾İ
+            // è¿™é‡Œéœ€è¦å°†è·å–çš„dataç¿»è½¬ä¸€ä¸‹ï¼Œå› ä¸ºç›¸æœºé»˜è®¤æ‹¿çš„çš„æ¨ªå±çš„æ•°æ®
             byte[] rotatedData = new byte[data.length];
             for (int y = 0; y < size.height; y++) {
                 for (int x = 0; x < size.width; x++)
                     rotatedData[x * size.height + size.height - y - 1] = data[x + y * size.width];
             }
 
-            // ¿í¸ßÒ²Òªµ÷Õû
+            // å®½é«˜ä¹Ÿè¦è°ƒæ•´
             int tmp = size.width;
             size.width = size.height;
             size.height = tmp;
@@ -167,13 +167,13 @@ public class CheckinActivity extends Activity {
     };
 
     /**
-     * ³õÊ¼»¯½ØÈ¡µÄ¾ØĞÎÇøÓò
+     * åˆå§‹åŒ–æˆªå–çš„çŸ©å½¢åŒºåŸŸ
      */
     private void initCrop() {
         int cameraWidth = mCameraManager.getCameraResolution().y;
         int cameraHeight = mCameraManager.getCameraResolution().x;
 
-        /** »ñÈ¡²¼¾ÖÖĞÉ¨Ãè¿òµÄÎ»ÖÃĞÅÏ¢ */
+        /** è·å–å¸ƒå±€ä¸­æ‰«ææ¡†çš„ä½ç½®ä¿¡æ¯ */
         int[] location = new int[2];
         scanCropView.getLocationInWindow(location);
 
@@ -183,21 +183,21 @@ public class CheckinActivity extends Activity {
         int cropWidth = scanCropView.getWidth();
         int cropHeight = scanCropView.getHeight();
 
-        /** »ñÈ¡²¼¾ÖÈİÆ÷µÄ¿í¸ß */
+        /** è·å–å¸ƒå±€å®¹å™¨çš„å®½é«˜ */
         int containerWidth = scanContainer.getWidth();
         int containerHeight = scanContainer.getHeight();
 
-        /** ¼ÆËã×îÖÕ½ØÈ¡µÄ¾ØĞÎµÄ×óÉÏ½Ç¶¥µãx×ø±ê */
+        /** è®¡ç®—æœ€ç»ˆæˆªå–çš„çŸ©å½¢çš„å·¦ä¸Šè§’é¡¶ç‚¹xåæ ‡ */
         int x = cropLeft * cameraWidth / containerWidth;
-        /** ¼ÆËã×îÖÕ½ØÈ¡µÄ¾ØĞÎµÄ×óÉÏ½Ç¶¥µãy×ø±ê */
+        /** è®¡ç®—æœ€ç»ˆæˆªå–çš„çŸ©å½¢çš„å·¦ä¸Šè§’é¡¶ç‚¹yåæ ‡ */
         int y = cropTop * cameraHeight / containerHeight;
 
-        /** ¼ÆËã×îÖÕ½ØÈ¡µÄ¾ØĞÎµÄ¿í¶È */
+        /** è®¡ç®—æœ€ç»ˆæˆªå–çš„çŸ©å½¢çš„å®½åº¦ */
         int width = cropWidth * cameraWidth / containerWidth;
-        /** ¼ÆËã×îÖÕ½ØÈ¡µÄ¾ØĞÎµÄ¸ß¶È */
+        /** è®¡ç®—æœ€ç»ˆæˆªå–çš„çŸ©å½¢çš„é«˜åº¦ */
         int height = cropHeight * cameraHeight / containerHeight;
 
-        /** Éú³É×îÖÕµÄ½ØÈ¡µÄ¾ØĞÎ */
+        /** ç”Ÿæˆæœ€ç»ˆçš„æˆªå–çš„çŸ©å½¢ */
         mCropRect = new Rect(x, y, width + x, height + y);
     }
 

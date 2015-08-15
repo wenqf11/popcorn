@@ -66,108 +66,107 @@ public class RecordFragment extends ListFragment {
 
     private View recordView;
 
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 1) {
-                //接收消息后要做的处理
-                String ROUTE_GET_URL = Config.LOCAL_IP + "/app/route";
+  //  Handler handler = new Handler() {
+    public void updateRecord() {
+            //接收消息后要做的处理
+            String ROUTE_GET_URL = Config.LOCAL_IP + "/app/route";
 
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String time = df.format(new Date());
-                //Timestamp timestamp = Timestamp.valueOf(time);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String time = df.format(new Date());
+            //Timestamp timestamp = Timestamp.valueOf(time);
 
-                RequestParams params = new RequestParams();
-                params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
-                params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
-                params.addQueryStringParameter("timestamp", time);
+            RequestParams params = new RequestParams();
+            params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+            params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+            params.addQueryStringParameter("timestamp", time);
 
-                //progressDialog.show();
+            //progressDialog.show();
 
-                HttpUtils http = new HttpUtils();
-                http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
-                http.send(HttpRequest.HttpMethod.GET,
-                        ROUTE_GET_URL,
-                        params,
-                        new RequestCallBack<String>() {
+            HttpUtils http = new HttpUtils();
+            http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+            http.send(HttpRequest.HttpMethod.GET,
+                    ROUTE_GET_URL,
+                    params,
+                    new RequestCallBack<String>() {
 
-                            @Override
-                            public void onStart() {
-                            }
+                        @Override
+                        public void onStart() {
+                        }
 
-                            @Override
-                            public void onLoading(long total, long current, boolean isUploading) {
-                            }
+                        @Override
+                        public void onLoading(long total, long current, boolean isUploading) {
+                        }
 
-                            @Override
-                            public void onSuccess(ResponseInfo<String> responseInfo) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(responseInfo.result);
-                                    String status = jsonObject.getString("status");
-                                    ArrayList<String> tmp_title = new ArrayList<String>();
-                                    ArrayList<String> tmp_time = new ArrayList<String>();
-                                    ArrayList<String> tmp_route_id = new ArrayList<String>();
-                                    if (status.equals("ok")) {
-                                        JSONArray results = jsonObject.getJSONArray("data");
-                                        for (int i = 0; i < results.length(); ++i) {
-                                            JSONObject result = results.getJSONObject(i);
-                                            String name = result.getString("name");
-                                            String str_start_time = result.getString("start_time");
-                                            String route_id = result.getString("id");
-                                            String str_interval = result.getString("interval");
-                                            Integer interval = Integer.parseInt(str_interval);
-                                            String[] date = str_start_time.split(":");
-                                            Integer hour = Integer.parseInt(date[0]);
-                                            String minute = date[1];
-                                            int count = (24 - hour)/interval;
-                                            for (int j = 0; j < count; ++j) {
-                                                tmp_title.add(name);
-                                                tmp_time.add((hour+j*interval)+":"+minute);
-                                                tmp_route_id.add(route_id);
-                                            }
+                        @Override
+                        public void onSuccess(ResponseInfo<String> responseInfo) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseInfo.result);
+                                String status = jsonObject.getString("status");
+                                ArrayList<String> tmp_title = new ArrayList<String>();
+                                ArrayList<String> tmp_time = new ArrayList<String>();
+                                ArrayList<String> tmp_route_id = new ArrayList<String>();
+                                if (status.equals("ok")) {
+                                    JSONArray results = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < results.length(); ++i) {
+                                        JSONObject result = results.getJSONObject(i);
+                                        String name = result.getString("name");
+                                        String str_start_time = result.getString("start_time");
+                                        String route_id = result.getString("id");
+                                        String str_interval = result.getString("interval");
+                                        Integer interval = Integer.parseInt(str_interval);
+                                        String[] date = str_start_time.split(":");
+                                        Integer hour = Integer.parseInt(date[0]);
+                                        String minute = date[1];
+                                        int count = (24 - hour)/interval;
+                                        for (int j = 0; j < count; ++j) {
+                                            tmp_title.add(name);
+                                            tmp_time.add((hour+j*interval)+":"+minute);
+                                            tmp_route_id.add(route_id);
                                         }
-                                        mTitle = tmp_title.toArray(new String[]{});
-                                        mTime = tmp_time.toArray(new String[]{});
-                                        mID = tmp_route_id.toArray(new String[]{});
-                                        mData = getData(mTitle, mTime);
-                                        RouteListAdapter adapter = new RouteListAdapter(getActivity());
-                                        setListAdapter(adapter);
-                                        unfinished = mTitle.length;
-                                    } else {
-                                        //Toast.makeText(getActivity(), "您今天没有抄表任务", Toast.LENGTH_SHORT).show();
-                                        unfinished = 0;
-                                        //bottomTabMeterText.setText(String.valueOf(1));
-                                        //bottomTabMeterText.setText("2");
-                                        //bottomTabMeterText.setTextSize(50);
-                                        //bottomTabMeterText.setVisibility(View.GONE);
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    mTitle = tmp_title.toArray(new String[]{});
+                                    mTime = tmp_time.toArray(new String[]{});
+                                    mID = tmp_route_id.toArray(new String[]{});
+                                    mData = getData(mTitle, mTime);
+                                    RouteListAdapter adapter = new RouteListAdapter(getActivity());
+                                    setListAdapter(adapter);
+                                    unfinished = mTitle.length;
+                                } else {
+                                    //Toast.makeText(getActivity(), "您今天没有抄表任务", Toast.LENGTH_SHORT).show();
+                                    unfinished = 0;
+                                    //bottomTabMeterText.setText(String.valueOf(1));
+                                    //bottomTabMeterText.setText("2");
+                                    //bottomTabMeterText.setTextSize(50);
+                                    //bottomTabMeterText.setVisibility(View.GONE);
                                 }
-                                //progressDialog.hide();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                            //progressDialog.hide();
+                        }
 
 
-                            @Override
-                            public void onFailure(HttpException error, String msg) {
-                                Toast.makeText(getActivity(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
-                                //progressDialog.hide();
-                            }
-                        });
-            }
-            super.handleMessage(msg);
-        };
-    };
-    Timer timer = new Timer();
-    TimerTask task = new TimerTask() {
-
-        @Override
-        public void run() {
-            // 需要做的事:发送消息
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
+                        @Override
+                        public void onFailure(HttpException error, String msg) {
+                            Toast.makeText(getActivity(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                            //progressDialog.hide();
+                        }
+                    });
         }
-    };
+//            super.handleMessage(msg);
+//        };
+//    };
+//    Timer timer = new Timer();
+//    TimerTask task = new TimerTask() {
+//
+//        @Override
+//        public void run() {
+//            // 需要做的事:发送消息
+//            Message message = new Message();
+//            message.what = 1;
+//            handler.sendMessage(message);
+//        }
+//    };
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
@@ -182,20 +181,9 @@ public class RecordFragment extends ListFragment {
             parent.removeView(recordView);
         }
 
-
         unfinished = 0;
+        updateRecord();
 
-//        progressDialog = new ProgressDialog(getActivity(), R.style.buffer_dialog);
-//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//        progressDialog.setMessage("数据加载中...");
-//        progressDialog.setIndeterminate(false);
-//        progressDialog.setCancelable(true);
-//
-//        //String[] str_title = {"线路一","线路二","线路三","线路四","线路五"};
-//        //String[] str_time = {"8:00","10:00","12:00","14:00","16:00"};
-//        progressDialog.show();
-//        timer.schedule(task, Config.RECORD_UPDATE_DELAY, Config.RECORD_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
-//        progressDialog.hide();
         return recordView;
 	}
 
@@ -209,17 +197,23 @@ public class RecordFragment extends ListFragment {
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(true);
 
-        //String[] str_title = {"线路一","线路二","线路三","线路四","线路五"};
-        //String[] str_time = {"8:00","10:00","12:00","14:00","16:00"};
         progressDialog.show();
-        timer.schedule(task, Config.RECORD_UPDATE_DELAY, Config.RECORD_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+       // timer.schedule(task, Config.RECORD_UPDATE_DELAY, Config.RECORD_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
         progressDialog.hide();
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            updateRecord();
+        } else {
+            //相当于Fragment的onPause
+        }
+    }
+    @Override
     public void onDestroy(){
         super.onDestroy();
-        timer.cancel();
     }
 
     @Override
