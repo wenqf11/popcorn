@@ -1,12 +1,7 @@
 package cn.edu.tsinghua.thss.popcorn;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -52,7 +47,6 @@ import cn.edu.tsinghua.thss.popcorn.ui.FragmentAdapter;
 import cn.edu.tsinghua.thss.popcorn.ui.MineFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.RecordFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
-import cn.edu.tsinghua.thss.popcorn.update.UpdateInfo;
 import cn.edu.tsinghua.thss.popcorn.update.UpdateInfoParser;
 
 /**
@@ -68,8 +62,8 @@ public class MainActivity extends FragmentActivity {
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
 	private FragmentAdapter mFragmentAdapter;
 
-	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv,
-            mBodyRepairTv, mBodyMaintainTv,mbottomTabMeterTv, mbottomTabAppTv, mbottomTabMineTv;
+	private TextView mTabRecordTv, mTabRepairTv, mTabAppsTv, mTabMineTv,mBodyMeterTv,mBodyRepairTv,
+            mBodyMaintainTv,mbottomTabMeterTv, mbottomTabAppTv, mbottomTabMineTv, mBodyTaskTv;
 
     private FontAwesomeText mTabRecordFat, mTabRepairFat, mTabAppsFat, mTabMineFat;
 
@@ -78,13 +72,7 @@ public class MainActivity extends FragmentActivity {
 	 * Tab的那个引导线
 	 */
 	private ImageView mTabLineIv;
-	/**
-	 * Fragment
-	 */
-	private RecordFragment mRecordFg;
-	private ReportFragment mReportFg;
-    private AppsFragment mAppsFg;
-    private MineFragment mMineFg;
+
 	/**
 	 * ViewPager的当前选中页
 	 */
@@ -116,7 +104,7 @@ public class MainActivity extends FragmentActivity {
 		init();
 		initTabLineWidth();
         setLocalUsername();
-        //timer.schedule(task, Config.MAIN_UPDATE_DELAY, Config.MAIN_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+        updateHint();
 	}
 
     @Override
@@ -162,75 +150,12 @@ public class MainActivity extends FragmentActivity {
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_MAINTENANCE) {
-                //接收消息后要做的处理
-                // 增加http请求分别用来统计未维修、未保养的数量
-                mRecordUnfinished = mRecordFg.unfinished;
                 getUnRepairNum();
                 getUnMaintainNum();
-
-                // 显示在界面上
-                if (mRecordUnfinished > 0 || mRepairUnfinished > 0 || mMaintainUnfinished > 0) {
-                    mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished));
-                    mbottomTabAppTv.setVisibility(View.VISIBLE);
-                    if (mRecordUnfinished > 0) {
-                        mbottomTabMeterTv.setText(String.valueOf(mRecordUnfinished));
-                        mbottomTabMeterTv.setVisibility(View.VISIBLE);
-                        if(mBodyMeterTv == null) {
-                            mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                        }
-                        mBodyMeterTv.setText(String.valueOf(mRecordUnfinished));
-                        mBodyMeterTv.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        if(mBodyMeterTv == null) {
-                            mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                        }
-                        mbottomTabMeterTv.setVisibility(View.GONE);
-                    }
-                    if (mRepairUnfinished > 0) {
-                        if(mBodyRepairTv == null) {
-                            mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
-                        }
-                        mBodyRepairTv.setText(String.valueOf(mRepairUnfinished));
-                        mBodyRepairTv.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        if(mBodyRepairTv == null) {
-                            mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
-                        }
-                        mBodyRepairTv.setVisibility(View.GONE);
-                    }
-                    if(mMaintainUnfinished > 0) {
-                        if(mBodyMaintainTv == null) {
-                            mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
-                        }
-                        mBodyMaintainTv.setText(String.valueOf(mMaintainUnfinished));
-                        mBodyMaintainTv.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        if(mBodyMaintainTv == null) {
-                            mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
-                        }
-                        mBodyMaintainTv.setVisibility(View.GONE);
-                    }
-                } else {
-                    mbottomTabMeterTv.setVisibility(View.GONE);
-                    mbottomTabAppTv.setVisibility(View.GONE);
-                    if(mBodyMeterTv == null) {
-                        mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
-                    }
-                    if(mBodyRepairTv == null) {
-                        mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
-                    }
-                    if(mBodyMaintainTv == null) {
-                        mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
-                    }
-                    mBodyMeterTv.setVisibility(View.GONE);
-                    mBodyRepairTv.setVisibility(View.GONE);
-                    mBodyMaintainTv.setVisibility(View.GONE);
-                }
+                getUnRecordNum();
+                getUnTaskNum();
             }else if (msg.what == UPDATE_VERSION){
-                if(remoteVersion.equals(localVersion)){
+                if(remoteVersion.equals("") || remoteVersion.equals(localVersion)){
                     mbottomTabMineTv.setVisibility(View.GONE);
                 }else{
                     mbottomTabMineTv.setVisibility(View.VISIBLE);
@@ -238,17 +163,6 @@ public class MainActivity extends FragmentActivity {
             }
             super.handleMessage(msg);
         };
-    };
-    Timer timer = new Timer();
-    TimerTask task = new TimerTask() {
-
-        @Override
-        public void run() {
-            // 需要做的事:发送消息
-            Message message = new Message();
-            message.what = UPDATE_MAINTENANCE;
-            handler.sendMessage(message);
-        }
     };
 
 	private void findById() {
@@ -273,16 +187,17 @@ public class MainActivity extends FragmentActivity {
         mBodyMeterTv = (TextView)this.findViewById(R.id.main_body_app_meter_id);
         mBodyRepairTv = (TextView)this.findViewById(R.id.main_body_app_repair_id);
         mBodyMaintainTv = (TextView)this.findViewById(R.id.main_body_app_maintain_id);
+        mBodyTaskTv = (TextView)this.findViewById(R.id.main_body_app_task_id);
 
 		mTabLineIv = (ImageView) this.findViewById(R.id.id_tab_line_iv);
 		mPageVp = (ViewPager) this.findViewById(R.id.id_page_vp);
 	}
 
 	private void init() {
-        mAppsFg = new AppsFragment();
-		mRecordFg = new RecordFragment();
-		mReportFg = new ReportFragment();
-        mMineFg = new MineFragment();
+        AppsFragment mAppsFg = new AppsFragment();
+        RecordFragment mRecordFg = new RecordFragment();
+        ReportFragment mReportFg = new ReportFragment();
+        MineFragment mMineFg = new MineFragment();
 
         mFragmentList.add(mAppsFg);
 		mFragmentList.add(mRecordFg);
@@ -295,7 +210,6 @@ public class MainActivity extends FragmentActivity {
         }
 		mPageVp.setAdapter(mFragmentAdapter);
 		mPageVp.setCurrentItem(0);
-        mPageVp.setOffscreenPageLimit(2);
 
         mTabAppsLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -524,17 +438,39 @@ public class MainActivity extends FragmentActivity {
                                 mRepairUnfinished = repairTaskList.length();
                             }
                             else{
-                                //Toast.makeText(getApplicationContext(), "服务器内部出错1", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
                             }
                         }catch (JSONException e){
                             e.printStackTrace();
+                        }
+
+
+                        if (mRepairUnfinished > 0) {
+                            if(mBodyRepairTv == null) {
+                                mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
+                            }
+                            mBodyRepairTv.setText(String.valueOf(mRepairUnfinished));
+                            mBodyRepairTv.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            if(mBodyRepairTv == null) {
+                                mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
+                            }
+                            mBodyRepairTv.setVisibility(View.GONE);
+                        }
+
+                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished > 0) {
+                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                            mbottomTabAppTv.setVisibility(View.VISIBLE);
+                        }else{
+                            mbottomTabAppTv.setVisibility(View.GONE);
                         }
                     }
 
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -565,22 +501,170 @@ public class MainActivity extends FragmentActivity {
                                 JSONArray maintainTaskList = jsonObject.getJSONArray("data");
                                 mMaintainUnfinished = maintainTaskList.length();
                             } else {
-                                //Toast.makeText(getApplicationContext(), "服务器内部出错2", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
+                        if(mMaintainUnfinished > 0) {
+                            if(mBodyMaintainTv == null) {
+                                mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
+                            }
+                            mBodyMaintainTv.setText(String.valueOf(mMaintainUnfinished));
+                            mBodyMaintainTv.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            if(mBodyMaintainTv == null) {
+                                mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
+                            }
+                            mBodyMaintainTv.setVisibility(View.GONE);
+                        }
+
+                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished > 0) {
+                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                            mbottomTabAppTv.setVisibility(View.VISIBLE);
+                        }else{
+                            mbottomTabAppTv.setVisibility(View.GONE);
+                        }
                     }
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+
+    private void getUnRecordNum(){
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.ROUTE_GET_URL,
+                params,
+                new RequestCallBack<String>() {
+
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if (status.equals("ok")) {
+                                JSONArray results = jsonObject.getJSONArray("data");
+                                mRecordUnfinished = results.length();
+                            }else{
+                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (mRecordUnfinished > 0) {
+                            mbottomTabMeterTv.setText(String.valueOf(mRecordUnfinished));
+                            mbottomTabMeterTv.setVisibility(View.VISIBLE);
+                            if(mBodyMeterTv == null) {
+                                mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                            }
+                            mBodyMeterTv.setText(String.valueOf(mRecordUnfinished));
+                            mBodyMeterTv.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            if(mBodyMeterTv == null) {
+                                mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
+                            }
+                            mbottomTabMeterTv.setVisibility(View.GONE);
+                        }
+
+                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished > 0) {
+                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                            mbottomTabAppTv.setVisibility(View.VISIBLE);
+                        }else{
+                            mbottomTabAppTv.setVisibility(View.GONE);
+                        }
+                    }
+
+
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+    private void getUnTaskNum(){
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.TASK_LIST_URL,
+                params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public void onStart() {
+                    }
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+                            if (status.equals("ok")) {
+                                JSONArray taskList = jsonObject.getJSONArray("data");
+                                mTaskUnfinished = taskList.length();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(mTaskUnfinished > 0) {
+                            if(mBodyTaskTv == null) {
+                                mBodyTaskTv = (TextView)findViewById(R.id.main_body_app_task_id);
+                            }
+                            mBodyTaskTv.setText(String.valueOf(mTaskUnfinished));
+                            mBodyTaskTv.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            if(mBodyTaskTv == null) {
+                                mBodyTaskTv = (TextView)findViewById(R.id.main_body_app_task_id);
+                            }
+                            mBodyTaskTv.setVisibility(View.GONE);
+                        }
+
+                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished + mTaskUnfinished > 0) {
+                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                            mbottomTabAppTv.setVisibility(View.VISIBLE);
+                        }else{
+                            mbottomTabAppTv.setVisibility(View.GONE);
+                        }
+                    }
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     @Override
     public void onDestroy(){
         super.onDestroy();
-        timer.cancel();
     }
 }

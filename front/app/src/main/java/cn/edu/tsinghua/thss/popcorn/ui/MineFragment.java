@@ -167,7 +167,7 @@ public class MineFragment extends Fragment {
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_VERSION){
-                if(remoteVersion.equals(localVersion)){
+                if(remoteVersion.equals("") || remoteVersion.equals(localVersion)){
                     aboutHint.setVisibility(View.GONE);
                 }else{
                     aboutHint.setVisibility(View.VISIBLE);
@@ -225,7 +225,7 @@ public class MineFragment extends Fragment {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getActivity().getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
