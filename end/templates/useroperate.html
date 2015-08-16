@@ -110,6 +110,9 @@
                                         <option value="{{ role }}">{{ role }}</option>
                                     {% endif %}
                                 {% endfor %}
+                                {% for role in data.disabled_chosen_roles %}
+                                    <option class="alwaysselected" value="{{ role }}" selected="selected" disabled>{{ role }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -364,6 +367,7 @@
                 });
                 return false;
             }
+            $(".alwaysselected").removeAttr("disabled");
             return true;
         }
     </script>

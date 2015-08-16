@@ -294,6 +294,7 @@ def operate_user(request):
             for k_chosed_role in k_chosed_roles:
                 chosed_roles.append(k_chosed_role.name)
             userdata['chosen_roles'] = chosed_roles
+            userdata['disabled_chosen_roles'] = list(set(chosed_roles).difference(set(role_list)))
         else:
             userdata['isNew'] = True
 
@@ -713,6 +714,18 @@ def operate_device(request):
         if len(_owner) == 1:
             _owner = _owner[0]
             userdata['chosen_owner'] = _owner.name
+            _choseneditable = False
+            for person in people_list:
+                if userdata['chosen_owner'] == person['name']:
+                    _choseneditable = True
+            userdata['choseneditable'] = _choseneditable
+            if _choseneditable == False:
+                p = k_user.objects.filter(name=userdata['chosen_owner'])[0]
+                person = dict()
+                person["name"] = p.name
+                _c = k_class.objects.get(id=p.classid_id)
+                person["position"] = _c.name
+                people_list.append(person)
     else:
         userdata['isNew'] = True
     variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg': server_msg})

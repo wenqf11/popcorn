@@ -378,25 +378,34 @@
                 divs[1].childNodes[3].childNodes[1].value = "";
                 divs[2].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
                 divs[3].childNodes[3].childNodes[1].value = "";
-                // var maintainers = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
-                // var mlength = maintainers.length;
-                // maintainers[0].setAttribute("selected", "selected");
-                // maintainers[0].removeAttribute("disabled");
-                // for(var i = 1; i < mlength; i++) {
-                //     maintainers[i].removeAttribute("selected");
-                //     maintainers[i].removeAttribute("disabled");
-                // }
-                // $("#editor").trigger("chosen:updated");
 
-                // var helpers = divs[5].childNodes[3].childNodes[1].getElementsByTagName("option");
-                // var hlength = helpers.length;
-                // helpers[0].setAttribute("disabled", "");
-                // helpers[0].removeAttribute("selected");
-                // for(var i = 1; i < hlength; i++) {
-                //     helpers[i].removeAttribute("selected");
-                //     helpers[i].removeAttribute("disabled");
-                // }
-                // $("#helpers").trigger("chosen:updated");
+                var maintainers = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var mlength = maintainers.length;
+                maintainers[0].setAttribute("selected", "selected");
+                maintainers[0].removeAttribute("disabled");
+                for(var i = 1; i < mlength; i++) {
+                    maintainers[i].removeAttribute("selected");
+                    maintainers[i].removeAttribute("disabled");
+                }
+
+                var helpers = divs[5].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var hlength = helpers.length;
+                helpers[0].setAttribute("disabled", "");
+                helpers[0].removeAttribute("selected");
+                for(var i = 1; i < hlength; i++) {
+                    helpers[i].removeAttribute("selected");
+                    helpers[i].removeAttribute("disabled");
+                }
+                // var show1 = divs[5].childNodes[3].childNodes[1].nextSibling.childNodes[0];
+                // show1.innerHTML = '<li class="search-field"><input type="text" value="选择协助者" class="default" autocomplete="off" style="width: 90px;"></li>';
+                // var show2 = divs[5].childNodes[3].childNodes[1].nextSibling.childNodes[1];
+                // show2.innerHTML = '<ul class="chosen-results"></ul>';
+
+                $("#editor").trigger("chosen:updated");
+                $("#helpers").val("");
+                $("#helpers").chosen();
+                $("#helpers").trigger("liszt:updated");
+                $("#helpers").trigger("chosen:updated");
 
                 divs[6].childNodes[3].childNodes[1].value = {{ taskid }};
                 divs[7].childNodes[3].childNodes[1].value = "";

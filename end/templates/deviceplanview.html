@@ -130,6 +130,7 @@
                                 {% for maintainer in maintainers %}
                                 <option value="{{ maintainer }}">{{ maintainer }}</option>
                                 {% endfor %}
+                                <option value="" style="display:none"></option>
                             </select>
                         </div>
                     </div>
@@ -271,6 +272,18 @@
             divs[3].childNodes[3].childNodes[1].value = "";
             divs[5].childNodes[3].childNodes[1].value = "";
             divs[7].childNodes[3].childNodes[1].value = "";
+            var periods = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
+            var plength = periods.length;
+            for(var i = 0; i < plength; i++)
+                periods[i].removeAttribute("selected");
+            periods[3].setAttribute("selected", "selected");
+            var maintainers = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
+            var mlength = maintainers.length;
+            for(var i = 0; i < mlength; i++)
+                maintainers[i].removeAttribute("selected");
+            maintainers[0].setAttribute("selected", "selected");
+            maintainers[mlength - 1].setAttribute("style", "display:none");
+            $("#editor").trigger("chosen:updated");
             $(".maintenancetitle").text("添加保养计划");
         };
         $(".fa-pencil").click(function() {
@@ -300,16 +313,32 @@
             var mlength = maintainers.length;
             var themaintainer = dataline[3].innerHTML;
             maintainers[0].setAttribute("selected", "selected");
-            for(var i = 1; i < mlength; i++) {
+            var hasthemaintainer = false;
+            for(var i = 1; i < mlength - 1; i++) {
                 if(maintainers[i].value == themaintainer) {
                     maintainers[i].setAttribute("selected", "selected");
                     maintainers[0].removeAttribute("selected");
                     var show = divs[4].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
                     show.innerHTML = themaintainer;
+                    hasthemaintainer = true;
                 }
                 else {
                     maintainers[i].removeAttribute("selected");
                 }
+            }
+            if(hasthemaintainer == false) {
+                maintainers[mlength - 1].setAttribute("selected", "selected");
+                maintainers[mlength - 1].setAttribute("style", "");
+                maintainers[mlength - 1].value = themaintainer;
+                maintainers[mlength - 1].innerHTML = themaintainer;
+                var show = divs[4].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                show.innerHTML = themaintainer;
+                $("#editor").trigger("chosen:updated");
+            }
+            else {
+                maintainers[mlength - 1].removeAttribute("selected", "selected");
+                maintainers[mlength - 1].setAttribute("style", "display:none");
+                $("#editor").trigger("chosen:updated");
             }
 
             divs[5].childNodes[3].childNodes[1].value = dataline[6].innerHTML;
