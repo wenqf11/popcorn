@@ -84,6 +84,7 @@
 						<b class="arrow"></b>
 					</li>
 
+					{% if "用户管理" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-users"></i>
@@ -93,6 +94,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "所有用户" in modelsshow %}
 							<li id="f_view_user" class="">
 								<a href="/user">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -101,7 +103,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "添加用户" in modelsshow %}
 							<li id="f_operate_user" class="">
 								<a href="/useradd">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -109,7 +113,9 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "角色管理" in modelsshow %}
 							<li id="f_view_role" class="">
 								<a href="/view_role">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -117,7 +123,9 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "添加角色" in modelsshow %}
 							<li id="f_operate_role" class="">
 								<a href="/operate_role">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -125,9 +133,12 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
+					{% endif %}
 
+					{% if "设备管理" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-tachometer"></i>
@@ -139,6 +150,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "所有设备" in modelsshow %}
 							<li id="f_view_device" class="">
 								<a href="/devicebyclass">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -147,7 +159,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "添加设备" in modelsshow %}
 							<li id="f_operate_device" class="">
 								<a href="/operate_device">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -156,7 +170,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "设备类型" in modelsshow %}
 							<li id="f_device_type" class="">
 								<a href="/device_type">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -165,7 +181,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "供应商" in modelsshow %}
 							<li id="f_supplier" class="">
 								<a href="/supplier">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -174,7 +192,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "生产厂家" in modelsshow %}
 							<li id="f_producer" class="">
 								<a href="/producer">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -183,9 +203,12 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
+					{% endif %}
 
+					{% if "维修保养" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-wrench"></i>
@@ -197,6 +220,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "尚未维修" in modelsshow %}
 							<li id="f_view_maintaining" class="">
 								<a href="/view_maintaining">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -205,7 +229,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "维修记录" in modelsshow %}
 							<li id="f_view_maintained" class="">
 								<a href="/view_maintained">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -214,7 +240,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "添加维修任务" in modelsshow %}
 							<li id="f_add_maintenance" class="">
 								<a href="/add_maintenance">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -223,7 +251,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "尚未保养" in modelsshow %}
 							<li id="f_view_upkeeping" class="">
 								<a href="/view_upkeeping">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -232,7 +262,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "保养记录" in modelsshow %}
 							<li id="f_view_upkeeped" class="">
 								<a href="/view_upkeeped">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -241,9 +273,12 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
+					{% endif %}
 
+					{% if "任务" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-tasks"></i>
@@ -255,6 +290,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "未完成任务" in modelsshow %}
 							<li id="f_view_tasking" class="">
 								<a href="/view_tasking">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -263,7 +299,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "任务记录" in modelsshow %}
 							<li id="f_view_tasked" class="">
 								<a href="/view_tasked">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -272,7 +310,9 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "添加任务" in modelsshow %}
 							<li id="f_add_task" class="">
 								<a href="/add_task">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -281,10 +321,13 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
+					{% endif %}
 
 
+					{% if "库存" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-institution"></i>
@@ -296,6 +339,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "所有备件信息" in modelsshow %}
 							<li id="f_view_spare" class="">
 								<a href="/view_spare">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -304,6 +348,8 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
+							{% if "添加备件信息" in modelsshow %}
 							<li id="f_operate_spare" class="">
 								<a href="/operate_spare">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -312,6 +358,8 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
+							{% if "备件使用" in modelsshow %}
 							<li id="f_view_sparebill" class="">
 								<a href="/view_sparebill">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -320,6 +368,8 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
+							{% if "备件出入库" in modelsshow %}
 							<li id="f_view_sparecount" class="">
 								<a href="/view_sparecount">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -329,6 +379,8 @@
 								<b class="arrow"></b>
 							</li>
 
+							{% endif %}
+							{% if "所有工具信息" in modelsshow %}
 							<li id="f_view_tool" class="">
 								<a href="/view_tool">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -337,6 +389,8 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
+							{% if "添加工具信息" in modelsshow %}
 							<li id="f_operate_tool" class="">
 								<a href="/operate_tool">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -345,6 +399,8 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
+							{% if "工具使用" in modelsshow %}
 							<li id="f_view_tooluse" class="">
 								<a href="/view_tooluse">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -353,6 +409,8 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
+							{% if "工具出入库" in modelsshow %}
 							<li id="f_view_toolcount" class="">
 								<a href="/view_toolcount">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -361,9 +419,12 @@
 
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
+					{% endif %}
 
+					{% if "路线设置" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-mobile"></i>
@@ -373,6 +434,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "查看路线" in modelsshow %}
 							<li id="f_view_route" class="">
 								<a href="/view_route">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -380,7 +442,9 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "添加路线" in modelsshow %}
 							<li id="f_operate_route" class="">
 								<a href="/operate_route">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -388,16 +452,21 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
+					{% endif %}
 
+					{% if "抄表数据" in modelsshow %}
                     <li id="f_meter">
                         <a href="/meter/">
                             <i class="menu-icon fa fa-newspaper-o"></i>
                             <span class="menu-text">抄表数据</span>
                         </a>
                     </li>
+					{% endif %}
 
+					{% if "排班设置" in modelsshow %}
 					<li id="f_schedule" class="">
 						<a href="/view_schedule/">
 							<i class="menu-icon fa fa-calendar"></i>
@@ -405,7 +474,9 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
+					{% endif %}
 
+					{% if "系统设置" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-flag"></i>
@@ -415,6 +486,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "部门设置" in modelsshow %}
 							<li id="f_department" class="">
 								<a href="/department">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -422,7 +494,9 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "积分设置" in modelsshow %}
 							<li id="f_score" class="">
 								<a href="/score">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -430,7 +504,9 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 
+							{% if "彩蛋设置" in modelsshow %}
 							<li id="f_egg" class="">
 								<a href="/egg/">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -438,8 +514,10 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
+					{% endif %}
 				</ul><!-- /.nav-list -->
 
 
