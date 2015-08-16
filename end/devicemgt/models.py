@@ -385,7 +385,7 @@ class k_maintenance(models.Model):
     createcontent = models.CharField(max_length=200)
 
     def content_file_name(instance, filename):
-        return 'maintance_image/{0}_{1}'.format(
+        return '../static/maintenance_image/{0}_{1}'.format(
             datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
             filename
         )

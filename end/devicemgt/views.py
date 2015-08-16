@@ -1172,7 +1172,7 @@ def profile(request):
         user = k_user.objects.get(username=request.user.username)
         #user = User.objects.get(username=request.user.username)
 
-        return get_purviews_and_render_to_response(request.user.username, 'profile.html', {
+        return render_to_response('profile.html', {
             'user': user
         }, context_instance=RequestContext(request))
     else:
@@ -1193,7 +1193,7 @@ def profile(request):
             msg = "用户名不存在，修改用户信息失败！"
 
         user = k_user.objects.get(username=request.user.username)
-        return get_purviews_and_render_to_response(request.user.username, 'profile.html', {
+        return render_to_response('profile.html', {
             'user': user,
             "msg": msg
         }, context_instance=RequestContext(request))
@@ -1212,7 +1212,7 @@ def change_password(request):
             msg = "旧密码错误，修改密码失败！"
 
         user = k_user.objects.get(username=request.user.username)
-        return get_purviews_and_render_to_response(request.user.username, 'profile.html', {
+        return render_to_response('profile.html', {
             'user': user,
             "msg": msg
         }, context_instance=RequestContext(request))
@@ -1250,7 +1250,7 @@ def register(req):
             return HttpResponse('register success!!')
     else:
         uf = UserForm()
-    return get_purviews_and_render_to_response(request.user.username, 'register.html', {'uf': uf}, context_instance=RequestContext(req))
+    return render_to_response('register.html', {'uf': uf}, context_instance=RequestContext(req))
 
 
 # 处理登录请求
@@ -1887,6 +1887,10 @@ def view_maintaining(request):
             _dn = _device.name
             _dp = _device.position
         _creator = k_user.objects.get(id=_maintaining.creatorid)
+        if _maintaining.image:
+            _imageurl = _maintaining.image.url
+        else:
+            _imageurl = ""
         if _maintaining.assignorid == 0:
             data.append({
                 'id': _maintaining.id,
@@ -1895,6 +1899,7 @@ def view_maintaining(request):
                 'brief': _db,
                 'name': _dn,
                 'position': _dp,
+                'imageurl': _imageurl,
                 'creator': _creator.name,
                 'createdatetime': _maintaining.createdatetime,
                 'createcontent': _maintaining.createcontent,
@@ -1912,6 +1917,7 @@ def view_maintaining(request):
                 'brief': _db,
                 'name': _dn,
                 'position': _dp,
+                'imageurl': _imageurl,
                 'creator': _creator.name,
                 'createdatetime': _maintaining.createdatetime,
                 'assignor': _assignor.name,
@@ -1964,6 +1970,10 @@ def view_maintained(request):
         _creator = k_user.objects.get(id=_maintained.creatorid)
         _assignor = k_user.objects.get(id=_maintained.assignorid)
         _editor = k_user.objects.get(id=_maintained.editorid)
+        if _maintained.image:
+            _imageurl = _maintained.image.url
+        else:
+            _imageurl = ""
         if _maintained.auditorid == 0:
             data.append({
                 'id': _maintained.id,
@@ -1972,6 +1982,7 @@ def view_maintained(request):
                 'brief': _db,
                 'name': _dn,
                 'position': _dp,
+                'imageurl': _imageurl,
                 'creator': _creator.name,
                 'createdatetime': _maintained.createdatetime,
                 'assignor': _assignor.name,
@@ -1993,6 +2004,7 @@ def view_maintained(request):
                 'brief': _db,
                 'name': _dn,
                 'position': _dp,
+                'imageurl': _imageurl,
                 'creator': _creator.name,
                 'createdatetime': _maintained.createdatetime,
                 'assignor': _assignor.name,
@@ -3864,8 +3876,9 @@ def department(request):
 def department_revise(request):
     _id = request.GET.get('id')
     if _id:
-        #分类筛选
         user=User.objects.get(username=request.user.username)
+        #分类筛选
+        user = k_user.objects.get(username=request.user.username)
         result = [user.classid.id]
         get_class_set(result, user.classid.id)
         datas = dict()
@@ -3911,8 +3924,9 @@ def department_revise(request):
 @login_required
 def departmentadd(request):
     if request.user.is_authenticated():
-        #分类筛选
         user=User.objects.get(username=request.user.username)
+        #分类筛选
+        user = k_user.objects.get(username=request.user.username)
         result = [user.classid.id]
         get_class_set(result, user.classid.id)
         datas = dict()
