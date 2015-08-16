@@ -378,6 +378,7 @@ class k_maintenance(models.Model):
         ('2', '重要'),
         ('3', '紧急'),
     )
+    classid = models.ForeignKey(k_class, related_name='maintenance_set',blank=True, null=True, on_delete=models.SET_NULL)
     deviceid = models.ForeignKey(k_device, related_name='maintenance_set',blank=True, null=True, on_delete=models.SET_NULL)
     state = models.CharField(max_length=1, choices=MAINTENANCE_STATUS, default='1')
     title = models.CharField(max_length=50)
@@ -444,6 +445,7 @@ class k_task(models.Model):
         ('2', '重要'),
         ('3', '紧急'),
     )
+    classid = models.ForeignKey(k_class, related_name='task_set',blank=True, null=True, on_delete=models.SET_NULL)
     state = models.CharField(max_length=1, choices=TASK_STATUS, default='1')
     title = models.CharField(max_length=50)
     createcontent = models.CharField(max_length=200)

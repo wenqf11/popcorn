@@ -1825,7 +1825,7 @@ def submit_deviceplan(request):
         _deviceplan = k_deviceplan.objects.get(id=_id)
         _maintenance = k_maintenance.objects.get(id=_deviceplan.maintenanceid_id)
     else:
-        _maintenance = k_maintenance.objects.create(mtype=1,deviceid_id=_deviceid,state=2)
+        _maintenance = k_maintenance.objects.create(mtype=1,classid=_user.classid,deviceid_id=_deviceid,state=2)
         _deviceplan = k_deviceplan.objects.create(deviceid_id=_deviceid,maintenanceid=_maintenance)
 
     _maintenance.creatorid = _user.id
@@ -1872,11 +1872,11 @@ def view_maintaining(request):
     #     return HttpResponseRedirect('/?msg='+_msg)
 
     #分类筛选
-    # user = k_user.objects.get(username=request.user.username)
-    # result = [user.classid.id]
-    # get_class_set(result, user.classid.id)
-    # _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=2, state__lte=3)
-    _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=3)
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=2, state__lte=3)
+    # _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=3)
 
     data = []
     for _maintaining in _maintainings:
@@ -1890,6 +1890,7 @@ def view_maintaining(request):
         if _maintaining.assignorid == 0:
             data.append({
                 'id': _maintaining.id,
+                'classname': _maintaining.classid.name,
                 'title': _maintaining.title,
                 'brief': _db,
                 'name': _dn,
@@ -1906,6 +1907,7 @@ def view_maintaining(request):
             _editor = k_user.objects.get(id=_maintaining.editorid)
             data.append({
                 'id': _maintaining.id,
+                'classname': _maintaining.classid.name,
                 'title': _maintaining.title,
                 'brief': _db,
                 'name': _dn,
@@ -1945,11 +1947,11 @@ def view_maintained(request):
     #     return HttpResponseRedirect('/?msg='+_msg)
 
     #分类筛选
-    # user = k_user.objects.get(username=request.user.username)
-    # result = [user.classid.id]
-    # get_class_set(result, user.classid.id)
-    # _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=2, state__gte=4)
-    _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=4)
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=2, state__gte=4)
+    # _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=4)
 
     data = []
     for _maintained in _maintaineds:
@@ -1965,6 +1967,7 @@ def view_maintained(request):
         if _maintained.auditorid == 0:
             data.append({
                 'id': _maintained.id,
+                'classname': _maintained.classid.name,
                 'title': _maintained.title,
                 'brief': _db,
                 'name': _dn,
@@ -1985,6 +1988,7 @@ def view_maintained(request):
             _auditor = k_user.objects.get(id=_maintained.auditorid)
             data.append({
                 'id': _maintained.id,
+                'classname': _maintained.classid.name,
                 'title': _maintained.title,
                 'brief': _db,
                 'name': _dn,
@@ -2106,6 +2110,7 @@ def submit_maintenance(request):
         _maintenance.memo = _memo
     else:
         _maintenance = k_maintenance.objects.create(
+            classid=_user.classid,
             title=_title,
             createcontent=_createcontent,
             priority=_priority,
@@ -2157,11 +2162,11 @@ def view_upkeeping(request):
     #     return HttpResponseRedirect('/?msg='+_msg)
 
     #分类筛选
-    # user = k_user.objects.get(username=request.user.username)
-    # result = [user.classid.id]
-    # get_class_set(result, user.classid.id)
-    # _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=1, state__lte=3)
-    _maintainings = k_maintenance.objects.filter(mtype=1, state__lte=3)
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=1, state__lte=3)
+    # _maintainings = k_maintenance.objects.filter(mtype=1, state__lte=3)
 
     data = []
     for _maintaining in _maintainings:
@@ -2170,6 +2175,7 @@ def view_upkeeping(request):
         _editor = k_user.objects.get(id=_maintaining.editorid)
         data.append({
             'id': _maintaining.id,
+            'classname': _maintaining.classid.name,
             'title': _maintaining.title,
             'brief': _device.brief,
             'name': _device.name,
@@ -2208,11 +2214,11 @@ def view_upkeeped(request):
     #     return HttpResponseRedirect('/?msg='+_msg)
 
     #分类筛选
-    # user = k_user.objects.get(username=request.user.username)
-    # result = [user.classid.id]
-    # get_class_set(result, user.classid.id)
-    # _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=1, state__gte=4)
-    _maintaineds = k_maintenance.objects.filter(mtype=1, state__gte=4)
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=1, state__gte=4)
+    # _maintaineds = k_maintenance.objects.filter(mtype=1, state__gte=4)
 
     data = []
     for _maintained in _maintaineds:
@@ -2223,6 +2229,7 @@ def view_upkeeped(request):
         if _maintained.auditorid == 0:
             data.append({
                 'id': _maintained.id,
+                'classname': _maintained.classid.name,
                 'title': _maintained.title,
                 'brief': _device.brief,
                 'name': _device.name,
@@ -2245,6 +2252,7 @@ def view_upkeeped(request):
             _auditor = k_user.objects.get(id=_maintained.auditorid)
             data.append({
                 'id': _maintained.id,
+                'classname': _maintained.classid.name,
                 'title': _maintained.title,
                 'brief': _device.brief,
                 'name': _device.name,
@@ -2316,17 +2324,18 @@ def view_tasking(request):
     #     return HttpResponseRedirect('/?msg='+_msg)
 
     #分类筛选
-    # user = k_user.objects.get(username=request.user.username)
-    # result = [user.classid.id]
-    # get_class_set(result, user.classid.id)
-    # _maintainings = k_task.objects.filter(classid__in=result, state__lte=2)
-    _maintainings = k_task.objects.filter(state__lte=2)
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _maintainings = k_task.objects.filter(classid__in=result, state__lte=2)
+    # _maintainings = k_task.objects.filter(state__lte=2)
 
     data = []
     for _maintaining in _maintainings:
         _creator = k_user.objects.get(id=_maintaining.creatorid)
         data.append({
             'id': _maintaining.id,
+            'classname': _maintaining.classid.name,
             'title': _maintaining.title,
             'creator': _creator.name,
             'createdatetime': _maintaining.createdatetime,
@@ -2352,17 +2361,18 @@ def view_tasked(request):
     #     return HttpResponseRedirect('/?msg='+_msg)
 
     #分类筛选
-    # user = k_user.objects.get(username=request.user.username)
-    # result = [user.classid.id]
-    # get_class_set(result, user.classid.id)
-    # _maintaineds = k_task.objects.filter(classid__in=result, state__gte=3)
-    _maintaineds = k_task.objects.filter(state__gte=3)
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _maintaineds = k_task.objects.filter(classid__in=result, state__gte=3)
+    # _maintaineds = k_task.objects.filter(state__gte=3)
 
     data = []
     for _maintained in _maintaineds:
         _creator = k_user.objects.get(id=_maintained.creatorid)
         data.append({
             'id': _maintained.id,
+            'classname': _maintained.classid.name,
             'title': _maintained.title,
             'creator': _creator.name,
             'createdatetime': _maintained.createdatetime,
@@ -2421,6 +2431,7 @@ def submit_task(request):
         _maintenance.createdatetime = get_current_date()
     else:
         _maintenance = k_task.objects.create(
+            classid=_user.classid,
             title=_title,
             createcontent=_createcontent,
             priority=_priority,

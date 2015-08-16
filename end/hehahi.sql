@@ -285,11 +285,11 @@ CREATE TABLE `devicemgt_k_deviceplan` (
   KEY `devicemgt_k_deviceplan_221733ad` (`maintenanceid_id`),
   CONSTRAINT `deviceid_id_refs_id_e0de95d1` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`),
   CONSTRAINT `maintenanceid_id_refs_id_7574d147` FOREIGN KEY (`maintenanceid_id`) REFERENCES `devicemgt_k_maintenance` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_deviceplan` */
 
-insert  into `devicemgt_k_deviceplan`(`id`,`deviceid_id`,`maintenanceid_id`,`title`,`period`,`createcontent`,`memo`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,43,'556','halfmonth','778','990',1,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(2,1,44,'rrr','fourmonth','ttt','yyyy',1,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0');
+insert  into `devicemgt_k_deviceplan`(`id`,`deviceid_id`,`maintenanceid_id`,`title`,`period`,`createcontent`,`memo`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (1,1,43,'556','halfmonth','778','990',1,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(2,1,44,'rrr','fourmonth','ttt','yyyy',1,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0'),(3,1,54,'rew','year','wer','',1,'2015-08-16',3,'2015-08-16',0,'2015-08-16','0');
 
 /*Table structure for table `devicemgt_k_devicetype` */
 
@@ -393,6 +393,7 @@ DROP TABLE IF EXISTS `devicemgt_k_maintenance`;
 
 CREATE TABLE `devicemgt_k_maintenance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `classid_id` int(11) DEFAULT NULL,
   `deviceid_id` int(11) DEFAULT NULL,
   `state` varchar(1) NOT NULL,
   `title` varchar(50) NOT NULL,
@@ -414,12 +415,14 @@ CREATE TABLE `devicemgt_k_maintenance` (
   `status` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_maintenance_72537f95` (`deviceid_id`),
+  KEY `classid_id_refs_id_e689c6dd` (`classid_id`),
+  CONSTRAINT `classid_id_refs_id_e689c6dd` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`),
   CONSTRAINT `deviceid_id_refs_id_e790c6dd` FOREIGN KEY (`deviceid_id`) REFERENCES `devicemgt_k_device` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_maintenance` */
 
-insert  into `devicemgt_k_maintenance`(`id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',2,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(30,2,'3','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',2,'2015-05-01',3,'2015-05-01',0,'2015-05-08','0'),(31,2,'3','m7','parts loosening','','不行么？',2,'456','2','3',1,'2015-05-01',2,'2015-05-01',4,'2015-05-01',0,'2015-05-01','0'),(36,2,'3','k3','c3','','ok',3,'x','2','',1,'2015-05-05',2,'2015-04-30',5,'2015-05-01',0,'2015-05-05','0'),(37,2,'3','k4','c4','','测试',2,'x','1','',1,'2015-05-05',2,'2015-04-30',6,'2015-05-01',0,'2015-05-05','0'),(40,2,'4','k7','c7','','ok',1,'x','1','',1,'2015-05-05',2,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,'1','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',0,'2015-08-11',0,'2015-05-08',0,'2015-05-08','0'),(43,1,'2','556','778','','开始',1,'990','1','1',1,'2015-06-05',2,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(44,1,'2','rrr','ttt','','',1,'yyyy','1','1',1,'2015-06-05',2,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0'),(45,NULL,'4','4','4','','4',4,'4','2','2',1,'2015-08-18',2,'2015-08-20',3,'2015-08-20',0,'2015-08-11','0'),(46,2,'5','3','3','','3',3,'3','2','1',1,'2015-08-11',2,'2015-08-11',3,'2015-08-11',2,'2015-08-20','0'),(51,NULL,'1','123','123','','',1,'','2','1',1,'2015-08-11',0,'2015-08-11',0,'2015-08-11',0,'2015-08-11','0'),(52,6,'1','313','3213','','',1,'','2','1',1,'2015-08-11',0,'2015-08-11',0,'2015-08-11',0,'2015-08-11','0');
+insert  into `devicemgt_k_maintenance`(`id`,`classid_id`,`deviceid_id`,`state`,`title`,`createcontent`,`image`,`editcontent`,`factor`,`memo`,`mtype`,`priority`,`creatorid`,`createdatetime`,`assignorid`,`assigndatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`) values (26,1,2,'3','m2','too old','','',1,'','2','1',1,'2015-04-29',2,'2015-04-29',4,'2015-04-29',0,'2015-04-29','0'),(30,2,2,'3','m6','leaking','','ok!',3,'345','2','2',1,'2015-05-01',2,'2015-05-01',3,'2015-05-01',0,'2015-05-08','0'),(31,3,2,'3','m7','parts loosening','','不行么？',2,'456','2','3',1,'2015-05-01',2,'2015-05-01',4,'2015-05-01',0,'2015-05-01','0'),(36,4,2,'3','k3','c3','','ok',3,'x','2','',1,'2015-05-05',2,'2015-04-30',5,'2015-05-01',0,'2015-05-05','0'),(37,5,2,'3','k4','c4','','测试',2,'x','1','',1,'2015-05-05',2,'2015-04-30',6,'2015-05-01',0,'2015-05-05','0'),(40,6,2,'4','k7','c7','','ok',1,'x','1','',1,'2015-05-05',2,'2015-05-01',5,'2015-05-05',0,'2015-05-05','0'),(42,1,1,'2','shuigunhuaile','c#301','','',1,'..','2','2',1,'2015-05-08',1,'2015-08-16',2,'2015-05-08',0,'2015-05-08','0'),(43,2,1,'2','556','778','','开始',1,'990','1','1',1,'2015-06-05',2,'2015-06-05',9,'2015-06-05',0,'2015-06-05','0'),(44,3,1,'2','rrr','ttt','','',1,'yyyy','1','1',1,'2015-06-05',2,'2015-06-05',8,'2015-06-05',0,'2015-06-05','0'),(45,4,NULL,'4','4','4','','4',4,'4','2','2',1,'2015-08-18',2,'2015-08-20',3,'2015-08-20',0,'2015-08-11','0'),(46,5,2,'5','3','3','','3',3,'3','2','1',1,'2015-08-11',2,'2015-08-11',3,'2015-08-11',2,'2015-08-20','0'),(51,6,NULL,'1','123','123','','',1,'','2','1',1,'2015-08-11',0,'2015-08-11',0,'2015-08-11',0,'2015-08-11','0'),(52,1,6,'1','313','3213','','',1,'','2','1',1,'2015-08-11',0,'2015-08-11',0,'2015-08-11',0,'2015-08-11','0'),(53,1,NULL,'1','突然fds','fdas','','',1,'','2','1',1,'2015-08-16',0,'2015-08-16',0,'2015-08-16',0,'2015-08-16','0'),(54,1,1,'2','rew','wer','','',1,'','1','1',1,'2015-08-16',1,'2015-08-16',3,'2015-08-16',0,'2015-08-16','0');
 
 /*Table structure for table `devicemgt_k_meter` */
 
@@ -812,6 +815,7 @@ DROP TABLE IF EXISTS `devicemgt_k_task`;
 
 CREATE TABLE `devicemgt_k_task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `classid_id` int(11) DEFAULT NULL,
   `state` varchar(1) NOT NULL,
   `title` varchar(50) NOT NULL,
   `createcontent` varchar(100) NOT NULL,
@@ -824,12 +828,14 @@ CREATE TABLE `devicemgt_k_task` (
   `auditorid` int(10) unsigned NOT NULL,
   `auditdatetime` date NOT NULL,
   `status` varchar(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `classid_id_refs_id_e578c6dd` (`classid_id`),
+  CONSTRAINT `classid_id_refs_id_e578c6dd` FOREIGN KEY (`classid_id`) REFERENCES `devicemgt_k_class` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_task` */
 
-insert  into `devicemgt_k_task`(`id`,`state`,`title`,`createcontent`,`editcontent`,`auditcontent`,`memo`,`priority`,`creatorid`,`createdatetime`,`auditorid`,`auditdatetime`,`status`) values (6,'1','123','333','','','333','1',1,'2015-05-05',0,'2015-05-05','0'),(7,'1','456','777','','','32','2',1,'2015-05-05',0,'2015-05-05','0'),(8,'2','111','22','','','3','3',1,'2015-05-05',0,'2015-05-05','0'),(9,'1','ew','ewew','','','','2',1,'2015-05-05',0,'2015-05-05','0'),(10,'3','gg','hh','','','jj','1',1,'2015-05-05',0,'2015-05-05','0'),(11,'4','ff','fff','','','ffff','1',1,'2015-05-05',0,'2015-05-05','0');
+insert  into `devicemgt_k_task`(`id`,`classid_id`,`state`,`title`,`createcontent`,`editcontent`,`auditcontent`,`memo`,`priority`,`creatorid`,`createdatetime`,`auditorid`,`auditdatetime`,`status`) values (6,1,'1','123','333','','','333','1',1,'2015-05-05',0,'2015-05-05','0'),(7,2,'1','456','777','','','32','2',1,'2015-05-05',0,'2015-05-05','0'),(8,3,'2','111','22','','','3','3',1,'2015-05-05',0,'2015-05-05','0'),(9,4,'1','ew','ewew','','','','2',1,'2015-05-05',0,'2015-05-05','0'),(10,5,'3','gg','hh','','','jj','1',1,'2015-05-05',0,'2015-05-05','0'),(11,6,'4','ff','fff','','','ffff','1',1,'2015-05-05',0,'2015-05-05','0'),(12,2,'1','hhh','hhh','','','hhh','3',1,'2015-08-16',0,'2015-08-16','0');
 
 /*Table structure for table `devicemgt_k_taskitem` */
 
@@ -857,11 +863,11 @@ CREATE TABLE `devicemgt_k_taskitem` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_taskitem_752fe31f` (`taskid_id`),
   CONSTRAINT `taskid_id_refs_id_1ab584ad` FOREIGN KEY (`taskid_id`) REFERENCES `devicemgt_k_task` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_taskitem` */
 
-insert  into `devicemgt_k_taskitem`(`id`,`state`,`title`,`taskid_id`,`createcontent`,`editcontent`,`auditcontent`,`factor`,`memo`,`priority`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`helpersid`) values (5,'2','sub3',6,'xilian','','',0,'354','3',1,'2015-05-12',6,'2015-05-12',0,'2015-05-12','1',''),(6,'3','sub4',6,'zaofan','chiwanle','',2,'0','2',1,'2015-05-12',3,'2015-05-12',1,'2015-05-12','1','2'),(7,'4','sub5',6,'shangban','shangwanle','',2,'9','2',1,'2015-05-12',6,'2015-05-12',1,'2015-05-13','1',''),(12,'1','sub6',6,'xiaban','','',1,'haha','3',1,'2015-08-11',3,'2015-05-13',0,'2015-05-13','0','4;5'),(13,'1','re',9,'ewr','','',1,'rew','2',1,'2015-05-13',9,'2015-05-13',0,'2015-05-13','0','');
+insert  into `devicemgt_k_taskitem`(`id`,`state`,`title`,`taskid_id`,`createcontent`,`editcontent`,`auditcontent`,`factor`,`memo`,`priority`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`helpersid`) values (5,'2','sub3',6,'xilian','','',0,'354','3',1,'2015-05-12',6,'2015-05-12',0,'2015-05-12','1',''),(6,'3','sub4',6,'zaofan','chiwanle','',2,'0','2',1,'2015-05-12',3,'2015-05-12',1,'2015-05-12','1','2'),(7,'4','sub5',6,'shangban','shangwanle','',2,'9','2',1,'2015-05-12',6,'2015-05-12',1,'2015-05-13','1',''),(12,'1','sub6',6,'xiaban','','',1,'haha','3',1,'2015-08-11',3,'2015-05-13',0,'2015-05-13','0','4;5'),(13,'1','re',9,'ewr','','',1,'rew','2',1,'2015-05-13',9,'2015-05-13',0,'2015-05-13','0',''),(14,'1','fds',7,'fdsfds','','',1,'fdsf','1',1,'2015-08-16',5,'2015-08-16',0,'2015-08-16','0','6;7');
 
 /*Table structure for table `devicemgt_k_test` */
 

@@ -71,6 +71,7 @@
                 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="maintenance">
                     <thead>
                         <tr>
+                            <th>所属</th>
                             <th>保养标题</th>
                             <th>设备编号</th>
                             <th>名称</th>
@@ -96,6 +97,7 @@
                     <tbody>
                         {% for dataitem in data %}
                         <tr>
+                            <td>{{ dataitem.classname }}</td>
                             <td>{{ dataitem.title }}</td>
                             <td>{{ dataitem.brief }}</td>
                             <td>{{ dataitem.name }}</td>
@@ -191,7 +193,7 @@
 
                 var factors = factor.getElementsByTagName("option");
                 var flength = factors.length;
-                var thefactor = dataline[14].innerHTML;
+                var thefactor = dataline[15].innerHTML;
                 factors[0].setAttribute("selected", "selected");
                 for(var i = 1; i < flength; i++) {
                     if(factors[i].value == thefactor) {
