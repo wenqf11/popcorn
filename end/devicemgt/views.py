@@ -1282,12 +1282,12 @@ def login(request):
                 return get_purviews_and_render_to_response(request.user.username, 'index.html', {'username': username})
             else:
                 variables = RequestContext(request, {'msg': "用户名不存在或密码错误！"})
-                return get_purviews_and_render_to_response(request.user.username, 'login.html', variables)
+                return render_to_response('login.html', variables)
         else:
                 variables = RequestContext(request, {'msg': "用户名不存在或密码错误！"})
-                return get_purviews_and_render_to_response(request.user.username, 'login.html', variables)
+                return render_to_response('login.html', variables)
     else:
-        return get_purviews_and_render_to_response(request.user.username, 'login.html')
+        return render_to_response('login.html')
 
 
 def logout(request):
