@@ -1,4 +1,5 @@
 popcorn
 =======
-python 2.7.*
-django 1.5.2+
+Python 2.7.*
+Django 1.5.2+
+South

@@ -39,7 +39,7 @@ public class Config {
     public static String TASK_CONFIRM_URL = LOCAL_IP + "/app/task/confirm/";
 
     public static String WILL_WINGS_ORG_WEBSITE = "http://www.willwings.com";
-    public static String AVATAR_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/willwings/avatar/avatar.jpg";
+    public static String AVATAR_FILE_DIR = Environment.getExternalStorageDirectory().getPath() + "/willwings/avatar/";
     public static String REPORT_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/willwings/photos/report.jpg";
     public static String DEBUG_USERNAME = "";
     public static int MAX_NETWORK_TIME = 5000;

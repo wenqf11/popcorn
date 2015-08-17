@@ -56,7 +56,7 @@ public class UserInfoActivity extends Activity {
     private static final int IMAGE_REQUEST_CODE = 0;
     private static final int CAMERA_REQUEST_CODE = 1;
     private static final int RESULT_REQUEST_CODE = 2;
-    private static final String IMAGE_FILE_NAME = "avatar.jpg";
+    private static final String IMAGE_FILE_NAME = Config.DEBUG_USERNAME+".jpg";
 
     @ViewInject(R.id.user_info_avatar)
     private ImageView userInfoAvatar;
@@ -114,7 +114,7 @@ public class UserInfoActivity extends Activity {
                                         MediaStore.ACTION_IMAGE_CAPTURE);
                                 // 判断存储卡是否可以用，可用进行存储
                                 if (hasSdcard()) {
-                                    String file_path = Environment.getExternalStorageDirectory().getPath() + "/willwings/avatar/";
+                                    String file_path = Config.AVATAR_FILE_DIR;
                                     File path = new File(file_path);
                                     File file = new File(path,IMAGE_FILE_NAME);
 
@@ -200,12 +200,12 @@ public class UserInfoActivity extends Activity {
             Bitmap photo = extras.getParcelable("data");
            // Drawable drawable = new BitmapDrawable(this.getResources(),photo);
             userInfoAvatar.setImageBitmap(photo);
-            saveBitmap(photo, Config.AVATAR_FILE_PATH);
+            saveBitmap(photo, Config.AVATAR_FILE_DIR+IMAGE_FILE_NAME);
 
             RequestParams params = new RequestParams();
             params.addBodyParameter("username", Config.DEBUG_USERNAME);
             params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
-            params.addBodyParameter("avatar", new File(Config.AVATAR_FILE_PATH));
+            params.addBodyParameter("avatar", new File(Config.AVATAR_FILE_DIR+IMAGE_FILE_NAME));
 
             HttpUtils http = new HttpUtils();
             http.send(HttpRequest.HttpMethod.POST,
@@ -574,7 +574,7 @@ public class UserInfoActivity extends Activity {
     }
 
     private void getUserInfo(){
-        Bitmap photo = getDiskBitmap(Config.AVATAR_FILE_PATH);
+        Bitmap photo = getDiskBitmap(Config.AVATAR_FILE_DIR+IMAGE_FILE_NAME);
         if(photo!=null){
             //Drawable drawable = new BitmapDrawable(this.getResources(),photo);
             userInfoAvatar.setImageBitmap(photo);
