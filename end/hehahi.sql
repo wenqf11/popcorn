@@ -863,11 +863,11 @@ CREATE TABLE `devicemgt_k_taskitem` (
   PRIMARY KEY (`id`),
   KEY `devicemgt_k_taskitem_752fe31f` (`taskid_id`),
   CONSTRAINT `taskid_id_refs_id_1ab584ad` FOREIGN KEY (`taskid_id`) REFERENCES `devicemgt_k_task` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 /*Data for the table `devicemgt_k_taskitem` */
 
-insert  into `devicemgt_k_taskitem`(`id`,`state`,`title`,`taskid_id`,`createcontent`,`editcontent`,`auditcontent`,`factor`,`memo`,`priority`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`helpersid`) values (5,'2','sub3',6,'xilian','','',0,'354','3',1,'2015-05-12',6,'2015-05-12',0,'2015-05-12','1',''),(6,'3','sub4',6,'zaofan','chiwanle','',2,'0','2',1,'2015-05-12',3,'2015-05-12',1,'2015-05-12','1','2'),(7,'4','sub5',6,'shangban','shangwanle','',2,'9','2',1,'2015-05-12',6,'2015-05-12',1,'2015-05-13','1',''),(12,'1','sub6',6,'xiaban','','',1,'haha','3',1,'2015-08-11',3,'2015-05-13',0,'2015-05-13','0','4;5'),(13,'1','re',9,'ewr','','',1,'rew','2',1,'2015-05-13',9,'2015-05-13',0,'2015-05-13','0',''),(14,'1','fds',7,'fdsfds','','',1,'fdsf','1',1,'2015-08-16',5,'2015-08-16',0,'2015-08-16','0','6;7'),(15,'1','555',7,'555','','',1,'555','2',1,'2015-08-17',5,'2015-08-17',0,'2015-08-17','0','6;7'),(16,'1','666',7,'666','','',1,'','1',1,'2015-08-17',7,'2015-08-17',0,'2015-08-17','0','6;10');
+insert  into `devicemgt_k_taskitem`(`id`,`state`,`title`,`taskid_id`,`createcontent`,`editcontent`,`auditcontent`,`factor`,`memo`,`priority`,`creatorid`,`createdatetime`,`editorid`,`editdatetime`,`auditorid`,`auditdatetime`,`status`,`helpersid`) values (5,'2','sub3',6,'xilian','','',0,'354','3',1,'2015-05-12',6,'2015-05-12',0,'2015-05-12','1',''),(6,'3','sub4',6,'zaofan','chiwanle','',2,'0','2',1,'2015-05-12',3,'2015-05-12',1,'2015-05-12','1','2'),(7,'4','sub5',6,'shangban','shangwanle','',2,'9','2',1,'2015-05-12',6,'2015-05-12',1,'2015-05-13','1',''),(12,'1','sub6',6,'xiaban','','',1,'haha','3',1,'2015-08-11',3,'2015-05-13',0,'2015-05-13','0','4;5'),(13,'1','re',9,'ewr','','',1,'rew','2',1,'2015-05-13',9,'2015-05-13',0,'2015-05-13','0',''),(14,'1','fds',7,'fdsfds','','',1,'fdsf','1',1,'2015-08-17',2,'2015-08-16',0,'2015-08-16','0','1;10;3;4'),(15,'1','555',7,'555','','',1,'555','2',1,'2015-08-17',5,'2015-08-17',0,'2015-08-17','0','6;7'),(16,'1','666',7,'666','','',1,'','1',1,'2015-08-17',3,'2015-08-17',0,'2015-08-17','0','6;10'),(17,'1','hhh',7,'hhh','','',1,'','1',1,'2015-08-17',5,'2015-08-17',0,'2015-08-17','0','10');
 
 /*Table structure for table `devicemgt_k_test` */
 

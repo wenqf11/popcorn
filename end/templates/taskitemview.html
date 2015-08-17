@@ -354,13 +354,11 @@
             }
             var helpers = $("#helpers option:selected");
             var hlength = helpers.length;
-            console.log(helpers[0].value);
-            console.log(helpers[1].value);
             var harray = new Array();
             for(var i = 0; i < hlength; i++)
                 harray[i] = helpers[i].value;
-            console.log(harray.join(";"));
             $("[name='helpersstring']").val(harray.join(";"));
+            $(".noneditablemen").removeAttr("disabled");
             return true;
         }
         function delcfm() {
@@ -378,6 +376,8 @@
                 divs[1].childNodes[3].childNodes[1].value = "";
                 divs[2].childNodes[3].childNodes[1].childNodes[1].setAttribute("selected", "selected");
                 divs[3].childNodes[3].childNodes[1].value = "";
+
+                $(".noneditablemen").remove();
 
                 var maintainers = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
                 var mlength = maintainers.length;
@@ -433,36 +433,64 @@
 
                 divs[3].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
 
+                $(".noneditablemen").remove();
+                $("#editor").val("");
+                $("#editor").chosen();
+                $("#editor").trigger("liszt:updated");
+                $("#editor").trigger("chosen:updated");
+                $("#helpers").val("");
+                $("#helpers").chosen();
+                $("#helpers").trigger("liszt:updated");
+                $("#helpers").trigger("chosen:updated");
+
                 var maintainers = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
                 var mlength = maintainers.length;
                 var themaintainer = dataline[7].innerHTML;
+                var tmmark = false;
                 for(var i = 0; i < mlength; i++) {
+                    maintainers[i].removeAttribute("disabled");
                     if(maintainers[i].value == themaintainer) {
                         maintainers[i].setAttribute("selected", "selected");
                         var show = divs[4].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
                         show.innerHTML = themaintainer;
+                        tmmark = true;
                     }
                     else {
                         maintainers[i].removeAttribute("selected");
                     }
+                }
+                if(tmmark == false) {
+                    $(divs[4].childNodes[3].childNodes[1]).append('<option class="noneditablemen" selected value="'+themaintainer+'">'+themaintainer+'</option>');
                 }
 
                 var helpers = divs[5].childNodes[3].childNodes[1].getElementsByTagName("option");
                 var hlength = helpers.length;
                 var thehelper = dataline[8].innerHTML;
                 var thehelpers = thehelper.split(";");
+                var thlength = thehelpers.length;
+                var thmark = new Array();
+                for(var i = 0; i < thlength; i++)
+                    thmark[i] = false;
                 for(var i = 0; i < hlength; i++) {
+                    helpers[i].removeAttribute("disabled");
                     if(helpers[i].value == themaintainer) {
                         helpers[i].setAttribute("disabled", "");
                     }
                     else if($.inArray(helpers[i].value, thehelpers) >= 0) {
                         helpers[i].setAttribute("selected", "selected");
                         maintainers[i].setAttribute("disabled", "");
+                        thmark[$.inArray(helpers[i].value, thehelpers)] = true;
                     }
                     else {
                         helpers[i].removeAttribute("selected");
                     }
                 }
+                for(var i = 0; i < thlength; i++) {
+                    if(thmark[i] == false) {
+                        $(divs[5].childNodes[3].childNodes[1]).append('<option class="noneditablemen" selected disabled value="'+thehelpers[i]+'">'+thehelpers[i]+'</option>');
+                    }
+                }
+
                 $("#editor").trigger("chosen:updated");
                 $("#helpers").trigger("chosen:updated");
 
@@ -490,12 +518,14 @@
                 var helpers = $("#helpers").children("option");
                 var hlength = helpers.length;
                 for(var i = 0; i < hlength; i++) {
-                    if(helpers[i].value == $("#editor option:selected").text()) {
-                        helpers[i].removeAttribute("selected");
-                        helpers[i].setAttribute("disabled", "");
-                    }
-                    else {
-                        helpers[i].removeAttribute("disabled");
+                    if(!$(helpers[i]).hasClass("noneditablemen")) {
+                        if(helpers[i].value == $("#editor option:selected").text()) {
+                            helpers[i].removeAttribute("selected");
+                            helpers[i].setAttribute("disabled", "");
+                        }
+                        else {
+                            helpers[i].removeAttribute("disabled");
+                        }
                     }
                 }
                 $("#helpers").trigger("chosen:updated");
@@ -507,12 +537,14 @@
                 var elength = editor.length;
                 var j = 0;
                 for(var i = 0; i < elength; i++) {
-                    if(j < hlength && editor[i].value == helpers[j].value) {
-                        editor[i].setAttribute("disabled", "");
-                        j++;
-                    }
-                    else {
-                        editor[i].removeAttribute("disabled");
+                    if(!$(editor[i]).hasClass("noneditablemen")) {
+                        if(j < hlength && editor[i].value == helpers[j].value) {
+                            editor[i].setAttribute("disabled", "");
+                            j++;
+                        }
+                        else {
+                            editor[i].removeAttribute("disabled");
+                        }
                     }
                 }
                 $("#editor").trigger("chosen:updated");
