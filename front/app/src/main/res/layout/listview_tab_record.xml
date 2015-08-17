@@ -11,7 +11,7 @@
     <com.beardedhen.androidbootstrap.FontAwesomeText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         fontawesometext:fa_icon="fa-random"
         android:textSize="28sp"
         android:textColor="#33B5E5"
@@ -28,14 +28,23 @@
         android:textSize="14sp" />
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:gravity="end"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <TextView
             android:id="@+id/start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="center_vertical"
+            android:textColor="#000"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/interval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
             android:textColor="#000"
             android:textSize="14sp" />
     </LinearLayout>

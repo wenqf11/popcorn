@@ -58,9 +58,7 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 public class RecordFragment extends ListFragment {
     private List<Map<String, Object>> mData;
 
-    String[] mTitle, mTime, mID;
-
-    public int unfinished;
+    String[] mTitle, mTime, mID, mInterval;
 
     ProgressDialog progressDialog;
 
@@ -103,6 +101,7 @@ public class RecordFragment extends ListFragment {
                                 ArrayList<String> tmp_title = new ArrayList<String>();
                                 ArrayList<String> tmp_time = new ArrayList<String>();
                                 ArrayList<String> tmp_route_id = new ArrayList<String>();
+                                ArrayList<String> tmp_interval = new ArrayList<String>();
                                 if (status.equals("ok")) {
                                     JSONArray results = jsonObject.getJSONArray("data");
                                     for (int i = 0; i < results.length(); ++i) {
@@ -111,27 +110,20 @@ public class RecordFragment extends ListFragment {
                                         String str_start_time = result.getString("start_time");
                                         String route_id = result.getString("id");
                                         String str_interval = result.getString("interval");
-                                        Integer interval = Integer.parseInt(str_interval);
-                                        String[] date = str_start_time.split(":");
-                                        Integer hour = Integer.parseInt(date[0]);
-                                        String minute = date[1];
-                                        int count = (24 - hour)/interval;
-                                        for (int j = 0; j < count; ++j) {
-                                            tmp_title.add(name);
-                                            tmp_time.add((hour+j*interval)+":"+minute);
-                                            tmp_route_id.add(route_id);
-                                        }
+                                        tmp_title.add(name);
+                                        tmp_time.add(str_start_time);
+                                        tmp_route_id.add(route_id);
+                                        tmp_interval.add(str_interval);
                                     }
                                     mTitle = tmp_title.toArray(new String[]{});
                                     mTime = tmp_time.toArray(new String[]{});
                                     mID = tmp_route_id.toArray(new String[]{});
-                                    mData = getData(mTitle, mTime);
+                                    mInterval = tmp_interval.toArray(new String[]{});
+                                    mData = getData(mTitle, mTime, mInterval);
                                     RouteListAdapter adapter = new RouteListAdapter(getActivity());
                                     setListAdapter(adapter);
-                                    unfinished = mTitle.length;
                                 } else {
                                     //Toast.makeText(getActivity(), "您今天没有抄表任务", Toast.LENGTH_SHORT).show();
-                                    unfinished = 0;
                                     //bottomTabMeterText.setText(String.valueOf(1));
                                     //bottomTabMeterText.setText("2");
                                     //bottomTabMeterText.setTextSize(50);
@@ -179,7 +171,6 @@ public class RecordFragment extends ListFragment {
             parent.removeView(recordView);
         }
 
-        unfinished = 0;
         updateRecord();
 
         return recordView;
@@ -231,13 +222,14 @@ public class RecordFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 	}
 
-    private List<Map<String, Object>> getData(String[] str_title, String[] str_time) {
+    private List<Map<String, Object>> getData(String[] str_title, String[] str_time, String[] str_interval) {
         List<Map<String ,Object>> list = new ArrayList<Map<String,Object>>();
 
         for (int i = 0; i < str_title.length; i++) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("title", str_title[i]);
             map.put("start_time", str_time[i]);
+            map.put("interval", str_interval[i]);
             list.add(map);
         }
 
@@ -247,6 +239,7 @@ public class RecordFragment extends ListFragment {
     class ViewHolder {
         public TextView title;
         public TextView start_time;
+        public TextView interval;
     }
 
     public class RouteListAdapter extends BaseAdapter {
@@ -284,7 +277,7 @@ public class RecordFragment extends ListFragment {
                 convertView = mInflater.inflate(R.layout.listview_tab_record, null);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 holder.start_time = (TextView) convertView.findViewById(R.id.start_time);
-
+                holder.interval = (TextView) convertView.findViewById(R.id.interval);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -292,7 +285,7 @@ public class RecordFragment extends ListFragment {
 
             holder.title.setText((String)mData.get(position).get("title"));
             holder.start_time.setText((String)mData.get(position).get("start_time"));
-
+            holder.interval.setText((String)mData.get(position).get("interval")+"小时一次");
             return convertView;
         }
     }
