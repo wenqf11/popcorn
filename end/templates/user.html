@@ -81,13 +81,17 @@
     </div>
 
     <hr style="margin: 10px"/>
+    {% if "删除用户" in modelsshow %}
     <a id="delete_link"class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/userdel?id={{userinfo.id}}">
         <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
     </a>
+    {% endif %}
+    {% if "编辑用户" in modelsshow %}
     <span style="float:right">&nbsp;&nbsp;</span>
     <a id="edit_link"class="btn btn-white btn-info btn-bold" style="float:right" href="/user_operate/?id={{userinfo.id}}">
         <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
     </a>
+    {% endif %}
 </div>
 {% endblock %}
 

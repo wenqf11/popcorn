@@ -39,7 +39,9 @@
                             <th>编辑时间</th>
                             <th>审核人</th>
                             <th>审核时间</th>
+                            {% if "编辑备件信息" in modelsshow or "删除备件信息" in modelsshow or "审核备件信息" in modelsshow %}
                             <th></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -63,22 +65,30 @@
                             <td>{{ dataitem.editdatetime }}</td>
                             <td>{{ dataitem.auditor }}</td>
                             <td>{{ dataitem.auditdatetime }}</td>
+                            {% if "编辑备件信息" in modelsshow or "删除备件信息" in modelsshow or "审核备件信息" in modelsshow %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
+                                    {% if "编辑备件信息" in modelsshow %}
                                     <a class="green" href="/operate_spare?id={{ dataitem.id }}">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "删除备件信息" in modelsshow %}
                                     <a class="red" href="/delete_spare?id={{ dataitem.id }}" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
+                                    {% endif %}
                                     {% if dataitem.auditor %}
                                     {% else %}
+                                    {% if "审核备件信息" in modelsshow %}
                                     <a class="blue" href="/submit_spare?id={{ dataitem.id }}&audit=true" onclick="audcfm()">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
                                     {% endif %}
+                                    {% endif %}
                                 </div>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

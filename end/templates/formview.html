@@ -33,7 +33,9 @@
                                                 <th>阈值上限（不填表示不限）</th>
                                                 <th>选择项定义（用“/”隔开）</th>
                                                 <th>备注</th>
+                                                {% if "编辑设备" in modelsshow %}
                                                 <th></th>
+                                                {% endif %}
                                             </tr>
                                         </thead>
 
@@ -48,6 +50,7 @@
                                                 <td>{{ dataitem.choices }}</td>
                                                 <td>{{ dataitem.memo }}</td>
 
+                                                {% if "编辑设备" in modelsshow %}
                                                 <td>
                                                     <div class="hidden-sm hidden-xs action-buttons">
                                                         <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
@@ -58,15 +61,18 @@
                                                         </a>
                                                     </div>
                                                 </td>
+                                                {% endif %}
                                             </tr>
                                             {% endfor %}
                                         </tbody>
                                     </table>
+                                    {% if "编辑设备" in modelsshow %}
                                     <div>
                                         <a class="btn btn-blue btn-info btn-bold" href="#my-modal" onclick="setData()" role="button" data-toggle="modal">
                                             <i class="ace-icon fa fa-plus bigger-130"></i>添加
                                         </a>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

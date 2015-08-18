@@ -92,9 +92,11 @@
 
  <div class="row-fluid">
     <!-- block -->
+    {% if "添加供应商" in modelsshow %}
     <p>
         <a class="btn btn-success" href="/add_supplier">+新供应商</a>
     </p>
+    {% endif %}
     <div class="block">
         <div class="block-content collapse in">
             <div class="span12">
@@ -108,7 +110,9 @@
                             <th>公司联系人</th>
                             <th>联系人电话</th>
                             <th>备注</th>
+                            {% if "编辑供应商" in modelsshow or "删除供应商" in modelsshow %}
                             <th></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -120,21 +124,22 @@
                             <td>{{ dataitem.linkman }}</td>
                             <td>{{ dataitem.mobile }}</td>
                             <td>{{ dataitem.memo }}</td>
+                            {% if "编辑供应商" in modelsshow or "删除供应商" in modelsshow %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
-
+                                    {% if "编辑供应商" in modelsshow %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "删除供应商" in modelsshow %}
                                     <a class="red" href="/del_supplier?name={{ dataitem.name }}&type=2" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
-
-                                    <a class="red" href="">
-                                        <i class="ace-icon fa fa-search bigger-130"></i>
-                                    </a>
+                                    {% endif %}
                                 </div>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

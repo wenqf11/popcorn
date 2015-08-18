@@ -13,11 +13,13 @@
 {% endblock %}
 
 {% block maincontent %}
+{% if "添加部门" in modelsshow %}
  <div class="row-fluid">
     <p>
         <a class="btn btn-success" href="/departmentadd">+新部门</a>
     </p>
  </div>
+{% endif %}
 <div class="col-xs-5">
     <div id="treeview6"></div>
 </div>
@@ -85,13 +87,17 @@
     </div>
     <hr style="margin: 10px"/>
 
+    {% if "删除部门" in modelsshow %}
     <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/department_del?id={{department_info.id}}">
         <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
     </a>
+    {% endif %}
+    {% if "编辑部门" in modelsshow %}
     <span style="float:right">&nbsp;&nbsp;</span>
     <a class="btn btn-white btn-info btn-bold" style="float:right" href="/department_revise/?id={{department_info.id}}">
         <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
     </a>
+    {% endif %}
 </div>
     {% endif %}
 {% endblock %}

@@ -15,6 +15,7 @@
 {% block content %}
  <div class="row-fluid">
     <!-- block -->
+    {% if "添加工具库存记录" in modelsshow %}
     <p>
         <div>
             <a class="btn btn-success btn-bold" href="#my-modal2" onclick="setMax()" role="button" data-toggle="modal">
@@ -22,6 +23,7 @@
             </a>
         </div>
     </p>
+    {% endif %}
     <div class="block">
         <div class="block-content collapse in">
             <div class="span12">
@@ -44,7 +46,9 @@
                             <th>编辑时间</th>
                             <th>审核人</th>
                             <th>审核时间</th>
+                            {% if "编辑工具库存记录" in modelsshow or "删除工具库存记录" in modelsshow or "审核工具库存记录" in modelsshow %}
                             <th></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -65,24 +69,32 @@
                             <td>{{ dataitem.editdatetime }}</td>
                             <td>{{ dataitem.auditor }}</td>
                             <td>{{ dataitem.auditdatetime }}</td>
+                            {% if "编辑工具库存记录" in modelsshow or "删除工具库存记录" in modelsshow or "审核工具库存记录" in modelsshow %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% if dataitem.auditor %}
                                     {% else %}
+                                    {% if "编辑工具库存记录" in modelsshow %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "删除工具库存记录" in modelsshow %}
                                     <a class="red" href="/delete_tooluse?id={{ dataitem.id }}" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
+                                    {% endif %}
                                     {% if dataitem.audit %}
+                                    {% if "审核工具库存记录" in modelsshow %}
                                     <a class="blue" href="/submit_tooluse?id={{ dataitem.id }}&audit=true" onclick="audcfm()">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
                                     {% endif %}
                                     {% endif %}
+                                    {% endif %}
                                 </div>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

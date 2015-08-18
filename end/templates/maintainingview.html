@@ -35,6 +35,7 @@
                             <input type="text" name="title" value="" />
                         </div>
                     </div>
+                    {% if "指派维修" in modelsshow %}
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">指派维修人<span class="required">*</span></label>
                         <div class="col-sm-9">
@@ -47,6 +48,7 @@
                             </select>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">故障描述<span class="required">*</span></label>
                         <div class="col-sm-9">
@@ -162,12 +164,16 @@
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '3' %}
                                     {% else %}
+                                    {% if "编辑维修" in modelsshow %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "删除维修" in modelsshow %}
                                     <a class="red" href="/delete_maintenance?id={{ dataitem.id }}&type=2" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
+                                    {% endif %}
                                     {% endifequal %}
                                     <a class="red" href="#my-modal1" data-toggle="modal">
                                         <i class="ace-icon fa fa-search bigger-130"></i>

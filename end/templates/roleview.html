@@ -23,13 +23,17 @@
         </div>
         <div id="{{ dataitem.id }}" class="panel-collapse collapse notin" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
+                {% if "删除角色" in modelsshow %}
                 <a class="btn btn-white btn-danger btn-bold" style="float:right" href="/delete_role?id={{ dataitem.id }}" onclick="delcfm()">
                     <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
                 </a>
+                {% endif %}
+                {% if "编辑角色" in modelsshow %}
                 <span style="float:right">&nbsp;&nbsp;</span>
                 <a class="btn btn-white btn-info btn-bold" style="float:right" href="/operate_role?id={{ dataitem.id }}">
                     <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
                 </a>
+                {% endif %}
                 <p>所属部门：{{ dataitem.classname }}</p>
                 <p>编辑者：{{ dataitem.editor }}</p>
                 <p>编辑时间：{{ dataitem.editdatetime | date:"Y年m月d日" }}</p>

@@ -94,7 +94,9 @@
  <div class="row-fluid">
     <!-- block -->
    <p>
+    {% if "添加生产厂家" in modelsshow %}
         <a class="btn btn-success" href="/add_producer">+新厂家</a>
+    {% endif %}
         <a id="tabletools"></a>
    </p>
    <div class="block">
@@ -110,7 +112,9 @@
                             <th>公司联系人</th>
                             <th>联系人电话</th>
                             <th>备注</th>
+                            {% if "编辑生产厂家" in modelsshow or "删除生产厂家" in modelsshow %}
                             <th></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -122,22 +126,22 @@
                             <td>{{ dataitem.linkman }}</td>
                             <td>{{ dataitem.mobile }}</td>
                             <td>{{ dataitem.memo }}</td>
+                            {% if "编辑生产厂家" in modelsshow or "删除生产厂家" in modelsshow %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
-                                    {% ifequal dataitem.state '3' %}
-                                    {% else %}
+                                    {% if "编辑生产厂家" in modelsshow %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "删除生产厂家" in modelsshow %}
                                     <a class="red" href="/del_producer?name={{ dataitem.name }}&type=2" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
-                                    {% endifequal %}
-                                    <a class="red" href="">
-                                        <i class="ace-icon fa fa-search bigger-130"></i>
-                                    </a>
+                                    {% endif %}
                                 </div>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -41,6 +41,7 @@
                     </select>
                 </div>
             </div>
+            {% if "指派维修" in modelsshow %}
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
                 <div class="col-sm-2">
@@ -52,6 +53,7 @@
                     </select>
                 </div>
             </div>
+            {% endif %}
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">故障描述<span class="required">*</span></label>
                 <div class="col-sm-9">

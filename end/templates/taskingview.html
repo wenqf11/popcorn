@@ -111,12 +111,16 @@
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '计划' %}
+                                    {% if "编辑任务" in modelsshow %}
                                     <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-pencil bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "删除任务" in modelsshow %}
                                     <a class="red" href="/delete_task?id={{ dataitem.id }}&type=2" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
+                                    {% endif %}
                                     {% endifequal %}
                                     <a class="red" href="/view_taskitem?id={{ dataitem.id }}">
                                         <i class="ace-icon fa fa-search bigger-130"></i>

@@ -139,12 +139,16 @@
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '4' %}
+                                    {% if "删除维修" in modelsshow %}
                                     <a class="red" href="/delete_maintenance?id={{ dataitem.id }}&type=1" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "审核维修" in modelsshow %}
                                     <a class="blue" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
+                                    {% endif %}
                                     {% endifequal %}
                                     <a class="red" href="#my-modal1" data-toggle="modal">
                                         <i class="ace-icon fa fa-search bigger-130"></i>

@@ -80,18 +80,24 @@
         </h5>
     </div>
 
+    {% if "删除设备" in modelsshow %}
     <hr style="margin: 10px"/>
     <a class="btn btn-white btn-danger btn-bold" style="float:right" onclick="delcfm()" href="/devicedel?id={{deviceinfo.id}}">
         <i class="ace-icon fa fa-trash-o bigger-130"></i>删除
     </a>
+    {% endif %}
+    {% if "编辑设备" in modelsshow %}
     <span style="float:right">&nbsp;&nbsp;</span>
     <a class="btn btn-white btn-info btn-bold" style="float:right" href="/operate_device/?id={{deviceinfo.id}}">
         <i class="ace-icon fa fa-pencil bigger-130"></i>编辑
     </a>
+    {% endif %}
+    {% if "保养计划" in modelsshow %}
     <span style="float:right">&nbsp;&nbsp;</span>
     <a class="btn btn-white btn-success btn-bold" style="float:right" href="/view_deviceplan/?id={{deviceinfo.id}}">
         <i class="ace-icon fa fa-pencil bigger-130"></i>保养计划
     </a>
+    {% endif %}
     <span style="float:right">&nbsp;&nbsp;</span>
     <a class="btn btn-white btn-success btn-bold" style="float:right" href="/view_form/?id={{deviceinfo.id}}">
         <i class="ace-icon fa fa-pencil bigger-130"></i>抄表表单

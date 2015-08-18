@@ -13,11 +13,13 @@
 {% endblock %}
 
 {% block maincontent %}
+{% if "添加设备类型" in modelsshow %}
  <div class="row-fluid">
     <p>
         <a class="btn btn-success" href="/device_type_add">+新设备类型</a>
     </p>
  </div>
+{% endif %}
 <div class="col-xs-5">
     <div id="treeview6"></div>
 </div>

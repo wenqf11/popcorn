@@ -91,7 +91,9 @@
                             <th>审核时间</th>
                             <th>给分系数</th>
                             <th>状态</th>
+                            {% if "删除保养" in modelsshow or "审核保养" in modelsshow %}
                             <th></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -121,18 +123,24 @@
                             {% else %}
                             <td>已审核</td>
                             {% endifequal %}
+                            {% if "删除保养" in modelsshow or "审核保养" in modelsshow %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">
                                     {% ifequal dataitem.state '4' %}
+                                    {% if "删除保养" in modelsshow %}
                                     <a class="red" href="/delete_upkeep?id={{ dataitem.id }}" onclick="delcfm()">
                                         <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if "审核保养" in modelsshow %}
                                     <a class="blue" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
+                                    {% endif %}
                                     {% endifequal %}
                                 </div>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

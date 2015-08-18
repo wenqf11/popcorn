@@ -34,7 +34,9 @@
                                                 <th>起始时间</th>
                                                 <th>负责人</th>
                                                 <th>备注</th>
+                                                {% if "编辑保养" in modelsshow or "删除保养" in modelsshow %}
                                                 <th></th>
+                                                {% endif %}
                                             </tr>
                                         </thead>
 
@@ -49,25 +51,33 @@
                                                 <td>{{ dataitem.assignor }}</td>
                                                 <td>{{ dataitem.memo }}</td>
 
+                                                {% if "编辑保养" in modelsshow or "删除保养" in modelsshow %}
                                                 <td>
                                                     <div class="hidden-sm hidden-xs action-buttons">
+                                                        {% if "编辑保养" in modelsshow %}
                                                         <a class="green" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
                                                             <i class="ace-icon fa fa-pencil bigger-130"></i>
                                                         </a>
+                                                        {% endif %}
+                                                        {% if "删除保养" in modelsshow %}
                                                         <a class="red" href="/delete_deviceplan?id={{ dataitem.id }}&deviceid={{ deviceid }}" onclick="delcfm()">
                                                             <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                                         </a>
+                                                        {% endif %}
                                                     </div>
                                                 </td>
+                                                {% endif %}
                                             </tr>
                                             {% endfor %}
                                         </tbody>
                                     </table>
+                                    {% if "添加保养" in modelsshow %}
                                     <div>
                                         <a class="btn btn-blue btn-info btn-bold" href="#my-modal" onclick="setData()" role="button" data-toggle="modal">
                                             <i class="ace-icon fa fa-plus bigger-130"></i>添加
                                         </a>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

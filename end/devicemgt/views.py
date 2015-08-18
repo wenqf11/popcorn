@@ -18,59 +18,59 @@ import json
 
 
 purviewhash = {
-    1:["系统设置","部门设置"],
-    2:["系统设置","部门设置"],
-    3:["系统设置","部门设置"],
-    4:["用户管理","角色管理"],
-    5:["用户管理","角色管理","添加角色"],
-    6:["用户管理","角色管理"],
-    7:["用户管理","所有用户"],
-    8:["用户管理","所有用户","添加用户"],
-    9:["用户管理","所有用户"],
-    10:["设备管理","设备类型"],
-    11:["设备管理","设备类型"],
-    12:["设备管理","设备类型"],
-    13:["设备管理","生产厂家"],
-    14:["设备管理","生产厂家"],
-    15:["设备管理","生产厂家"],
-    16:["设备管理","供应商"],
-    17:["设备管理","供应商"],
-    18:["设备管理","供应商"],
-    19:["设备管理","所有设备"],
-    20:["设备管理","所有设备","添加设备"],
-    21:["设备管理","所有设备"],
-    22:["库存","所有备件信息"],
-    23:["库存","所有备件信息","添加备件信息"],
-    24:["库存","所有备件信息"],
-    25:["库存","所有工具信息"],
-    26:["库存","所有工具信息","添加工具信息"],
-    27:["库存","所有工具信息"],
-    28:["维修保养","尚未保养","保养记录","设备管理","所有设备"],
-    29:["设备管理","所有设备"],
-    30:["维修保养","保养记录","设备管理","所有设备"],
-    31:["维修保养","尚未维修","维修记录"],
-    32:["维修保养","尚未维修"],
-    33:["维修保养","尚未维修","添加维修任务"],
-    34:["维修保养","尚未维修","维修记录"],
-    35:["任务","未完成任务","任务记录"],
-    36:["任务","未完成任务","任务记录","添加任务"],
-    37:["任务","未完成任务","任务记录"],
-    38:["库存","备件使用","备件出入库"],
-    39:["库存","备件使用","备件出入库"],
-    40:["库存","备件使用","备件出入库"],
-    41:["库存","工具使用","工具出入库"],
-    42:["库存","工具使用","工具出入库"],
-    43:["库存","工具使用","工具出入库"],
-    44:["抄表数据"],
+    1:["系统设置","部门设置"],#ok
+    2:["系统设置","部门设置","添加部门","编辑部门"],#ok
+    3:["系统设置","部门设置","删除部门"],#审核？
+    4:["用户管理","角色管理"],#ok
+    5:["用户管理","角色管理","添加角色","编辑角色"],#ok
+    6:["用户管理","角色管理","删除角色"],#审核？
+    7:["用户管理","所有用户"],#ok
+    8:["用户管理","所有用户","添加用户","编辑用户"],#ok
+    9:["用户管理","所有用户","删除用户"],#审核？
+    10:["设备管理","设备类型"],#ok
+    11:["设备管理","设备类型","添加设备类型"],#编辑？
+    12:["设备管理","设备类型"],#删除/审核？
+    13:["设备管理","生产厂家"],#ok
+    14:["设备管理","生产厂家","添加生产厂家","编辑生产厂家"],#ok
+    15:["设备管理","生产厂家","删除生产厂家"],#审核？
+    16:["设备管理","供应商"],#ok
+    17:["设备管理","供应商","添加供应商","编辑供应商"],#ok
+    18:["设备管理","供应商","删除供应商"],#审核？
+    19:["设备管理","所有设备"],#ok
+    20:["设备管理","所有设备","添加设备","编辑设备"],#ok
+    21:["设备管理","所有设备","删除设备"],#审核？
+    22:["库存","所有备件信息"],#ok
+    23:["库存","所有备件信息","添加备件信息","编辑备件信息"],#ok
+    24:["库存","所有备件信息","删除备件信息","审核备件信息"],#ok
+    25:["库存","所有工具信息"],#ok
+    26:["库存","所有工具信息","添加工具信息","编辑工具信息"],#ok
+    27:["库存","所有工具信息","删除工具信息","审核工具信息"],#ok
+    28:["维修保养","尚未保养","保养记录","设备管理","所有设备","保养计划"],#ok
+    29:["设备管理","所有设备","保养计划","添加保养","编辑保养"],#ok
+    30:["维修保养","保养记录","设备管理","所有设备","保养计划","删除保养","审核保养"],#ok
+    31:["维修保养","尚未维修","维修记录"],#ok
+    32:["维修保养","尚未维修","指派维修"],#ok
+    33:["维修保养","尚未维修","添加维修任务","编辑维修"],#ok
+    34:["维修保养","尚未维修","维修记录","删除维修","审核维修"],#ok
+    35:["任务","未完成任务","任务记录"],#ok
+    36:["任务","未完成任务","任务记录","添加任务","编辑任务"],#ok
+    37:["任务","未完成任务","任务记录","删除任务","审核任务"],#ok
+    38:["库存","备件使用","备件出入库"],#ok
+    39:["库存","备件使用","备件出入库","添加备件库存记录","编辑备件库存记录"],#ok
+    40:["库存","备件使用","备件出入库","删除备件库存记录","审核备件库存记录"],#ok
+    41:["库存","工具使用","工具出入库"],#ok
+    42:["库存","工具使用","工具出入库","添加工具库存记录","编辑工具库存记录"],#ok
+    43:["库存","工具使用","工具出入库","删除工具库存记录","审核工具库存记录"],#ok
+    44:["抄表数据"],#ok
     45:["系统设置","积分设置"],
     46:["系统设置","积分设置"],
     47:["系统设置","积分设置"],
     48:["系统设置","彩蛋设置"],
     49:["系统设置","彩蛋设置"],
     50:["系统设置","彩蛋设置"],
-    51:["路线设置","查看路线"],
-    52:["路线设置","查看路线","添加路线"],
-    53:["路线设置","查看路线"],
+    51:["路线设置","查看路线"],#ok
+    52:["路线设置","查看路线","添加路线","编辑路线"],#ok
+    53:["路线设置","查看路线","删除路线"],#审核？
     54:["排班设置"],
     55:["排班设置"],
     56:["排班设置"],
@@ -1776,9 +1776,9 @@ def delete_form(request):
 @login_required
 def view_deviceplan(request):
     #权限判断
-    _msg = check_purview(request.user.username, 28)
-    if _msg != 0:
-        return HttpResponseRedirect('/device/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 28)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/device/?msg='+_msg)
 
     _deviceid = request.GET.get('id')
     _device = k_device.objects.get(id=_deviceid)
@@ -1820,9 +1820,9 @@ def view_deviceplan(request):
 def submit_deviceplan(request):
     _deviceid = request.GET.get('deviceid')
     #权限判断
-    _msg = check_purview(request.user.username, 29)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_deviceplan/?msg='+_msg+'&id='+_deviceid)
+    # _msg = check_purview(request.user.username, 29)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_deviceplan/?msg='+_msg+'&id='+_deviceid)
     
     _title = request.GET.get('title')
     _period = request.GET.get('period')
@@ -1867,9 +1867,9 @@ def delete_deviceplan(request):
     _id = request.GET.get('id')
     _deviceid = request.GET.get('deviceid')
     #权限判断
-    _msg = check_purview(request.user.username, 30)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_deviceplan/?msg='+_msg+'&id='+_deviceid)
+    # _msg = check_purview(request.user.username, 30)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_deviceplan/?msg='+_msg+'&id='+_deviceid)
     
     if _id:
         _deviceplan = k_deviceplan.objects.get(id=_id)
@@ -2044,9 +2044,9 @@ def view_maintained(request):
 @login_required
 def add_maintenance(request):
     #权限判断
-    _msg = check_purview(request.user.username, 33)
-    if _msg != 0:
-        return HttpResponseRedirect('/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 33)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/?msg='+_msg)
     
     #分类筛选
     user = k_user.objects.get(username=request.user.username)
@@ -2075,32 +2075,32 @@ def submit_maintenance(request):
     _factor = request.GET.get('factor')
     _editor = request.GET.get('editor')
     #权限判断
-    if _factor:
-        _msg = check_purview(request.user.username, 34)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_maintained/?msg='+_msg)
-    else:
-        _msg = check_purview(request.user.username, 33)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
-        if _id:
-            _maintenance = k_maintenance.objects.get(id=_id)
-            if _editor == "nopersonchosen":
-                if _maintenance.editorid != 0:
-                    _msg = check_purview(request.user.username, 32)
-                    if _msg != 0:
-                        return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
-            else:
-                _maintainer = k_user.objects.get(name=_editor)
-                if _maintenance.editorid != _maintainer.id:
-                    _msg = check_purview(request.user.username, 32)
-                    if _msg != 0:
-                        return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
-        else:
-            if _editor != "nopersonchosen":
-                _msg = check_purview(request.user.username, 32)
-                if _msg != 0:
-                    return HttpResponseRedirect('/add_maintenance/?msg='+_msg)
+    # if _factor:
+    #     _msg = check_purview(request.user.username, 34)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_maintained/?msg='+_msg)
+    # else:
+    #     _msg = check_purview(request.user.username, 33)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+    #     if _id:
+    #         _maintenance = k_maintenance.objects.get(id=_id)
+    #         if _editor == "nopersonchosen":
+    #             if _maintenance.editorid != 0:
+    #                 _msg = check_purview(request.user.username, 32)
+    #                 if _msg != 0:
+    #                     return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+    #         else:
+    #             _maintainer = k_user.objects.get(name=_editor)
+    #             if _maintenance.editorid != _maintainer.id:
+    #                 _msg = check_purview(request.user.username, 32)
+    #                 if _msg != 0:
+    #                     return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+    #     else:
+    #         if _editor != "nopersonchosen":
+    #             _msg = check_purview(request.user.username, 32)
+    #             if _msg != 0:
+    #                 return HttpResponseRedirect('/add_maintenance/?msg='+_msg)
     
     _title = request.GET.get('title')
     _brief = request.GET.get('brief')
@@ -2162,12 +2162,12 @@ def submit_maintenance(request):
 def delete_maintenance(request):
     _type = request.GET.get('type')
     #权限判断
-    _msg = check_purview(request.user.username, 34)
-    if _msg != 0:
-        if _type == "1":
-            return HttpResponseRedirect('/view_maintained/?msg='+_msg)
-        else:
-            return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 34)
+    # if _msg != 0:
+    #     if _type == "1":
+    #         return HttpResponseRedirect('/view_maintained/?msg='+_msg)
+    #     else:
+    #         return HttpResponseRedirect('/view_maintaining/?msg='+_msg)
 
     _id = request.GET.get('id')
     if _id:
@@ -2311,9 +2311,9 @@ def view_upkeeped(request):
 @login_required
 def submit_upkeep(request):
     #权限判断
-    _msg = check_purview(request.user.username, 30)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_upkeeped/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 30)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_upkeeped/?msg='+_msg)
         
     _id = request.GET.get('id')
     _factor = request.GET.get('factor')
@@ -2330,9 +2330,9 @@ def submit_upkeep(request):
 @login_required
 def delete_upkeep(request):
     #权限判断
-    _msg = check_purview(request.user.username, 30)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_upkeeped/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 30)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_upkeeped/?msg='+_msg)
         
     _id = request.GET.get('id')
     if _id:
@@ -2418,9 +2418,9 @@ def view_tasked(request):
 @login_required
 def add_task(request):
     #权限判断
-    _msg = check_purview(request.user.username, 37)
-    if _msg != 0:
-        return HttpResponseRedirect('/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 36)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/?msg='+_msg)
         
     #非法权限信息
     purview_msg = request.GET.get('msg')
@@ -2434,9 +2434,9 @@ def add_task(request):
 @login_required
 def submit_task(request):
     #权限判断
-    _msg = check_purview(request.user.username, 37)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_tasking/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 36)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_tasking/?msg='+_msg)
         
     _title = request.GET.get('title')
     _createcontent = request.GET.get('createcontent')
@@ -2474,12 +2474,12 @@ def delete_task(request):
     _id = request.GET.get('id')
     _type = request.GET.get('type')
     #权限判断
-    _msg = check_purview(request.user.username, 38)
-    if _msg != 0:
-        if _type == "1":
-            return HttpResponseRedirect('/view_tasked/?msg='+_msg)
-        else:
-            return HttpResponseRedirect('/view_tasking/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 37)
+    # if _msg != 0:
+    #     if _type == "1":
+    #         return HttpResponseRedirect('/view_tasked/?msg='+_msg)
+    #     else:
+    #         return HttpResponseRedirect('/view_tasking/?msg='+_msg)
         
     if _id:
         _maintenance = k_task.objects.get(id=_id)
@@ -2565,29 +2565,29 @@ def submit_taskitem(request):
     _user = k_user.objects.get(username=request.user.username)
 
     #权限判断
-    if _submittype == "1":
-        _msg = check_purview(request.user.username, 38)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
-    elif _submittype == "2":
-        _msg = check_purview(request.user.username, 37)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+    # if _submittype == "1":
+    #     _msg = check_purview(request.user.username, 37)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+    # elif _submittype == "2":
+    #     _msg = check_purview(request.user.username, 36)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
 
-        # _taskitem = k_taskitem.objects.get(id=_id)
+    #     # _taskitem = k_taskitem.objects.get(id=_id)
 
-        # _tasker = k_user.objects.get(name=_editor)
-        # if _taskitem.editorid != _tasker.id:
-        #     _msg = check_purview(request.user.username, 36)
-        #     if _msg != 0:
-        #         return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
-    else:
-        _msg = check_purview(request.user.username, 37)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
-        # _msg = check_purview(request.user.username, 36)
-        # if _msg != 0:
-        #     return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+    #     # _tasker = k_user.objects.get(name=_editor)
+    #     # if _taskitem.editorid != _tasker.id:
+    #     #     _msg = check_purview(request.user.username, 35.5)
+    #     #     if _msg != 0:
+    #     #         return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+    # else:
+    #     _msg = check_purview(request.user.username, 36)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
+    #     # _msg = check_purview(request.user.username, 35.5)
+    #     # if _msg != 0:
+    #     #     return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id='+_taskid)
 
 
     if _submittype == "1":
@@ -2643,9 +2643,9 @@ def delete_taskitem(request):
     _id = request.GET.get('id')
     _taskitem = k_taskitem.objects.get(id=_id)
     #权限判断
-    _msg = check_purview(request.user.username, 38)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id=%i' % _taskitem.taskid_id)
+    # _msg = check_purview(request.user.username, 37)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_taskitem/?msg='+_msg+'&id=%i' % _taskitem.taskid_id)
 
     if _id:
         _taskitem = k_taskitem.objects.get(id=_id)
@@ -2722,12 +2722,12 @@ def view_spare(request):
 def operate_spare(request):
     _id = request.GET.get('id')
     #权限判断
-    _msg = check_purview(request.user.username, 23)
-    if _msg != 0:
-        if _id:
-            return HttpResponseRedirect('/view_spare/?msg='+_msg)
-        else:
-            return HttpResponseRedirect('/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 23)
+    # if _msg != 0:
+    #     if _id:
+    #         return HttpResponseRedirect('/view_spare/?msg='+_msg)
+    #     else:
+    #         return HttpResponseRedirect('/?msg='+_msg)
 
     server_msg = request.GET.get('msg')
     if server_msg == None:
@@ -2781,14 +2781,14 @@ def submit_spare(request):
     _id = request.GET.get('id')
     _audit = request.GET.get('audit')
     #权限判断
-    if _audit:
-        _msg = check_purview(request.user.username, 24)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_spare/?msg='+_msg)
-    else:
-        _msg = check_purview(request.user.username, 23)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_spare/?msg='+_msg)
+    # if _audit:
+    #     _msg = check_purview(request.user.username, 24)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_spare/?msg='+_msg)
+    # else:
+    #     _msg = check_purview(request.user.username, 23)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_spare/?msg='+_msg)
 
     _classname = request.GET.get('classname')
     _brand = request.GET.get('brand')
@@ -2862,9 +2862,9 @@ def submit_spare(request):
 
 def delete_spare(request):
     #权限判断
-    _msg = check_purview(request.user.username, 24)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_spare/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 24)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_spare/?msg='+_msg)
 
     _id = request.GET.get('id')
     if _id:
@@ -2902,7 +2902,7 @@ def sparebatch_submit(request):
 
 def view_sparebill(request):
     #权限判断
-    # _msg = check_purview(request.user.username, 39)
+    # _msg = check_purview(request.user.username, 38)
     # if _msg != 0:
     #     return HttpResponseRedirect('/?msg='+_msg)
 
@@ -2977,14 +2977,14 @@ def submit_sparebill(request):
     _id = request.GET.get('id')
     _audit = request.GET.get('audit')
     #权限判断
-    if _audit:
-        _msg = check_purview(request.user.username, 41)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
-    else:
-        _msg = check_purview(request.user.username, 40)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
+    # if _audit:
+    #     _msg = check_purview(request.user.username, 40)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
+    # else:
+    #     _msg = check_purview(request.user.username, 39)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
 
     #_using = request.GET.get('using')
     _returned = request.GET.get('returned')
@@ -3056,9 +3056,9 @@ def submit_sparebill(request):
 
 def delete_sparebill(request):
     #权限判断
-    _msg = check_purview(request.user.username, 41)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 40)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_sparebill/?msg='+_msg)
 
     _id = request.GET.get('id')
     if _id:
@@ -3079,7 +3079,7 @@ def delete_sparebill(request):
 
 def view_sparecount(request):
     #权限判断
-    # _msg = check_purview(request.user.username, 39)
+    # _msg = check_purview(request.user.username, 38)
     # if _msg != 0:
     #     return HttpResponseRedirect('/?msg='+_msg)
 
@@ -3159,14 +3159,14 @@ def submit_sparecount(request):
     _id = request.GET.get('id')
     _audit = request.GET.get('audit')
     #权限判断
-    if _audit:
-        _msg = check_purview(request.user.username, 41)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
-    else:
-        _msg = check_purview(request.user.username, 40)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
+    # if _audit:
+    #     _msg = check_purview(request.user.username, 40)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
+    # else:
+    #     _msg = check_purview(request.user.username, 39)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
 
     _brief = request.GET.get('brief')
     _state = request.GET.get('state')
@@ -3242,9 +3242,9 @@ def submit_sparecount(request):
 
 def delete_sparecount(request):
     #权限判断
-    _msg = check_purview(request.user.username, 41)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 40)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_sparecount/?msg='+_msg)
 
     _id = request.GET.get('id')
     if _id:
@@ -3323,12 +3323,12 @@ def view_tool(request):
 def operate_tool(request):
     _id = request.GET.get('id')
     #权限判断
-    _msg = check_purview(request.user.username, 26)
-    if _msg != 0:
-        if _id:
-            return HttpResponseRedirect('/view_tool/?msg='+_msg)
-        else:
-            return HttpResponseRedirect('/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 26)
+    # if _msg != 0:
+    #     if _id:
+    #         return HttpResponseRedirect('/view_tool/?msg='+_msg)
+    #     else:
+    #         return HttpResponseRedirect('/?msg='+_msg)
 
     server_msg = request.GET.get('msg')
     if server_msg == None:
@@ -3383,14 +3383,14 @@ def submit_tool(request):
     _id = request.GET.get('id')
     _audit = request.GET.get('audit')
     #权限判断
-    if _audit:
-        _msg = check_purview(request.user.username, 27)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_tool/?msg='+_msg)
-    else:
-        _msg = check_purview(request.user.username, 26)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_tool/?msg='+_msg)
+    # if _audit:
+    #     _msg = check_purview(request.user.username, 27)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_tool/?msg='+_msg)
+    # else:
+    #     _msg = check_purview(request.user.username, 26)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_tool/?msg='+_msg)
 
     _classname = request.GET.get('classname')
     _brand = request.GET.get('brand')
@@ -3467,9 +3467,9 @@ def submit_tool(request):
 
 def delete_tool(request):
     #权限判断
-    _msg = check_purview(request.user.username, 27)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_tool/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 27)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_tool/?msg='+_msg)
 
     _id = request.GET.get('id')
     if _id:
@@ -3484,7 +3484,7 @@ def delete_tool(request):
 
 def view_tooluse(request):
     #权限判断
-    # _msg = check_purview(request.user.username, 42)
+    # _msg = check_purview(request.user.username, 41)
     # if _msg != 0:
     #     return HttpResponseRedirect('/?msg='+_msg)
 
@@ -3559,14 +3559,14 @@ def submit_tooluse(request):
     _id = request.GET.get('id')
     _audit = request.GET.get('audit')
     #权限判断
-    if _audit:
-        _msg = check_purview(request.user.username, 44)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
-    else:
-        _msg = check_purview(request.user.username, 43)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
+    # if _audit:
+    #     _msg = check_purview(request.user.username, 43)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
+    # else:
+    #     _msg = check_purview(request.user.username, 42)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
 
     #_using = request.GET.get('using')
     _returned = request.GET.get('returned')
@@ -3638,9 +3638,9 @@ def submit_tooluse(request):
 
 def delete_tooluse(request):
     #权限判断
-    _msg = check_purview(request.user.username, 44)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 43)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_tooluse/?msg='+_msg)
 
     _id = request.GET.get('id')
     if _id:
@@ -3661,7 +3661,7 @@ def delete_tooluse(request):
 
 def view_toolcount(request):
     #权限判断
-    # _msg = check_purview(request.user.username, 42)
+    # _msg = check_purview(request.user.username, 41)
     # if _msg != 0:
     #     return HttpResponseRedirect('/?msg='+_msg)
 
@@ -3741,14 +3741,14 @@ def submit_toolcount(request):
     _id = request.GET.get('id')
     _audit = request.GET.get('audit')
     #权限判断
-    if _audit:
-        _msg = check_purview(request.user.username, 44)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
-    else:
-        _msg = check_purview(request.user.username, 43)
-        if _msg != 0:
-            return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
+    # if _audit:
+    #     _msg = check_purview(request.user.username, 43)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
+    # else:
+    #     _msg = check_purview(request.user.username, 42)
+    #     if _msg != 0:
+    #         return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
 
     _brief = request.GET.get('brief')
     _state = request.GET.get('state')
@@ -3824,9 +3824,9 @@ def submit_toolcount(request):
 
 def delete_toolcount(request):
     #权限判断
-    _msg = check_purview(request.user.username, 44)
-    if _msg != 0:
-        return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
+    # _msg = check_purview(request.user.username, 43)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/view_toolcount/?msg='+_msg)
 
     _id = request.GET.get('id')
     if _id:
