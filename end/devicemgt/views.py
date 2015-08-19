@@ -4079,7 +4079,7 @@ def meter_device(request):
     meters = k_meter.objects.filter(brief=brief)
     data = []
     for m in meters:
-        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.username, 'time': m.metertime}
+        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
         json_dict = json.loads(m.json)
         if 'qrcode' in json_dict:
             if json_dict['qrcode'] == m.brief:
@@ -4106,7 +4106,7 @@ def meter_date(request):
     meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)))
     data = []
     for m in meters:
-        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.username, 'time': m.metertime}
+        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
         json_dict = json.loads(m.json)
         if 'qrcode' in json_dict:
             if json_dict['qrcode'] == m.brief:
