@@ -22,8 +22,6 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
