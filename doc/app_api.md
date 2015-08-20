@@ -407,32 +407,36 @@
 					id: 12,
 					name: "kt094732",
 					content: [
-						{
-							name: "设备状态",
-							choice: true,
-							choices: ["正常", "异常"],
-							memo: "重要"
-						},
-						{
-							name: "压力",
-							choice: false,
-							unit: "MPa",
-							min: "12",
-							max: "18",
-							memo: "重要"
-						}
+						"冷供水温度  ℃": {
+					        type": "integer",
+					        id": 0,
+					        default: "",
+					        priority: "0",
+					        hint:"正常值范围在7-12"
+				    	},
+				    	"冷供水压力  Mpa": {
+					        type: "integer",
+					        id: "1",
+					        "default": "",
+					        "priority": "1"
+					    },
 					]
 				},
 				{
 					id: 32,
 					name: "ms383831",
 					content: [
-						{
-							name: "设备状态",
-							choice: true,
-							choices: ["正常", "异常"],
-							memo: "重要"
-						}
+						"水位": {
+					        type: "integer",
+					        id: "4",
+					        default: "0",
+					        priority: "4",
+					        options: {
+					            0: "偏高",
+					            1: "中等",
+					            2: "偏低"
+					        }
+					    }
 					]
 				}
 			]

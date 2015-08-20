@@ -41,6 +41,7 @@ public abstract class FormActivity extends Activity
 	public static String SCHEMA_KEY_HINT		= "hint";
 	public static String SCHEMA_KEY_MAX		= "max";
 	public static String SCHEMA_KEY_MIN		= "min";
+	public static String SCHEMA_KEY_VALUE		= "value";
 	
 	public static final LayoutParams defaultLayoutParams = new LinearLayout.LayoutParams( LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 	
@@ -103,7 +104,10 @@ public abstract class FormActivity extends Activity
 
 				if( property.has(FormActivity.SCHEMA_KEY_MAX) || property.has(FormActivity.SCHEMA_KEY_MIN))
 					widget.setThresholdChecker(property.getString(FormActivity.SCHEMA_KEY_MAX), property.getString(FormActivity.SCHEMA_KEY_MIN));
-				
+
+				if(property.has(FormActivity.SCHEMA_KEY_VALUE))
+					widget.setValue(property.getString(FormActivity.SCHEMA_KEY_VALUE));
+
 				_widgets.add( widget );
 				_map.put( name, widget );
 			}

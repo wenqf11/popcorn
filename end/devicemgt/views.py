@@ -1972,6 +1972,8 @@ def view_maintained(request):
     _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=2, state__gte=4)
     # _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=4)
 
+    print result
+
     data = []
     for _maintained in _maintaineds:
         _device = _maintained.deviceid

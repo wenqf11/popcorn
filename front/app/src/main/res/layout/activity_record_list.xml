@@ -3,9 +3,15 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <ListView
-        android:id="@id/android:list"
+        android:id="@+id/recordlist_listview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         ></ListView>
-
+    <Button
+        android:id="@+id/recordlist_submit"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="提交所有数据"/>
 </LinearLayout>

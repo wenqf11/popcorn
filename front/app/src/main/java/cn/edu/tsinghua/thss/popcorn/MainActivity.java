@@ -1,8 +1,12 @@
 package cn.edu.tsinghua.thss.popcorn;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -105,6 +109,11 @@ public class MainActivity extends FragmentActivity {
 		initTabLineWidth();
         setLocalUsername();
         updateHint();
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
+        //startAlarmPush();
 	}
 
     @Override
@@ -367,12 +376,20 @@ public class MainActivity extends FragmentActivity {
         mTabMineFat.setTextColor(Color.parseColor("#D3D3D3"));
 	}
 
+    public void startAlarmPush() {
+        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        AlarmManager am=(AlarmManager)getSystemService(ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5*1000, sender);
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addCategory(Intent.CATEGORY_HOME);
             this.startActivity(intent);
             return true;

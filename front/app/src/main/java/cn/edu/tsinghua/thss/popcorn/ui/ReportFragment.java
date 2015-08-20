@@ -94,7 +94,7 @@ public class ReportFragment extends Fragment {
     @OnClick(R.id.tab_report_submit_btn)
     private void submitButtonClick(View v){
         String deviceBrief = deviceBriefText.getText().toString();
-        String reportTitle = reportTitleText.getText().toString();
+        final String reportTitle = reportTitleText.getText().toString();
         String faultDescription = faultDescriptionText.getText().toString();
         String reportMemo = reportMemoText.getText().toString();
 
@@ -175,6 +175,11 @@ public class ReportFragment extends Fragment {
                                                 @Override
                                                 public void onSuccess(ResponseInfo<String> responseInfo) {
                                                     Toast.makeText(getActivity().getApplicationContext(), "报修成功", Toast.LENGTH_SHORT).show();
+                                                    reportTitleText.setText("");
+                                                    deviceBriefText.setText("");
+                                                    faultDescriptionText.setText("");
+                                                    reportMemoText.setText("");
+                                                    image_view.setImageBitmap(null);
                                                 }
 
                                                 @Override
@@ -182,6 +187,12 @@ public class ReportFragment extends Fragment {
                                                 }
                                             }
                                     );
+                                }else{
+                                    Toast.makeText(getActivity().getApplicationContext(), "报修成功", Toast.LENGTH_SHORT).show();
+                                    reportTitleText.setText("");
+                                    deviceBriefText.setText("");
+                                    faultDescriptionText.setText("");
+                                    reportMemoText.setText("");
                                 }
                             } else {
                                 Toast.makeText(getActivity().getApplicationContext(), "数据提交失败，请重试", Toast.LENGTH_SHORT).show();

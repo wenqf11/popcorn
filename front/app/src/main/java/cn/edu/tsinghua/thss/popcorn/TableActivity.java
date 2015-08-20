@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +25,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,95 +41,56 @@ public class TableActivity extends FormActivity{
     static private int REQUEST_CODE = 2;
     private String  result;
     private String mRouteId;
+    private String mFormId;
     private String mBrief;
     private TextView resultTextView;
-    private ProgressDialog progressDialog;
 
-    private void submitButtonClick(JSONObject json) {
-        String id = "";
-        try{
-            //id = maintainTask.getString("id");
-        }catch (Exception e){
+    private void saveButtonClick(JSONObject json) {
+        Toast.makeText(getApplicationContext(), "暂存成功", Toast.LENGTH_SHORT).show();
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        if(sp.getString("route_" + mRouteId+"_form_" + mFormId, "").equals("")){
+            int numOfForms = sp.getInt("route_" + mRouteId, 0);
+            editor.putInt("route_" + mRouteId, numOfForms + 1);
         }
-        //String note = maintainResultEditText.getText().toString();
-
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("username", Config.DEBUG_USERNAME);
-        params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
-        params.addBodyParameter("route_id", mRouteId);
-        params.addBodyParameter("brief", mBrief);
-        params.addBodyParameter("content", json.toString());
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = df.format(new Date());
-        params.addBodyParameter("timestamp", time);
-
-        progressDialog.show();
-
-        HttpUtils http = new HttpUtils();
-        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
-        http.send(HttpRequest.HttpMethod.POST,
-                Config.SUBMIT_METER_URL,
-                params,
-                new RequestCallBack<String>() {
-
-                    @Override
-                    public void onStart() {
-                    }
-
-                    @Override
-                    public void onLoading(long total, long current, boolean isUploading) {
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-
-                        try{
-                            JSONObject jsonObject = new JSONObject(responseInfo.result);
-                            String status = jsonObject.getString("status");
-                            if(status.equals("ok")) {
-                                Toast.makeText(getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(), "提交失败，请重新提交", Toast.LENGTH_SHORT).show();
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                        progressDialog.hide();
-                    }
-
-
-                    @Override
-                    public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
-                        progressDialog.hide();
-                    }
-                });
-    }
-
-    private String wrap_form_content(String raw) {
-        String form_content_json = raw;
-        return form_content_json;
+        editor.putString("route_" + mRouteId+"_form_" + mFormId, json.toString());
+        editor.apply();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle tmp_bundle = this.getIntent().getExtras();
-        String form_content_raw = tmp_bundle.getString("form_content");
+        String form_content_json = tmp_bundle.getString("form_content");
         mBrief = tmp_bundle.getString("brief");
         mRouteId = tmp_bundle.getString("route_id");
-        String form_content_json = wrap_form_content(form_content_raw);
-
-        progressDialog = new ProgressDialog(TableActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("抄表数据提交中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
+        mFormId = tmp_bundle.getString("id");
 
         if (form_content_json.length() < 10) {
             form_content_json = "{\"未添加抄表表单\":{\"id\":\"1\",\"type\":\"integer\",\"hint\":\"未添加抄表表单\"}}";
+        }
+
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
+        String cacheFormData = sp.getString("route_" + mRouteId + "_form_" + mFormId, "");
+
+        JSONObject cacheObj = null;
+        if(!cacheFormData.equals("")) {
+            try {
+                JSONObject schema = new JSONObject(form_content_json);
+                cacheObj = new JSONObject(cacheFormData);
+                JSONObject property;
+                JSONArray names = schema.names();
+                String name;
+                for (int i = 0; i < names.length(); i++) {
+                    name = names.getString(i);
+                    property = schema.getJSONObject(name);
+                    property.put("value", cacheObj.getString(name));
+                }
+                form_content_json = schema.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         LinearLayout container = generateForm( form_content_json );
 
@@ -134,6 +99,13 @@ public class TableActivity extends FormActivity{
         Button btn = new Button(this);
         resultTextView = new TextView(this);
         resultTextView.setGravity(Gravity.CENTER);
+        try {
+            if (cacheObj.getString("qrcode").length() > 0){
+                resultTextView.setText(cacheObj.getString("qrcode"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         btn.setText("签到");
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,10 +121,8 @@ public class TableActivity extends FormActivity{
         list.addView(btn);
         container.addView(list);
 
-
-
         Button submitBtn = new Button(this);
-        submitBtn.setText("提交");
+        submitBtn.setText("暂存");
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,13 +159,19 @@ public class TableActivity extends FormActivity{
                     return;
                 }
 
-                submitButtonClick(json);
+                saveButtonClick(json);
             }
         });
         container.addView(submitBtn);
 
         container.setPadding(20, 20, 20, 20);
         setContentView(container);
+    }
+
+        @Override
+    public void finish() {
+        TableActivity.this.setResult(RESULT_OK, null);
+        super.finish();
     }
 
     /**

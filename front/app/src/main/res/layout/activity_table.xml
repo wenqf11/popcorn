@@ -15,6 +15,6 @@ android:layout_height="fill_parent">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="保存"/>
+            android:text="暂存"/>
     </LinearLayout>
 </LinearLayout>

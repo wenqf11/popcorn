@@ -210,12 +210,12 @@ public class AboutInfoActivity extends Activity {
         builer.setTitle("版本升级");
         builer.setMessage(info.getDescription());
         //当点确定按钮时从服务器上下载 新的apk 然后安装   װ
-        builer.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builer.setNegativeButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 downLoadApk();
             }
         });
-        builer.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        builer.setPositiveButton("取消", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 //do sth
