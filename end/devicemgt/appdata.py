@@ -797,7 +797,7 @@ def app_egg_info(request, para, user):
         'data': {
             'bonus': _info.bonus,
             'probability': _info.probability,
-            'result': _info.state == 1
+            'result': _info.state
         }
     }))
 

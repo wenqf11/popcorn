@@ -658,3 +658,6 @@ class k_config(models.Model):
     # remember always to get the element of id=1
     eggbonus = models.FloatField(default=0.0)
     eggprobability = models.FloatField(default=0.0)
+    classid = models.ForeignKey(k_class, default=1, related_name='config_set')
+    starttime = models.TimeField(default="2:00")
+    endtime = models.TimeField(default="4:00")

@@ -1,0 +1,42 @@
+为了便于数据库迁移，我在 Django setting.py 的 INSTALL_APP 中加入了 South 模块，专门辅助数据库迁移。
+需要做以下几点改变：
+1. 安装south, pip install south
+
+2.请将我添加在 models.py k_config 中的
+    classid = models.ForeignKey(k_class, default=1, related_name='config_set')
+    starttime = models.TimeField(default="2:00")
+    endtime = models.TimeField(default="4:00")
+三行代码删掉。
+
+好了，现在你的 models.py 与你的 local 数据库 schema 应该是一致了,下面我们来进行数据库迁移。
+
+
+3.在 popcorn/end 目录下执行， python manage.py syncdb，数据库会新建一张 south_historymigration 的表，专门记录迁移历史
+
+4.初始化迁移环境，python manage.py schemamigration devicemgt --initial 
+顺利的话，devicemgt 目录下面创建一个migrations的子目录（里面有init.py和00001_initial.py），可以打开他们看看。
+migrations 这个目录我已经 *.gitignore 了，只要各自本地有就可以了，自己维护自己的，不必提交到代码库。
+
+屏幕上还会出现：
+Created 0001_initial.py. You can now apply this migration with: ./manage.py migrate devicemgt
+听从建议  python manage.py migrate devicemgt 的话有可能会报错 table 'devicemgt_k_class' alread exists， 
+这时在初始化，因为数据库已经存在，所以我们不能更改数据库，那我们就假装已经提交。
+执行  python manage.py migrate devicemgt --fake
+出现：
+Running migrations for devicemgt:
+ - Migrating forwards to 0001_initial.
+ > devicemgt:0001_initial
+   (faked)
+假装提交成功了。
+
+5.上一步为止，数据库迁移的环境已经配置完成，现在开始我们常规的数据库修改操作了，比如我们现在要修改models.py，
+把刚刚删掉的代码粘贴回去 k_config 中，就好像是你修改的一样。
+然后执行 python manage.py schemamigration devicemgt --auto，顺利地话，屏幕上会显示你的修改了k_config，并且在
+migrations 目录下生成 0002___.py
+
+6.python manage.py migrate devicemgt 这次不用加 --fake 了，你是真的要修改数据库。
+之后你会发现数据库的schema变了，而数据都还在。
+
+那么，以后每次修改 models.py， 只要执行下第5和第6两步就可以了。
+如果有什么问题，及时讨论，也可以搜索"django south + 错误内容"。
+

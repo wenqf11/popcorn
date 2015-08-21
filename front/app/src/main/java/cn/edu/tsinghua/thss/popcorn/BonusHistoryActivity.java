@@ -107,7 +107,7 @@ public class BonusHistoryActivity extends FragmentActivity {
                                 }
                             }
                             else{
-                                Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                resultText.setText("这天没有参与抽奖");
                             }
                         }catch (JSONException e){
                             e.printStackTrace();

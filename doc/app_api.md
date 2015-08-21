@@ -230,7 +230,7 @@
 	- access_token，`string`，用户认证用的token
 	- **date**，`string`，要查询的日期，如“2015-05-22”
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：`bonus`为当次抢彩蛋的奖金，`probability`为当日中奖概率，`result`为是否中奖
+- 返回结果：`bonus`为当次抢彩蛋的奖金，`probability`为当日中奖概率，`result`为中奖状态，0表示没中，1表示中了未领取，2表示已经领取奖励
 - json示例：
 
 		{
@@ -238,7 +238,7 @@
 			data: {
 				bonus: 20.0,
 				probability: 0.1,
-				result: true
+				result: 1
 			}
 		}
 	或
