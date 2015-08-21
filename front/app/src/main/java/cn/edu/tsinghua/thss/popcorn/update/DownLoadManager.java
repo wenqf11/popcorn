@@ -19,7 +19,7 @@ public class DownLoadManager {
             //获取到文件的大小
             pd.setMax(conn.getContentLength());
             InputStream is = conn.getInputStream();
-            File file = new File(Environment.getExternalStorageDirectory(), "updata.apk");
+            File file = new File(Environment.getExternalStorageDirectory(), "willwings.apk");
             FileOutputStream fos = new FileOutputStream(file);
             BufferedInputStream bis = new BufferedInputStream(is);
             byte[] buffer = new byte[1024];

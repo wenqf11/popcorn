@@ -15,20 +15,24 @@
         android:layout_centerInParent="true"
         android:orientation="vertical"
         >
-        <TextView
-            android:id="@+id/id_lottery_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|center_vertical"
-            android:layout_marginBottom="20dp" />
         <Button
-            android:id="@+id/id_get_lottery_btn"
+            android:id="@+id/get_lottery_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_vertical"
             android:textSize="14sp"
             android:background="@drawable/round_button"
             android:text="@string/get_lottery"
+            />
+        <Button
+            android:id="@+id/get_lottery_history_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_button"
+            android:text="查看中奖历史"
             />
     </LinearLayout>
 </RelativeLayout>

@@ -1,8 +1,11 @@
 package cn.edu.tsinghua.thss.popcorn;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,15 +33,36 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 public class BonusActivity extends Activity {
     ProgressDialog progressDialog;
 
-    @ViewInject(R.id.id_lottery_result)
-    private TextView mTextViewResult;
 
-    @ViewInject(R.id.id_get_lottery_btn)
+    @ViewInject(R.id.get_lottery_btn)
     private Button mButtonGetLottery;
 
-    @OnClick(R.id.id_get_lottery_btn)
+    @OnClick(R.id.get_lottery_btn)
     private void getLotteryButtonClick(View v) {
-        getBonus();
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("BonusData", MODE_PRIVATE);
+        int times = sp.getInt("lottery_times", 0);
+        if(times > 0) {
+            getBonus();
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt("lottery_times", times-1);
+            editor.apply();
+        } else {
+            new AlertDialog.Builder(BonusActivity.this)
+                    .setTitle("没有抽奖机会，不能抽奖！")
+                    .setPositiveButton("确定", null)
+                    .show();
+        }
+    }
+
+    @ViewInject(R.id.get_lottery_history_btn)
+    private Button getHistoryBtn;
+
+    @OnClick(R.id.get_lottery_history_btn)
+    private void onGetHistoryBtnClick(View v) {
+        Intent intent = new Intent(this, BonusHistoryActivity.class);
+//        Bundle bundle = new Bundle();
+//        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
 
@@ -82,18 +106,27 @@ public class BonusActivity extends Activity {
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
 
-
                             if (status.equals("ok")) {
-                                JSONObject userInfo = jsonObject.getJSONObject("data");
-                                String result = userInfo.getString("result");
-                                String bonus = userInfo.getString("bonus");
-                                mButtonGetLottery.setVisibility(View.GONE);
+                                JSONObject bonusInfo = jsonObject.getJSONObject("data");
+                                String result = bonusInfo.getString("result");
+                                String bonus = bonusInfo.getString("bonus");
                                 if(result.equals("false")){
-                                    mTextViewResult.setText("很遗憾，您没有中奖，下次再来！");
+                                    new AlertDialog.Builder(BonusActivity.this)
+                                            .setTitle("很遗憾，您没有中奖，下次再来！")
+                                            .setPositiveButton("确定", null)
+                                            .show();
                                 }
                                 else{
-                                    mTextViewResult.setText("恭喜中奖！金额为"+bonus+"元。");
+                                    new AlertDialog.Builder(BonusActivity.this)
+                                            .setTitle("恭喜中奖！金额为"+bonus+"元。")
+                                            .setPositiveButton("确定", null)
+                                            .show();
                                 }
+                            }else{
+                                new AlertDialog.Builder(BonusActivity.this)
+                                        .setTitle("不能重复抽奖！")
+                                        .setPositiveButton("确定", null)
+                                        .show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

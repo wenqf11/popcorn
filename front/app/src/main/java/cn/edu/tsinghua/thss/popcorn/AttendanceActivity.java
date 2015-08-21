@@ -1,23 +1,19 @@
 package cn.edu.tsinghua.thss.popcorn;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +26,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,20 +41,23 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.BDNotifyListener;//假如用到位置提醒功能，需要import该类
+import com.baidu.location.Poi;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 
-public class AttendanceActivity extends Activity implements LocationListener,View.OnClickListener{
-    private static String ATTENDANCE_POST_URL = Config.LOCAL_IP + "/app/check/";
-    private static String ATTENDANCE_GET_URL = Config.LOCAL_IP + "/app/checkinfo/";
+public class AttendanceActivity extends FragmentActivity implements View.OnClickListener{
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = null;
 
-    private boolean mStatus = false;
-    private String mAddress = "无法定位";
-
-    private LocationManager locationManager;
-    private String provider = LocationManager.NETWORK_PROVIDER;
-
-    ProgressDialog progressDialog;
+    CaldroidFragment caldroidFragment;
+    Date lastSelected = null;
 
     @ViewInject(R.id.id_btn_attend_on_work)
     private Button mButtonOnWork;
@@ -71,112 +72,121 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
     @ViewInject(R.id.id_text_attend_off_work)
     private TextView mTextViewOffWork;
 
-    @ViewInject(R.id.datePicker)
-    private DatePicker datePicker;
-
-    @OnClick(R.id.submit_date)
-    private void submitDateButtonClick(View v) {
-        updateAttendanceData();
-    }
-
-
     @Override
     public void onClick(final View v) {
-        switch (v.getId()) {
-            case R.id.id_btn_attend_on_work:
-                mStatus = false;
-                getTimeAndLocation();
-                break;
-            case R.id.id_btn_attend_off_work:
-                mStatus = true;
-                getTimeAndLocation();
-                break;
-            default:
-                break;
-        }
+        mLocationClient.start();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLayout();
-
-        updateAttendanceData();
-
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(provider, 0, 0, this);
+        initLocation();
     }
 
-    //位置发生改变时调用
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    //provider失效时调用
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-
-    //provider启用时调用
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    //状态改变时调用
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    public class MyLocationListener implements BDLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //Receive Location
+            StringBuffer sb = new StringBuffer(256);
+            sb.append(location.getTime());
+            if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
+                sb.append("\n"+location.getAddrStr());
+            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
+                sb.append("\n"+location.getAddrStr());
+            } else {
+                new AlertDialog.Builder(AttendanceActivity.this)
+                        .setTitle("网络错误无法定位，请重新定位！")
+                        .setPositiveButton("确定", null)
+                        .show();
+                mLocationClient.stop();
+                return;
+            }
+            if(mButtonOffWork.getVisibility()!=View.VISIBLE) {
+                mTextViewOnWork.setText(sb.toString());
+                mButtonOffWork.setVisibility(View.VISIBLE);
+                mButtonOnWork.setVisibility(View.GONE);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String today = dateFormat.format(new Date());
+                SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("checkin", sb.toString());
+                editor.putString("date", today);
+                editor.apply();
+            }else{
+                mButtonOffWork.setVisibility(View.GONE);
+                mTextViewOffWork.setText(sb.toString());
+                submitData();
+            }
+            mLocationClient.stop();
+        }
     }
 
     private void setLayout(){
         setContentView(R.layout.activity_attendance);
-
-        progressDialog = new ProgressDialog(AttendanceActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("数据加载中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
-
         ViewUtils.inject(this);
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int monthOfYear = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        datePicker.init(year, monthOfYear, dayOfMonth, new OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            }
-        });
-        datePicker.setMaxDate(new Date().getTime());
 
         mButtonOnWork.setOnClickListener(this);
         mButtonOffWork.setOnClickListener(this);
+
+        caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        caldroidFragment.setArguments(args);
+
+        updateAttendanceData(cal.getTime());
+
+        caldroidFragment.setCaldroidListener(new CaldroidListener() {
+            @Override
+            public void onSelectDate(Date date, View view) {
+                caldroidFragment.setBackgroundResourceForDate(R.color.light_blue, date);
+                if (lastSelected != null && lastSelected.compareTo(date) != 0) {
+                    caldroidFragment.clearBackgroundResourceForDate(lastSelected);
+                }
+                lastSelected = date;
+                caldroidFragment.refreshView();
+                updateAttendanceData(date);
+            }
+        });
+
+        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.attendance_calendar, caldroidFragment);
+        t.commit();
     }
 
-    private void updateAttendanceData(){
-        final int pickedDay = datePicker.getDayOfMonth();
-        final int pickedMonth = datePicker.getMonth()+1;
-        final int pickedYear = datePicker.getYear();
+    private void initLocation(){
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        myListener = new MyLocationListener();
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
 
-        String sDay = String.valueOf(pickedDay), sMonth = String.valueOf(pickedMonth);
-        if( pickedMonth < 10){
-            sMonth = "0" + String.valueOf(pickedMonth);
-        }
-        if (pickedDay < 10){
-            sDay = "0" + String.valueOf(pickedDay);
-        }
-        String date = String.valueOf(pickedYear) + '-' + sMonth +'-'+ sDay;
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        option.setScanSpan(0);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIgnoreKillProcess(false);//可选，默认false，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+    }
+
+    private void updateAttendanceData(final Date date){
+        String date_str = String.format("%tF", date);
 
         RequestParams params = new RequestParams();
         params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
-        params.addQueryStringParameter("date", date);
-
-        progressDialog.show();
+        params.addQueryStringParameter("date", date_str);
 
         HttpUtils http = new HttpUtils();
         http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.GET,
-                ATTENDANCE_GET_URL,
+                Config.ATTENDANCE_GET_URL,
                 params,
                 new RequestCallBack<String>() {
 
@@ -191,12 +201,11 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
 
-                        try{
+                        try {
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
 
-
-                            if(status.equals("ok")) {
+                            if (status.equals("ok")) {
                                 JSONObject results = jsonObject.getJSONObject("data");
                                 String checkIn = results.getString("checkin");
                                 String checkOut = results.getString("checkout");
@@ -204,26 +213,25 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                                 mTextViewOffWork.setText(checkOut);
                                 mButtonOnWork.setVisibility(View.GONE);
                                 mButtonOffWork.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 mTextViewOnWork.setText("");
                                 mTextViewOffWork.setText("");
                                 mButtonOnWork.setVisibility(View.GONE);
                                 mButtonOffWork.setVisibility(View.GONE);
+                                Calendar now = Calendar.getInstance();
                                 Calendar calendar = Calendar.getInstance();
-                                int currentYear = calendar.get(Calendar.YEAR);
-                                int currentMonth = calendar.get(Calendar.MONTH)+1;
-                                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-                                if(pickedYear==currentYear && pickedMonth==currentMonth && pickedDay==currentDay) {
+                                calendar.setTime(date);
+                                if (calendar.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                                        && now.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
                                     mButtonOnWork.setVisibility(View.VISIBLE);
                                     mButtonOffWork.setVisibility(View.GONE);
 
                                     SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
                                     String checkIn = sp.getString("checkin", "");
-                                    String date = sp.getString("date", "");
+                                    String date_str = sp.getString("date", "");
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                                     String today = dateFormat.format(new Date());
-                                    if (!checkIn.equals("")&& date.equals(today)){
+                                    if (!checkIn.equals("") && date_str.equals(today)) {
                                         mTextViewOnWork.setText(checkIn);
                                         mButtonOnWork.setVisibility(View.GONE);
                                         mButtonOffWork.setVisibility(View.VISIBLE);
@@ -231,161 +239,68 @@ public class AttendanceActivity extends Activity implements LocationListener,Vie
                                 }
 
 
-
                                 String msg = jsonObject.getString("data");
-                                if(msg.equals("can't connect to database")) {
+                                if (msg.equals("can't connect to database")) {
                                     Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        progressDialog.hide();
                     }
 
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
-                        progressDialog.hide();
+                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void getTimeAndLocation(){
-       new getAddrThread().execute();
-    }
+    private void submitData(){
+        String start = mTextViewOnWork.getText().toString();
+        String date = start.split(" ")[0];
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("username", Config.DEBUG_USERNAME);
+        params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
+        params.addBodyParameter("date", date);
+        params.addBodyParameter("checkin", mTextViewOnWork.getText().toString());
+        params.addBodyParameter("checkout", mTextViewOffWork.getText().toString());
 
+        HttpUtils http = new HttpUtils();
+        http.send(HttpRequest.HttpMethod.POST,
+                Config.ATTENDANCE_POST_URL,
+                params,
+                new RequestCallBack<String>() {
 
-    public class getAddrThread extends AsyncTask {
-        @Override
-        protected String doInBackground(Object... params) {
-
-            //通过最后一次的地理位置来获得Location对象
-            Location location = locationManager.getLastKnownLocation(provider);
-            if (location == null) {
-                mAddress = "无法定位";
-                return null;
-            }
-
-
-            String latitude = Double.toString(location.getLatitude());
-            String longitude = Double.toString(location.getLongitude());
-            String url = String.format(
-                    "http://maps.google.cn/maps/api/geocode/json?latlng=%s,%s&language=CN",
-                    latitude, longitude);
-
-            try {
-                URL myURL = new URL(url);
-                URLConnection httpsConn =  myURL.openConnection();
-
-                if (httpsConn != null) {
-                    InputStreamReader insr = new InputStreamReader(
-                            httpsConn.getInputStream(), "UTF-8");
-                    BufferedReader br = new BufferedReader(insr);
-                    StringBuilder builder = new StringBuilder();
-
-                    for (String s = br.readLine(); s != null; s = br.readLine()) {
-                        builder.append(s);
+                    @Override
+                    public void onStart() {
                     }
 
-                    try {
-                        JSONObject jsonObject = new JSONObject(builder.toString());
-                        JSONArray results = jsonObject.getJSONArray("results");
-                        JSONObject component = results.getJSONObject(0);
-                        mAddress = component.getString("formatted_address");
-                    }catch (JSONException e){
-                        e.printStackTrace();
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+
                     }
-                    insr.close();
-                }
-                else{
-                    mAddress = "无法定位";
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                mAddress = "无法定位";
-                return null;
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            if(!mStatus){
-                if(!mAddress.equals("无法定位")){
-                    String checkinInfo = datetimeFormat.format(new Date()) +'\n'+ mAddress;
-                    mButtonOnWork.setVisibility(View.GONE);
-                    mTextViewOnWork.setText(checkinInfo);
-                    mButtonOffWork.setVisibility(View.VISIBLE);
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("checkin", "");
+                        editor.apply();
+                        Toast.makeText(getApplicationContext(), "今日打卡成功", Toast.LENGTH_SHORT).show();
+                    }
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    String today = dateFormat.format(new Date());
-                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("checkin", checkinInfo);
-                    editor.putString("date", today);
-                    editor.apply();
-                }else{
-                    mStatus = true;
-                    Toast.makeText(getApplicationContext(), "无法定位，请检查网络是否正常", Toast.LENGTH_SHORT).show();
-                }
-            }else{
-                if(!mAddress.equals("无法定位")){
-                    mButtonOffWork.setVisibility(View.GONE);
-                    mTextViewOffWork.setText(datetimeFormat.format(new Date()) +'\n'+ mAddress);
-
-                    String start = mTextViewOnWork.getText().toString();
-                    String date = start.split(" ")[0];
-                    RequestParams params = new RequestParams();
-                    params.addBodyParameter("username", Config.DEBUG_USERNAME);
-                    params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
-                    params.addBodyParameter("date", date);
-                    params.addBodyParameter("checkin", mTextViewOnWork.getText().toString());
-                    params.addBodyParameter("checkout", mTextViewOffWork.getText().toString());
-
-                    HttpUtils http = new HttpUtils();
-                    http.send(HttpRequest.HttpMethod.POST,
-                            ATTENDANCE_POST_URL,
-                            params,
-                            new RequestCallBack<String>() {
-
-                                @Override
-                                public void onStart() {
-                                }
-
-                                @Override
-                                public void onLoading(long total, long current, boolean isUploading) {
-
-                                }
-
-                                @Override
-                                public void onSuccess(ResponseInfo<String> responseInfo) {
-                                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sp.edit();
-                                    editor.putString("checkin", "");
-                                    editor.apply();
-                                    Toast.makeText(getApplicationContext(), "今日打卡成功", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onFailure(HttpException error, String msg) {
-                                    Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }else{
-                    Toast.makeText(getApplicationContext(), "无法定位，请检查网络是否正常", Toast.LENGTH_SHORT).show();
-                }
-            }
-            super.onPostExecute(o);
-        }
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                        Toast.makeText(getApplicationContext(), "网络错误数据提交失败，请重新提交", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
-
 
     @Override
     protected  void onDestroy(){
-        progressDialog.dismiss();
+        mLocationClient.stop();
         super.onDestroy();
     }
 

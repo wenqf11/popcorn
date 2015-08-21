@@ -5,29 +5,12 @@
         android:stretchColumns="*"
         android:shrinkColumns="*"
         tools:context="cn.edu.tsinghua.thss.popcorn.AttendanceActivity">
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/attendance_calendar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
-            <DatePicker android:id="@+id/datePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:calendarViewShown="false"
-                android:layout_gravity="center_horizontal"/>
+            android:orientation="vertical" >
         </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-        <Button
-            android:id="@+id/submit_date"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/query"/>
-    </LinearLayout>
 
         <TableRow
             android:layout_width="wrap_content"

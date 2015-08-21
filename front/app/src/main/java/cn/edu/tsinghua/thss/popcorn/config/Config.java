@@ -9,10 +9,13 @@ public class Config {
 
     public static String ACCESS_TOKEN = "hello_world";
 
-    public static String LOCAL_IP = "http://d.willwings.com";
+    public static String LOCAL_IP = "http://59.66.93.137";
     public static String REPORT_URL =  LOCAL_IP + "/app/maintain/add/";
     public static String ROUTE_GET_URL = LOCAL_IP + "/app/route";
     public static String FORM_GET_URL = LOCAL_IP + "/app/form";
+
+    public static String ATTENDANCE_POST_URL = LOCAL_IP + "/app/check/";
+    public static String ATTENDANCE_GET_URL = LOCAL_IP + "/app/checkinfo/";
 
     public static String SCORE_RANK_URL = LOCAL_IP + "/app/score/rank/";
     public static String VERSION_SERVER_URL = LOCAL_IP + "/app/version/";
@@ -20,6 +23,7 @@ public class Config {
     public static String GET_DEVICE_INFO_URL = LOCAL_IP + "/app/device/info/";
     public static String GET_USER_INFO_URL = LOCAL_IP + "/app/userinfo/";
     public static String GET_BONUS_URL = LOCAL_IP + "/app/egg/";
+    public static String GET_BONUS_INFO_URL = LOCAL_IP + "/app/egg/info";
     public static String LOGIN_URL = LOCAL_IP +"/app/login/";
     public static String SUBMIT_METER_URL = LOCAL_IP + "/app/meter/";
     public static String SUBMIT_USER_INFO_URL = LOCAL_IP + "/app/userinfo/submit/";
