@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, logout as auth_logout,login as aut
 from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node
 import json
 
@@ -129,6 +129,7 @@ def index(request):
     #非法权限信息
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
+       purview_msg = ''
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
@@ -4035,34 +4036,75 @@ def score(request):
 
 @login_required
 def egg(request):
-    configs = k_config.objects.all()
-    config = list(configs[0:1])
+    msg = request.GET.get("msg")
+    if msg is None:
+        msg = ""
 
-    if not config:
-        config = k_config.objects.create(eggbonus=0.0, eggprobability=0.0)
-    else:
-        config = config[0]
+    user = k_user.objects.get(username=request.user.username)
+    department_class = user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
 
-    return get_purviews_and_render_to_response(request.user.username, 'egg.html', {'data': {'bonus': config.eggbonus, 'probability': config.eggprobability}})
+    try:
+        config = k_config.objects.get(classid=department_class)
+    except ObjectDoesNotExist:
+        config = k_config(
+            eggbonu=0,
+            eggprobability=0,
+            classid=department_class,
+            starttime=time(2, 0, 0, 0),
+            endtime=time(4, 0, 0, 0)
+        )
+        config.save()
+
+    return get_purviews_and_render_to_response(request.user.username, 'egg.html', {
+        'bonus': config.eggbonus,
+        'probability': config.eggprobability,
+        'starttime': config.starttime.hour,
+        'endtime': config.endtime.hour,
+        'range': xrange(24),
+        'msg': msg
+    })
 
 
+@login_required
 def egg_submit(request):
     bonus = request.POST.get('bonus')
     probability = request.POST.get('probability')
+    start_time = request.POST.get('starttime')
+    end_time = request.POST.get('endtime')
 
-    configs = k_config.objects.all()
-    config = list(configs[0:1])
 
-    if not config:
-        config = k_config()
-    else:
-        config = config[0]
+    if start_time.isdigit():
+        start_time = int(start_time)
 
-    config.eggbonus = bonus
-    config.eggprobability = probability
-    config.save()
+    if end_time.isdigit():
+        end_time = int(end_time)
 
-    return HttpResponseRedirect('/egg/?msg=修改成功')
+    user = k_user.objects.get(username=request.user.username)
+    department_class = user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
+
+    try:
+        config = k_config.objects.get(classid=department_class)
+        config.eggbonus = bonus
+        config.eggprobability = probability
+        config.classid = department_class
+        config.starttime = time(start_time, 0, 0, 0)
+        config.endtime = time(end_time, 0, 0, 0)
+        config.save()
+    except ObjectDoesNotExist:
+        config = k_config(
+            eggbonu=bonus,
+            eggprobability=probability,
+            classid=department_class,
+            starttime=time(start_time, 0, 0, 0),
+            endtime=time(end_time, 0, 0, 0)
+        )
+        config.save()
+
+    return HttpResponseRedirect('/egg/?msg=修改成功！')
 
 
 def meter(request):

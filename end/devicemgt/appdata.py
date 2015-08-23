@@ -743,6 +743,32 @@ def app_version(request):
 
 @get_required
 @token_required
+def app_egg_time(request, para, user):
+    user = k_user.objects.get(username=request.user.username)
+    department_class = user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
+
+    try:
+        config = k_config.objects.get(classid=department_class)
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': {
+                'bonus': config.eggbonus,
+                'probability': config.eggprobability,
+                'start_time': config.starttime.strftime('%H:%M'),
+                'end_time': config.endtime.strftime('%H:%M')
+            }
+        }))
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'bonus config does not found'
+        }))
+
+
+@get_required
+@token_required
 def app_egg(request, para, user):
     # query whether already tried to get an egg today
     egginfo = k_staffegginfo.objects.filter(userid=user, time=date.today())
@@ -753,26 +779,38 @@ def app_egg(request, para, user):
             'data': 'already tried today'
         }))
 
-    config = k_config.objects.get(id=1)
-    number = random.random()
 
-    # update staff egg info
-    _info = k_staffegginfo.objects.create(
-        userid=user,
-        time=date.today(),
-        bonus=config.eggbonus,
-        probability=config.eggprobability,
-        state=1 if config.eggprobability > number else 0
-    )
+    user = k_user.objects.get(username=request.user.username)
+    department_class = user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
 
-    return HttpResponse(json.dumps({
-        'status': 'ok',
-        'data': {
-            'bonus': config.eggbonus,
-            'probability': config.eggprobability,
-            'result': config.eggprobability > number
-        }
-    }))
+    try:
+        config = k_config.objects.get(classid=department_class)
+        number = random.random()
+
+        # update staff egg info
+        _info = k_staffegginfo.objects.create(
+            userid=user,
+            time=date.today(),
+            bonus=config.eggbonus,
+            probability=config.eggprobability,
+            state=1 if config.eggprobability > number else 0
+        )
+
+        return HttpResponse(json.dumps({
+            'status': 'ok',
+            'data': {
+                'bonus': config.eggbonus,
+                'probability': config.eggprobability,
+                'result': config.eggprobability > number
+            }
+        }))
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'bonus config does not found'
+        }))
 
 
 @get_required
@@ -797,7 +835,7 @@ def app_egg_info(request, para, user):
         'data': {
             'bonus': _info.bonus,
             'probability': _info.probability,
-            'result': _info.state
+            'state': _info.state
         }
     }))
 

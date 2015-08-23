@@ -49,6 +49,7 @@ urlpatterns = patterns(
 
     url(r'^app/feedback/$', app_feedback),
     url(r'^app/egg/$', app_egg),
+    url(r'^app/egg/time/$', app_egg_time),
     url(r'^app/egg/info/$', app_egg_info),
     url(r'^app/version/$', app_version),
 

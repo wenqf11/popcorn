@@ -11,19 +11,35 @@
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">中奖金额</label>
             <div class="col-sm-9">
-                <input name="bonus" type="text" class="span6 m-wrap" value="{{ data.bonus }}" />
+                <input name="bonus" type="text" class="span6 m-wrap" value="{{ bonus }}" />
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">中奖概率</label>
             <div class="col-sm-9">
-                <input name="probability" type="text" class="span6 m-wrap" value="{{ data.probability }}" />
+                <input name="probability" type="text" class="span6 m-wrap" value="{{ probability }}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">起止时间</label>
+            <div class="col-sm-9">
+                <select name="starttime">
+                  {% for i in range %}
+                  <option value ="{{i}}"{% ifequal i starttime%}selected {% endifequal %}>{{i}}:00</option>
+                  {% endfor %}
+                </select> -
+                <select name="endtime">
+                  {% for i in range %}
+                  <option value ="{{i}}"{% ifequal i endtime%}selected {% endifequal %}>{{i}}:00</option>
+                  {% endfor %}
+                </select>
             </div>
         </div>
 
         <div class="clearfix form-actions" style="margin-top: 0px; margin-bottom: 0px; padding-top: 20px; padding-bottom: 0px;">
             <div class="col-md-offset-3 col-md-9">
-                <button type="submit" class="btn btn-primary" onclick="return checkvalid();">确定</button>
+                <button type="submit" class="btn btn-primary" onclick="return validate_form();">确定</button>
                 <button type="reset" class="btn">取消</button>
             </div>
         </div>
@@ -33,15 +49,65 @@
 
 {% block tailjs %}
 <script>
-    $(function(){
-        var purview_msg = "{{ purview_msg }}";
-        if (purview_msg) {
-            $.gritter.add({
-                title: '您没有权限进行此操作',
-                text: purview_msg,
-                class_name: 'gritter-error gritter-center'
-            });
-        }
-    });
+function validate_form() {
+    var bonus = $("[name='bonus']").val();
+    var probability = $("[name='probability']").val();
+    var start_time = $("[name='starttime']").val();
+    var end_time = $("[name='endtime']").val();
+
+    var number = /^[0-9]+.?[0-9]*$/;   //判断字符串是否为数字     //判断正整数 /^[1-9]+[0-9]*]*$/
+
+    if(!number.test(bonus)) {
+        $("[name='bonus']").select();
+        $.gritter.add({
+            title: '格式不正确！',
+            text: '中奖金额应为数字！',
+            class_name: 'gritter-error gritter-center',
+            time: 1500
+        });
+        return false;
+    }else if(!number.test(probability)) {
+        $("[name='probability']").select();
+        $.gritter.add({
+            title: '格式不正确！',
+            text: '中奖概率应为数字！',
+            class_name: 'gritter-error gritter-center',
+            time: 1500
+        });
+        return false;
+    }else if(parseFloat(probability)>1|| parseFloat(probability)<0) {
+        $("[name='probability']").select();
+        $.gritter.add({
+            title: '格式不正确！',
+            text: '中奖概率应该介于0到1之间！',
+            class_name: 'gritter-error gritter-center',
+            time: 1500
+        });
+        return false;
+    }else if(parseFloat(start_time)>=parseFloat(end_time)){
+        $("[name='starttime']").select();
+        $.gritter.add({
+            title: '格式不正确！',
+            text: '起始时间必须小于结束时间！',
+            class_name: 'gritter-error gritter-center',
+            time: 1500
+        });
+        return false;
+    }
+
+    return true;
+}
+
+$(function(){
+    var msg = "{{ msg }}";
+    if (msg) {
+        $.gritter.add({
+            title: '提示',
+            text: msg,
+            class_name: 'gritter-error gritter-center',
+            time: 1500
+        });
+    }
+});
 </script>
 {% endblock %}
