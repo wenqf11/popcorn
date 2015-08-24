@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import hirondelle.date4j.DateTime;
 
 public class RecordListActivity extends Activity {
 
@@ -73,7 +76,12 @@ public class RecordListActivity extends Activity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 completedForm = sp.getInt("route_" + mRouteId, 0);
-                if (completedForm < mBrief.length) {
+                if(completedForm == 0){
+                    new AlertDialog.Builder(RecordListActivity.this)
+                            .setTitle("没有完成任何抄表，不能提交！")
+                            .setPositiveButton("确定", null)
+                            .show();
+                } else if (completedForm < mBrief.length) {
                     new AlertDialog.Builder(RecordListActivity.this)
                             .setTitle("路线上的抄表并未全部完成，是否确定提交？")
                             .setNegativeButton("确定", new DialogInterface.OnClickListener() {
@@ -165,12 +173,15 @@ public class RecordListActivity extends Activity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络故障或服务器内部错误", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void sendRouteFormData(){
+        final int completed = completedForm;
+        oneSubmitMessage = 0;
+
         progressDialog = new ProgressDialog(RecordListActivity.this, R.style.buffer_dialog);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
@@ -179,9 +190,6 @@ public class RecordListActivity extends Activity {
         progressDialog.setMax(100);
         progressDialog.setMessage("数据提交中...");
         progressDialog.show();
-
-        final int completed = completedForm;
-        oneSubmitMessage = 0;
 
         for(int i = 0; i < mBrief.length; i++) {
             String cacheFormData = sp.getString("route_" + mRouteId + "_form_" + mFormId[i], "");
@@ -210,7 +218,6 @@ public class RecordListActivity extends Activity {
 
                         @Override
                         public void onSuccess(ResponseInfo<String> responseInfo) {
-
                             try {
                                 JSONObject jsonObject = new JSONObject(responseInfo.result);
                                 String status = jsonObject.getString("status");
@@ -244,6 +251,13 @@ public class RecordListActivity extends Activity {
         handler.sendMessage(message);
     }
 
+    public static String getTimeShort() {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        Date currentTime = new Date();
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
+
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == ONE_SUBMIT_FINISHED) {
@@ -256,19 +270,42 @@ public class RecordListActivity extends Activity {
                             editor.remove("route_" + mRouteId + "_form_" + mFormId[i]);
                             editor.apply();
                         }
-                        progressDialog.dismiss();
                         myListView.setAdapter(mAdapter);
-                        new AlertDialog.Builder(RecordListActivity.this)
-                                .setTitle("提交数据成功！")
-                                .setPositiveButton("确定", null)
-                                .show();
+
+
+
+                        SharedPreferences BonusSp = getApplicationContext().getSharedPreferences("BonusData", MODE_PRIVATE);
+                        int times = BonusSp.getInt("lottery_times", 0);
+                        String start_time = BonusSp.getString("start_time", "");
+                        String end_time = BonusSp.getString("end_time", "");
+
+                        String date_str = BonusSp.getString("date", "");
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String today = dateFormat.format(new Date());
+                        String now = getTimeShort();
+
+                        if(start_time.compareTo(now) > 0 || end_time.compareTo(now) < 0 || date_str.equals(today)){
+                            new AlertDialog.Builder(RecordListActivity.this)
+                                    .setTitle("提交数据成功！")
+                                    .setPositiveButton("确定", null)
+                                    .show();
+                        } else {
+                            SharedPreferences.Editor BonusEditor = BonusSp.edit();
+                            BonusEditor.putInt("lottery_times", times+1);
+                            BonusEditor.putString("date", today);
+                            BonusEditor.apply();
+                            new AlertDialog.Builder(RecordListActivity.this)
+                                    .setTitle("提交数据成功！同时获得一次抽奖机会，可以前去抽奖。")
+                                    .setPositiveButton("确定", null)
+                                    .show();
+                        }
                     } else {
-                        progressDialog.dismiss();
                         new AlertDialog.Builder(RecordListActivity.this)
                                 .setTitle("网络故障，请重新提交！")
                                 .setPositiveButton("确定", null)
                                 .show();
                     }
+                    progressDialog.dismiss();
                 }
             }
             super.handleMessage(msg);

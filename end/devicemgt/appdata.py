@@ -744,7 +744,6 @@ def app_version(request):
 @get_required
 @token_required
 def app_egg_time(request, para, user):
-    user = k_user.objects.get(username=request.user.username)
     department_class = user.classid
     while department_class.depth > 1:
         department_class = k_class.objects.get(id=department_class.parentid)
@@ -780,7 +779,6 @@ def app_egg(request, para, user):
         }))
 
 
-    user = k_user.objects.get(username=request.user.username)
     department_class = user.classid
     while department_class.depth > 1:
         department_class = k_class.objects.get(id=department_class.parentid)
@@ -828,7 +826,10 @@ def app_egg_info(request, para, user):
             'data': 'element not exists'
         }))
     except MultipleObjectsReturned:
-        _info = _info[0]
+    	return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'multi bonus record found'
+        }))
 
     return HttpResponse(json.dumps({
         'status': 'ok',

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -109,12 +110,59 @@ public class MainActivity extends FragmentActivity {
 		initTabLineWidth();
         setLocalUsername();
         updateHint();
+        initCacheData();
+        //startAlarmPush();
+	}
+
+    private void initCacheData(){
         SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.apply();
-        //startAlarmPush();
-	}
+
+        RequestParams params = new RequestParams();
+        params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
+        params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
+
+        HttpUtils http = new HttpUtils();
+        http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        http.send(HttpRequest.HttpMethod.GET,
+                Config.GET_BONUS_TIME_URL,
+                params,
+                new RequestCallBack<String>() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseInfo<String> responseInfo) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseInfo.result);
+                            String status = jsonObject.getString("status");
+
+                            if (status.equals("ok")) {
+                                JSONObject bonusInfo = jsonObject.getJSONObject("data");
+                                String start_time = bonusInfo.getString("start_time");
+                                String end_time = bonusInfo.getString("end_time");
+                                SharedPreferences sp = getApplicationContext().getSharedPreferences("BonusData", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("start_time", start_time);
+                                editor.putString("end_time", end_time);
+                                editor.apply();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onFailure(HttpException error, String msg) {
+                    }
+                });
+    }
 
     @Override
     protected void onStart() {

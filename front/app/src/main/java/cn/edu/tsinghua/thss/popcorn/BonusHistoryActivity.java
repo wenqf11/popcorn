@@ -56,6 +56,7 @@ public class BonusHistoryActivity extends FragmentActivity {
                 }
                 lastSelected = date;
                 caldroidFragment.refreshView();
+                resultText.setText("");
                 updateResultText(date);
             }
         });
@@ -98,12 +99,14 @@ public class BonusHistoryActivity extends FragmentActivity {
 
                             if(status.equals("ok")) {
                                 JSONObject bonusInfo = jsonObject.getJSONObject("data");
-                                String result = bonusInfo.getString("result");
+                                String state = bonusInfo.getString("state");
                                 String bonus = bonusInfo.getString("bonus");
-                                if(result.equals("false")){
+                                if(state.equals("0")){
                                     resultText.setText("未中奖");
-                                } else {
-                                    resultText.setText("中奖金额"+bonus+"元。");
+                                } else if(state.equals("1")) {
+                                    resultText.setText("中奖金额"+bonus+"元，尚未领取。");
+                                } else if(state.equals("2")) {
+                                    resultText.setText("中奖金额"+bonus+"元，已经领取。");
                                 }
                             }
                             else{
@@ -117,7 +120,7 @@ public class BonusHistoryActivity extends FragmentActivity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络故障或服务器内部错误", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

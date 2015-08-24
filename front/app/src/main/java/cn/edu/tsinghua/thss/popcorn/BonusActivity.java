@@ -31,9 +31,6 @@ import cn.edu.tsinghua.thss.popcorn.config.Config;
 
 
 public class BonusActivity extends Activity {
-    ProgressDialog progressDialog;
-
-
     @ViewInject(R.id.get_lottery_btn)
     private Button mButtonGetLottery;
 
@@ -43,9 +40,6 @@ public class BonusActivity extends Activity {
         int times = sp.getInt("lottery_times", 0);
         if(times > 0) {
             getBonus();
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putInt("lottery_times", times-1);
-            editor.apply();
         } else {
             new AlertDialog.Builder(BonusActivity.this)
                     .setTitle("没有抽奖机会，不能抽奖！")
@@ -60,8 +54,6 @@ public class BonusActivity extends Activity {
     @OnClick(R.id.get_lottery_history_btn)
     private void onGetHistoryBtnClick(View v) {
         Intent intent = new Intent(this, BonusHistoryActivity.class);
-//        Bundle bundle = new Bundle();
-//        intent.putExtras(bundle);
         startActivity(intent);
     }
 
@@ -71,12 +63,15 @@ public class BonusActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bonus);
         ViewUtils.inject(this);
+        setLotteryTimes();
+    }
 
-        progressDialog = new ProgressDialog(BonusActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("请稍候...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
+    private void setLotteryTimes(){
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("BonusData", MODE_PRIVATE);
+        int times = sp.getInt("lottery_times", 0);
+        if(times >= 0) {
+            mButtonGetLottery.setText("抽奖（"+times+"）");
+        }
     }
 
     private void getBonus(){
@@ -84,7 +79,6 @@ public class BonusActivity extends Activity {
         params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
 
-        progressDialog.show();
         HttpUtils http = new HttpUtils();
         http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
         http.send(HttpRequest.HttpMethod.GET,
@@ -110,19 +104,27 @@ public class BonusActivity extends Activity {
                                 JSONObject bonusInfo = jsonObject.getJSONObject("data");
                                 String result = bonusInfo.getString("result");
                                 String bonus = bonusInfo.getString("bonus");
-                                if(result.equals("false")){
+                                if (result.equals("false")) {
                                     new AlertDialog.Builder(BonusActivity.this)
                                             .setTitle("很遗憾，您没有中奖，下次再来！")
                                             .setPositiveButton("确定", null)
                                             .show();
-                                }
-                                else{
+                                } else {
                                     new AlertDialog.Builder(BonusActivity.this)
-                                            .setTitle("恭喜中奖！金额为"+bonus+"元。")
+                                            .setTitle("恭喜中奖！金额为" + bonus + "元。")
                                             .setPositiveButton("确定", null)
                                             .show();
                                 }
-                            }else{
+
+                                SharedPreferences sp = getApplicationContext().getSharedPreferences("BonusData", MODE_PRIVATE);
+                                int times = sp.getInt("lottery_times", 0) - 1;
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putInt("lottery_times", times);
+                                editor.apply();
+                                if(times >= 0) {
+                                    mButtonGetLottery.setText("抽奖（"+times+"）");
+                                }
+                            } else {
                                 new AlertDialog.Builder(BonusActivity.this)
                                         .setTitle("不能重复抽奖！")
                                         .setPositiveButton("确定", null)
@@ -131,21 +133,18 @@ public class BonusActivity extends Activity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        progressDialog.hide();
                     }
 
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
-                        progressDialog.hide();
                     }
                 });
     }
 
     @Override
     protected  void onDestroy(){
-        progressDialog.dismiss();
         super.onDestroy();
     }
 
