@@ -14,6 +14,9 @@ from datetime import date, datetime
 from django.contrib.auth.hashers import (
     check_password, make_password, is_password_usable)
 
+from devicemgt import settings
+import os
+
 # Create your models here.
 
 
@@ -164,12 +167,15 @@ class k_user(models.Model):
     face = models.CharField(max_length=50)
 
     def content_file_name(instance, filename):
-        return 'user_avatar/{0}/{1}_{2}'.format(
+        image_name = 'user_avatar/{0}_{1}'.format(
             instance.username,
-            datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
             filename
         )
-    avatar = models.FileField(upload_to=content_file_name, default='user_avatar/undefined.png')
+        fullname = os.path.join(settings.MEDIA_ROOT, image_name)
+        if os.path.exists(fullname):
+            os.remove(fullname)
+        return image_name
+    avatar = models.FileField(upload_to=content_file_name, default='user_avatar/default-user.png')
 
     mobile = models.CharField(max_length=50, default='0')
     email = models.EmailField(_('e-mail address'))

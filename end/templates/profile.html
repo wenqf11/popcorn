@@ -20,7 +20,7 @@
         <div class="col-xs-12 col-sm-3 center">
             <div>
                 <span class="profile-picture">
-                    <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="../static/images/user.png" />
+                    <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}{{ user.avatar }}" />
                 </span>
 
                 <div class="space-4"></div>
@@ -30,7 +30,7 @@
                         <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                             <i class="ace-icon fa fa-circle light-green"></i>
                             &nbsp;
-                            <span class="white">{{ user.username }}</span>
+                            <span class="white">{{ user.name }}</span>
                         </a>
                     </div>
                 </div>
@@ -305,7 +305,7 @@
                         //specify ace file input plugin's options here
                         btn_choose: '更改头像',
                         droppable: true,
-                        maxSize: 110000,//~100Kb
+                        maxSize: 1100000,//~1MB
 
                         //and a few extra ones here
                         name: 'avatar',//put the field name here as well, will be used inside the custom plugin
@@ -320,7 +320,7 @@
                             } else if(error_type == 2) {//file size rror
                                 last_gritter = $.gritter.add({
                                     title: '上传图片太大！',
-                                    text: '头像大小不能超过100Kb!',
+                                    text: '头像大小不能超过1MB!',
                                     class_name: 'gritter-error gritter-center'
                                 });
                             }
@@ -344,7 +344,6 @@
                             return deferred.promise();
                         }
 
-
                         //dummy upload
                         setTimeout(function(){
                             if("FileReader" in window) {
@@ -362,7 +361,7 @@
                                 class_name: 'gritter-info gritter-center'
                             });
 
-                         } , parseInt(Math.random() * 800 + 800))
+                         } , parseInt(Math.random() * 800 + 800));
 
                         return deferred.promise();
 
