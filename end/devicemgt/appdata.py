@@ -489,6 +489,7 @@ def app_maintain_add(request, para, user):
     task.title = para['title']
     task.createcontent = para['description']
     # task.image = para['image']
+    task.classid = user.classid
     task.memo = para['memo']
     task.mtype = '2'
     task.creatorid = user.id
