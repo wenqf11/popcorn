@@ -333,8 +333,6 @@
                     },
                     url: function(params) {
                         // ***UPDATE AVATAR HERE*** //
-                        //for a working upload example you can replace the contents of this function with
-                        //examples/profile-avatar-update.js
 
                         var deferred = new $.Deferred
 
@@ -344,26 +342,117 @@
                             return deferred.promise();
                         }
 
-                        //dummy upload
-                        setTimeout(function(){
-                            if("FileReader" in window) {
-                                //for browsers that have a thumbnail of selected image
-                                var thumb = $('#avatar').next().find('img').data('thumb');
-                                if(thumb) $('#avatar').get(0).src = thumb;
+                        var submit_url = '/profile/';
+                        var $form = $('#avatar').next().find('.editableform:eq(0)')
+                        var file_input = $form.find('input[type=file]:eq(0)');
+
+                        //user iframe for older browsers that don't support file upload via FormData & Ajax
+                        if( !("FormData" in window) ) {
+                            deferred = new $.Deferred
+
+                            var iframe_id = 'temporary-iframe-'+(new Date()).getTime()+'-'+(parseInt(Math.random()*1000));
+                            $form.after('<iframe id="'+iframe_id+'" name="'+iframe_id+'" frameborder="0" width="0" height="0" src="about:blank" style="position:absolute;z-index:-1;"></iframe>');
+                            $form.append('<input type="hidden" name="temporary-iframe-id" value="'+iframe_id+'" />');
+                            $form.next().data('deferrer' , deferred);//save the deferred object to the iframe
+                            $form.attr({'method' : 'POST', 'enctype' : 'multipart/form-data',
+                                        'target':iframe_id, 'action':submit_url});
+
+                            $form.get(0).submit();
+
+                            //if we don't receive the response after 60 seconds, declare it as failed!
+                            setTimeout(function(){
+                                var iframe = document.getElementById(iframe_id);
+                                if(iframe != null) {
+                                    iframe.src = "about:blank";
+                                    $(iframe).remove();
+
+                                    deferred.reject({'status':'fail','message':'Timeout!'});
+                                }
+                            } , 60000);
+                        }
+                        else {
+                            var fd = null;
+                            try {
+                                fd = new FormData($form.get(0));
+                            } catch(e) {
+                                //IE10 throws "SCRIPT5: Access is denied" exception,
+                                //so we need to add the key/value pairs one by one
+                                fd = new FormData();
+                                $.each($form.serializeArray(), function(index, item) {
+                                    fd.append(item.name, item.value);
+                                });
+                                //and then add files because files are not included in serializeArray()'s result
+                                $form.find('input[type=file]').each(function(){
+                                    if(this.files.length > 0) fd.append(this.getAttribute('name'), this.files[0]);
+                                });
                             }
 
-                            deferred.resolve({'status':'OK'});
+                            //if file has been drag&dropped , append it to FormData
+                            if(file_input.data('ace_input_method') == 'drop') {
+                                var files = file_input.data('ace_input_files');
+                                if(files && files.length > 0) {
+                                    fd.append(file_input.attr('name'), files[0]);
+                                }
+                            }
 
-                            if(last_gritter) $.gritter.remove(last_gritter);
-                            last_gritter = $.gritter.add({
-                                title: '头像更新成功!',
-                                text: 'Uploading to server can be easily implemented. A working example is included with the template.',
-                                class_name: 'gritter-info gritter-center'
+                            deferred = $.ajax({
+                                url: submit_url,
+                                type: 'POST',
+                                processData: false,
+                                contentType: false,
+                                dataType: 'json',
+                                data: fd,
+                                xhr: function() {
+                                    var req = $.ajaxSettings.xhr();
+                                    /*if (req && req.upload) {
+                                        req.upload.addEventListener('progress', function(e) {
+                                            if(e.lengthComputable) {
+                                                var done = e.loaded || e.position, total = e.total || e.totalSize;
+                                                var percent = parseInt((done/total)*100) + '%';
+                                                //bar.css('width', percent).parent().attr('data-percent', percent);
+                                            }
+                                        }, false);
+                                    }*/
+                                    return req;
+                                },
+                                beforeSend : function() {
+                                    //bar.css('width', '0%').parent().attr('data-percent', '0%');
+                                },
+                                success : function() {
+                                    //bar.css('width', '100%').parent().attr('data-percent', '100%');
+                                }
+                            })
+                        }
+
+
+
+                        deferred.done(function(res){
+                            if(res.status == 'OK') {
+                                $('#avatar').get(0).src = res.url;
+                                $.gritter.add({
+                                    title: '修改个人信息成功！',
+                                    text: '头像更新成功！',
+                                    class_name: 'gritter-info gritter-center'
+                                });
+                            }
+                            else {
+                                $.gritter.add({
+                                    title: '修改个人信息失败！',
+                                    text: res.message,
+                                    class_name: 'gritter-error gritter-center'
+                                });
+                            }
+                        }).fail(function(res){
+                            $.gritter.add({
+                                title: '修改个人信息失败！',
+                                text: '上传头像失败！请重试！',
+                                class_name: 'gritter-error gritter-center'
                             });
+                        });
 
-                         } , parseInt(Math.random() * 800 + 800));
 
                         return deferred.promise();
+
 
                         // ***END OF UPDATE AVATAR HERE*** //
                     },

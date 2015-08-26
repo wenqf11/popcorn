@@ -1184,11 +1184,8 @@ def submit_producer(request):
 def profile(request):
     if request.method == "GET":
         user = k_user.objects.get(username=request.user.username)
-        #user = User.objects.get(username=request.user.username)
-
-        return render_to_response('profile.html', {
-            'user': user
-        }, context_instance=RequestContext(request))
+        variables = RequestContext(request, {'user': user})
+        return get_purviews_and_render_to_response(request.user.username, 'profile.html', variables)
     else:
         user = k_user.objects.filter(username=request.POST['username'])
         if len(user) == 1:
@@ -1207,10 +1204,8 @@ def profile(request):
             msg = "用户名不存在，修改用户信息失败！"
 
         user = k_user.objects.get(username=request.user.username)
-        return render_to_response('profile.html', {
-            'user': user,
-            "msg": msg
-        }, context_instance=RequestContext(request))
+        variables = RequestContext(request, {'user': user, 'msg': msg})
+        return get_purviews_and_render_to_response(request.user.username, 'profile.html', variables)
 
 
 def change_password(request):
