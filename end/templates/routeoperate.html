@@ -57,8 +57,15 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">起始时间</label>
                 <div class="col-sm-9">
-                    <input type="text" name="hour" value="{{ data.startTime | time:'G' }}" style="width: 60px;">时
-                    <input type="text" name="minute" value="{{ data.startTime | time:'i' }}" style="width: 60px;">分
+                    <input type="text" name="startHour" value="{{ data.startTime | time:'G' }}" style="width: 60px;">时
+                    <input type="text" name="startMinute" value="{{ data.startTime | time:'i' }}" style="width: 60px;">分
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">结束时间</label>
+                <div class="col-sm-9">
+                    <input type="text" name="endHour" value="{{ data.endTime | time:'G' }}" style="width: 60px;">时
+                    <input type="text" name="endMinute" value="{{ data.endTime | time:'i' }}" style="width: 60px;">分
                 </div>
             </div>
             <div class="hr hr-16 hr-dotted"></div>
@@ -71,9 +78,9 @@
                     <select id="multiselect" multiple="multiple" size="10" name="routeList" form="roleform">
                         {% for form in data.forms %}
                             {% if form.selected %}
-                            <option value="{{ form.id }}" selected="selected">{{ form.brief }}</option>
+                            <option value="{{ form.id }}" selected="selected">{{ form.name }} ({{ form.brief }})</option>
                             {% else %}
-                            <option value="{{ form.id }}">{{ form.brief }}</option>
+                            <option value="{{ form.id }}">{{ form.name }} ({{ form.brief }})</option>
                             {% endif %}
                         {% endfor %}
                     </select>

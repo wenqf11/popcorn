@@ -347,10 +347,11 @@ class k_formitem(models.Model):
 Route, Meter, Maintenance, Task
 """
 class k_route(models.Model):
-    classid = models.ForeignKey(k_class, related_name='route_set',blank=True, null=True, on_delete=models.SET_NULL)
+    classid = models.ForeignKey(k_class, related_name='route_set', blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=100)
     formid = models.CharField(max_length=100)
     starttime = models.TimeField()
+    endtime = models.TimeField()
     period = models.PositiveIntegerField()
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
