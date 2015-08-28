@@ -1,0 +1,177 @@
+{% extends 'userframe.html' %}
+
+{% block js %}
+    <script src="/static/assets/js/bootstrap-datepicker.min.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link href="/static/assets/css/datepicker.min.css" rel="stylesheet" media="screen">
+    <link href="/static/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
+{% endblock %}
+
+{% block pageheader %}
+    抽奖记录
+{% endblock %}
+
+{% block maincontent %}
+<div class="row-fluid" style="width: 80%;">
+    <div class="col-sm-6 col-sm-offset-3 well">
+        <form id="bonus-form"action="/egg_history/" class="form-horizontal" method="POST">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">起始日期</label>
+                <div class="col-sm-9">
+                    <input id="bonus-start-date" name="start-date" type="text" class="span6 m-wrap" value="{{ start_date }}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">结束日期</label>
+                <div class="col-sm-9">
+                    <input id="bonus-end-date" name="end-date" type="text" class="span6 m-wrap" value="{{ end_date }}"readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">姓名</label>
+                <div class="col-sm-9">
+                    <input  name="name" type="text" class="span8 m-wrap" value="{{ name }}" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="float: right;">查找</button>
+        </form>
+    </div>
+</div>
+<hr />
+<div class="row-fluid">
+    <div class="col-sm-12">
+        <table id="bonus-records-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>姓名</th>
+                    <th>部门</th>
+                    <th>中奖金额</th>
+                    <th>中奖概率</th>
+                    <th>中奖状态</th>
+                    <th>领取奖金</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in bonus_records %}
+                <tr>
+                    <td>{{ record.date | date:"Y-m-d" }}</td>
+                    <td>{{ record.name }}</td>
+                    <td>{{ record.dept }}</td>
+                    <td>{{ record.bonus }}</td>
+                    <td>{{ record.probability }}</td>
+                    <td>{{ record.state }}</td>
+                    <td>{% ifequal record.state '中奖未领' %}<button pk="{{ record.id }}"name="get_bonus_btn" class="btn btn-primary btn-xs">领取</button>{% endifequal %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block tailjs %}
+
+<script src="/static/vendors/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/static/assets/DT_bootstrap.js"></script>
+<script type="text/javascript">
+    $("[name='get_bonus_btn']").click(function(event) {
+        id = $(this).attr('pk');
+        $.ajax({
+            type:"post",
+            url: '/receive_bonus/'+id+'/',
+            success:function(data){
+                if(data =="ok"){
+                    $.gritter.add({
+                        title: '提示',
+                        text: '领取成功！',
+                        class_name: 'gritter-error gritter-center',
+                        time: 1500
+                    });
+                }else if(data == "record not found"){
+                    $.gritter.add({
+                        title: '提示',
+                        text: '找不到中奖记录！',
+                        class_name: 'gritter-error gritter-center',
+                        time: 1500
+                    });
+                }else{
+                    $.gritter.add({
+                        title: '提示',
+                        text: '领取失败，请重新尝试！',
+                        class_name: 'gritter-error gritter-center',
+                        time: 1500
+                    });
+                }
+            },
+            error: function() {
+                $.gritter.add({
+                    title: '提示',
+                    text: '领取失败，请重新尝试！',
+                    class_name: 'gritter-error gritter-center',
+                    time: 1500
+                });
+            },
+            dataType: "text",
+            complete: function () {
+                $.ajax({
+                  type: 'POST',
+                  url: "/egg_history/",
+                  data: $('#bonus-form').serialize(),
+                  success: function(data){
+                      document.open();
+                      document.write(data);
+                      document.close();
+                  },
+                  dataType: "html"
+                });
+            }
+        });
+    });
+
+    $('#bonus-start-date').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+    $('#bonus-end-date').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+
+    $(document).ready(function() {
+        $('#bonus-records-table').DataTable({
+            order: [[0, 'desc']],
+            oLanguage : {
+                "sLengthMenu" : "每页显示 _MENU_ 条记录",
+                "sZeroRecords" : "对不起，没有匹配的数据",
+                "sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
+                "sInfoEmpty" : "没有数据",
+                "sInfoFiltered" : "(数据表中共 _MAX_ 条记录)",
+                "sProcessing" : "正在加载中...",
+                "sSearch" : "搜索：",
+                "oPaginate" : {
+                    "sFirst" : "第一页",
+                    "sPrevious" : " 上一页 ",
+                    "sNext" : " 下一页 ",
+                    "sLast" : " 最后一页 "
+                }
+            }
+        });
+    });
+
+    function validateForm() {
+        var start_date = $("[name='start-date']").val();
+        var end_date = $("[name='end-date']").val();
+        if(start_date.length > 0 && end_date.length > 0 && start_date > end_date) {
+            $.gritter.add({
+                title: '日期有误',
+                text: '起始日期不能大于结束日期！',
+                class_name: 'gritter-error gritter-center',
+                time: 1500
+            });
+            return false;
+        }
+        return true;
+    }
+</script>
+{% endblock %}

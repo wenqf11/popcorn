@@ -652,7 +652,7 @@ class k_staffegginfo(models.Model):
     time = models.DateField(blank=True, default=date.today)
     bonus = models.FloatField()
     probability = models.FloatField()
-    state = models.CharField(max_length=1) #1 yes, 0 no
+    state = models.CharField(max_length=1) #1 yes, 0 no, 2 means received
 
 class k_feedback(models.Model):
     feedback = models.CharField(max_length=200)

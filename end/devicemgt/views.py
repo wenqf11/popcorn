@@ -4114,6 +4114,75 @@ def egg_submit(request):
     return HttpResponseRedirect('/egg/?msg=修改成功！')
 
 
+@login_required
+def egg_history(request):
+    if request.method == "GET":
+        return get_purviews_and_render_to_response(request.user.username, "egg_history.html", {
+        })
+    else:
+        start_date_str = request.POST.get("start-date", "")
+        end_date_str = request.POST.get("end-date", "")
+        name = request.POST.get("name", "")
+        bonus_records = k_staffegginfo.objects.all()
+
+        if start_date_str != "":
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+            bonus_records = bonus_records.filter(time__gte=start_date)
+
+        if end_date_str != "":
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            bonus_records = bonus_records.filter(time__lte=end_date)
+
+
+        if len(name) > 0:
+            bonus_users = k_user.objects.filter(name=name)
+            bonus_records = bonus_records.filter(userid__in=bonus_users)
+
+        data = []
+        for bonus_record in bonus_records:
+            d = {
+                'id': bonus_record.id,
+                'date': bonus_record.time,
+                'name': bonus_record.userid.name,
+                'dept': bonus_record.userid.classid.name,
+                'bonus': bonus_record.bonus,
+                'probability': bonus_record.probability
+            }
+
+            if bonus_record.state == '0':
+                d['state'] = u'未中奖'
+            elif bonus_record.state == '1':
+                d['state'] = u'中奖未领'
+            elif bonus_record.state == '2':
+                d['state'] = u'已领取'
+            data.append(d)
+        return get_purviews_and_render_to_response(request.user.username, "egg_history.html", {
+            'bonus_records': data,
+            'start_date': start_date_str,
+            'end_date': end_date_str,
+            'name': name
+        })
+
+
+@login_required
+def receive_bonus(request, bonus_record_id=""):
+    if request.method == 'POST':
+        if bonus_record_id:
+            bonus_record = k_staffegginfo.objects.filter(id=bonus_record_id)
+            if len(bonus_record) > 0:
+                bonus_record = bonus_record[0]
+                bonus_record.state = 2                     #change state to received state
+                bonus_record.save()
+                return HttpResponse("ok")
+            else:
+                return HttpResponse("record not found")
+        else:
+            return HttpResponse("error")
+    else:
+        return HttpResponse("error")
+
+
+
 def meter(request):
     if request.method == 'GET':
         return get_purviews_and_render_to_response(request.user.username, 'meter.html')
