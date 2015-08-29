@@ -10,11 +10,11 @@
 {% block content %}
 <div class="panel-group span6" id="accordion" role="tablist" aria-multiselectable="true">
     {% for route in routes %}
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="width: 650px;">
         <div class="panel-heading" role="tab" id="route-{{ route.id }}">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ route.id }}" aria-expanded="true" aria-controls={{ route.id }}>
-                路线名称：{{ route.name }}　　抄表周期：{{ route.period }}小时　　起始时间：{{ route.startTime | time:'H:i' }}
+                路线名称：{{ route.name }}　　抄表周期：{{ route.period }}小时　　起始时间：{{ route.startTime | time:'H:i' }}　　结束时间：{{ route.endTime | time:'H:i' }}
                 </a>
             </h4>
         </div>

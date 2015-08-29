@@ -1427,8 +1427,8 @@ def delete_schedule(request):
 def view_schedule(request):
     kuser = k_user.objects.get(username = request.user.username)
     if request.method == 'GET':
-        users = k_user.objects.all() # 此处应取对应班组的用户
-        user_data = [{'id': user.id, 'name': user.username} for user in users]
+        users = k_user.objects.all()  # 此处应取对应班组的用户
+        user_data = [{'id': user.id, 'name': user.name, 'department': user.classid.name} for user in users]
 
         routes = k_route.objects.all()
         route_data = [{'id': r.id, 'name': r.name, 'startTime': r.starttime, 'period': r.period} for r in routes]
@@ -1629,6 +1629,7 @@ def view_route(request):
             route['forms'] = '暂未指定路线设备'
         route['name'] = r.name
         route['startTime'] = r.starttime
+        route['endTime'] = r.endtime
         route['period'] = r.period
         route['creator'] = k_user.objects.get(id=r.creatorid).username
         route['createTime'] = r.createdatetime
@@ -1651,6 +1652,7 @@ def operate_route(request):
         _forms = _route.formid.split(',')
         data['name'] = _route.name
         data['startTime'] = _route.starttime
+        data['endTime'] = _route.endtime
         data['period'] = _route.period
         data['creator'] = k_user.objects.get(id=_route.creatorid).username
         data['createTime'] = _route.createdatetime
@@ -1658,23 +1660,29 @@ def operate_route(request):
         data['editTime'] = _route.editdatetime
 
         all_form = k_form.objects.all()
-        data['forms'] = [{
-            'id': _form.id,
-            'brief': _form.brief,
-            'selected': str(_form.id) in _forms
-        } for _form in all_form]
+        data['forms'] = []
+        for _form in all_form:
+            _device = k_device.objects.get(brief=_form.brief)
+            data['forms'].append({
+                'id': _form.id,
+                'brief': _form.brief,
+                'name': _device.name,
+                'selected': str(_form.id) in _forms
+            })
 
         data['routeString'] = _route.formid
 
         return get_purviews_and_render_to_response(request.user.username, 'routeoperate.html', {'isNew': False, 'data': data})
     else:
         # 添加路线
-        data['forms'] = []
         all_form = k_form.objects.all()
+        data['forms'] = []
         for _form in all_form:
+            _device = k_device.objects.get(brief=_form.brief)
             data['forms'].append({
                 'id': _form.id,
                 'brief': _form.brief,
+                'name': _device.name,
                 'selected': False
             })
         return get_purviews_and_render_to_response(request.user.username, 'routeoperate.html', {'isNew': True, 'data': data})
@@ -1688,9 +1696,12 @@ def submit_route(request, _id=''):
     _name = request.POST.get('name')
     _period = request.POST.get('period')
     # _start_time = request.GET.get('startTime')
-    _hour = request.POST.get('hour')
-    _minute = request.POST.get('minute')
-    _start_time = _hour + ':' + _minute
+    _start_hour = request.POST.get('startHour')
+    _start_minute = request.POST.get('startMinute')
+    _start_time = _start_hour + ':' + _start_minute
+    _end_hour = request.POST.get('endHour')
+    _end_minute = request.POST.get('endMinute')
+    _end_time = _end_hour + ':' + _end_minute
     _edit_time = get_current_date()
     if _id:
         route = k_route.objects.get(id=_id)
@@ -1700,6 +1711,7 @@ def submit_route(request, _id=''):
     route.name = _name
     route.formid = _forms
     route.starttime = datetime.strptime(_start_time, '%H:%M').time()
+    route.endtime = datetime.strptime(_end_time, '%H:%M').time()
     route.period = _period
     route.editorid = _editor
     route.editdatetime = _edit_time
@@ -4121,6 +4133,75 @@ def egg_submit(request):
         config.save()
 
     return HttpResponseRedirect('/egg/?msg=修改成功！')
+
+
+@login_required
+def egg_history(request):
+    if request.method == "GET":
+        return get_purviews_and_render_to_response(request.user.username, "egg_history.html", {
+        })
+    else:
+        start_date_str = request.POST.get("start-date", "")
+        end_date_str = request.POST.get("end-date", "")
+        name = request.POST.get("name", "")
+        bonus_records = k_staffegginfo.objects.all()
+
+        if start_date_str != "":
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+            bonus_records = bonus_records.filter(time__gte=start_date)
+
+        if end_date_str != "":
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            bonus_records = bonus_records.filter(time__lte=end_date)
+
+
+        if len(name) > 0:
+            bonus_users = k_user.objects.filter(name=name)
+            bonus_records = bonus_records.filter(userid__in=bonus_users)
+
+        data = []
+        for bonus_record in bonus_records:
+            d = {
+                'id': bonus_record.id,
+                'date': bonus_record.time,
+                'name': bonus_record.userid.name,
+                'dept': bonus_record.userid.classid.name,
+                'bonus': bonus_record.bonus,
+                'probability': bonus_record.probability
+            }
+
+            if bonus_record.state == '0':
+                d['state'] = u'未中奖'
+            elif bonus_record.state == '1':
+                d['state'] = u'中奖未领'
+            elif bonus_record.state == '2':
+                d['state'] = u'已领取'
+            data.append(d)
+        return get_purviews_and_render_to_response(request.user.username, "egg_history.html", {
+            'bonus_records': data,
+            'start_date': start_date_str,
+            'end_date': end_date_str,
+            'name': name
+        })
+
+
+@login_required
+def receive_bonus(request, bonus_record_id=""):
+    if request.method == 'POST':
+        if bonus_record_id:
+            bonus_record = k_staffegginfo.objects.filter(id=bonus_record_id)
+            if len(bonus_record) > 0:
+                bonus_record = bonus_record[0]
+                bonus_record.state = 2                     #change state to received state
+                bonus_record.save()
+                return HttpResponse("ok")
+            else:
+                return HttpResponse("record not found")
+        else:
+            return HttpResponse("error")
+    else:
+        return HttpResponse("error")
+
 
 
 def meter(request):

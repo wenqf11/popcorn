@@ -347,10 +347,11 @@ class k_formitem(models.Model):
 Route, Meter, Maintenance, Task
 """
 class k_route(models.Model):
-    classid = models.ForeignKey(k_class, related_name='route_set',blank=True, null=True, on_delete=models.SET_NULL)
+    classid = models.ForeignKey(k_class, related_name='route_set', blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=100)
     formid = models.CharField(max_length=100)
     starttime = models.TimeField()
+    endtime = models.TimeField()
     period = models.PositiveIntegerField()
     creatorid = models.PositiveIntegerField(default=0)
     createdatetime = models.DateField(blank=True, default=date.today)
@@ -651,7 +652,7 @@ class k_staffegginfo(models.Model):
     time = models.DateField(blank=True, default=date.today)
     bonus = models.FloatField()
     probability = models.FloatField()
-    state = models.CharField(max_length=1) #1 yes, 0 no
+    state = models.CharField(max_length=1) #1 yes, 0 no, 2 means received
 
 class k_feedback(models.Model):
     feedback = models.CharField(max_length=200)
