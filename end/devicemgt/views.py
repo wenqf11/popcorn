@@ -1642,6 +1642,7 @@ def view_route(request):
 
 @login_required
 def operate_route(request):
+    user = k_user.objects.get(username=request.user.username)
     data = {}
     _id = request.GET.get('id')
 
@@ -1672,7 +1673,8 @@ def operate_route(request):
 
         data['routeString'] = _route.formid
 
-        return get_purviews_and_render_to_response(request.user.username, 'routeoperate.html', {'isNew': False, 'data': data})
+        return get_purviews_and_render_to_response(request.user.username, 'routeoperate.html', {'isNew': False, 'data': data,
+                                                                                                'username':user.username, 'useravatar': user.avatar})
     else:
         # 添加路线
         all_form = k_form.objects.all()
@@ -1685,7 +1687,8 @@ def operate_route(request):
                 'name': _device.name,
                 'selected': False
             })
-        return get_purviews_and_render_to_response(request.user.username, 'routeoperate.html', {'isNew': True, 'data': data})
+        return get_purviews_and_render_to_response(request.user.username, 'routeoperate.html', {'isNew': True, 'data': data,
+                                                                                                'username':user.username, 'useravatar': user.avatar})
 
 
 @login_required
@@ -1732,6 +1735,7 @@ def delete_route(request):
 
 @login_required
 def view_form(request):
+    user = k_user.objects.get(username=request.user.username)
     _id = request.GET.get('id')
     if _id:
         _device = k_device.objects.get(id=_id)
@@ -1745,7 +1749,8 @@ def view_form(request):
     else:
         _form = _form[0]
     _formitems = k_formitem.objects.filter(formid_id=_form.id)
-    return get_purviews_and_render_to_response(request.user.username, 'formview.html', {'brief': _brief, 'formid': _form.id, 'data': _formitems})
+    return get_purviews_and_render_to_response(request.user.username, 'formview.html', {'brief': _brief, 'formid': _form.id, 'data': _formitems,
+                                                                                        'username':user.username, 'useravatar': user.avatar})
 
 
 @login_required
@@ -1842,7 +1847,9 @@ def view_deviceplan(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'deviceplanview.html', {'brief': _brief, 'deviceid': _deviceid, 'data': data, 'maintainers': _maintainers, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'deviceplanview.html', {'brief': _brief, 'deviceid': _deviceid, 'data': data,
+                                                                                              'maintainers': _maintainers, 'purview_msg': purview_msg,
+                                                                                              'username':user.username,'useravatar': user.avatar})
 
 
 @login_required
@@ -1984,7 +1991,10 @@ def view_maintaining(request):
     if purview_msg == None:
        purview_msg = ''
 
-    return get_purviews_and_render_to_response(request.user.username, 'maintainingview.html', {'data': data, 'maintainers': _maintainers, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'maintainingview.html', {'data': data, 'maintainers': _maintainers,
+                                                                                               'purview_msg': purview_msg,
+                                                                                               'username':user.username,
+                                                                                               'useravatar': user.avatar})
 
 
 @login_required
@@ -2069,7 +2079,9 @@ def view_maintained(request):
     if purview_msg == None:
        purview_msg = ''
 
-    return get_purviews_and_render_to_response(request.user.username, 'maintainedview.html', {'data': data, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'maintainedview.html', {'data': data, 'purview_msg': purview_msg,
+                                                                                              'username':user.username,
+                                                                                              'useravatar': user.avatar})
 
 
 @login_required
@@ -2097,7 +2109,10 @@ def add_maintenance(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'maintenanceadd.html', {'maintainers': _maintainers, 'briefs': _briefs, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'maintenanceadd.html', {'maintainers': _maintainers, 'briefs': _briefs,
+                                                                                              'purview_msg': purview_msg,
+                                                                                              'username':user.username,
+                                                                                              'useravatar': user.avatar})
 
 
 @login_required
@@ -2260,7 +2275,10 @@ def view_upkeeping(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'upkeepingview.html', {'data': data, 'maintainers': _maintainers, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'upkeepingview.html', {'data': data, 'maintainers': _maintainers,
+                                                                                             'purview_msg': purview_msg,
+                                                                                             'username': user.username,
+                                                                                             'useravatar': user.avatar})
 
 @login_required
 def view_upkeeped(request):
@@ -2336,7 +2354,9 @@ def view_upkeeped(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'upkeepedview.html', {'data': data, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'upkeepedview.html', {'data': data, 'purview_msg': purview_msg,
+                                                                                            'username':user.username,
+                                                                                            'useravatar': user.avatar})
 
 
 @login_required
@@ -2406,7 +2426,9 @@ def view_tasking(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'taskingview.html', {'data': data, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'taskingview.html', {'data': data, 'purview_msg': purview_msg,
+                                                                                           'username':user.username,
+                                                                                           'useravatar': user.avatar})
 
 
 @login_required
@@ -2443,7 +2465,9 @@ def view_tasked(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'taskedview.html', {'data': data, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'taskedview.html', {'data': data, 'purview_msg': purview_msg,
+                                                                                          'username':user.username,
+                                                                                          'useravatar': user.avatar})
 
 
 @login_required
@@ -2452,14 +2476,16 @@ def add_task(request):
     # _msg = check_purview(request.user.username, 36)
     # if _msg != 0:
     #     return HttpResponseRedirect('/?msg='+_msg)
-        
+    user=k_user.objects.get(username=request.user.username)
     #非法权限信息
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'taskadd.html', {'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'taskadd.html', {'purview_msg': purview_msg,
+                                                                                       'username':user.username,
+                                                                                       'useravatar': user.avatar})
 
 
 @login_required
@@ -2579,7 +2605,9 @@ def view_taskitem(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'taskitemview.html', {'title': _task.title, 'taskers': _taskers, 'taskid': _task.id, 'data': data, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'taskitemview.html', {'title': _task.title, 'taskers': _taskers,
+                                                                                            'taskid': _task.id, 'data': data, 'purview_msg': purview_msg,
+                                                                                            'username':user.username,'useravatar': user.avatar})
 
 
 @login_required
@@ -2747,7 +2775,8 @@ def view_spare(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'spare.html', {"data": data, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'spare.html', {"data": data, 'purview_msg': purview_msg,
+                                                                                     'username':user.username, 'useravatar': user.avatar})
 
 
 def operate_spare(request):
@@ -2805,7 +2834,10 @@ def operate_spare(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'spareoperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'spareoperate.html', {"data": _data, "producers": _producers,
+                                                                                            "suppliers": _suppliers, "classes": _classes,
+                                                                                            'server_msg': server_msg, 'purview_msg': purview_msg,
+                                                                                            'username':user.username, 'useravatar': user.avatar})
 
 
 def submit_spare(request):
@@ -2911,10 +2943,9 @@ def delete_spare(request):
 @login_required
 def sparebatch_add(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username})
+    variables = RequestContext(request, {'username':user.username, 'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'sparebatchadd.html', variables)
 
 @login_required
@@ -3001,7 +3032,9 @@ def view_sparebill(request):
 
 
     #return get_purviews_and_render_to_response(request.user.username, 'sparebill.html', {'data': data, 'briefs': _briefs})
-    return get_purviews_and_render_to_response(request.user.username, 'sparebill.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'sparebill.html', {'data': data, 'briefinfos': _briefinfos,
+                                                                                         'server_msg': server_msg, 'purview_msg': purview_msg,
+                                                                                         'username':user.username, 'useravatar': user.avatar})
 
 
 def submit_sparebill(request):
@@ -3183,7 +3216,9 @@ def view_sparecount(request):
 
 
     #return get_purviews_and_render_to_response(request.user.username, 'sparecount.html', {'data': data, 'briefs': _briefs})
-    return get_purviews_and_render_to_response(request.user.username, 'sparecount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'sparecount.html', {'data': data, 'briefinfos': _briefinfos,
+                                                                                          'server_msg': server_msg, 'purview_msg': purview_msg,
+                                                                                          'username':user.username, 'useravatar': user.avatar})
 
 
 def submit_sparecount(request):
@@ -3348,7 +3383,8 @@ def view_tool(request):
     #, 'purview_msg': purview_msg
 
 
-    return get_purviews_and_render_to_response(request.user.username, 'tool.html', {"data": data, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'tool.html', {"data": data, 'purview_msg': purview_msg,
+                                                                                    'username':user.username, 'useravatar': user.avatar})
 
 
 def operate_tool(request):
@@ -3407,7 +3443,9 @@ def operate_tool(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers, "classes": _classes, 'server_msg': server_msg, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'tooloperate.html', {"data": _data, "producers": _producers, "suppliers": _suppliers,
+                                                                                           "classes": _classes, 'server_msg': server_msg, 'purview_msg': purview_msg,
+                                                                                           'username':user.username, 'useravatar': user.avatar})
 
 
 def submit_tool(request):
@@ -3583,7 +3621,9 @@ def view_tooluse(request):
 
 
     #return get_purviews_and_render_to_response(request.user.username, 'tooluse.html', {'data': data, 'briefs': _briefs})
-    return get_purviews_and_render_to_response(request.user.username, 'tooluse.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'tooluse.html', {'data': data, 'briefinfos': _briefinfos,
+                                                                                       'server_msg': server_msg, 'purview_msg': purview_msg,
+                                                                                       'username':user.username, 'useravatar': user.avatar})
 
 
 def submit_tooluse(request):
@@ -3765,7 +3805,9 @@ def view_toolcount(request):
 
 
     #return get_purviews_and_render_to_response(request.user.username, 'toolcount.html', {'data': data, 'briefs': _briefs})
-    return get_purviews_and_render_to_response(request.user.username, 'toolcount.html', {'data': data, 'briefinfos': _briefinfos, 'server_msg': server_msg, 'purview_msg': purview_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'toolcount.html', {'data': data, 'briefinfos': _briefinfos,
+                                                                                         'server_msg': server_msg, 'purview_msg': purview_msg,
+                                                                                         'username':user.username, 'useravatar': user.avatar})
 
 
 def submit_toolcount(request):
@@ -3882,7 +3924,7 @@ def delete_toolcount(request):
 
 def department(request):
     if request.user.is_authenticated():
-        user = User.objects.get(username=request.user.username)
+        user = k_user.objects.get(username=request.user.username)
         classes = k_class.objects.all()
         parents = 0
         datas = get_dept_type_node(classes, parents) #获取节点树
@@ -3906,12 +3948,12 @@ def department(request):
                 department_info["zipcode"] = _departs[0].zipcode
                 department_info["code"] = _departs[0].code
                 department_info["license"] = _departs[0].license
-                variables=RequestContext(request,{'username':user.username, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg,
+                variables=RequestContext(request,{'username':user.username, 'useravatar': user.avatar, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg,
                                               'department_info':department_info})
             else:
-                variables=RequestContext(request,{'username':user.username, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
+                variables=RequestContext(request,{'username':user.username, 'useravatar': user.avatar, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
         else:
-            variables=RequestContext(request,{'username':user.username, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
+            variables=RequestContext(request,{'username':user.username, 'useravatar': user.avatar, 'data':datas, 'server_msg':server_msg, 'purview_msg': purview_msg})
         return get_purviews_and_render_to_response(request.user.username, 'department.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -3920,7 +3962,6 @@ def department(request):
 def department_revise(request):
     _id = request.GET.get('id')
     if _id:
-        user=User.objects.get(username=request.user.username)
         #分类筛选
         user = k_user.objects.get(username=request.user.username)
         result = [user.classid.id]
@@ -3959,7 +4000,7 @@ def department_revise(request):
            purview_msg = ''
         #, 'purview_msg': purview_msg
 
-        variables=RequestContext(request,{'username':user.username,  'data':datas, 'purview_msg': purview_msg})
+        variables=RequestContext(request,{'username':user.username, 'useravatar': user.avatar,  'data':datas, 'purview_msg': purview_msg})
         return get_purviews_and_render_to_response(request.user.username, 'departmentadd.html',variables)
     else:
         HttpResponseRedirect('/department/?msg="非法访问！"')
@@ -3990,7 +4031,7 @@ def departmentadd(request):
            purview_msg = ''
         #, 'purview_msg': purview_msg
 
-        variables=RequestContext(request,{'username':user.username, 'data':datas, 'purview_msg': purview_msg})
+        variables=RequestContext(request,{'username':user.username, 'useravatar': user.avatar, 'data':datas, 'purview_msg': purview_msg})
         return get_purviews_and_render_to_response(request.user.username, 'departmentadd.html',variables)
     else:
         return HttpResponseRedirect('/login/')
@@ -4059,7 +4100,8 @@ def department_del(request):
 
 @login_required
 def score(request):
-    return get_purviews_and_render_to_response(request.user.username, 'score.html', {})
+    user=k_user.objects.get(username=request.user.username)
+    return get_purviews_and_render_to_response(request.user.username, 'score.html', {'username':user.username, 'useravatar': user.avatar})
 
 
 @login_required
@@ -4091,6 +4133,8 @@ def egg(request):
         'starttime': config.starttime.hour,
         'endtime': config.endtime.hour,
         'range': xrange(24),
+        'username':user.username,
+        'useravatar': user.avatar,
         'msg': msg
     })
 
@@ -4137,8 +4181,11 @@ def egg_submit(request):
 
 @login_required
 def egg_history(request):
+    user = k_user.objects.get(username=request.user.username)
     if request.method == "GET":
         return get_purviews_and_render_to_response(request.user.username, "egg_history.html", {
+            'username':user.username,
+            'useravatar': user.avatar
         })
     else:
         start_date_str = request.POST.get("start-date", "")
@@ -4181,6 +4228,8 @@ def egg_history(request):
             'bonus_records': data,
             'start_date': start_date_str,
             'end_date': end_date_str,
+            'username':user.username,
+            'useravatar': user.avatar,
             'name': name
         })
 
@@ -4206,7 +4255,11 @@ def receive_bonus(request, bonus_record_id=""):
 
 def meter(request):
     if request.method == 'GET':
-        return get_purviews_and_render_to_response(request.user.username, 'meter.html')
+        user = k_user.objects.get(username=request.user.username)
+        return get_purviews_and_render_to_response(request.user.username, 'meter.html', {
+            'username':user.username,
+            'useravatar': user.avatar
+        })
 
 
 def meter_device(request):
@@ -4216,7 +4269,7 @@ def meter_device(request):
     #     k_device.objects.get(brief=brief)
     # except ObjectDoesNotExist:
     #     return HttpResponseRedirect('/meter/')
-
+    user = k_user.objects.get(username=request.user.username)
     meters = k_meter.objects.filter(brief=brief)
     data = []
     for m in meters:
@@ -4233,7 +4286,11 @@ def meter_device(request):
         d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
         data.append(d)
 
-    return get_purviews_and_render_to_response(request.user.username, 'meterview.html', {'meters': data})
+    return get_purviews_and_render_to_response(request.user.username, 'meterview.html', {
+        'meters': data,
+        'username':user.username,
+        'useravatar': user.avatar
+    })
 
 
 def meter_date(request):
@@ -4244,6 +4301,7 @@ def meter_date(request):
     date_string = year + '-' + month + '-' + day
     _date = datetime.strptime(date_string, '%Y-%m-%d').date()
 
+    user = k_user.objects.get(username=request.user.username)
     meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)))
     data = []
     for m in meters:
@@ -4260,6 +4318,10 @@ def meter_date(request):
         d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
         data.append(d)
 
-    return get_purviews_and_render_to_response(request.user.username, 'meterview.html', {'meters': data})
+    return get_purviews_and_render_to_response(request.user.username, 'meterview.html', {
+        'meters': data,
+        'username':user.username,
+        'useravatar': user.avatar
+    })
 
 

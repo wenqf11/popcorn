@@ -33,9 +33,17 @@
 						<li class="light-blue">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
                                 {% if useravatar %}
-								    <img class="nav-user-photo" src="{{ MEDIA_URL }}{{ useravatar }}" alt="头像" width ="32" height="32"/>
+                                    {% if MEDIA_URL %}
+								        <img class="nav-user-photo" src="{{ MEDIA_URL }}{{ useravatar }}" alt="头像" width ="32" height="32"/>
+                                    {% else %}
+                                        <img class="nav-user-photo" src="/static/images/user_avatar/{{ useravatar }}" alt="头像" width ="32" height="32"/>
+                                    {% endif %}
 								{% else %}
-                                    <img class="nav-user-photo" src="{{ MEDIA_URL }}default-user.png" alt="头像" width ="32" height="32"/>
+                                    {% if MEDIA_URL %}
+								        <img class="nav-user-photo" src="{{ MEDIA_URL }}default-user.png" alt="头像" width ="32" height="32"/>
+                                    {% else %}
+                                        <img class="nav-user-photo" src="/static/images/user_avatar/default-user.png" alt="头像" width ="32" height="32"/>
+                                    {% endif %}
                                 {% endif %}
                                 <span class="user-info">
 									{{ username }}
