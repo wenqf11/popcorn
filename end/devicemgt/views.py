@@ -124,8 +124,8 @@ def check_purview(username, pid):
 @login_required
 def index(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
+    #user = User.objects.get(username=request.user.username)
     #非法权限信息
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
@@ -134,7 +134,7 @@ def index(request):
     #, 'purview_msg': purview_msg
 
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'index', 'purview_msg': purview_msg})
+    variables = RequestContext(request, {'username': user.username, 'purview_msg': purview_msg, 'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'index.html', variables)
 
 
@@ -248,6 +248,7 @@ def usermgt(request):
     else:
         variables = RequestContext(request, {
             'username': user.username,
+            'useravatar': user.avatar,
             'clicked_item': 'user',
             'data': datas,
             'server_msg': server_msg
@@ -261,7 +262,7 @@ def operate_user(request):
         update user information
     """
     if request.method == 'GET':
-        user = User.objects.get(username=request.user.username)
+        user = k_user.objects.get(username=request.user.username)
         # 读取权限，显示内容
         _id = request.GET.get('id')
         userdata = dict()
@@ -301,9 +302,9 @@ def operate_user(request):
 
         server_msg = request.GET.get('msg')
         if server_msg:
-            variables = RequestContext(request, {'username': user.username, 'data': userdata, 'server_msg': server_msg})
+            variables = RequestContext(request, {'username': user.username, 'data': userdata, 'server_msg': server_msg, 'useravatar': user.avatar})
         else:
-            variables = RequestContext(request, {'username': user.username, 'data': userdata})
+            variables = RequestContext(request, {'username': user.username, 'data': userdata, 'useravatar': user.avatar,})
         return get_purviews_and_render_to_response(request.user.username, 'useroperate.html', variables)
     else:
         user = k_user.objects.filter(username=request.POST['username'])
@@ -454,9 +455,9 @@ def useradd(request):
             userdata['isNew'] = True
         server_msg = request.GET.get('msg')
         if server_msg:
-            variables = RequestContext(request, {'username': user.username, 'data': userdata, 'server_msg': server_msg})
+            variables = RequestContext(request, {'username': user.username, 'data': userdata, 'useravatar': user.avatar, 'server_msg': server_msg})
         else:
-            variables = RequestContext(request, {'username': user.username, 'data': userdata})
+            variables = RequestContext(request, {'username': user.username, 'useravatar': user.avatar, 'data': userdata})
         return get_purviews_and_render_to_response(request.user.username, 'useradd.html',variables)
 
 
@@ -541,29 +542,26 @@ def userdel(request):
 @login_required
 def userset(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username})
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'userset.html', variables)
 
 @login_required
 def userbatch_add(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username})
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'userbatchadd.html', variables)
 
 
 @login_required
 def userbatch_submit(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
     user = User.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username})
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'userbatchadd.html', variables)
 
 '''
@@ -583,14 +581,14 @@ def devicebyclass(request):
     data['nodes'] = get_device_by_class(classes, parents.id)
     if data['nodes']:
         datas.append(data)
-        variables=RequestContext(request,{'username':user.username, 'data':datas})
+        variables=RequestContext(request,{'username':user.username,  'useravatar': user.avatar, 'data':datas})
         return get_purviews_and_render_to_response(request.user.username, 'devicebyclass.html',variables)
     else:
         return HttpResponseRedirect('/device/')
 
 @login_required
 def devicemgt(request):
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
     server_msg = request.GET.get('msg')
     if server_msg == None:
@@ -644,17 +642,16 @@ def devicemgt(request):
        purview_msg = ''
 
     if len(deviceinfo) > 0:
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'deviceinfo':deviceinfo, 'purview_msg':purview_msg})
+        variables=RequestContext(request,{'username':user.username,  'useravatar': user.avatar, 'data':datas, 'server_msg':server_msg, 'deviceinfo':deviceinfo, 'purview_msg':purview_msg})
     else:
-        variables=RequestContext(request,{'username':user.username, 'clicked_item': 'device', 'data':datas, 'server_msg':server_msg, 'purview_msg':purview_msg})
+        variables=RequestContext(request,{'username':user.username,  'useravatar': user.avatar, 'data':datas, 'server_msg':server_msg, 'purview_msg':purview_msg})
     return get_purviews_and_render_to_response(request.user.username, 'device.html',variables)
 
 
 @login_required
 def operate_device(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
     server_msg = request.GET.get('msg')
     if server_msg == None:
@@ -729,7 +726,7 @@ def operate_device(request):
                 people_list.append(person)
     else:
         userdata['isNew'] = True
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'user', 'data': userdata, 'server_msg': server_msg})
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar, 'data': userdata, 'server_msg': server_msg})
     return get_purviews_and_render_to_response(request.user.username, 'deviceadd.html', variables)
 
 
@@ -846,20 +843,18 @@ def devicedel(request):
 @login_required
 def devicebatch_add(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
     server_msg = request.GET.get("msg")
     if server_msg == None:
         server_msg = ""
-    variables = RequestContext(request, {'username': user.username, 'server_msg': server_msg})
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar,'server_msg': server_msg})
     return get_purviews_and_render_to_response(request.user.username, 'devicebatchadd.html', variables)
 
 @login_required
 def devicebatch_submit(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
     variables = RequestContext(request, {'username': user.username})
     if request.method == "POST":
@@ -981,25 +976,25 @@ def devicebatch_submit(request):
 
 @login_required
 def device_type(request):
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     devicetypes = k_devicetype.objects.all()
     parents = 0
     datas = get_type_node(devicetypes, parents) #获取节点树
     server_msg = request.GET.get("msg")
     if server_msg == None:
         server_msg = ""
-    variables = RequestContext(request,{'username': user.username, 'clicked_item': 'device', 'data': datas, 'server_msg': server_msg})
+    variables = RequestContext(request,{'username': user.username,  'useravatar': user.avatar, 'data': datas, 'server_msg': server_msg})
     return get_purviews_and_render_to_response(request.user.username, 'devicetype.html', variables)
 
 
 @login_required
 def device_type_add(request):
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     k_devicetypes = k_devicetype.objects.all()
     devicetypes = list()
     for k_type in k_devicetypes:
         devicetypes.append(k_type.name)
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device', 'devicetypes': devicetypes})
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar, 'devicetypes': devicetypes})
     return get_purviews_and_render_to_response(request.user.username, 'devicetypeadd.html', variables)
 
 
@@ -1048,6 +1043,7 @@ def device_type_submit(request):
 
 
 def supplier(request):
+    user = k_user.objects.get(username=request.user.username)
     _suppliers = k_supplier.objects.all()
     data = []
     for _supplier in _suppliers:
@@ -1060,13 +1056,13 @@ def supplier(request):
             'memo': _supplier.memo,
         })
 
-    return get_purviews_and_render_to_response(request.user.username, 'supplier.html', {'data': data})
+    return get_purviews_and_render_to_response(request.user.username, 'supplier.html', {'data': data, 'username': user.username,  'useravatar': user.avatar})
 
 
 @login_required
 def add_supplier(request):
-    user = User.objects.get(username=request.user.username)
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device'})
+    user = k_user.objects.get(username=request.user.username)
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'supplieradd.html', variables)
 
 @login_required
@@ -1114,6 +1110,7 @@ def submit_supplier(request):
 
 @login_required
 def producer(request):
+    user = k_user.objects.get(username=request.user.username)
     _producers = k_producer.objects.all()
     data = []
     for _producer in _producers:
@@ -1126,13 +1123,13 @@ def producer(request):
             'memo': _producer.memo,
         })
 
-    return get_purviews_and_render_to_response(request.user.username, 'producer.html', {'data': data})
+    return get_purviews_and_render_to_response(request.user.username, 'producer.html', {'data': data, 'username': user.username,  'useravatar': user.avatar})
 
 
 @login_required
 def add_producer(request):
-    user = User.objects.get(username=request.user.username)
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'device'})
+    user = k_user.objects.get(username=request.user.username)
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar, 'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'produceradd.html', variables)
 
 
@@ -1184,7 +1181,7 @@ def submit_producer(request):
 def profile(request):
     if request.method == "GET":
         user = k_user.objects.get(username=request.user.username)
-        variables = RequestContext(request, {'user': user})
+        variables = RequestContext(request, {'userinfo': user, 'username': user.username, 'useravatar': user.avatar})
         return get_purviews_and_render_to_response(request.user.username, 'profile.html', variables)
     else:
         user = k_user.objects.filter(username=request.POST['username'])
@@ -1204,7 +1201,7 @@ def profile(request):
             msg = "用户名不存在，修改用户信息失败！"
 
         user = k_user.objects.get(username=request.user.username)
-        variables = RequestContext(request, {'user': user, 'msg': msg})
+        variables = RequestContext(request, {'userinfo': user, 'msg': msg, 'username': user.username, 'useravatar': user.avatar})
         return get_purviews_and_render_to_response(request.user.username, 'profile.html', variables)
 
 
@@ -1223,11 +1220,24 @@ def change_password(request):
         user = k_user.objects.get(username=request.user.username)
         return render_to_response('profile.html', {
             'user': user,
+            'useravatar': user.avatar,
             "msg": msg
         }, context_instance=RequestContext(request))
     else:
         return HttpResponseRedirect("/profile/")
 
+
+def change_avatar(request):
+    filename = handle_uploaded_file(request.user.username, request.FILES['avatar'])
+    user = k_user.objects.get(username=request.user.username)
+    user.avatar = filename
+    user.save()
+    return HttpResponse(json.dumps({
+            "username": request.user.username,
+            "useravatar":filename,
+            "status":"OK"
+            }
+        ), content_type="application/json")
 
 @login_required
 def setting(request):
@@ -1235,7 +1245,7 @@ def setting(request):
     # user = k_user.objects.get(username=request.user.username)
     user = User.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username, 'clicked_item': 'setting'})
+    variables = RequestContext(request, {'username': user.username, 'useravatar': user.avatar})
     return get_purviews_and_render_to_response(request.user.username, 'setting.html', variables)
 
 
@@ -1275,7 +1285,12 @@ def login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return get_purviews_and_render_to_response(request.user.username, 'index.html', {'username': username})
+                kuser = k_user.objects.filter(username = username)
+                if len(kuser) == 1:
+                    return get_purviews_and_render_to_response(request.user.username, 'index.html', {'username': username, 'useravatar': kuser[0].avatar})
+                else:
+                    variables = RequestContext(request, {'msg': "数据库中存在重名用户！请联系管理员！"})
+                    return render_to_response('login.html', variables)
             else:
                 variables = RequestContext(request, {'msg': "用户名不存在或密码错误！"})
                 return render_to_response('login.html', variables)
@@ -1410,6 +1425,7 @@ def delete_schedule(request):
 
 
 def view_schedule(request):
+    kuser = k_user.objects.get(username = request.user.username)
     if request.method == 'GET':
         users = k_user.objects.all() # 此处应取对应班组的用户
         user_data = [{'id': user.id, 'name': user.username} for user in users]
@@ -1417,7 +1433,10 @@ def view_schedule(request):
         routes = k_route.objects.all()
         route_data = [{'id': r.id, 'name': r.name, 'startTime': r.starttime, 'period': r.period} for r in routes]
 
-        return get_purviews_and_render_to_response(request.user.username, 'schedule.html', {'routes': route_data, 'users': user_data})
+        return get_purviews_and_render_to_response(request.user.username, 'schedule.html', {'routes': route_data,
+                                                                                            'users': user_data,
+                                                                                            'username': kuser.username,
+                                                                                            'useravatar': kuser.avatar})
     else:
         routes = k_route.objects.all()
         route_data = [{'id': _r.id, 'name': _r.name, 'startTime': str(_r.starttime), 'period': _r.period} for _r in routes]
@@ -1440,6 +1459,7 @@ def view_schedule(request):
                     r['users'] = [dd['user'] for dd in available_day_route_shifts.values('user').distinct()]
                     day_shifts.append(r.copy())
             shift_data[str(day)] = day_shifts
+
         return HttpResponse(json.dumps({'shifts': shift_data}))
 
 
@@ -1487,7 +1507,7 @@ def view_role(request):
         onerole["editor"] = theeditor.username
         onerole["editdatetime"] = therole.editdatetime
         roledata.append(onerole)
-    return get_purviews_and_render_to_response(request.user.username, 'roleview.html', {'username': user.username, 'data': roledata})
+    return get_purviews_and_render_to_response(request.user.username, 'roleview.html', {'username': user.username, 'useravatar': user.avatar,'data': roledata})
 
 
 @login_required
@@ -1533,7 +1553,7 @@ def operate_role(request):
                 'name': _purview.name + ', ' + _purview.item,
                 'selected': _purview.id in purview_ids
             })
-        return get_purviews_and_render_to_response(request.user.username, 'roleoperate.html', {'username':user.username,'isNew': False, 'data': roledata, "classes": _classes, 'server_msg': server_msg})
+        return get_purviews_and_render_to_response(request.user.username, 'roleoperate.html', {'username':user.username,'useravatar': user.avatar,'isNew': False, 'data': roledata, "classes": _classes, 'server_msg': server_msg})
     else:
         data = {}
         data['purviews'] = []
@@ -1545,7 +1565,7 @@ def operate_role(request):
                 'selected': False
             })
 
-        return get_purviews_and_render_to_response(request.user.username, 'roleoperate.html', {'username':user.username,'isNew': True, 'data': data, "classes": _classes, 'server_msg': server_msg})
+        return get_purviews_and_render_to_response(request.user.username, 'roleoperate.html', {'username':user.username,'useravatar': user.avatar,'isNew': True, 'data': data, "classes": _classes, 'server_msg': server_msg})
 
 
 @login_required
@@ -1595,6 +1615,7 @@ def submit_role(request, _id=''):
 
 @login_required
 def view_route(request):
+    user = k_user.objects.get(username = request.user.username)
     routes = k_route.objects.all()
     data = []
     for r in routes:
@@ -1615,7 +1636,7 @@ def view_route(request):
         route['editTime'] = r.editdatetime
         #route['status'] = r.status
         data.append(route)
-    return get_purviews_and_render_to_response(request.user.username, 'routeview.html', {'routes': data})
+    return get_purviews_and_render_to_response(request.user.username, 'routeview.html', {'routes': data, 'username':user.username, 'useravatar': user.avatar})
 
 
 @login_required

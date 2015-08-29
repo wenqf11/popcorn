@@ -32,8 +32,12 @@
 
 						<li class="light-blue">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="../static/images/user.png" alt="头像" width ="32"/>
-								<span class="user-info">
+                                {% if useravatar %}
+								    <img class="nav-user-photo" src="{{ MEDIA_URL }}{{ useravatar }}" alt="头像" width ="32" height="32"/>
+								{% else %}
+                                    <img class="nav-user-photo" src="{{ MEDIA_URL }}default-user.png" alt="头像" width ="32" height="32"/>
+                                {% endif %}
+                                <span class="user-info">
 									{{ username }}
 								</span>
 
@@ -650,10 +654,12 @@
                     "score":"f_score",
                     "egg":"f_egg"
                 };
-                if(key!="schedule"){
-                    document.getElementById(url_map[key]).parentNode.parentNode.className="active";
+                if (url_map[key]) {
+                    if(key!="schedule"){
+                        document.getElementById(url_map[key]).parentNode.parentNode.className="active";
+                    }
+                    document.getElementById(url_map[key]).className="active";
                 }
-                document.getElementById(url_map[key]).className="active";
             }
         </script>
 

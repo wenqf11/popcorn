@@ -20,7 +20,13 @@
         <div class="col-xs-12 col-sm-3 center">
             <div>
                 <span class="profile-picture">
-                    <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}{{ user.avatar }}" />
+                    {% if userinfo.avatar %}
+                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}{{ userinfo.avatar }}" />
+                    {% elif user_avatar %}
+                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}{{ user_avatar }}" />
+                    {% else %}
+                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}default-user.png" />
+                    {% endif %}
                 </span>
 
                 <div class="space-4"></div>
@@ -30,7 +36,7 @@
                         <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                             <i class="ace-icon fa fa-circle light-green"></i>
                             &nbsp;
-                            <span class="white">{{ user.name }}</span>
+                            <span class="white">{{ userinfo.name }}</span>
                         </a>
                     </div>
                 </div>
@@ -67,7 +73,7 @@
 
                         <div class="col-sm-9">
                             <span class="input-icon input-icon-right">
-                                <input class="input-medium input-mask-phone" type="text" id="form-field-username" name="username" value="{{ user.username }}" readonly/>
+                                <input class="input-medium input-mask-phone" type="text" id="form-field-username" name="username" value="{{ userinfo.username }}" readonly/>
                                 <i class="ace-icon fa fa-user fa-flip-horizontal"></i>
                             </span>
                         </div>
@@ -78,7 +84,7 @@
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-username">姓名</label>
                         <div class="col-sm-9">
                             <span class="input-icon input-icon-right">
-                                <input class="input-medium input-mask-phone" type="text" id="form-field-name" name="name"   value="{{ user.name }}"/>
+                                <input class="input-medium input-mask-phone" type="text" id="form-field-name" name="name"   value="{{ userinfo.name }}"/>
                                 <i class="ace-icon fa fa-star fa-flip-horizontal"></i>
                             </span>
                         </div>
@@ -92,7 +98,7 @@
                         <div class="col-sm-9">
                             <div class="input-medium">
                                 <div class="input-group">
-                                    <input class="input-medium date-picker" id="birthday" name="birthday" type="text" value="{{ user.birthday | date:'Y-m-d' }}" data-date-format="yyyy-mm-dd" />
+                                    <input class="input-medium date-picker" id="birthday" name="birthday" type="text" value="{{ userinfo.birthday | date:'Y-m-d' }}" data-date-format="yyyy-mm-dd" />
                                     <span class="input-group-addon">
                                         <i class="ace-icon fa fa-calendar"></i>
                                     </span>
@@ -108,13 +114,13 @@
 
                         <div class="col-sm-9">
                             <label class="inline">
-                                <input type="radio" name="gender"value="1"  class="ace" {% ifequal user.gender "1"%}checked{% endifequal %}/>
+                                <input type="radio" name="gender"value="1"  class="ace" {% ifequal userinfo.gender "1"%}checked{% endifequal %}/>
                                 <span class="lbl middle"> 男</span>
                             </label>
 
                             &nbsp; &nbsp;
                             <label class="inline">
-                                <input type="radio" name="gender" value="0" class="ace" {% ifequal user.gender "0"%}checked{% endifequal %}/>
+                                <input type="radio" name="gender" value="0" class="ace" {% ifequal userinfo.gender "0"%}checked{% endifequal %}/>
                                 <span class="lbl middle"> 女</span>
                             </label>
                         </div>
@@ -127,7 +133,7 @@
 
                         <div class="col-sm-9">
                             <span class="input-icon input-icon-right">
-                                <input class="input-medium input-mask-phone" type="text" name="mobile" id="form-field-phone" value="{{ user.mobile }}"/>
+                                <input class="input-medium input-mask-phone" type="text" name="mobile" id="form-field-phone" value="{{ userinfo.mobile }}"/>
                                 <i class="ace-icon fa fa-phone fa-flip-horizontal"></i>
                             </span>
                         </div>
@@ -140,7 +146,7 @@
 
                         <div class="col-sm-9">
                             <span class="input-icon input-icon-right">
-                                <input type="email" id="form-field-email"  name="email" value="{{ user.email }}" />
+                                <input type="email" id="form-field-email"  name="email" value="{{ userinfo.email }}" />
                                 <i class="ace-icon fa fa-envelope"></i>
                             </span>
                         </div>
@@ -151,7 +157,7 @@
                         <label class="col-sm-3 control-label no-padding-right">联系地址</label>
                         <div class="col-sm-9">
                             <span class="input-icon input-icon-right">
-                                <input name="address" type="text"  value="{{ user.address }}"/>
+                                <input name="address" type="text"  value="{{ userinfo.address }}"/>
                                 <i class="ace-icon fa fa-home"></i>
                             </span>
                         </div>
@@ -342,7 +348,7 @@
                             return deferred.promise();
                         }
 
-                        var submit_url = '/profile/';
+                        var submit_url = '/change_avatar/';
                         var $form = $('#avatar').next().find('.editableform:eq(0)')
                         var file_input = $form.find('input[type=file]:eq(0)');
 
@@ -428,14 +434,16 @@
 
                         deferred.done(function(res){
                             if(res.status == 'OK') {
-                                $('#avatar').get(0).src = res.url;
+                                $('#avatar').get(0).src = "{{ MEDIA_URL }}" + res.useravatar;
                                 $.gritter.add({
                                     title: '修改个人信息成功！',
                                     text: '头像更新成功！',
                                     class_name: 'gritter-info gritter-center'
                                 });
+                                window.location.reload();
                             }
                             else {
+                                alert(res.status)
                                 $.gritter.add({
                                     title: '修改个人信息失败！',
                                     text: res.message,

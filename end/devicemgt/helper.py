@@ -5,17 +5,18 @@ __author__ = 'LY'
 import settings
 import time
 from models import k_device
+import os
 
 
 #用户上传文件
 def handle_uploaded_file(username, f):
-    print f.name.split('.')[-1]
-    path = settings.IMG_DIR+'/'+username+'.'+f.name.split('.')[-1]
-    print path
+    #path = settings.IMG_DIR+'/'+username+'.'+f.name.split('.')[-1]
+    filename = username+'.'+f.name.split('.')[-1]
+    path = os.getcwd() + settings.MEDIA_URL + filename
     with open(path, 'wb+') as info:
         for chunk in f.chunks():
             info.write(chunk)
-    return path
+    return filename
 
 
 # 获取系统当前时间

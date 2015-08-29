@@ -65,6 +65,7 @@ urlpatterns = patterns(
     url(r'^logout/$', logout),
     url(r'^register/$', register),
     url(r'^change_password/$', change_password),
+    url(r'^change_avatar/$', change_avatar),
     url(r'^user/$', usermgt),
     url(r'^useradd/$', useradd),
     url(r'^userbatch_add/$', userbatch_add),
