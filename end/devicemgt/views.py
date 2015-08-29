@@ -4119,7 +4119,7 @@ def egg(request):
         config = k_config.objects.get(classid=department_class)
     except ObjectDoesNotExist:
         config = k_config(
-            eggbonu=0,
+            eggbonus=0,
             eggprobability=0,
             classid=department_class,
             starttime=time(2, 0, 0, 0),
