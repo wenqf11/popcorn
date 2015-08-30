@@ -4335,11 +4335,7 @@ def meter_device(request):
 
 
 def meter_date(request):
-    year = request.GET.get('year')
-    month = request.GET.get('month')
-    day = request.GET.get('day')
-
-    date_string = year + '-' + month + '-' + day
+    date_string = request.GET.get('date')
     _date = datetime.strptime(date_string, '%Y-%m-%d').date()
 
     user = k_user.objects.get(username=request.user.username)
