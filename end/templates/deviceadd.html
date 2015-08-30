@@ -15,6 +15,168 @@
     {% endif %}
 {% endblock %}
 {% block maincontent %}
+
+<div id="my-modal1" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/submit_supplier/" role="form" id="supplierform">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="smaller lighter blue no-margin">添加供应商</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top"></label>
+                        <div class="col-sm-9">
+                            <input type="file" name="supplier_file" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司名称*</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="supplier_name" name="supplier_name" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司联系方式*</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="supplier_contact" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司地址*</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="supplier_address" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司联系人*</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="supplier_linkman" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">联系人电话</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="supplier_mobile" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">备注</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="supplier_memo" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top">id</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="id" value="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit" onclick="return check_supplier_valid();">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            保存
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div id="my-modal2" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="/submit_producer/" role="form" id="supplierform">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="smaller lighter blue no-margin">添加生产厂家</h3>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top"></label>
+                        <div class="col-sm-9">
+                            <input type="file" id="producer_name" name="producer_file" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司名称*</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="producer_name" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司联系方式*</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="producer_contact" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司地址*</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="producer_address" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">公司联系人</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="producer_linkman" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">联系人电话</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="producer_mobile" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">备注</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="producer_memo" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top">id</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="producer_id" value="" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit" onclick="return check_producer_valid();">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            保存
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+
+
+
          <!-- validation -->
         <div class="row-fluid well" style="width: 75%;margin: auto;">
              <!-- block -->
@@ -80,7 +242,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">供应商<span class="required">*</span></label>
                     <div class="col-sm-5">
-                        <select class="chosen-select" name="supplier">
+                        <select class="chosen-select" name="supplier" id="supplier">
                             <option value="">无</option>
                             {% for supplier in data.supplier_list %}
                                 {% if supplier in data.chosen_supplier %}
@@ -91,12 +253,14 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <i class="ace-icon fa fa-plus-circle info-icon" style="color:green;margin-top: 5px;font-size: 20px;"></i>
+                    <a href="#my-modal1" data-toggle="modal">
+                        <i class="ace-icon fa fa-plus-circle info-icon" style="color:green;margin-top: 5px;font-size: 20px;"></i>
+                    </a>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right">生产厂家<span class="required">*</span></label>
                     <div class="col-sm-5">
-                        <select class="chosen-select" name="producer">
+                        <select class="chosen-select" name="producer" id="producer">
                             <option value="">无</option>
                             {% for producer in data.producer_list %}
                                 {% if producer in data.chosen_producer %}
@@ -107,7 +271,9 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <i class="ace-icon fa fa-plus-circle info-icon" style="color:green;margin-top: 5px;font-size: 20px;"></i>
+                    <a href="#my-modal2" data-toggle="modal">
+                        <i class="ace-icon fa fa-plus-circle info-icon" style="color:green;margin-top: 5px;font-size: 20px;"></i>
+                    </a>
                 </div>
 
                 <h4 class="header blue bolder smaller">基本信息</h4>
@@ -387,6 +553,76 @@
                 });
                 return false;
            }
+            return true;
+        }
+    </script>
+    <script type="text/javascript">
+        function check_supplier_valid() {
+            var name = $("[name='supplier_name']").val();
+            if(name.length < 1 || name.length > 40) {
+                $("[name='supplier_name']").select();
+                $.gritter.add({
+                title: '添加供应商失败！',
+                text: '公司名称长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            var contact = $("[name='supplier_contact']").val();
+            if(contact.length < 1 || contact.length > 40) {
+                $("[name='supplier_contact']").select();
+                $.gritter.add({
+                title: '添加供应商失败！',
+                text: '公司联系方式的长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            var address = $("[name='supplier_address']").val();
+            if(address.length < 1 || address.length > 40) {
+                $("[name='supplier_address']").select();
+                $.gritter.add({
+                title: '添加供应商失败！',
+                text: '公司地址长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <script type="text/javascript">
+        function check_producer_valid() {
+            var name = $("[name='producer_name']").val();
+            if(name.length < 1 || name.length > 40) {
+                $("[name='producer_name']").select();
+                $.gritter.add({
+                title: '添加生产厂家失败！',
+                text: '公司名称长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            var contact = $("[name='producer_contact']").val();
+            if(contact.length < 1 || contact.length > 40) {
+                $("[name='producer_contact']").select();
+                $.gritter.add({
+                title: '添加生产厂家失败！',
+                text: '公司联系方式的长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
+            var address = $("[name='producer_address']").val();
+            if(address.length < 1 || address.length > 40) {
+                $("[name='producer_address']").select();
+                $.gritter.add({
+                title: '添加生产厂家失败！',
+                text: '公司地址长度为1-40！',
+                class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
             return true;
         }
     </script>

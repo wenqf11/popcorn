@@ -725,6 +725,10 @@ def operate_device(request):
                 person["position"] = _c.name
                 people_list.append(person)
     else:
+        if request.GET.get('supplier_name'):
+            userdata['chosen_supplier'] = request.GET.get('supplier_name')
+        if request.GET.get('producer_name'):
+            userdata['chosen_producer'] = request.GET.get('producer_name')
         userdata['isNew'] = True
     variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar, 'data': userdata, 'server_msg': server_msg})
     return get_purviews_and_render_to_response(request.user.username, 'deviceadd.html', variables)
@@ -1055,8 +1059,11 @@ def supplier(request):
             'mobile': _supplier.mobile,
             'memo': _supplier.memo,
         })
-
-    return get_purviews_and_render_to_response(request.user.username, 'supplier.html', {'data': data, 'username': user.username,  'useravatar': user.avatar})
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+        server_msg = ''
+    return get_purviews_and_render_to_response(request.user.username, 'supplier.html', {'data': data, 'username': user.username,
+                                                                                        'useravatar': user.avatar, 'server_msg':server_msg})
 
 
 @login_required
@@ -1091,18 +1098,33 @@ def submit_supplier(request):
             return HttpResponseRedirect('/supplier/')
     else:
         #添加供应商
-        if not k_supplier.objects.filter(name = request.GET.get('name')):
-            _name = request.GET.get('name')
-            _contact = request.GET.get('contact')
-            _address = request.GET.get('address')
-            _linkman = request.GET.get('linkman')
-            _mobile = request.GET.get('mobile')
-            _memo = request.GET.get('memo')
-            _supplier = k_supplier.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman=_linkman,mobile=_mobile,
-                                                  creatorid = request.user.id, createdatetime=get_current_date(),
-                                                  editorid=request.user.id, editdatetime=get_current_date())
-            _supplier.save()
-            return HttpResponseRedirect('/supplier/')
+        if not (k_supplier.objects.filter(name = request.GET.get('name')) or k_supplier.objects.filter(name = request.GET.get('supplier_name'))):
+            if request.GET.get('name'):
+                _name = request.GET.get('name')
+                _contact = request.GET.get('contact')
+                _address = request.GET.get('address')
+                _linkman = request.GET.get('linkman')
+                _mobile = request.GET.get('mobile')
+                _memo = request.GET.get('memo')
+                _supplier = k_supplier.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman=_linkman,mobile=_mobile,
+                                                      creatorid = request.user.id, createdatetime=get_current_date(),
+                                                      editorid=request.user.id, editdatetime=get_current_date())
+                _supplier.save()
+                return HttpResponseRedirect('/supplier/')
+            elif request.GET.get('supplier_name'):
+                _name = request.GET.get('supplier_name')
+                _contact = request.GET.get('supplier_contact')
+                _address = request.GET.get('supplier_address')
+                _linkman = request.GET.get('supplier_linkman')
+                _mobile = request.GET.get('supplier_mobile')
+                _memo = request.GET.get('supplier_memo')
+                _supplier = k_supplier.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman=_linkman,mobile=_mobile,
+                                                      creatorid = request.user.id, createdatetime=get_current_date(),
+                                                      editorid=request.user.id, editdatetime=get_current_date())
+                _supplier.save()
+                return HttpResponseRedirect('/operate_device/?supplier_name='+_name)
+            else:
+                return HttpResponseRedirect('/supplier/?msg="非法请求！"')
         else:
             return HttpResponseRedirect('/supplier/?msg="该供应商已存在！"')
     return HttpResponseRedirect('/supplier/')
@@ -1122,8 +1144,11 @@ def producer(request):
             'mobile': _producer.mobile,
             'memo': _producer.memo,
         })
-
-    return get_purviews_and_render_to_response(request.user.username, 'producer.html', {'data': data, 'username': user.username,  'useravatar': user.avatar})
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+        server_msg = ''
+    return get_purviews_and_render_to_response(request.user.username, 'producer.html', {'data': data, 'username': user.username,
+                                                                                        'useravatar': user.avatar, 'server_msg':server_msg})
 
 
 @login_required
@@ -1160,20 +1185,36 @@ def submit_producer(request):
             return HttpResponseRedirect('/producer/')
     else:
         #添加供应商
-        if not k_producer.objects.filter(name = request.GET.get('name')):
-            _name = request.GET.get('name')
-            _contact = request.GET.get('contact')
-            _address = request.GET.get('address')
-            _linkman = request.GET.get('linkman')
-            _mobile = request.GET.get('mobile')
-            _memo = request.GET.get('memo')
-            _producer = k_producer.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman = _linkman,mobile=_mobile,
-                                                  creatorid = request.user.id, createdatetime=get_current_date(),
-                                                  editorid=request.user.id, editdatetime=get_current_date())
-            _producer.save()
-            return HttpResponseRedirect('/producer/')
+        if not (k_producer.objects.filter(name = request.GET.get('name')) or k_producer.objects.filter(name = request.GET.get('producer_name'))):
+            # 本页面还是从设备添加页面
+            if request.GET.get('name'):
+                _name = request.GET.get('name')
+                _contact = request.GET.get('contact')
+                _address = request.GET.get('address')
+                _linkman = request.GET.get('linkman')
+                _mobile = request.GET.get('mobile')
+                _memo = request.GET.get('memo')
+                _producer = k_producer.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman = _linkman,mobile=_mobile,
+                                                      creatorid = request.user.id, createdatetime=get_current_date(),
+                                                      editorid=request.user.id, editdatetime=get_current_date())
+                _producer.save()
+                return HttpResponseRedirect('/producer/')
+            elif request.GET.get('producer_name'):
+                _name = request.GET.get('producer_name')
+                _contact = request.GET.get('producer_contact')
+                _address = request.GET.get('producer_address')
+                _linkman = request.GET.get('producer_linkman')
+                _mobile = request.GET.get('producer_mobile')
+                _memo = request.GET.get('producer_memo')
+                _producer = k_producer.objects.create(name=_name, contact=_contact,addr=_address,memo=_memo,linkman = _linkman,mobile=_mobile,
+                                                      creatorid = request.user.id, createdatetime=get_current_date(),
+                                                      editorid=request.user.id, editdatetime=get_current_date())
+                _producer.save()
+                return HttpResponseRedirect('/operate_device/?producer_name='+_name)
+            else:
+                return HttpResponseRedirect('/producer/?msg="非法请求！"')
         else:
-            return HttpResponseRedirect('/producer/?msg="error1"')
+            return HttpResponseRedirect('/producer/?msg="该生产厂家已存在！"')
 
 
 # 个人信息

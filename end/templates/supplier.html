@@ -164,6 +164,14 @@
                 class_name: 'gritter-error gritter-center'
             });
         }
+        var server_msg="{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '系统消息',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
     });
 </script>
     <script type="text/javascript">
