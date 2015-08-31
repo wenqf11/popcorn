@@ -167,15 +167,12 @@ class k_user(models.Model):
     face = models.CharField(max_length=50)
 
     def content_file_name(instance, filename):
-        image_name = 'user_avatar/{0}_{1}'.format(
-            instance.username,
-            filename
-        )
+        image_name = '{0}'.format(instance.username)
         fullname = os.path.join(settings.MEDIA_ROOT, image_name)
         if os.path.exists(fullname):
             os.remove(fullname)
         return image_name
-    avatar = models.FileField(upload_to=content_file_name, default='user_avatar/default-user.png')
+    avatar = models.FileField(upload_to=content_file_name, default='default-user.png')
 
     mobile = models.CharField(max_length=50, default='0')
     email = models.EmailField(_('e-mail address'))
