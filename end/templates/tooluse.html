@@ -64,11 +64,11 @@
                             <td>{{ dataitem.user }}</td>
                             <td>{{ dataitem.memo }}</td>
                             <td>{{ dataitem.creator }}</td>
-                            <td>{{ dataitem.createdatetime }}</td>
+                            <td>{{ dataitem.createdatetime| date:'Y-m-d' }}</td>
                             <td>{{ dataitem.editor }}</td>
-                            <td>{{ dataitem.editdatetime }}</td>
+                            <td>{{ dataitem.editdatetime| date:'Y-m-d' }}</td>
                             <td>{{ dataitem.auditor }}</td>
-                            <td>{{ dataitem.auditdatetime }}</td>
+                            <td>{{ dataitem.auditdatetime| date:'Y-m-d' }}</td>
                             {% if "编辑工具库存记录" in modelsshow or "删除工具库存记录" in modelsshow or "审核工具库存记录" in modelsshow %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">

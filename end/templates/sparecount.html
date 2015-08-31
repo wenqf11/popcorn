@@ -56,11 +56,11 @@
                             <td>{{ dataitem.count }}</td>
                             <td>{{ dataitem.memo }}</td>
                             <td>{{ dataitem.creator }}</td>
-                            <td>{{ dataitem.createdatetime }}</td>
+                            <td>{{ dataitem.createdatetime | date:'Y-m-d' }}</td>
                             <!--<td>{{ dataitem.editor }}</td>
                             <td>{{ dataitem.editdatetime }}</td>-->
                             <td>{{ dataitem.auditor }}</td>
-                            <td>{{ dataitem.auditdatetime }}</td>
+                            <td>{{ dataitem.auditdatetime | date:'Y-m-d' }}</td>
                             {% if "删除备件库存记录" in modelsshow or "审核备件库存记录" in modelsshow %}
                             <td class="unsearchable">
                                 <div class="hidden-sm hidden-xs action-buttons">

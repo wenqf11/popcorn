@@ -144,9 +144,9 @@
                             <td>{{ dataitem.name }}</td>
                             <td>{{ dataitem.position }}</td>
                             <td>{{ dataitem.creator }}</td>
-                            <td>{{ dataitem.createdatetime }}</td>
+                            <td>{{ dataitem.createdatetime | date:'Y-m-d' }}</td>
                             <td>{{ dataitem.assignor }}</td>
-                            <td>{{ dataitem.assigndatetime }}</td>
+                            <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
                             <td>{{ dataitem.editor }}</td>
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.priority }}</td>

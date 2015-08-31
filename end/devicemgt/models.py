@@ -167,7 +167,7 @@ class k_user(models.Model):
     face = models.CharField(max_length=50)
 
     def content_file_name(instance, filename):
-        image_name = '{0}'.format(instance.username)
+        image_name = '{0}'.format(instance.username) + '.' + filename.split('.')[-1]
         fullname = os.path.join(settings.MEDIA_ROOT, image_name)
         if os.path.exists(fullname):
             os.remove(fullname)

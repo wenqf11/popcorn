@@ -9,7 +9,7 @@ public class Config {
 
     public static String ACCESS_TOKEN = "hello_world";
 
-    public static String LOCAL_IP = "http://59.66.93.137";
+    public static String LOCAL_IP = "http://59.66.96.179";
     public static String REPORT_URL =  LOCAL_IP + "/app/maintain/add/";
     public static String ROUTE_GET_URL = LOCAL_IP + "/app/route";
     public static String FORM_GET_URL = LOCAL_IP + "/app/form";

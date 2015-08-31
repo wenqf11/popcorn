@@ -284,7 +284,7 @@ def operate_user(request):
         userdata['role_list'] = role_list
         if _id:
             theuser = k_user.objects.filter(id=_id)[0]
-            key_list = ['state', 'username', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
+            key_list = ['state', 'username', 'name', 'avatar', 'mobile', 'email', 'address', 'zipcode', 'birthday',
                         'idcard', 'idcardtype', 'contact','contactmobile', 'content', 'memo', 'birthday']
             for key in key_list:
                 userdata[key] = eval('theuser.' + key)
@@ -364,8 +364,7 @@ def useradd(request):
     server_msg = ''
     cur_user_id = 0
     if request.method == 'POST':
-        # face = handle_uploaded_file(request.POST['username'],request.FILES['face'])
-        face = "../static/images/user.png"
+        avatar = "default-user.png"
         # 如果用户名相同，修改已有的用户
         user = k_user.objects.filter(username=request.POST['username'])
         if not user:
@@ -376,7 +375,8 @@ def useradd(request):
                 state=1,
                 password=request.POST['password'],
                 name=request.POST['name'],
-                face=face,
+                face=avatar,
+                avatar=avatar,
                 mobile=request.POST['mobile'],
                 email=request.POST['email'],
                 address=request.POST['address'],
@@ -441,7 +441,7 @@ def useradd(request):
         userdata['role_list'] = role_list
         if _id:
             theuser = k_user.objects.filter(id=_id)[0]
-            key_list = ['username', 'name', 'face', 'mobile', 'email', 'address', 'zipcode', 'birthday',
+            key_list = ['username', 'name', 'avatar', 'mobile', 'email', 'address', 'zipcode', 'birthday',
                         'idcard', 'idcardtype', 'contact','contactmobile', 'content', 'memo', 'birthday']
             for key in key_list:
                 userdata[key] = eval('theuser.' + key)
