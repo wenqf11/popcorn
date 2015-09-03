@@ -98,7 +98,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right">备件简称(编号)<span class="required">*</span></label>
+                    <label class="col-sm-3 control-label no-padding-right">备件编号<span class="required">*</span></label>
                     <div class="col-sm-9">
                         <input name="brief" type="text" class="span6 m-wrap" value="{{ data.brief }}" required/>
                     </div>
@@ -247,7 +247,7 @@
                 $("[name='brief']").select();
                 $.gritter.add({
                     title: '设置备件失败！',
-                    text: '备件简称(编号)长度为1-40个字符！',
+                    text: '备件编号长度为1-40个字符！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;

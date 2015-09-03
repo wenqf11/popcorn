@@ -25,13 +25,13 @@
                 </div>
             </div><!--
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">设备简称</label>
+                <label class="col-sm-3 control-label no-padding-top">设备编号</label>
                 <div class="col-sm-9">
                     <input id="brief" name="brief" type="text" data-provide="typeahead">
                 </div>
             </div>-->
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">设备简称</label>
+                <label class="col-sm-3 control-label no-padding-top">设备编号</label>
                 <div class="col-sm-2">
                     <select class="chosen-select" id="brief" name="brief" type="text">
                         <option value="nopersonchosen" selected="selected"></option>
@@ -177,7 +177,7 @@
                 $("[name='brief']").select();
                 $.gritter.add({
                 title: '添加维修任务失败！',
-                text: '请输入正确的设备简称！',
+                text: '请输入正确的设备编号！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;
