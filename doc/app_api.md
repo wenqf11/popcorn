@@ -394,20 +394,23 @@
 					id: 1,					// 路线在数据库中的id
 					name: "线路一",			// 路线名称
 					start_time: "08:00",	// 路线起始巡视时间
+					end_time: "17:00",	    // 路线结束巡视时间
 					interval: 2,			// 巡视周期（小时）
 					checked: 1				// 是否巡视完毕（未实现）
 				},
 				{
 					id: 1,
-					name: "线路一",
+					name: "线路二",
 					start_time: "08:00",
+					end_time: "17:00",	  
 					interval: 2,
 					checked: 0
 				},
 				{
 					id: 2,
-					name: "线路二",
+					name: "线路三",
 					start_time: "10:00",
+					end_time: "17:00",	 
 					interval: 4,
 					checked: 0
 				},

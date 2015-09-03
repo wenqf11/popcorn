@@ -238,19 +238,26 @@ def app_score_rank(request, para, user):
 @get_required
 @token_required
 def app_route(request, para, user):
-    schedules = k_schedule.objects.filter(user=user, date=date.today())
-    if not schedules.exists():
-        return HttpResponse(json.dumps({
-            'status': 'ok',
-            'data': []
-        }))
+	now_time = datetime.now().time()
+	schedules = k_schedule.objects.filter(user=user,date=date.today())
+	if not schedules.exists():
+		return HttpResponse(json.dumps({
+			'status': 'ok',
+			'data': []
+		}))
 
-    routes = [_s.route for _s in schedules]
-    response = {
+	routes = [_s.route for _s in schedules]
+	return HttpResponse(json.dumps({
         'status': 'ok',
-        'data': [{'id': _r.id, 'name': _r.name, 'start_time': _r.starttime.strftime('%H:%M'), 'interval': _r.period, 'checked': 0} for _r in routes]
-    }
-    return HttpResponse(json.dumps(response))
+        'data': [{
+                     'id': _r.id,
+                     'name': _r.name,
+                     'start_time': _r.starttime.strftime('%H:%M'),
+                     'end_time':_r.endtime.strftime('%H:%M'),
+                     'interval': _r.period,
+                     'checked': 0
+                 } for _r in routes if _r.starttime <= now_time and _r.endtime >= now_time]
+    }))
 
 
 @get_required
