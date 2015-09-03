@@ -1466,12 +1466,14 @@ def delete_schedule(request):
 
 
 def view_schedule(request):
-    kuser = k_user.objects.get(username = request.user.username)
+    kuser = k_user.objects.get(username=request.user.username)
+    result = [kuser.classid.id]
+    get_class_set(result, kuser.classid.id)
     if request.method == 'GET':
-        users = k_user.objects.all()  # 此处应取对应班组的用户
+        users = k_user.objects.filter(classid__in=result)
         user_data = [{'id': user.id, 'name': user.name, 'department': user.classid.name} for user in users]
 
-        routes = k_route.objects.all()
+        routes = k_route.objects.filter(classid__in=result)
         route_data = [{'id': r.id, 'name': r.name, 'startTime': r.starttime, 'period': r.period} for r in routes]
 
         return get_purviews_and_render_to_response(request.user.username, 'schedule.html', {'routes': route_data,
@@ -1479,11 +1481,12 @@ def view_schedule(request):
                                                                                             'username': kuser.username,
                                                                                             'useravatar': kuser.avatar})
     else:
-        routes = k_route.objects.all()
+        routes = k_route.objects.filter(classid__in=result)
         route_data = [{'id': _r.id, 'name': _r.name, 'startTime': str(_r.starttime), 'period': _r.period} for _r in routes]
 
         available_shifts = k_schedule.objects.filter(
-            date__range=[date.today() - timedelta(days=30), date.today() + timedelta(days=30)]
+            date__range=[date.today() - timedelta(days=30), date.today() + timedelta(days=30)],
+            classid__in=result
         )
         existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
 
@@ -1656,8 +1659,10 @@ def submit_role(request, _id=''):
 
 @login_required
 def view_route(request):
-    user = k_user.objects.get(username = request.user.username)
-    routes = k_route.objects.all()
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    routes = k_route.objects.filter(classid__in=result)
     data = []
     for r in routes:
         route = {}
@@ -1684,6 +1689,12 @@ def view_route(request):
 @login_required
 def operate_route(request):
     user = k_user.objects.get(username=request.user.username)
+
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _all_classes = k_class.objects.filter(id__in=result)
+    _classes = [c.name for c in _all_classes]  # 参照role得到的，还没有使用
+
     data = {}
     _id = request.GET.get('id')
 
@@ -4474,7 +4485,7 @@ def meter(request):
     if request.method == 'GET':
         user = k_user.objects.get(username=request.user.username)
         return get_purviews_and_render_to_response(request.user.username, 'meter.html', {
-            'username':user.username,
+            'username': user.username,
             'useravatar': user.avatar
         })
 
@@ -4487,7 +4498,11 @@ def meter_device(request):
     # except ObjectDoesNotExist:
     #     return HttpResponseRedirect('/meter/')
     user = k_user.objects.get(username=request.user.username)
-    meters = k_meter.objects.filter(brief=brief)
+
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+
+    meters = k_meter.objects.filter(brief=brief, classid__in=result)
     data = []
     for m in meters:
         d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
@@ -4515,7 +4530,11 @@ def meter_date(request):
     _date = datetime.strptime(date_string, '%Y-%m-%d').date()
 
     user = k_user.objects.get(username=request.user.username)
-    meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)))
+
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+
+    meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)), classid__in=result)
     data = []
     for m in meters:
         d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}

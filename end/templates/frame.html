@@ -436,19 +436,29 @@
 					</li>
 					{% endif %}
 
-					{% if "路线设置" in modelsshow %}
+					{% if "抄表数据" in modelsshow %}
+                    <li id="f_meter">
+                        <a href="/meter/">
+                            <i class="menu-icon fa fa-newspaper-o"></i>
+                            <span class="menu-text">抄表数据</span>
+                        </a>
+                    </li>
+					{% endif %}
+
+					{% if "排班设置" in modelsshow %}
 					<li class="">
-						<a href="#" class="dropdown-toggle">
-							<i class="menu-icon fa fa-mobile"></i>
-							<span class="menu-text"> 路线设置 </span>
+						<a href="/view_schedule/" class="dropdown-toggle">
+							<i class="menu-icon fa fa-calendar"></i>
+							<span class="menu-text">排班设置</span>
 							<b class="arrow fa fa-angle-down"></b>
 						</a>
 						<b class="arrow"></b>
 
 						<ul class="submenu">
+							{% if "路线设置" in modelsshow %}
 							{% if "查看路线" in modelsshow %}
 							<li id="f_view_route" class="">
-								<a href="/view_route">
+								<a href="/view_route/">
 									<i class="menu-icon fa fa-caret-right"></i>
 									查看路线
 								</a>
@@ -465,26 +475,15 @@
 								<b class="arrow"></b>
 							</li>
 							{% endif %}
+							{% endif %}
+							<li id="f_schedule" class="">
+								<a href="/view_schedule/">
+									<i class="menu-icon fa fa-caret-right"></i>
+									排班
+								</a>
+								<b class="arrow"></b>
+							</li>
 						</ul>
-					</li>
-					{% endif %}
-
-					{% if "抄表数据" in modelsshow %}
-                    <li id="f_meter">
-                        <a href="/meter/">
-                            <i class="menu-icon fa fa-newspaper-o"></i>
-                            <span class="menu-text">抄表数据</span>
-                        </a>
-                    </li>
-					{% endif %}
-
-					{% if "排班设置" in modelsshow %}
-					<li id="f_schedule" class="">
-						<a href="/view_schedule/">
-							<i class="menu-icon fa fa-calendar"></i>
-							<span class="menu-text">排班设置</span>
-						</a>
-						<b class="arrow"></b>
 					</li>
 					{% endif %}
 
@@ -657,15 +656,13 @@
                     "view_toolcount":"f_view_toolcount",
                     "view_route":"f_view_route",
                     "operate_route":"f_operate_route",
-                    "schedule":"f_schedule",
+                    "view_schedule":"f_schedule",
                     "department":"f_department",
                     "score":"f_score",
                     "egg":"f_egg"
                 };
                 if (url_map[key]) {
-                    if(key!="schedule"){
-                        document.getElementById(url_map[key]).parentNode.parentNode.className="active";
-                    }
+                    document.getElementById(url_map[key]).parentNode.parentNode.className="active";
                     document.getElementById(url_map[key]).className="active";
                 }
             }

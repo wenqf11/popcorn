@@ -359,9 +359,10 @@ class k_route(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_meter(models.Model):
+    classid = models.ForeignKey(k_class, related_name='meter_set', blank=True, null=True, on_delete=models.SET_NULL)
     brief = models.CharField(max_length=50)
-    routeid = models.ForeignKey(k_route, related_name="meter_set",blank=True, null=True, on_delete=models.SET_NULL)
-    userid = models.ForeignKey(k_user, related_name="meter_set",blank=True, null=True, on_delete=models.SET_NULL)
+    routeid = models.ForeignKey(k_route, related_name="meter_set", blank=True, null=True, on_delete=models.SET_NULL)
+    userid = models.ForeignKey(k_user, related_name="meter_set", blank=True, null=True, on_delete=models.SET_NULL)
     metertime = models.DateTimeField(auto_now_add=True)
     json = models.TextField()
 
