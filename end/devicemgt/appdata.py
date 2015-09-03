@@ -345,7 +345,7 @@ def app_meter(request, para, user):
             'data': 'route not exists'
         }))
 
-    meter = k_meter(brief=para['brief'], routeid=_route, userid=user, json=para['content'])
+    meter = k_meter(classid=_route.classid, brief=para['brief'], routeid=_route, userid=user, json=para['content'])
     meter.save()
     return HttpResponse(json.dumps({
         'status': 'ok',
