@@ -445,7 +445,7 @@
                     </li>
 					{% endif %}
 
-					{% if "排班设置" in modelsshow %}
+					{% if "排班设置" in modelsshow or "路线设置" in modelsshow %}
 					<li class="">
 						<a href="/view_schedule/" class="dropdown-toggle">
 							<i class="menu-icon fa fa-calendar"></i>
@@ -455,7 +455,6 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
-							{% if "路线设置" in modelsshow %}
 							{% if "查看路线" in modelsshow %}
 							<li id="f_view_route" class="">
 								<a href="/view_route/">
@@ -475,7 +474,8 @@
 								<b class="arrow"></b>
 							</li>
 							{% endif %}
-							{% endif %}
+
+							{% if "排班设置" in modelsshow %}
 							<li id="f_schedule" class="">
 								<a href="/view_schedule/">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -483,6 +483,7 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
+							{% endif %}
 						</ul>
 					</li>
 					{% endif %}

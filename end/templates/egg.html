@@ -11,25 +11,25 @@
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">中奖金额</label>
             <div class="col-sm-9">
-                <input name="bonus" type="text" class="span6 m-wrap" value="{{ bonus }}" />
+                <input name="bonus" type="text" class="span6 m-wrap" value="{{ bonus }}" {% if "编辑彩蛋" in modelsshow %}{% else %}disabled{% endif %}/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">中奖概率</label>
             <div class="col-sm-9">
-                <input name="probability" type="text" class="span6 m-wrap" value="{{ probability }}" />
+                <input name="probability" type="text" class="span6 m-wrap" value="{{ probability }}" {% if "编辑彩蛋" in modelsshow %}{% else %}disabled{% endif %}/>
             </div>
         </div>
 
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">起止时间</label>
             <div class="col-sm-9">
-                <select name="starttime">
+                <select name="starttime" {% if "编辑彩蛋" in modelsshow %}{% else %}disabled{% endif %}>
                   {% for i in range %}
                   <option value ="{{i}}"{% ifequal i starttime%}selected {% endifequal %}>{{i}}:00</option>
                   {% endfor %}
                 </select> -
-                <select name="endtime">
+                <select name="endtime" {% if "编辑彩蛋" in modelsshow %}{% else %}disabled{% endif %}>
                   {% for i in range %}
                   <option value ="{{i}}"{% ifequal i endtime%}selected {% endifequal %}>{{i}}:00</option>
                   {% endfor %}
@@ -37,12 +37,14 @@
             </div>
         </div>
 
+        {% if "编辑彩蛋" in modelsshow %}
         <div class="clearfix form-actions" style="margin-top: 0px; margin-bottom: 0px; padding-top: 20px; padding-bottom: 0px;">
             <div class="col-md-offset-3 col-md-9">
                 <button type="submit" class="btn btn-primary" onclick="return validate_form();">确定</button>
                 <button type="reset" class="btn">取消</button>
             </div>
         </div>
+        {% endif %}
     </form>
 </div>
 {% endblock %}

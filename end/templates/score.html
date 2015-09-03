@@ -11,28 +11,30 @@
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">抄表基本分</label>
             <div class="col-sm-9">
-                <input name="meterscore" type="text" class="span6 m-wrap" value="{{ meterscore }}" />
+                <input name="meterscore" type="text" class="span6 m-wrap" value="{{ meterscore }}" {% if "编辑积分" in modelsshow %}{% else %}disabled{% endif %}/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">维修保养基本分</label>
             <div class="col-sm-9">
-                <input name="maintenancescore" type="text" class="span6 m-wrap" value="{{ maintenancescore }}" />
+                <input name="maintenancescore" type="text" class="span6 m-wrap" value="{{ maintenancescore }}" {% if "编辑积分" in modelsshow %}{% else %}disabled{% endif %}/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">任务基本分</label>
             <div class="col-sm-9">
-                <input name="taskscore" type="text" class="span6 m-wrap" value="{{ taskscore }}" />
+                <input name="taskscore" type="text" class="span6 m-wrap" value="{{ taskscore }}" {% if "编辑积分" in modelsshow %}{% else %}disabled{% endif %}/>
             </div>
         </div>
 
+        {% if "编辑积分" in modelsshow %}
         <div class="clearfix form-actions" style="margin-top: 0px; margin-bottom: 0px; padding-top: 20px; padding-bottom: 0px;">
             <div class="col-md-offset-3 col-md-9">
                 <button type="submit" class="btn btn-primary" onclick="return validate_form();">确定</button>
                 <button type="reset" class="btn">取消</button>
             </div>
         </div>
+        {% endif %}
     </form>
 </div>
 {% endblock %}
