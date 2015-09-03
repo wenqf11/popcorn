@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% block pageheader %}
-    抽奖记录
+    积分记录
 {% endblock %}
 
 {% block maincontent %}
 <div class="row-fluid" style="width: 80%;">
     <div class="col-sm-6 col-sm-offset-3 well">
-        <form id="bonus-form"action="/egg_history/" class="form-horizontal" method="POST">
+        <form id="bonus-form"action="/score_history/" class="form-horizontal" method="POST">
             <div class="form-group">
                 <label class="col-sm-3 control-label">起始日期</label>
                 <div class="col-sm-9">
@@ -48,10 +48,10 @@
                     <th>日期</th>
                     <th>姓名</th>
                     <th>部门</th>
-                    <th>中奖金额</th>
-                    <th>中奖概率</th>
-                    <th>中奖状态</th>
-                    <th>领取奖金</th>
+                    <th>获得积分</th>
+                    <th>基本分</th>
+                    <th>给分系数</th>
+                    <th>积分类型</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,10 +60,10 @@
                     <td>{{ record.date | date:"Y-m-d" }}</td>
                     <td>{{ record.name }}</td>
                     <td>{{ record.dept }}</td>
-                    <td>{{ record.bonus }}</td>
-                    <td>{{ record.probability }}</td>
-                    <td>{{ record.state }}</td>
-                    <td>{% ifequal record.state '中奖未领' %}<button pk="{{ record.id }}"name="get_bonus_btn" class="btn btn-primary btn-xs">领取</button>{% endifequal %}</td>
+                    <td>{{ record.score }}</td>
+                    <td>{{ record.scorebase }}</td>
+                    <td>{{ record.scorefactor }}</td>
+                    <td>{{ record.scoretype }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -77,60 +77,6 @@
 <script src="/static/vendors/datatables/js/jquery.dataTables.min.js"></script>
 <script src="/static/assets/DT_bootstrap.js"></script>
 <script type="text/javascript">
-    $("[name='get_bonus_btn']").click(function(event) {
-        id = $(this).attr('pk');
-        $.ajax({
-            type:"post",
-            url: '/receive_bonus/'+id+'/',
-            success:function(data){
-                if(data =="ok"){
-                    $.gritter.add({
-                        title: '提示',
-                        text: '领取成功！',
-                        class_name: 'gritter-error gritter-center',
-                        time: 1500
-                    });
-                }else if(data == "record not found"){
-                    $.gritter.add({
-                        title: '提示',
-                        text: '找不到中奖记录！',
-                        class_name: 'gritter-error gritter-center',
-                        time: 1500
-                    });
-                }else{
-                    $.gritter.add({
-                        title: '提示',
-                        text: '领取失败，请重新尝试！',
-                        class_name: 'gritter-error gritter-center',
-                        time: 1500
-                    });
-                }
-            },
-            error: function() {
-                $.gritter.add({
-                    title: '提示',
-                    text: '领取失败，请重新尝试！',
-                    class_name: 'gritter-error gritter-center',
-                    time: 1500
-                });
-            },
-            dataType: "text",
-            complete: function () {
-                $.ajax({
-                  type: 'POST',
-                  url: "/egg_history/",
-                  data: $('#bonus-form').serialize(),
-                  success: function(data){
-                      document.open();
-                      document.write(data);
-                      document.close();
-                  },
-                  dataType: "html"
-                });
-            }
-        });
-    });
-
     $('#bonus-start-date').datepicker({
             format: 'yyyy-mm-dd'
         });

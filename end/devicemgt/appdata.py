@@ -347,6 +347,29 @@ def app_meter(request, para, user):
 
     meter = k_meter(brief=para['brief'], routeid=_route, userid=user, json=para['content'])
     meter.save()
+
+    "记录积分"
+    department_class = user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
+    try:
+        project = k_project.objects.get(classid=department_class)
+    except ObjectDoesNotExist:
+        project = k_project(
+            classid=department_class,
+            meterscore=2,
+            maintenancescore=2,
+            taskscore=2
+        )
+        project.save()
+    staffscoreinfo = k_staffscoreinfo(
+        userid=user,
+        score=float(project.meterscore),
+        content=str(project.meterscore) + ';无;任务',
+        time=get_current_date()
+    )
+    staffscoreinfo.save()
+
     return HttpResponse(json.dumps({
         'status': 'ok',
         'data': 'meter data submitted'

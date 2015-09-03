@@ -2202,6 +2202,30 @@ def submit_maintenance(request):
         _maintenance.factor = _factor
         _maintenance.state = 5
         _maintenance.save()
+
+        "记录积分"
+        department_class = _user.classid
+        while department_class.depth > 1:
+            department_class = k_class.objects.get(id=department_class.parentid)
+        try:
+            project = k_project.objects.get(classid=department_class)
+        except ObjectDoesNotExist:
+            project = k_project(
+                classid=department_class,
+                meterscore=2,
+                maintenancescore=2,
+                taskscore=2
+            )
+            project.save()
+        _maintainer = k_user.objects.get(id=_maintenance.editorid)
+        staffscoreinfo = k_staffscoreinfo(
+            userid=_maintainer,
+            score=float(_factor) * float(project.maintenancescore),
+            content=str(project.maintenancescore) + ';' + _factor + ';维修',
+            time=get_current_date()
+        )
+        staffscoreinfo.save()
+
         return HttpResponseRedirect('/view_maintained/')
     elif _id:
         _maintenance = k_maintenance.objects.get(id=_id)
@@ -2415,6 +2439,30 @@ def submit_upkeep(request):
     _maintenance.factor = _factor
     _maintenance.state = 5
     _maintenance.save()
+
+    "记录积分"
+    department_class = _user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
+    try:
+        project = k_project.objects.get(classid=department_class)
+    except ObjectDoesNotExist:
+        project = k_project(
+            classid=department_class,
+            meterscore=2,
+            maintenancescore=2,
+            taskscore=2
+        )
+        project.save()
+    _maintainer = k_user.objects.get(id=_maintenance.editorid)
+    staffscoreinfo = k_staffscoreinfo(
+        userid=_maintainer,
+        score=float(_factor) * float(project.maintenancescore),
+        content=str(project.maintenancescore) + ';' + _factor + ';保养',
+        time=get_current_date()
+    )
+    staffscoreinfo.save()
+
     return HttpResponseRedirect('/view_upkeeped/')
 
 
@@ -2705,6 +2753,30 @@ def submit_taskitem(request):
             _task = k_task.objects.get(id=_taskitem.taskid_id)
             _task.state = 4
             _task.save()
+
+        "记录积分"
+        department_class = _user.classid
+        while department_class.depth > 1:
+            department_class = k_class.objects.get(id=department_class.parentid)
+        try:
+            project = k_project.objects.get(classid=department_class)
+        except ObjectDoesNotExist:
+            project = k_project(
+                classid=department_class,
+                meterscore=2,
+                maintenancescore=2,
+                taskscore=2
+            )
+            project.save()
+        _tasker = k_user.objects.get(id=_taskitem.editorid)
+        staffscoreinfo = k_staffscoreinfo(
+            userid=_tasker,
+            score=float(_factor) * float(project.taskscore),
+            content=str(project.taskscore) + ';' + _factor + ';任务',
+            time=get_current_date()
+        )
+        staffscoreinfo.save()
+
         return HttpResponseRedirect('/view_taskitem?id=%i' % _taskitem.taskid_id)
     
     if _submittype == "2":
@@ -4140,8 +4212,113 @@ def department_del(request):
 
 @login_required
 def score(request):
+    msg = request.GET.get("msg")
+    if msg is None:
+        msg = ""
+
     user=k_user.objects.get(username=request.user.username)
-    return get_purviews_and_render_to_response(request.user.username, 'score.html', {'username':user.username, 'useravatar': user.avatar})
+    department_class = user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
+
+    try:
+        project = k_project.objects.get(classid=department_class)
+    except ObjectDoesNotExist:
+        project = k_project(
+            classid=department_class,
+            meterscore=2,
+            maintenancescore=2,
+            taskscore=2
+        )
+        project.save()
+
+    return get_purviews_and_render_to_response(request.user.username, 'score.html', {
+        'meterscore': project.meterscore,
+        'maintenancescore': project.maintenancescore,
+        'taskscore': project.taskscore,
+        'username':user.username,
+        'useravatar': user.avatar,
+        'msg': msg
+    })
+
+
+@login_required
+def score_submit(request):
+    meterscore = request.POST.get('meterscore')
+    maintenancescore = request.POST.get('maintenancescore')
+    taskscore = request.POST.get('taskscore')
+
+    user = k_user.objects.get(username=request.user.username)
+    department_class = user.classid
+    while department_class.depth > 1:
+        department_class = k_class.objects.get(id=department_class.parentid)
+
+    try:
+        project = k_project.objects.get(classid=department_class)
+        project.meterscore = meterscore
+        project.maintenancescore = maintenancescore
+        project.taskscore = taskscore
+        project.save()
+    except ObjectDoesNotExist:
+        project = k_project(
+            classid=department_class,
+            meterscore=meterscore,
+            maintenancescore=maintenancescore,
+            taskscore=taskscore,
+        )
+        project.save()
+
+    return HttpResponseRedirect('/score/?msg=修改成功！')
+
+
+@login_required
+def score_history(request):
+    user = k_user.objects.get(username=request.user.username)
+    if request.method == "GET":
+        return get_purviews_and_render_to_response(request.user.username, "score_history.html", {
+            'username':user.username,
+            'useravatar': user.avatar
+        })
+    else:
+        start_date_str = request.POST.get("start-date", "")
+        end_date_str = request.POST.get("end-date", "")
+        name = request.POST.get("name", "")
+        bonus_records = k_staffscoreinfo.objects.all()
+
+        if start_date_str != "":
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+            bonus_records = bonus_records.filter(time__gte=start_date)
+
+        if end_date_str != "":
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            bonus_records = bonus_records.filter(time__lte=end_date)
+
+
+        if len(name) > 0:
+            bonus_users = k_user.objects.filter(name=name)
+            bonus_records = bonus_records.filter(userid__in=bonus_users)
+
+        data = []
+        for bonus_record in bonus_records:
+            d = {
+                'id': bonus_record.id,
+                'date': bonus_record.time,
+                'name': bonus_record.userid.name,
+                'dept': bonus_record.userid.classid.name,
+                'score': bonus_record.score,
+                'scorebase': bonus_record.content.split(";")[0],
+                'scorefactor': bonus_record.content.split(";")[1],
+                'scoretype': bonus_record.content.split(";")[2]
+            }
+            data.append(d)
+        return get_purviews_and_render_to_response(request.user.username, "score_history.html", {
+            'bonus_records': data,
+            'start_date': start_date_str,
+            'end_date': end_date_str,
+            'username':user.username,
+            'useravatar': user.avatar,
+            'name': name
+        })
 
 
 @login_required

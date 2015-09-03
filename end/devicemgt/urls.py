@@ -178,6 +178,8 @@ urlpatterns = patterns(
     url(r'^meter_date/$', meter_date),
 
     url(r'^score/$', score),
+    url(r'^score/submit/$', score_submit),
+     url(r'^score_history/$', score_history),
     url(r'^egg/$', egg),
     url(r'^egg/submit/$', egg_submit),
      url(r'^egg_history/$', egg_history),
