@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block maincontent %}
-<div class="row">
+<div class="row well" style="width: 60%;margin: auto;">
     <div class="col-xs-12">
         <form class="form-horizontal" action="/submit_maintenance/" role="form" id="maintenanceform" enctype="multipart/form-data">
             <fieldset>
@@ -36,7 +36,7 @@
                     <select class="chosen-select" id="brief" name="brief" type="text">
                         <option value="nopersonchosen" selected="selected"></option>
                         {% for brief in briefs %}
-                        <option value="{{ brief }}">{{ brief }}</option>
+                            <option value="{{ brief }}">{{ brief }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -48,7 +48,7 @@
                     <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
                         <option value="nopersonchosen" selected="selected"></option>
                         {% for maintainer in maintainers %}
-                        <option value="{{ maintainer }}">{{ maintainer }}</option>
+                            <option value="{{ maintainer }}">{{ maintainer }}</option>
                         {% endfor %}
                     </select>
                 </div>
