@@ -11,25 +11,366 @@
 {% block content %}
 
 <div class="block">
+    <div>
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="alert alert-block alert-success">
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="ace-icon fa fa-times"></i>
+                </button>
+                <div style="font-size: 18px;font-weight: 400;">
+                    <strong class="green">{{ data.name }}</strong>， 您好！今天是 <strong id="Date"></strong>。
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div>
+        <div class="col-sm-7 infobox-container">
+            <div class="infobox infobox-green">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-group"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">32</span>
+                    <div class="infobox-content">当前项目部人数</div>
+                </div>
+
+                <!--<div class="stat stat-success">8%</div>-->
+            </div>
+            <div class="infobox infobox-blue">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-dashboard"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">11</span>
+                    <div class="infobox-content">当前项目部设备数</div>
+                </div>
+            </div>
+            <div class="infobox infobox-pink">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-trophy"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">32</span>
+                    <div class="infobox-content">当前积分与排名</div>
+                </div>
+
+                <div class="stat stat-success">10</div>
+            </div>
+            <div class="infobox infobox-red">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-wrench"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">0</span>
+                    <div class="infobox-content">尚未维修</div>
+                </div>
+            </div>
+
+            <div class="infobox infobox-orange2">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-shopping-cart"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">0</span>
+                    <div class="infobox-content">尚未保养</div>
+                </div>
+            </div>
+            <div class="infobox infobox-blue2">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-tasks"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">0</span>
+                    <div class="infobox-content">未完成任务</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="vspace-12-sm"></div>
+
+
+        <div class="col-sm-5">
+            <div class="widget-box transparent">
+                <div class="widget-header widget-header-flat">
+                    <h4 class="widget-title lighter">
+                        <i class="ace-icon fa fa-star orange"></i>
+                        库存借出总量
+                    </h4>
+
+                    <div class="widget-toolbar">
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+                    <div class="widget-main no-padding">
+                        <table class="table table-bordered table-striped">
+
+                            <tbody>
+                                <tr>
+                                    <td>备品备件</td>
+
+                                    <td>
+                                        <b class="green">10</b>
+                                    </td>
+
+                                    <td class="hidden-480">
+                                        <span class="label label-info arrowed-right arrowed-in">查看</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具</td>
+
+                                    <td>
+                                        <b class="blue">20</b>
+                                    </td>
+
+                                    <td class="hidden-480">
+                                        <span class="label label-success arrowed-in arrowed-in-right">查看</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /.widget-main -->
+                </div><!-- /.widget-body -->
+            </div><!-- /.widget-box -->
+        </div>
+    </div>
+
+    <div class="col-xs-12" style="margin-top: 20px;">
+        <!-- PAGE CONTENT BEGINS -->
+        <div class="alert alert-block alert-success">
+            <button type="button" class="close" data-dismiss="alert">
+                <i class="ace-icon fa fa-times"></i>
+            </button>
+            <div style="font-size: 18px;font-weight: 400;">
+                请查看以下统计信息，合理分配人员，及时完成任务。
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="col-sm-6">
+            <div id="container0">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div id="container1">
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="col-sm-6">
+            <div id="container2">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div id="container3">
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
 
 {% block tailjs %}
+<script src="../static/Highcharts-4.1.7/js/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+	// 创建两个变量，一个数组中的月和日的名称
+	var monthNames = [ "1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月" ];
+	var dayNames= ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]
+
+	// 创建一个对象newDate（）
+	var newDate = new Date();
+	// 提取当前的日期从日期对象
+	newDate.setDate(newDate.getDate());
+	//输出的日子，日期，月和年
+	$('#Date').html(newDate.getFullYear() + " " + monthNames[newDate.getMonth()] + newDate.getDate() + '日 ' + dayNames[newDate.getDay()]);
+
+    var purview_msg = "{{ purview_msg }}";
+    if (purview_msg) {
+        $.gritter.add({
+            title: '您没有权限进行此操作',
+            text: purview_msg,
+            class_name: 'gritter-error gritter-center'
+        });
+    }
+});
+</script>
 <script>
-    $(function(){
-        var purview_msg = "{{ purview_msg }}";
-        if (purview_msg) {
-            $.gritter.add({
-                title: '您没有权限进行此操作',
-                text: purview_msg,
-                class_name: 'gritter-error gritter-center'
-            });
-        }
+    $('#container0').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: '员工签到统计（周）'
+        },
+        xAxis: {
+            categories: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
+        },
+        yAxis: {
+            title: {
+                text: '人数'
+            }
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{
+            name:"项目部内签到人数",
+            data: [7.0, 6.9, 9.5, 14.5, 18.4, 14.5, 18.4]
+        }]
     });
 </script>
-<script type="text/javascript">
-    
+<script>
+$(function() {
+    $('#container1').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '任务状况统计'
+        },
+        xAxis: {
+            categories: ['计划','执行中','执行完成','审核完成'],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '数量(注：“审核完成”的数目按周计算)'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' '
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name:"处于该状态的任务数量",
+            data: [1,2,3,4]
+        }]
+    });
+});
+</script>
+
+<script>
+$(function() {
+    $('#container2').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '维修状况统计'
+        },
+        xAxis: {
+            categories: ['未指派执行者','已指派执行者','执行者已确认','执行完成','审核完成'],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '数量(注：“审核完成”的数目按周计算)'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' '
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name:"处于该状态的维修任务数量",
+            data: [1,2,3,4,5]
+        }]
+    });
+});
+</script>
+<script>
+$(function() {
+    $('#container3').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '保养状况统计'
+        },
+        xAxis: {
+            categories: ['未指派执行者','已指派执行者','执行者已确认','执行完成','审核完成'],
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '数量(注：“审核完成”的数目按周计算)'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' '
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name:"处于该状态的保养任务数量",
+            data: [1,2,3,4,5]
+        }]
+    });
+});
 </script>
 {% endblock %}

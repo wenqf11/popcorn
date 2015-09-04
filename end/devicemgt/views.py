@@ -125,16 +125,21 @@ def check_purview(username, pid):
 def index(request):
     # 登陆成功
     user = k_user.objects.get(username=request.user.username)
-    #user = User.objects.get(username=request.user.username)
+    data = dict()
     #非法权限信息
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
        purview_msg = ''
        purview_msg = ''
     #, 'purview_msg': purview_msg
-
+    data["name"] = user.name
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username, 'purview_msg': purview_msg, 'useravatar': user.avatar})
+    variables = RequestContext(request, {
+        'username': user.username,
+        'purview_msg': purview_msg,
+        'useravatar': user.avatar,
+        'data': data
+    })
     return get_purviews_and_render_to_response(request.user.username, 'index.html', variables)
 
 
