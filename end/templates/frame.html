@@ -488,6 +488,16 @@
 					</li>
 					{% endif %}
 
+                    {% if "签到记录" in modelsshow %}
+					<li id="f_attendance_history" class="">
+						<a href="/attendance_history/">
+							<i class="menu-icon fa fa-time"></i>
+							<span class="menu-text">签到记录</span>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					{% endif %}
+
 					{% if "系统设置" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">

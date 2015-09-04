@@ -182,6 +182,7 @@ urlpatterns = patterns(
      url(r'^score_history/$', score_history),
     url(r'^egg/$', egg),
     url(r'^egg/submit/$', egg_submit),
-     url(r'^egg_history/$', egg_history),
-     url(r'^receive_bonus/(\d*)/$', receive_bonus),
+    url(r'^egg_history/$', egg_history),
+    url(r'^receive_bonus/(\d*)/$', receive_bonus),
+    url(r'^attendance_history/$', attendance_history)
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
