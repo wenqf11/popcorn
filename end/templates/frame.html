@@ -146,6 +146,16 @@
 								<b class="arrow"></b>
 							</li>
 							{% endif %}
+
+                            {% if "部门设置" in modelsshow %}
+							<li id="f_department" class="">
+								<a href="/department">
+									<i class="menu-icon fa fa-caret-right"></i>
+									部门设置
+								</a>
+								<b class="arrow"></b>
+							</li>
+							{% endif %}
 						</ul>
 					</li>
 					{% endif %}
@@ -498,29 +508,19 @@
 					</li>
 					{% endif %}
 
-					{% if "系统设置" in modelsshow %}
+					{% if "积分与抽奖" in modelsshow %}
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-flag"></i>
-							<span class="menu-text"> 系统设置 </span>
+							<span class="menu-text"> 积分与抽奖 </span>
                             <b class="arrow fa fa-angle-down"></b>
 						</a>
 						<b class="arrow"></b>
 
 						<ul class="submenu">
-							{% if "部门设置" in modelsshow %}
-							<li id="f_department" class="">
-								<a href="/department">
-									<i class="menu-icon fa fa-caret-right"></i>
-									部门设置
-								</a>
-								<b class="arrow"></b>
-							</li>
-							{% endif %}
-
 							{% if "积分设置" in modelsshow %}
 							<li id="f_score" class="">
-								<a href="/score">
+								<a href="/score/">
 									<i class="menu-icon fa fa-caret-right"></i>
 									积分设置
 								</a>
@@ -528,12 +528,32 @@
 							</li>
 							{% endif %}
 
-							{% if "彩蛋设置" in modelsshow %}
+                            {% if "积分记录" in modelsshow %}
+							<li id="f_score_history" class="">
+								<a href="/score_history/">
+									<i class="menu-icon fa fa-caret-right"></i>
+									积分记录
+								</a>
+								<b class="arrow"></b>
+							</li>
+							{% endif %}
+
+ 							{% if "抽奖设置" in modelsshow %}
 							<li id="f_egg" class="">
 								<a href="/egg/">
 									<i class="menu-icon fa fa-caret-right"></i>
-									彩蛋设置
-								</a>
+									       抽奖设置
+                                </a>
+								<b class="arrow"></b>
+							</li>
+							{% endif %}
+
+                            {% if "抽奖记录" in modelsshow %}
+							<li id="f_egg_history" class="">
+								<a href="/egg_history/">
+									<i class="menu-icon fa fa-caret-right"></i>
+									         抽奖记录
+                                </a>
 								<b class="arrow"></b>
 							</li>
 							{% endif %}
@@ -670,7 +690,9 @@
                     "view_schedule":"f_schedule",
                     "department":"f_department",
                     "score":"f_score",
-                    "egg":"f_egg"
+                    "egg":"f_egg",
+                    "egg_history":"f_egg_history",
+                    "score_history":"f_score_history"
                 };
                 if (url_map[key]) {
                     document.getElementById(url_map[key]).parentNode.parentNode.className="active";
