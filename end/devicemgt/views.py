@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, logout as auth_logout,login as aut
 from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
+from index import *
 from datetime import datetime, timedelta, time
 from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node
 import json
@@ -133,6 +134,15 @@ def index(request):
        purview_msg = ''
     #, 'purview_msg': purview_msg
     data["name"] = user.name
+    data["usernum"] = get_user_num(user.classid_id)
+    data["devicenum"] = get_device_num(user.classid_id)
+    data["userscore"] = get_user_score(user.id)
+    data["userrank"] = get_user_rank(user.id, user.classid_id)
+    data["unmaintenance1"] = get_user_unmaintenance(user.id, 1)
+    data["unmaintenance2"] = get_user_unmaintenance(user.id, 2)
+    data["unfinishedtask"] = get_user_unfinishedtask(user.id)
+    data["spareusing"] = get_using_spare(user.classid_id)
+    data["toolusing"] = get_using_tool(user.classid_id)
     # 读取权限，显示内容
     variables = RequestContext(request, {
         'username': user.username,

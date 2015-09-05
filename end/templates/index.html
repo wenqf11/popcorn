@@ -33,7 +33,15 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number">32</span>
+                    <span class="infobox-data-number">
+                        <a href="/user" style="text-decoration:none;color:green">
+                        {% if data.usernum %}
+                            {{ data.usernum }}
+                        {% else %}
+                            0
+                        {% endif %}
+                        </a>
+                    </span>
                     <div class="infobox-content">当前项目部人数</div>
                 </div>
 
@@ -45,7 +53,15 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number">11</span>
+                    <span class="infobox-data-number">
+                        <a href="/devicebyclass/" style="text-decoration:none;color:cornflowerblue">
+                        {% if data.devicenum %}
+                            {{ data.devicenum }}
+                        {% else %}
+                            0
+                        {% endif %}
+                        </a>
+                    </span>
                     <div class="infobox-content">当前项目部设备数</div>
                 </div>
             </div>
@@ -55,11 +71,25 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number">32</span>
+                    <span class="infobox-data-number">
+                        <a href="/score_history/" style="text-decoration:none;color:cornflowerblue">
+                        {% if data.userscore %}
+                            {{ data.userscore }}
+                        {% else %}
+                            0
+                        {% endif %}
+                        </a>
+                    </span>
                     <div class="infobox-content">当前积分与排名</div>
                 </div>
 
-                <div class="stat stat-success">10</div>
+                <div class="stat stat-success">
+                    {% if data.userrank %}
+                        {{ data.userrank }}
+                    {% else %}
+                        {{ data.usernum }}
+                    {% endif %}
+                </div>
             </div>
             <div class="infobox infobox-red">
                 <div class="infobox-icon">
@@ -67,7 +97,13 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number">0</span>
+                    <span class="infobox-data-number">
+                        {% if data.unmaintenance1 %}
+                            {{ data.unmaintenance1 }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </span>
                     <div class="infobox-content">尚未维修</div>
                 </div>
             </div>
@@ -78,7 +114,13 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number">0</span>
+                    <span class="infobox-data-number">
+                        {% if data.unmaintenance2 %}
+                            {{ data.unmaintenance2 }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </span>
                     <div class="infobox-content">尚未保养</div>
                 </div>
             </div>
@@ -88,7 +130,13 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number">0</span>
+                    <span class="infobox-data-number">
+                        {% if data.unfinishedtask %}
+                            {{ data.unfinishedtask }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </span>
                     <div class="infobox-content">未完成任务</div>
                 </div>
             </div>
@@ -102,7 +150,7 @@
                 <div class="widget-header widget-header-flat">
                     <h4 class="widget-title lighter">
                         <i class="ace-icon fa fa-star orange"></i>
-                        库存借出总量
+                        当前库存借出总量
                     </h4>
 
                     <div class="widget-toolbar">
@@ -121,11 +169,19 @@
                                     <td>备品备件</td>
 
                                     <td>
-                                        <b class="green">10</b>
+                                        <b class="green">
+                                            {% if data.spareusing %}
+                                                {{ data.spareusing }}
+                                            {% else %}
+                                                0
+                                            {% endif %}
+                                        </b>
                                     </td>
 
                                     <td class="hidden-480">
-                                        <span class="label label-info arrowed-right arrowed-in">查看</span>
+                                        <span class="label label-info arrowed-right arrowed-in">
+                                            <a href="/view_spare" style="text-decoration:none;color:white">查看</a>
+                                        </span>
                                     </td>
                                 </tr>
 
@@ -133,11 +189,19 @@
                                     <td>工具</td>
 
                                     <td>
-                                        <b class="blue">20</b>
+                                        <b class="blue">
+                                            {% if data.toolusing %}
+                                                {{ data.toolusing }}
+                                            {% else %}
+                                                0
+                                            {% endif %}
+                                        </b>
                                     </td>
 
                                     <td class="hidden-480">
-                                        <span class="label label-success arrowed-in arrowed-in-right">查看</span>
+                                        <span class="label label-success arrowed-in arrowed-in-right">
+                                            <a href="/view_tool" style="text-decoration:none;color:white">查看</a>
+                                        </span>
                                     </td>
                                 </tr>
                             </tbody>
