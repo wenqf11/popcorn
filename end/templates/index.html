@@ -72,7 +72,7 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
-                        <a href="/score_history/" style="text-decoration:none;color:cornflowerblue">
+                        <a href="/score_history/" style="text-decoration:none;color:purple">
                         {% if data.userscore %}
                             {{ data.userscore }}
                         {% else %}
@@ -98,11 +98,13 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
+                        <a href="/view_maintaining/" style="text-decoration:none;color:red">
                         {% if data.unmaintenance1 %}
                             {{ data.unmaintenance1 }}
                         {% else %}
                             0
                         {% endif %}
+                        </a>
                     </span>
                     <div class="infobox-content">尚未维修</div>
                 </div>
@@ -115,11 +117,13 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
+                        <a href="/view_upkeeping/" style="text-decoration:none;color:orangered">
                         {% if data.unmaintenance2 %}
                             {{ data.unmaintenance2 }}
                         {% else %}
                             0
                         {% endif %}
+                        </a>
                     </span>
                     <div class="infobox-content">尚未保养</div>
                 </div>
@@ -131,11 +135,13 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
+                        <a href="/view_tasking/" style="text-decoration:none;color:dodgerblue">
                         {% if data.unfinishedtask %}
                             {{ data.unfinishedtask }}
                         {% else %}
                             0
                         {% endif %}
+                        </a>
                     </span>
                     <div class="infobox-content">未完成任务</div>
                 </div>
@@ -300,7 +306,7 @@ $(document).ready(function() {
         },
         series: [{
             name:"项目部内签到人数",
-            data: [7.0, 6.9, 9.5, 14.5, 18.4, 14.5, 18.4]
+            data: {{ data.attendence }}
         }]
     });
 </script>

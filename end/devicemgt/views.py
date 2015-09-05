@@ -143,6 +143,7 @@ def index(request):
     data["unfinishedtask"] = get_user_unfinishedtask(user.id)
     data["spareusing"] = get_using_spare(user.classid_id)
     data["toolusing"] = get_using_tool(user.classid_id)
+    data["attendence"] = get_attendence_stat(user.classid_id)
     # 读取权限，显示内容
     variables = RequestContext(request, {
         'username': user.username,

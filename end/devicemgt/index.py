@@ -60,3 +60,20 @@ def get_using_tool(parentid):
         if using > 0:
             sum += using
     return 0
+
+
+def get_attendence_stat(parentid):
+    day = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+    week=int(time.strftime("%w"))
+    stat = [0,0,0,0,0,0,0]
+    for i in xrange(0,week):
+        day = time.strftime('%Y-%m-%d',time.localtime(time.time()-i*24*60*60))
+        allusers = k_staffworkinfo.objects.filter(date=day)
+        usernum = 0
+        for u in allusers:
+            users = k_user.objects.filter(id=u.userid_id)
+            if len(users) == 1:
+                if users[0].classid_id == parentid:
+                    usernum += 1
+        stat[week-i-1] = usernum
+    return stat
