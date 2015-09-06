@@ -144,6 +144,9 @@ def index(request):
     data["spareusing"] = get_using_spare(user.classid_id)
     data["toolusing"] = get_using_tool(user.classid_id)
     data["attendence"] = get_attendence_stat(user.classid_id)
+    data["tasks"] = get_task_stat(user.classid_id)
+    data["maintenance1"] = get_maintenace_stat(user.classid_id, 1)
+    data["maintenance2"] = get_maintenace_stat(user.classid_id, 2)
     # 读取权限，显示内容
     variables = RequestContext(request, {
         'username': user.username,

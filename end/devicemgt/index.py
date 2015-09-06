@@ -63,7 +63,6 @@ def get_using_tool(parentid):
 
 
 def get_attendence_stat(parentid):
-    day = time.strftime('%Y-%m-%d',time.localtime(time.time()))
     week=int(time.strftime("%w"))
     stat = [0,0,0,0,0,0,0]
     for i in xrange(0,week):
@@ -76,4 +75,36 @@ def get_attendence_stat(parentid):
                 if users[0].classid_id == parentid:
                     usernum += 1
         stat[week-i-1] = usernum
+    return stat
+
+
+def get_task_num_by_class(tasks, parentid):
+    num = 0
+    for t in tasks:
+        tmp = k_task.objects.filter(id=t.taskid_id)
+        if len(tmp) == 1:
+            if tmp[0].classid_id == parentid:
+                num+=1
+    return num
+
+
+def get_task_stat(parentid):
+    stat = [0,0,0,0]
+    month = int(time.strftime('%m',time.localtime(time.time())))
+    for i in xrange(0,3):
+        tasks = k_taskitem.objects.filter(state=i+1)
+        stat[i] = get_task_num_by_class(tasks, parentid)
+    tasks = k_taskitem.objects.filter(state=4,auditdatetime__month=month)
+    stat[3] = get_task_num_by_class(tasks, parentid)
+    return stat
+
+
+def get_maintenace_stat(parentid, mtype):
+    stat = [0,0,0,0,0]
+    month = int(time.strftime('%m',time.localtime(time.time())))
+    for i in xrange(0,4):
+        tasks = k_maintenance.objects.filter(classid_id=parentid,state=i+1,mtype=mtype)
+        stat[i] = len(tasks)
+    tasks = k_maintenance.objects.filter(classid_id=parentid,state=4,mtype=mtype,auditdatetime__month=month)
+    stat[4] = len(tasks)
     return stat

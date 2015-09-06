@@ -328,7 +328,7 @@ $(function() {
         yAxis: {
             min: 0,
             title: {
-                text: '数量(注：“审核完成”的数目按周计算)'
+                text: '数量(注：“审核完成”的数目按月计算)'
             },
             labels: {
                 overflow: 'justify'
@@ -349,7 +349,7 @@ $(function() {
         },
         series: [{
             name:"处于该状态的任务数量",
-            data: [1,2,3,4]
+            data: {{ data.tasks }}
         }]
     });
 });
@@ -373,7 +373,7 @@ $(function() {
         yAxis: {
             min: 0,
             title: {
-                text: '数量(注：“审核完成”的数目按周计算)'
+                text: '数量(注：“审核完成”的数目按月计算)'
             },
             labels: {
                 overflow: 'justify'
@@ -394,7 +394,7 @@ $(function() {
         },
         series: [{
             name:"处于该状态的维修任务数量",
-            data: [1,2,3,4,5]
+            data: {{ data.maintenance1 }}
         }]
     });
 });
@@ -417,7 +417,7 @@ $(function() {
         yAxis: {
             min: 0,
             title: {
-                text: '数量(注：“审核完成”的数目按周计算)'
+                text: '数量(注：“审核完成”的数目按月计算)'
             },
             labels: {
                 overflow: 'justify'
@@ -438,7 +438,7 @@ $(function() {
         },
         series: [{
             name:"处于该状态的保养任务数量",
-            data: [1,2,3,4,5]
+            data: {{ data.maintenance2 }}
         }]
     });
 });
