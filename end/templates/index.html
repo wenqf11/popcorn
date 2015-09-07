@@ -27,6 +27,7 @@
 
     <div>
         <div class="col-sm-7 infobox-container">
+            {% if "所有用户" in modelsshow %}
             <div class="infobox infobox-green">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-group"></i>
@@ -47,6 +48,8 @@
 
                 <!--<div class="stat stat-success">8%</div>-->
             </div>
+            {% endif %}
+            {% if "所有设备" in modelsshow %}
             <div class="infobox infobox-blue">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-dashboard"></i>
@@ -65,6 +68,7 @@
                     <div class="infobox-content">当前项目部设备数</div>
                 </div>
             </div>
+            {% endif %}
             <div class="infobox infobox-pink">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-trophy"></i>
@@ -91,6 +95,7 @@
                     {% endif %}
                 </div>
             </div>
+            {% if "维修" in modelsshow %}
             <div class="infobox infobox-red">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-wrench"></i>
@@ -109,7 +114,8 @@
                     <div class="infobox-content">尚未维修</div>
                 </div>
             </div>
-
+            {% endif %}
+            {% if "保养" in modelsshow %}
             <div class="infobox infobox-orange2">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-shopping-cart"></i>
@@ -128,6 +134,8 @@
                     <div class="infobox-content">尚未保养</div>
                 </div>
             </div>
+            {% endif %}
+            {% if "未完成任务" in modelsshow %}
             <div class="infobox infobox-blue2">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-tasks"></i>
@@ -146,12 +154,14 @@
                     <div class="infobox-content">未完成任务</div>
                 </div>
             </div>
+            {% endif %}
 
         </div>
         <div class="vspace-12-sm"></div>
 
 
         <div class="col-sm-5">
+            {% if "库存" in modelsshow %}
             <div class="widget-box transparent">
                 <div class="widget-header widget-header-flat">
                     <h4 class="widget-title lighter">
@@ -171,6 +181,7 @@
                         <table class="table table-bordered table-striped">
 
                             <tbody>
+                                {% if "所有备件信息" in modelsshow or "备件使用" in modelsshow %}
                                 <tr>
                                     <td>备品备件</td>
 
@@ -190,7 +201,9 @@
                                         </span>
                                     </td>
                                 </tr>
-
+                                {% endif %}
+            
+                                {% if "所有工具信息" in modelsshow or "工具使用" in modelsshow %}
                                 <tr>
                                     <td>工具</td>
 
@@ -210,11 +223,13 @@
                                         </span>
                                     </td>
                                 </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div><!-- /.widget-main -->
                 </div><!-- /.widget-body -->
             </div><!-- /.widget-box -->
+            {% endif %}
         </div>
     </div>
 
@@ -231,25 +246,33 @@
     </div>
 
     <div>
+        {% if "考勤记录" in modelsshow %}
         <div class="col-sm-6">
             <div id="container0">
             </div>
         </div>
+        {% endif %}
+        {% if "任务" in modelsshow %}
         <div class="col-sm-6">
             <div id="container1">
             </div>
         </div>
+        {% endif %}
     </div>
 
     <div>
+        {% if "维修" in modelsshow %}
         <div class="col-sm-6">
             <div id="container2">
             </div>
         </div>
+        {% endif %}
+        {% if "保养" in modelsshow %}
         <div class="col-sm-6">
             <div id="container3">
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 
