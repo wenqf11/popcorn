@@ -14,6 +14,7 @@
 
 {% block maincontent %}
 <div class="row-fluid" style="width: 80%;">
+	{% if "抄表数据" in modelsshow %}
 	<div class="col-sm-5 col-sm-offset-1 well">
 		<form action="/meter_device/" class="form-horizontal" method="GET">
 			<h4 class="header blue bolder smaller">按设备查找</h4>
@@ -38,6 +39,9 @@
 			</div>
 		</form>
 	</div>
+	{% else %}
+	<h4>您没有查看抄表数据的权限</h4>
+	{% endif %}
 </div>
 {% endblock %}
 

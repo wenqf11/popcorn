@@ -19,6 +19,7 @@
 {% endblock %}
 {% block maincontent %}
 
+{% if "排班设置" in modelsshow %}
 <div class="row-fluid">
 	<div class="col-xs-9">
 		<div id="calendar"></div>
@@ -62,7 +63,7 @@
 							<tr>
 								<td>
 									<label class="pos-rel">
-										<input type="checkbox" class="ace" name="user-checkbox" data-id={{ user.id }}>
+										<input type="checkbox" class="ace" name="user-checkbox" data-id={{ user.id }} {% if not "编辑排班" in modelsshow %}disabled="disabled"{% endif %}>
 										<span class="lbl"></span>
 										{{ user.name }}
 									</label>
@@ -74,14 +75,19 @@
 					</table>
 				</div>
 			</div>
+			{% if "编辑排班" in modelsshow %}
 			<div class="modal-footer">
 				<button type="button" class="btn btn-sm btn-danger" data-action="delete" style="float: left;"><i class="ace-icon fa fa-trash-o"></i>删除</button>
 				<button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i>保存</button>
 				<button type="button" class="btn btn-sm" data-dismiss="modal" data-action="cancel"><i class="ace-icon fa fa-times"></i>取消</button>
 			</div>
+			{% endif %}
 		</div>
 	</div>
 </div>
+{% else %}
+<h4>您没有排班的权限</h4>
+{% endif %}
 
 {% endblock %}
 {% block tailjs %}
@@ -103,6 +109,7 @@
 	});
 </script>
 
+{% if "编辑排班" in modelsshow %}
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#routes div.external-event').each(function() {
@@ -211,7 +218,7 @@
 			$('#modal').modal('hide');
 		});
 
-		$('#modal').find('button[data-action=cancel]').on('click', function() {
+		$('#modal').on('hide.bs.modal', function() {
 			var event = $('#calendar').fullCalendar('clientEvents', $('#modal').attr('event-id'))[0];
 
 			if (event.is_new) {
@@ -241,5 +248,6 @@
 
 	});
 </script>
+{% endif %}
 
 {% endblock %}
