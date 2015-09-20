@@ -264,7 +264,7 @@ class k_spare(models.Model):
 
 class k_device(models.Model):
     DEVICE_STATUS = (
-        ('0', '运营'),
+        ('0', '运行'),
         ('1', '停用'),
         ('2', '故障'),
         ('3', '维修'),

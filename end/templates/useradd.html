@@ -307,9 +307,9 @@
             var confirm_password = $("[name='confirm_password']").val();
             var name = $("[name='name']").val();
             var mobile = $("[name='mobile']").val();
-            mobile_re = /^1\d{10}$/;
+            var mobile_re = /^1\d{10}$/;
             var birthday = $("[name='birthday']").val();
-            birthday_re = /^(\d{4})-(\d{2})-(\d{2})$/
+            var birthday_re = /^(\d{4})-(\d{2})-(\d{2})$/;
             var role = $("[name='role']").val();
             if(username.length < 1 || username.length > 20) {
                 $("[name='username']").select();
@@ -357,7 +357,7 @@
                 return false;
             }
             else if(!birthday_re.test(birthday)) {
-                $("[name='mobile']").select();
+                $("[name='birthday']").select();
                 $.gritter.add({
                     title: '添加用户失败！',
                     text: '日期格式有误！',

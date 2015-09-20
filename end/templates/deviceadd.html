@@ -282,7 +282,7 @@
                     <label class="col-sm-3 control-label no-padding-right">设备状态<span class="required">*</span></label>
                     <div class="col-sm-5">
                         <select class="chosen-select" name="state">
-                            <option value="0">运营</option>
+                            <option value="0">运行</option>
                             <option value="1">停用</option>
                             <option value="2">故障</option>
                             <option value="3">维修</option>
@@ -515,6 +515,8 @@
            var brand = $("[name='brand']").val();
            var serial = $("[name='serial']").val();
            var brief = $("[name='brief']").val();
+           var buytime = $("[name='buytime']").val();
+           var buytime_re = /^(\d{4})-(\d{2})-(\d{2})$/;
            if(name.length < 1 || name.length > 40) {
                 $("[name='name']").select();
                 $.gritter.add({
@@ -542,6 +544,15 @@
                 });
                 return false;
            }
+            else if(!buytime_re.test(buytime)) {
+                $("[name='buytime']").select();
+                $.gritter.add({
+                    title: '添加设备失败！',
+                    text: '日期格式有误！',
+                    class_name: 'gritter-error gritter-center'
+                });
+                return false;
+            }
            else if(serial.length < 1 || serial.length > 100) {
                 $("[name='serial']").select();
                 $.gritter.add({

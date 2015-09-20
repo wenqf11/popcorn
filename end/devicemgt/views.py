@@ -937,18 +937,16 @@ def devicebatch_submit(request):
                             }), content_type="application/json")
 
                     _state = 0
-                    if obj_data['state'] == '正常':
-                        _state = 1
-                    elif obj_data['state'] == '停用':
-                        _state = 2
-                    elif obj_data['state'] == '故障':
-                        _state = 3
-                    elif obj_data['state'] == '维修':
-                        _state = 4
-                    elif obj_data['state'] == '保养':
-                        _state = 5
-                    else:
+                    if obj_data['state'] == '运行':
                         _state = 0
+                    elif obj_data['state'] == '停用':
+                        _state = 1
+                    elif obj_data['state'] == '故障':
+                        _state = 2
+                    elif obj_data['state'] == '维修':
+                        _state = 3
+                    else:
+                        _state = 4 # error
 
                     _device = k_device.objects.create(
                         classid=_classid,
