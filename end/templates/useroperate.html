@@ -18,7 +18,19 @@
                     <div class="span12">
                         <div class="center">
                         {% if not data.isNew %}
-                            <img src="{{ data.face }}" title="只有用户自己能修改头像">
+                                {% if data.avatar %}
+                                    {% if MEDIA_URL %}
+								        <img class="nav-user-photo" src="{{ MEDIA_URL }}{{ data.avatar }}" alt="只有用户自己能修改头像" width ="64" height="64"/>
+                                    {% else %}
+                                        <img class="nav-user-photo" src="/static/images/user_avatar/{{ data.avatar }}" alt="只有用户自己能修改头像" width ="64" height="64"/>
+                                    {% endif %}
+								{% else %}
+                                    {% if MEDIA_URL %}
+								        <img class="nav-user-photo" src="{{ MEDIA_URL }}default-user.png" alt="只有用户自己能修改头像" width ="64" height="64"/>
+                                    {% else %}
+                                        <img class="nav-user-photo" src="/static/images/user_avatar/default-user.png" alt="只有用户自己能修改头像" width ="64" height="64"/>
+                                    {% endif %}
+                                {% endif %}
                         {% endif %}
                         </div>
 
