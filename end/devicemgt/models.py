@@ -264,12 +264,10 @@ class k_spare(models.Model):
 
 class k_device(models.Model):
     DEVICE_STATUS = (
-        ('0', '锁定'),
-        ('1', '正常'),
-        ('2', '停用'),
-        ('3', '故障'),
-        ('4', '维修'),
-        ('5', '保养'),
+        ('0', '运营'),
+        ('1', '停用'),
+        ('2', '故障'),
+        ('3', '维修'),
     )
     classid = models.ForeignKey(k_class, related_name='device_set',blank=True, null=True, on_delete=models.SET_NULL)
     brand = models.CharField(max_length=50)

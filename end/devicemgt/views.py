@@ -1012,6 +1012,10 @@ def device_type(request):
         _departs = k_devicetype.objects.filter(id=_id)
         if len(_departs) == 1:
             device_info["id"] = _id
+            device_info["parent"] = "（该类型为最上级类型）"
+            _parent = k_devicetype.objects.filter(id=_departs[0].parentid)
+            if len(_parent) == 1:
+                device_info["parent"] = _parent[0].name
             device_info["name"] = _departs[0].name
             device_info["memo"] = _departs[0].memo
             device_info["creatorid"] = _departs[0].creatorid
