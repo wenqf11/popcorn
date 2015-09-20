@@ -7,7 +7,12 @@
 {% endblock %}
 
 {% block pageheader %}
+{% if data.isExisted %}
+    修改设备类型
+{% else %}
     添加设备类型
+{% endif %}
+
 {% endblock %}
 
 {% block maincontent %}
@@ -20,7 +25,11 @@
                 <select class="col-sm-6" name="parentname">
                     <option value=""></option>
                     {% for type in devicetypes %}
-                        <option value="{{ type }}">{{ type }}</option>
+                        {% if type in chosentype %}
+                            <option value="{{ type }}" selected="selected">{{ type }}</option>
+                        {% else %}
+                            <option value="{{ type }}">{{ type }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 </div>
@@ -28,7 +37,7 @@
             <div class="form-group">
                 <label class="col-sm-5 control-label no-padding-top">分类名称</label>
                 <div class="col-sm-7">
-                    <input type="text" name="name" value="">
+                    <input type="text" name="name" value="{{ name }}">
                 </div>
             </div>
             <div class="form-group">

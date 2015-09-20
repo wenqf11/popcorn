@@ -30,7 +30,7 @@ purviewhash = {
     9: ["用户管理","所有用户","删除用户"],#审核？
     10: ["设备管理","设备类型"],#ok
     11: ["设备管理","设备类型","添加设备类型"],#编辑？
-    12: ["设备管理","设备类型"],#删除/审核？
+    12: ["设备管理","设备类型","编辑设备类型", "删除设备类型"],#删除/审核？
     13: ["设备管理","生产厂家"],#ok
     14: ["设备管理","生产厂家","添加生产厂家","编辑生产厂家"],#ok
     15: ["设备管理","生产厂家","删除生产厂家"],#审核？
@@ -1006,7 +1006,23 @@ def device_type(request):
     server_msg = request.GET.get("msg")
     if server_msg == None:
         server_msg = ""
-    variables = RequestContext(request,{'username': user.username,  'useravatar': user.avatar, 'data': datas, 'server_msg': server_msg})
+    _id = request.GET.get('id')
+    if _id:
+        device_info = {}
+        _departs = k_devicetype.objects.filter(id=_id)
+        if len(_departs) == 1:
+            device_info["id"] = _id
+            device_info["name"] = _departs[0].name
+            device_info["memo"] = _departs[0].memo
+            device_info["creatorid"] = _departs[0].creatorid
+            _tmp_creator = k_user.objects.filter(id=_departs[0].creatorid)
+            if len(_tmp_creator) == 1:
+                device_info["creatorname"] = _tmp_creator[0].name
+            device_info["createtime"] = _departs[0].createdatetime
+            variables=RequestContext(request,{'username':user.username, 'useravatar': user.avatar, 'data':datas, 'server_msg':server_msg,
+                                          'device_info':device_info})
+    else:
+        variables = RequestContext(request,{'username': user.username,  'useravatar': user.avatar, 'data': datas, 'server_msg': server_msg})
     return get_purviews_and_render_to_response(request.user.username, 'devicetype.html', variables)
 
 
@@ -1063,6 +1079,61 @@ def device_type_submit(request):
                 return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
     else:
         return HttpResponseRedirect('/device_type/?msg="该设备名称已存在！"')
+
+
+@login_required
+def device_type_revise(request):
+    _id = request.GET.get('id')
+    if _id:
+        user = k_user.objects.get(username=request.user.username)
+        k_devicetypes = k_devicetype.objects.all()
+        devicetypes = list()
+        for k_type in k_devicetypes:
+            devicetypes.append(k_type.name)
+        _dtype = k_devicetype.objects.filter(id=_id)
+        if len(_dtype) == 1:
+            name = _dtype[0].name
+            parentid = _dtype[0].parentid
+            _parenttype = k_devicetype.objects.filter(id=parentid)
+            chosentype=''
+            if len(_parenttype) == 1:
+                chosentype = _parenttype[0].name
+            else:
+                chosentype = "" #顶层，无父级设备类型
+            variables = RequestContext(request, {
+                'username': user.username,
+                'useravatar': user.avatar,
+                'devicetypes': devicetypes,
+                'isExisted': False,
+                'name':name,
+                'chosentype':chosentype
+            })
+        elif len(_dtype) == 0:
+            HttpResponseRedirect('/department/?msg="该设备类型不存在！"')
+        else:
+            HttpResponseRedirect('/department/?msg="该设备类型在数据库中存储错误！"')
+        return get_purviews_and_render_to_response(request.user.username, 'devicetypeadd.html', variables)
+    else:
+        HttpResponseRedirect('/department/?msg="非法访问！"')
+
+
+@login_required
+def device_type_del(request):
+    _id = request.GET.get('id')
+    if _id:
+        _devicetype = k_devicetype.objects.filter(id=_id)
+        if len(_devicetype) == 1:
+            _device = k_device.objects.filter(typeid_id=_id)
+            if len(_device) > 0:
+                msg = "有"+str(len(_device))+"个设备属于该设备类型，无法删除设备类型："+_devicetype[0].name
+            else:
+                msg = "成功删除设备类型："+_devicetype[0].name
+                _devicetype[0].delete()
+        else:
+            msg = "该部门不存在！"
+        return HttpResponseRedirect('/device_type/?msg='+msg)
+    else:
+        return HttpResponseRedirect('/device_type/')
 
 
 def supplier(request):
@@ -4231,9 +4302,16 @@ def department_submit(request):
 def department_del(request):
     _id = request.GET.get('id')
     if _id:
-        _department = k_class.objects.get(id=_id)
-        msg = "成功删除部门："+_department.name
-        _department.delete()
+        _department = k_class.objects.filter(id=_id)
+        if len(_department) == 1:
+            _user = k_user.objects.filter(classid_id=id)
+            if len(_user) > 0:
+                msg = "有"+str(len(_user))+"个用户属于该部门，无法删除部门："+_department[0].name
+            else:
+                msg = "成功删除部门："+_department[0].name
+                _department[0].delete()
+        else:
+            msg = "该部门不存在！"
         return HttpResponseRedirect('/department/?msg='+msg)
     else:
         return HttpResponseRedirect('/department/')
