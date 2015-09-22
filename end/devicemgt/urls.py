@@ -56,6 +56,9 @@ urlpatterns = patterns(
     url(r'^app/device/brief/$', app_device_brief),
     url(r'^app/device/info/$', app_device_info),
 
+    url(r'app/class/tree/$', app_class_tree),
+    url(r'app/device/class/$', app_class_device_type_classified),
+
     url(r'app_test/$', app_test),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
