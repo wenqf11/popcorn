@@ -43,7 +43,7 @@ class UserManager(models.Manager):
 
     def create_user(self, classid, state, username, password, name, face, mobile, email, address, zipcode, birthday,
                     idcard, idcardtype, content, memo, contact, contactmobile, creatorid, createdatetime, editorid,
-                    editdatetime, auditorid, auditdatetime, status, gender):
+                    editdatetime, auditorid, auditdatetime, status, gender, avatar):
         """
         Creates and saves a User with the given username, email and password.
         """
@@ -55,7 +55,7 @@ class UserManager(models.Manager):
             password=password, name=name, face=face, mobile = mobile, email=email, address=address, zipcode=zipcode,
             birthday=birthday, idcard=idcard, idcardtype=idcardtype, content=content, memo=memo, contact=contact, contactmobile=contactmobile,
             creatorid=creatorid, createdatetime=createdatetime, editorid=editorid, editdatetime=editdatetime,
-            auditorid=auditorid, auditdatetime=auditdatetime, status=status, gender=gender)
+            auditorid=auditorid, auditdatetime=auditdatetime, status=status, gender=gender, avatar=avatar)
         user.set_password(password)
         return user
 
