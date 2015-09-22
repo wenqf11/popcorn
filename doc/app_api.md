@@ -274,6 +274,59 @@
 			data: "element not exists"
 		}
 
+### 获取部门层级信息
+
+- 请求地址：http://domain.com/app/class/tree/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：数据库中的部门层级树
+- json示例：
+
+		{
+			status: "ok",
+			data: {
+				depth: 3
+				root: {
+					class_id: 1,
+					name: "网电盈科",
+					type: "公司",
+					children: [
+						{
+							class_id: 2,
+							name: "微谷项目部",
+							type: "项目部",
+							children: [
+								{
+									class_id: 4,
+									name: "空调班组1",
+									type: "班组"
+								},
+								{
+									class_id: 5,
+									name: "空调班组2",
+									type: "班组"
+								}
+							]
+						},
+						{
+							class_id: 3,
+							name: "某项目部",
+							type: "项目部"
+						}
+					]
+				}
+			}
+		}
+	或
+
+		{
+			status: "error",
+			data: "illegal db data" // 数据库中不存在parentid为0的根节点
+		}
+
 ## 考勤模块
 
 ### 获取上下班数据
@@ -372,6 +425,37 @@
 				location: "c#210",
 				memo: ""
 			}
+		}
+
+### 获取某个部门下的设备并按照设备类型分类
+
+- 请求地址：http://domain.com/app/device/class/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **class_id**，`string`，部门id
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：该部门管辖的、按照设备类型分好类的设备集合
+- json示例：
+
+		{
+			status: "ok",
+			data: [
+				{
+					type: "空调",
+					devices: [
+						{brief: "kt088233", name: "空调233"},
+						{brief: "kt032764", name: "空调764"}
+					]
+				},
+				{
+					type: "锅炉",
+					devices: [
+						{brief: "gl387712", name: "锅炉12"}
+					]
+				}
+			]
 		}
 
 ## 抄表模块

@@ -974,7 +974,10 @@ def app_class_device_type_classified(request, para, user):
     for t in types:
         device_type = k_devicetype.objects.get(id=t)
         type_devices = devices.filter(typeid=device_type)
-        result.append({'type': device_type.name, 'devices': [{'brief': d.brief} for d in type_devices]})
+        result.append({
+            'type': device_type.name,
+            'devices': [{'brief': d.brief, 'name': d.name} for d in type_devices]
+        })
 
     return HttpResponse(json.dumps({
         'status': 'ok',

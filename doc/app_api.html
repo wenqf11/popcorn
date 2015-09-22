@@ -538,7 +538,7 @@ img {
 
 </li>
 </ul>
-<h3>抢彩蛋</h3>
+<h3>抽奖</h3>
 <ul>
 <li>请求地址：http://domain.com/app/egg/</li>
 <li>请求方式：GET</li>
@@ -550,7 +550,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：<code>bonus</code>为本次抢彩蛋的奖金，<code>probability</code>为中奖概率，<code>result</code>为是否中奖</li>
+<li>返回结果：<code>bonus</code>为本次抽奖的奖金，<code>probability</code>为中奖概率，<code>result</code>为是否中奖</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -576,7 +576,42 @@ img {
 
 </li>
 </ul>
-<h3>彩蛋信息查询</h3>
+<h3>抽奖信息查询</h3>
+<ul>
+<li>请求地址：http://domain.com/app/egg/time/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：<code>bonus</code>为本次抽奖的奖金，<code>probability</code>为中奖概率，<code>start_time</code>抽奖开始时间， <code>end_time</code> 抽奖结束时间</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: {
+        bonus: 20.0,
+        probability: 0.1,
+        start_time: 2:00
+        end_time: 4:00
+    }
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;bonus config does not found&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>中奖历史信息查询</h3>
 <ul>
 <li>请求地址：http://domain.com/app/egg/info/</li>
 <li>请求方式：GET</li>
@@ -589,7 +624,7 @@ img {
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
 </ul>
 </li>
-<li>返回结果：<code>bonus</code>为当次抢彩蛋的奖金，<code>probability</code>为当日中奖概率，<code>result</code>为是否中奖</li>
+<li>返回结果：<code>bonus</code>为当次中奖的奖金，<code>probability</code>为当日中奖概率，<code>state</code>为中奖状态，0表示没中，1表示中了未领取，2表示已经领取奖励</li>
 <li>
 <p>json示例：</p>
 <pre><code>{
@@ -597,7 +632,7 @@ img {
     data: {
         bonus: 20.0,
         probability: 0.1,
-        result: true
+        state: 1
     }
 }
 </code></pre>
@@ -606,6 +641,67 @@ img {
 <pre><code>{
     status: &quot;error&quot;,
     data: &quot;element not exists&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>获取部门层级信息</h3>
+<ul>
+<li>请求地址：http://domain.com/app/class/tree/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：数据库中的部门层级树</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: {
+        depth: 3
+        root: {
+            class_id: 1,
+            name: &quot;网电盈科&quot;,
+            type: &quot;公司&quot;,
+            children: [
+                {
+                    class_id: 2,
+                    name: &quot;微谷项目部&quot;,
+                    type: &quot;项目部&quot;,
+                    children: [
+                        {
+                            class_id: 4,
+                            name: &quot;空调班组1&quot;,
+                            type: &quot;班组&quot;
+                        },
+                        {
+                            class_id: 5,
+                            name: &quot;空调班组2&quot;,
+                            type: &quot;班组&quot;
+                        }
+                    ]
+                },
+                {
+                    class_id: 3,
+                    name: &quot;某项目部&quot;,
+                    type: &quot;项目部&quot;
+                }
+            ]
+        }
+    }
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;error&quot;,
+    data: &quot;illegal db data&quot; // 数据库中不存在parentid为0的根节点
 }
 </code></pre>
 
@@ -739,6 +835,44 @@ img {
 
 </li>
 </ul>
+<h3>获取某个部门下的设备并按照设备类型分类</h3>
+<ul>
+<li>请求地址：http://domain.com/app/device/class/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>class_id</strong>，<code>string</code>，部门id</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：该部门管辖的、按照设备类型分好类的设备集合</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: [
+        {
+            type: &quot;空调&quot;,
+            devices: [
+                {brief: &quot;kt088233&quot;, name: &quot;空调233&quot;},
+                {brief: &quot;kt032764&quot;, name: &quot;空调764&quot;}
+            ]
+        },
+        {
+            type: &quot;锅炉&quot;,
+            devices: [
+                {brief: &quot;gl387712&quot;, name: &quot;锅炉12&quot;}
+            ]
+        }
+    ]
+}
+</code></pre>
+
+</li>
+</ul>
 <h2>抄表模块</h2>
 <h3>获取当日巡视路线列表</h3>
 <ul>
@@ -762,20 +896,23 @@ img {
             id: 1,                  // 路线在数据库中的id
             name: &quot;线路一&quot;,            // 路线名称
             start_time: &quot;08:00&quot;,    // 路线起始巡视时间
+            end_time: &quot;17:00&quot;,      // 路线结束巡视时间
             interval: 2,            // 巡视周期（小时）
             checked: 1              // 是否巡视完毕（未实现）
         },
         {
             id: 1,
-            name: &quot;线路一&quot;,
+            name: &quot;线路二&quot;,
             start_time: &quot;08:00&quot;,
+            end_time: &quot;17:00&quot;,    
             interval: 2,
             checked: 0
         },
         {
             id: 2,
-            name: &quot;线路二&quot;,
+            name: &quot;线路三&quot;,
             start_time: &quot;10:00&quot;,
+            end_time: &quot;17:00&quot;,   
             interval: 4,
             checked: 0
         },
@@ -808,31 +945,35 @@ img {
             id: 12,
             name: &quot;kt094732&quot;,
             content: [
-                {
-                    name: &quot;设备状态&quot;,
-                    choice: true,
-                    choices: [&quot;正常&quot;, &quot;异常&quot;],
-                    memo: &quot;重要&quot;
+                &quot;冷供水温度  ℃&quot;: {
+                    type&quot;: &quot;integer&quot;,
+                    id&quot;: 0,
+                    default: &quot;&quot;,
+                    priority: &quot;0&quot;,
+                    hint:&quot;正常值范围在7-12&quot;
                 },
-                {
-                    name: &quot;压力&quot;,
-                    choice: false,
-                    unit: &quot;MPa&quot;,
-                    min: &quot;12&quot;,
-                    max: &quot;18&quot;,
-                    memo: &quot;重要&quot;
-                }
+                &quot;冷供水压力  Mpa&quot;: {
+                    type: &quot;integer&quot;,
+                    id: &quot;1&quot;,
+                    &quot;default&quot;: &quot;&quot;,
+                    &quot;priority&quot;: &quot;1&quot;
+                },
             ]
         },
         {
             id: 32,
             name: &quot;ms383831&quot;,
             content: [
-                {
-                    name: &quot;设备状态&quot;,
-                    choice: true,
-                    choices: [&quot;正常&quot;, &quot;异常&quot;],
-                    memo: &quot;重要&quot;
+                &quot;水位&quot;: {
+                    type: &quot;integer&quot;,
+                    id: &quot;4&quot;,
+                    default: &quot;0&quot;,
+                    priority: &quot;4&quot;,
+                    options: {
+                        0: &quot;偏高&quot;,
+                        1: &quot;中等&quot;,
+                        2: &quot;偏低&quot;
+                    }
                 }
             ]
         }
