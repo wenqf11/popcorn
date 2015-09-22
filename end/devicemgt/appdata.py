@@ -919,3 +919,66 @@ def app_maintain_image(request, para, user):
         }))
 
 
+@get_required
+@token_required
+def app_class_tree(request, para, user):
+    def tree_traverse(parent_id, result):
+        nodes = k_class.objects.filter(parentid=parent_id)
+        if nodes.exists():
+            result['children'] = [{
+                'class_id': node.id,
+                'type': node.depthname,
+                'name': node.name
+            } for node in nodes]
+            depths = [tree_traverse(child['class_id'], child) for child in result['children']]
+            return max(depths) + 1
+        else:
+            return 0
+
+    try:
+        root = k_class.objects.get(parentid=0)  # root node has parentid=0
+    except (ObjectDoesNotExist, MultipleObjectsReturned):
+        return HttpResponse(json.dump({
+            'status': 'error',
+            'data': 'illegal db data'
+        }))
+
+    tree = {'root': {'class_id': root.id, 'type': root.depthname, 'name': root.name}, 'depth': 1}
+
+    tree['depth'] += tree_traverse(root.id, tree['root'])
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': tree
+    }))
+
+
+@get_required
+@token_required
+def app_class_device_type_classified(request, para, user):
+    para['class_id'] = int(request.GET.get('class_id'))
+
+    try:
+        class_object = k_class.objects.get(id=para['class_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'class not exists'
+        }))
+
+    devices = k_device.objects.filter(classid=class_object)
+
+    types = [d['typeid'] for d in devices.values('typeid').distinct()]
+
+    result = []
+    for t in types:
+        device_type = k_devicetype.objects.get(id=t)
+        type_devices = devices.filter(typeid=device_type)
+        result.append({'type': device_type.name, 'devices': [{'brief': d.brief} for d in type_devices]})
+
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': result
+    }))
+
+

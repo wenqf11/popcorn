@@ -20,10 +20,11 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.get('/app/task/list/', {
+            $.get('/app/device/class/', {
                 username: 'syb1001',
                 access_token: 'hello_world',
                 timestamp: 1383712332,
+                class_id: 1
             }, function(data) {
                 console.log(data);
                 $('#div-status').text(data.status);
