@@ -111,6 +111,12 @@
 
  <div class="row-fluid">
     <!-- block -->
+    <div>
+        <a class="btn btn-success" id="refresh" href="/view_maintaining" style="float:right">刷新</a>
+    </div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
     <div class="block">
         <div class="block-content collapse in">
             <div class="span12">
@@ -197,6 +203,10 @@
     <script src="../static/assets/DT_bootstrap.js"></script>
     <script src="../static/assets/js/chosen.jquery.min.js"></script>
     <script>
+        function myrefresh() { 
+            window.location.reload(); 
+        } 
+        setTimeout('myrefresh()', 1000*60*10);
         jQuery(function($) {
             if(!ace.vars['touch']) {
                 $('.chosen-select').chosen({allow_single_deselect:true});
