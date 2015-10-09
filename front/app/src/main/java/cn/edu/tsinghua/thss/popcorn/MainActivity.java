@@ -1,13 +1,10 @@
 package cn.edu.tsinghua.thss.popcorn;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -114,9 +111,8 @@ public class MainActivity extends FragmentActivity {
 		init();
 		initTabLineWidth();
         setLocalUsername();
-        updateHint();
+        newTaskHandler.postDelayed(runnable, Config.MAIN_UPDATE_INTERVAL);
         initCacheData();
-        //startAlarmPush();
 	}
 
     private void initCacheData(){
@@ -376,7 +372,6 @@ public class MainActivity extends FragmentActivity {
                 resetTabColor();
                 switch (position) {
                     case 0:
-                        updateHint();
                         mTabAppsTv.setTextColor(Color.parseColor("#33B5E5"));
                         mTabAppsFat.setTextColor(Color.parseColor("#33B5E5"));
                         break;
@@ -789,6 +784,17 @@ public class MainActivity extends FragmentActivity {
     }
     @Override
     public void onDestroy(){
+        newTaskHandler.removeCallbacks(runnable);
         super.onDestroy();
     }
+
+
+    Handler newTaskHandler = new Handler();
+    Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+            updateHint();
+            newTaskHandler.postDelayed(this, Config.MAIN_UPDATE_INTERVAL);
+        }
+    };
 }
