@@ -61,7 +61,7 @@ import cn.edu.tsinghua.thss.popcorn.update.UpdateInfoParser;
  */
 
 public class MainActivity extends FragmentActivity {
-    private static int UPDATE_MAINTENANCE = 1, UPDATE_VERSION = 2;
+    private static int UPDATE_UNDO = 1, UPDATE_VERSION = 2;
 	private ViewPager mPageVp;
     private String localVersion = "", remoteVersion = "";
 	private List<Fragment> mFragmentList = new ArrayList<Fragment>();
@@ -100,6 +100,11 @@ public class MainActivity extends FragmentActivity {
     private int mRepairUnfinished = 0;
     private int mMaintainUnfinished = 0;
     private int mTaskUnfinished = 0;
+    private boolean isUnRecordCallbackFinished = false;
+    private boolean isUnRepairCallbackFinished = false;
+    private boolean isUnMaintainCallbackFinished = false;
+    private boolean isUnTaskCallbackFinished = false;
+    private boolean alarmRing = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +163,7 @@ public class MainActivity extends FragmentActivity {
                             e.printStackTrace();
                         }
                     }
+
                     @Override
                     public void onFailure(HttpException error, String msg) {
                     }
@@ -206,7 +212,12 @@ public class MainActivity extends FragmentActivity {
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            if (msg.what == UPDATE_MAINTENANCE) {
+            if (msg.what == UPDATE_UNDO) {
+                alarmRing = false;
+                isUnRepairCallbackFinished = false;
+                isUnRecordCallbackFinished = false;
+                isUnMaintainCallbackFinished = false;
+                isUnTaskCallbackFinished = false;
                 getUnRepairNum();
                 getUnMaintainNum();
                 getUnRecordNum();
@@ -392,7 +403,7 @@ public class MainActivity extends FragmentActivity {
 
     private void updateHint(){
         Message message = new Message();
-        message.what = UPDATE_MAINTENANCE;
+        message.what = UPDATE_UNDO;
         handler.sendMessage(message);
     }
 	/**
@@ -429,7 +440,7 @@ public class MainActivity extends FragmentActivity {
         PendingIntent sender = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
         AlarmManager am=(AlarmManager)getSystemService(ALARM_SERVICE);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5*1000, sender);
+        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), sender);
     }
 
 
@@ -514,6 +525,9 @@ public class MainActivity extends FragmentActivity {
                             if(mBodyRepairTv == null) {
                                 mBodyRepairTv = (TextView)findViewById(R.id.main_body_app_repair_id);
                             }
+                            if(mRepairUnfinished > Integer.parseInt(mBodyRepairTv.getText().toString())){
+                                alarmRing = true;
+                            }
                             mBodyRepairTv.setText(String.valueOf(mRepairUnfinished));
                             mBodyRepairTv.setVisibility(View.VISIBLE);
                         }
@@ -524,11 +538,19 @@ public class MainActivity extends FragmentActivity {
                             mBodyRepairTv.setVisibility(View.GONE);
                         }
 
-                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished > 0) {
-                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
-                            mbottomTabAppTv.setVisibility(View.VISIBLE);
-                        }else{
-                            mbottomTabAppTv.setVisibility(View.GONE);
+                        isUnRepairCallbackFinished = true;
+
+                        if(isUnRepairCallbackFinished&&isUnRecordCallbackFinished&&isUnMaintainCallbackFinished&&isUnTaskCallbackFinished){
+                            if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished + mTaskUnfinished > 0) {
+                                mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                                mbottomTabAppTv.setVisibility(View.VISIBLE);
+                            }else{
+                                mbottomTabAppTv.setVisibility(View.GONE);
+                            }
+
+                            if(alarmRing){
+                                startAlarmPush();
+                            }
                         }
                     }
 
@@ -536,6 +558,7 @@ public class MainActivity extends FragmentActivity {
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        isUnRepairCallbackFinished = true;
                     }
                 });
     }
@@ -576,6 +599,9 @@ public class MainActivity extends FragmentActivity {
                             if(mBodyMaintainTv == null) {
                                 mBodyMaintainTv = (TextView)findViewById(R.id.main_body_app_maintain_id);
                             }
+                            if(mMaintainUnfinished > Integer.parseInt(mBodyMaintainTv.getText().toString())){
+                                alarmRing = true;
+                            }
                             mBodyMaintainTv.setText(String.valueOf(mMaintainUnfinished));
                             mBodyMaintainTv.setVisibility(View.VISIBLE);
                         }
@@ -586,16 +612,25 @@ public class MainActivity extends FragmentActivity {
                             mBodyMaintainTv.setVisibility(View.GONE);
                         }
 
-                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished > 0) {
-                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
-                            mbottomTabAppTv.setVisibility(View.VISIBLE);
-                        }else{
-                            mbottomTabAppTv.setVisibility(View.GONE);
+                        isUnRecordCallbackFinished = true;
+
+                        if(isUnRepairCallbackFinished&&isUnRecordCallbackFinished&&isUnMaintainCallbackFinished&&isUnTaskCallbackFinished){
+                            if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished + mTaskUnfinished > 0) {
+                                mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                                mbottomTabAppTv.setVisibility(View.VISIBLE);
+                            }else{
+                                mbottomTabAppTv.setVisibility(View.GONE);
+                            }
+
+                            if(alarmRing){
+                                startAlarmPush();
+                            }
                         }
                     }
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        isUnRecordCallbackFinished = true;
                     }
                 });
     }
@@ -642,6 +677,9 @@ public class MainActivity extends FragmentActivity {
                             if(mBodyMeterTv == null) {
                                 mBodyMeterTv = (TextView)findViewById(R.id.main_body_app_meter_id);
                             }
+                            if(mRecordUnfinished > Integer.parseInt(mBodyMeterTv.getText().toString())){
+                                alarmRing = true;
+                            }
                             mBodyMeterTv.setText(String.valueOf(mRecordUnfinished));
                             mBodyMeterTv.setVisibility(View.VISIBLE);
                         }
@@ -652,11 +690,19 @@ public class MainActivity extends FragmentActivity {
                             mbottomTabMeterTv.setVisibility(View.GONE);
                         }
 
-                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished > 0) {
-                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
-                            mbottomTabAppTv.setVisibility(View.VISIBLE);
-                        }else{
-                            mbottomTabAppTv.setVisibility(View.GONE);
+                        isUnMaintainCallbackFinished = true;
+
+                        if(isUnRepairCallbackFinished&&isUnRecordCallbackFinished&&isUnMaintainCallbackFinished&&isUnTaskCallbackFinished){
+                            if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished + mTaskUnfinished > 0) {
+                                mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                                mbottomTabAppTv.setVisibility(View.VISIBLE);
+                            }else{
+                                mbottomTabAppTv.setVisibility(View.GONE);
+                            }
+
+                            if(alarmRing){
+                                startAlarmPush();
+                            }
                         }
                     }
 
@@ -664,6 +710,7 @@ public class MainActivity extends FragmentActivity {
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        isUnMaintainCallbackFinished = true;
                     }
                 });
     }
@@ -705,6 +752,9 @@ public class MainActivity extends FragmentActivity {
                             if(mBodyTaskTv == null) {
                                 mBodyTaskTv = (TextView)findViewById(R.id.main_body_app_task_id);
                             }
+                            if(mTaskUnfinished > Integer.parseInt(mBodyTaskTv.getText().toString())){
+                                alarmRing = true;
+                            }
                             mBodyTaskTv.setText(String.valueOf(mTaskUnfinished));
                             mBodyTaskTv.setVisibility(View.VISIBLE);
                         }
@@ -715,16 +765,25 @@ public class MainActivity extends FragmentActivity {
                             mBodyTaskTv.setVisibility(View.GONE);
                         }
 
-                        if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished + mTaskUnfinished > 0) {
-                            mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
-                            mbottomTabAppTv.setVisibility(View.VISIBLE);
-                        }else{
-                            mbottomTabAppTv.setVisibility(View.GONE);
+                        isUnTaskCallbackFinished = true;
+
+                        if(isUnRepairCallbackFinished&&isUnRecordCallbackFinished&&isUnMaintainCallbackFinished&&isUnTaskCallbackFinished){
+                            if(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished + mTaskUnfinished > 0) {
+                                mbottomTabAppTv.setText(String.valueOf(mRecordUnfinished + mRepairUnfinished + mMaintainUnfinished + mTaskUnfinished));
+                                mbottomTabAppTv.setVisibility(View.VISIBLE);
+                            }else{
+                                mbottomTabAppTv.setVisibility(View.GONE);
+                            }
+
+                            if(alarmRing){
+                                startAlarmPush();
+                            }
                         }
                     }
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        isUnTaskCallbackFinished = true;
                     }
                 });
     }

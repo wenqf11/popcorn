@@ -731,9 +731,15 @@ def app_feedback(request, para, user):
 @token_required
 def app_device_brief(request, para, user):
     devices = k_device.objects.all()
+    name_dict = dict()
+    for _d in devices:
+        name_dict[_d.brief] = _d.name
     return HttpResponse(json.dumps({
         'status': 'ok',
-        'data': [_d.brief for _d in devices]
+        'data': {
+            'brief': [_d.brief for _d in devices],
+            'dict': name_dict
+            }
     }))
 
 

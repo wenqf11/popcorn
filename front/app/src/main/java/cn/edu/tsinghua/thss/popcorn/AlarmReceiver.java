@@ -60,7 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         PlaySound(context);
         //playAlarmRing(context);
-        Toast.makeText(context, "闹铃响了, 可以做点事情了~~", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "您有新的任务，请尽快完成~~", Toast.LENGTH_LONG).show();
     }
 
 }

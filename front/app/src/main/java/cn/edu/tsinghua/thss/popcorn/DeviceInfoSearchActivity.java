@@ -50,7 +50,8 @@ public class DeviceInfoSearchActivity extends Activity implements
         SearchView.OnQueryTextListener{
 
     private SearchView searchView;
-    private ArrayList<String> deviceBrief = new ArrayList<String>();;
+    private ArrayList<String> deviceBrief = new ArrayList<String>();
+    JSONObject nameDict = null;
     private HintAdapter adapter;
 
     @ViewInject(R.id.device_info_hint_listview)
@@ -134,9 +135,10 @@ public class DeviceInfoSearchActivity extends Activity implements
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
 
-
                             if (status.equals("ok")) {
-                                JSONArray briefList = jsonObject.getJSONArray("data");
+                                JSONObject data = jsonObject.getJSONObject("data");
+                                JSONArray  briefList = data.getJSONArray("brief");
+                                nameDict = data.getJSONObject("dict");
                                 for(int i = 0; i<briefList.length(); i++){
                                     deviceBrief.add(briefList.getString(i));
                                 }
@@ -245,9 +247,12 @@ public class DeviceInfoSearchActivity extends Activity implements
             {
                 holder = (HintHolder) convertView.getTag();
             }
-
-            holder.name.setText(nameList.get(position));
-
+            try{
+                String name = nameDict.getString(nameList.get(position));
+                holder.name.setText(name+"（"+nameList.get(position)+"）");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return convertView;
 
         }

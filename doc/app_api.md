@@ -382,7 +382,7 @@
 
 ## 设备模块
 
-### 获取所有设备简称
+### 获取所有设备全称和简称
 
 - 请求地址：http://domain.com/app/device/brief/
 - 请求方式：GET
@@ -390,12 +390,18 @@
 	- username，`string`，用户名
 	- access_token，`string`，用户认证用的token
 	- timestamp，`int`，时间戳，暂时没有用
-- 返回结果：所有设备的简称brief
+- 返回结果：所有设备的简称brief以及简称所对应全称的字典
 - json示例：
 
 		{
 			status: "ok",
-			data: ["ks304921", "kt931121", "dj239932", "gl991223"]
+			data: {
+				brief: ["ks304921", "kt931121", "dj239932"],
+				dict: {
+						ks304921: "冷水机001",
+						kt931121: "空调机002"
+						dj239932： "冷柜11"
+					}
 		}
 
 ### 获取设备信息
