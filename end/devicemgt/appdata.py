@@ -7,6 +7,7 @@ from django.core.exceptions import *
 from models import *
 from datetime import date, datetime, time, timedelta
 from django.contrib.auth.hashers import make_password, check_password
+from .views import get_class_set
 import json, random
 
 
@@ -730,7 +731,10 @@ def app_feedback(request, para, user):
 @get_required
 @token_required
 def app_device_brief(request, para, user):
-    devices = k_device.objects.all()
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    devices = k_device.objects.filter(classid__in=result)
+
     name_dict = dict()
     for _d in devices:
         name_dict[_d.brief] = _d.name
