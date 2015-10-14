@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.core.servers.basehttp import FileWrapper
 import json
 import qrcode
+import StringIO
 
 @login_required
 def print_qrcode(request):
@@ -37,13 +38,41 @@ def print_qrcode(request):
     variables = RequestContext(request, {'username':user.username, 'useravatar': user.avatar, 'data':data})
     return get_purviews_and_render_to_response(request.user.username, 'print_qrcode.html', variables)
 
+
 def download_qrcode(request):
     user = k_user.objects.get(username=request.user.username)
     server_msg = ''
+    path = './static/images/qrcode/'
     if request.method == "POST":
         filelist = request.POST.getlist("filelist[]")
+        '''elegant way but doesn't work yet
+        #temp = tempfile.TemporaryFile()
+        # s = StringIO.StringIO()
+        # archive = zipfile.ZipFile(s, 'w')
+        # for _f in filelist:
+        #     filename = gen_qrcode(path, _f)
+        #     #archive.write(path+filename)
+        #     archive.write('logo.png')
+        # archive.close()
+        # wrapper = s.getvalue()#FileWrapper(temp)
+        # response = HttpResponse(wrapper, content_type='application/x-zip-compressed')
+        # response['Content-Disposition'] = 'attachment;filename=qrcode.zip'
+        # response['Content-Length'] = s.tell()#temp.tell()
+        # #print s.tell()
+        # #temp.seek(0)
+        #
+        # return response
+        '''
+        ''' Not elegant but ok
+       '''
+        archive = zipfile.ZipFile(path+'qrcode.zip', 'w')
         for _f in filelist:
-            gen_qrcode(_f)
+            filename = gen_qrcode(path, _f)
+            archive.write(path+filename)
+        archive.close()
+        return HttpResponse(json.dumps({
+            "link": "/static/images/qrcode/qrcode.zip"
+            }), content_type="application/json")
     return HttpResponse(json.dumps({
         "username": user.username,
         "server_msg":server_msg
@@ -51,9 +80,10 @@ def download_qrcode(request):
 
 
 
-def gen_qrcode(filename):
+def gen_qrcode(path, filename):
     img = qrcode.make(filename)
-    img.save(filename+'.png')
+    img.save(path+filename+'.png')
+    return filename+'.png'
 
 
 def send_file(request):
@@ -62,7 +92,7 @@ def send_file(request):
     memory at once. The FileWrapper will turn the file object into an
     iterator for chunks of 8KB.
     """
-    filename = __file__ # Select your file here.
+    filename = 'logo.png' # Select your file here.
     wrapper = FileWrapper(file(filename))
     response = HttpResponse(wrapper, content_type='text/plain')
     response['Content-Length'] = os.path.getsize(filename)

@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.conf import settings
 from views import *
 from appdata import *
+from qrdata import *
 
 from django.conf.urls.static import static
 
@@ -112,6 +113,9 @@ urlpatterns = patterns(
     url(r'^submit_role/(\d*)/$', submit_role),
     url(r'^submit_role/$', submit_role),
     url(r'^delete_role/$', delete_role),
+
+    url(r'^print_qrcode/$', print_qrcode),
+    url(r'^download_qrcode/$', download_qrcode),
 
     url(r'^view_route/$', view_route),
     url(r'^operate_route/$', operate_route),

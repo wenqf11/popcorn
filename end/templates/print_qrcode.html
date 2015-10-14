@@ -85,13 +85,12 @@
            dataType:'json',     //接受数据格式
            data: {"filelist":filelist},         //要传递的数据
           success:function(data) {
-              if (data.server_msg) {
-                    $.gritter.add({
-                        title: '系统消息',
-                        text: data.server_msg,
-                        class_name: 'gritter-error gritter-center'
-                    });
-                }
+              console.log(data)
+              if (data.link) {
+                var tmp_a = document.createElement('a');
+                tmp_a.href = data.link;
+                tmp_a.click();
+              }
            } //回传函数(这里是函数名)
          });
   }
