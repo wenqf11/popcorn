@@ -73,6 +73,13 @@ public class AboutInfoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_info);
         ViewUtils.inject(this);
+        TextView versionName = (TextView)findViewById(R.id.about_version_name);
+        try {
+            versionName.setText(getVersionName());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

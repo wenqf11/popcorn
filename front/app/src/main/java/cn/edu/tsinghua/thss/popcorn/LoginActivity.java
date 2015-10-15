@@ -311,13 +311,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                 JSONObject jsonObject = new JSONObject(responseInfo.result);
                                 String status = jsonObject.getString("status");
 
-
                                 if (status.equals("ok")) {
                                     isLogedIn = true;
                                     String accessToken = jsonObject.getString("data");
                                     SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sp.edit();
                                     editor.putString("ACCESS_TOKEN", accessToken);
+                                    editor.putString("USERNAME", mUsername);
+                                    editor.putString("PASSWORD", mPassword);
                                     editor.apply();
                                 }
                             } catch (JSONException e) {
@@ -334,21 +335,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                         }
                     });
 
-            // TODO: register the new account here.
-
             try {
                 while(!isDone)
                     Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-
-            if (isLogedIn) {
-                SharedPreferences sp = getApplicationContext().getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("USERNAME", mUsername);
-                editor.putString("PASSWORD", mPassword);
-                editor.apply();
             }
 
             return isLogedIn;
