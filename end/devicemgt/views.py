@@ -591,7 +591,6 @@ def userbatch_submit(request):
 @login_required
 def devicebyclass(request):
     user = k_user.objects.get(username=request.user.username)
-    #_class = k_class.objects.get(id=_user.classid)
     parents = user.classid
     classes = k_class.objects.all()
     datas = list()

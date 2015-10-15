@@ -12,14 +12,33 @@ import json
 import qrcode
 import StringIO
 
+def get_devices_by_user_class(classes, parentid):
+    devices_list = list()
+    devices = k_device.objects.filter(classid_id=parentid)
+    devices_list.extend(queryset2list(devices))
+    for _c in classes:
+        if _c.parentid == parentid:
+            tmp_list = get_devices_by_user_class(classes, _c.id)
+            devices_list.extend(tmp_list)
+
+    return devices_list
+
+def queryset2list(queryset):
+    res = list()
+    for q in queryset:
+        res.append(q)
+    return res
+
 @login_required
 def print_qrcode(request):
     user = k_user.objects.get(username=request.user.username)
     data = dict()
     devicetype = dict()
     devicenum = dict()
-    _classid = user.classid
-    _devices = k_device.objects.filter(classid_id=_classid)
+    _classid = user.classid_id
+    classes = k_class.objects.all()
+    _devices = list()
+    _devices.extend(get_devices_by_user_class(classes, _classid))
     data["devicetypes"] = dict()
     for _d in _devices:
         if not devicetype.has_key(_d.typeid_id):
