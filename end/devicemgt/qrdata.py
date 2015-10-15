@@ -61,7 +61,7 @@ def print_qrcode(request):
 def download_qrcode(request):
     user = k_user.objects.get(username=request.user.username)
     server_msg = ''
-    path = './static/images/qrcode/'
+    path = os.getcwd() + '/static/images/qrcode/'
     if request.method == "POST":
         filelist = request.POST.getlist("filelist[]")
         '''elegant way but doesn't work yet
