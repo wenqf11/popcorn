@@ -80,18 +80,19 @@
           }
       });
       $.ajax({
-           url:'/download_qrcode/', //后台处理程序
-           type:'post',         //数据发送方式
-           dataType:'json',     //接受数据格式
-           data: {"filelist":filelist},         //要传递的数据
+           url:'/download_qrcode/',
+           type:'post',
+           dataType:'json',
+           data: {"filelist":filelist},
           success:function(data) {
-              console.log(data)
+              //console.log(data)
               if (data.link) {
-                var tmp_a = document.createElement('a');
-                tmp_a.href = data.link;
-                tmp_a.click();
+                //var tmp_a = document.createElement('a');
+                //tmp_a.href = data.link;
+                //tmp_a.click();
+                window.location.href = data.link;
               }
-           } //回传函数(这里是函数名)
+           } 
          });
   }
 
