@@ -1634,12 +1634,18 @@ def view_role(request):
                 onepurview["item"] = nowitem
                 onerole["purviews"].append(onepurview)
         onerole["memo"] = p.memo
-        thecreator = k_user.objects.get(id=p.creatorid)
         therole = k_role.objects.get(name=p.name)
-        onerole["creator"] = thecreator.username
+        try:
+            thecreator = k_user.objects.get(id=p.creatorid)
+            onerole["creator"] = thecreator.username
+        except ObjectDoesNotExist:
+            onerole["creator"] = '该用户已被删除'
         onerole["createdatetime"] = therole.createdatetime
-        theeditor = k_user.objects.get(id=p.editorid)
-        onerole["editor"] = theeditor.username
+        try:
+            theeditor = k_user.objects.get(id=p.editorid)
+            onerole["editor"] = theeditor.username
+        except ObjectDoesNotExist:
+            onerole["editor"] = '该用户已被删除'
         onerole["editdatetime"] = therole.editdatetime
         roledata.append(onerole)
     return get_purviews_and_render_to_response(request.user.username, 'roleview.html', {'username': user.username, 'useravatar': user.avatar,'data': roledata})
@@ -1672,11 +1678,17 @@ def operate_role(request):
         for q in therolepurviews:
             purview_ids.append(q.id)
         roledata["memo"] = therole.memo
-        thecreator = k_user.objects.get(id=therole.creatorid)
-        roledata["creator"] = thecreator.username
+        try:
+            thecreator = k_user.objects.get(id=therole.creatorid)
+            roledata["creator"] = thecreator.username
+        except ObjectDoesNotExist:
+            roledata["creator"] = '该用户已被删除'
         roledata["createdatetime"] = therole.createdatetime
-        theeditor = k_user.objects.get(id=therole.editorid)
-        roledata["editor"] = theeditor.username
+        try:
+            theeditor = k_user.objects.get(id=therole.editorid)
+            roledata["editor"] = theeditor.username
+        except ObjectDoesNotExist:
+            roledata["editor"] = '该用户已被删除'
         roledata["editdatetime"] = therole.editdatetime
         roledata['classname'] = therole.classid.name
 
@@ -1768,9 +1780,15 @@ def view_route(request):
         route['startTime'] = r.starttime
         route['endTime'] = r.endtime
         route['period'] = r.period
-        route['creator'] = k_user.objects.get(id=r.creatorid).username
+        try:
+            route['creator'] = k_user.objects.get(id=r.creatorid).username
+        except ObjectDoesNotExist:
+            route['creator'] = '该用户已被删除'
         route['createTime'] = r.createdatetime
-        route['editor'] = k_user.objects.get(id=r.editorid).username
+        try:
+            route['editor'] = k_user.objects.get(id=r.editorid).username
+        except ObjectDoesNotExist:
+            route['editor'] = '该用户已被删除'
         route['editTime'] = r.editdatetime
         #route['status'] = r.status
         data.append(route)
@@ -1798,9 +1816,15 @@ def operate_route(request):
         data['startTime'] = _route.starttime
         data['endTime'] = _route.endtime
         data['period'] = _route.period
-        data['creator'] = k_user.objects.get(id=_route.creatorid).username
+        try:
+            data['creator'] = k_user.objects.get(id=_route.creatorid).username
+        except ObjectDoesNotExist:
+            data['creator'] = '该用户已被删除'
         data['createTime'] = _route.createdatetime
-        data['editor'] = k_user.objects.get(id=_route.editorid).username
+        try:
+            data['editor'] = k_user.objects.get(id=_route.editorid).username
+        except ObjectDoesNotExist:
+            data['editor'] = '该用户已被删除'
         data['editTime'] = _route.editdatetime
 
         all_form = k_form.objects.all()
@@ -1964,17 +1988,23 @@ def view_deviceplan(request):
     _deviceplans = k_deviceplan.objects.filter(deviceid=_device)
     data = []
     for _deviceplan in _deviceplans:
-        _assignor = k_user.objects.get(id=_deviceplan.assignorid)
-        _editor = k_user.objects.get(id=_deviceplan.editorid)
+        try:
+            _assignor = k_user.objects.get(id=_deviceplan.assignorid).name
+        except ObjectDoesNotExist:
+            _assignor = '该用户已被删除'
+        try:
+            _editor = k_user.objects.get(id=_deviceplan.editorid).name
+        except ObjectDoesNotExist:
+            _editor = '该用户已被删除'
         data.append({
             'id': _deviceplan.id,
             'title': _deviceplan.title,
             'period': _deviceplan.get_period_display(),
             'createcontent': _deviceplan.createcontent,
             'memo': _deviceplan.memo,
-            'assignor': _assignor.name,
+            'assignor': _assignor,
             'assigndatetime': _deviceplan.assigndatetime,
-            'editor': _editor.name
+            'editor': _editor
         })
 
     #分类筛选
@@ -2012,7 +2042,8 @@ def submit_deviceplan(request):
 
     _id = request.GET.get('id')
     _user = k_user.objects.get(username=request.user.username)
-    _editor = k_user.objects.get(name=_editor)
+    if _editor != '该用户已被删除':
+        _editor = k_user.objects.get(name=_editor)
 
     if _id != "":
         _deviceplan = k_deviceplan.objects.get(id=_id)
@@ -2026,7 +2057,8 @@ def submit_deviceplan(request):
     _maintenance.assigndatetime = get_current_date()
     _maintenance.title = _title
     _maintenance.createcontent = _createcontent
-    _maintenance.editorid = _editor.id
+    if _editor != '该用户已被删除':
+        _maintenance.editorid = _editor.id
     _maintenance.memo = _memo
     _maintenance.save()
 
@@ -2035,7 +2067,8 @@ def submit_deviceplan(request):
     _deviceplan.title = _title
     _deviceplan.period = _period
     _deviceplan.createcontent = _createcontent
-    _deviceplan.editorid = _editor.id
+    if _editor != '该用户已被删除':
+        _deviceplan.editorid = _editor.id
     _deviceplan.memo = _memo
     _deviceplan.save()
 
@@ -2079,7 +2112,11 @@ def view_maintaining(request):
             _db = _device.brief
             _dn = _device.name
             _dp = _device.position
-        _creator = k_user.objects.get(id=_maintaining.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_maintaining.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        
         if _maintaining.image:
             _imageurl = _maintaining.image.url
         else:
@@ -2093,7 +2130,7 @@ def view_maintaining(request):
                 'name': _dn,
                 'position': _dp,
                 'imageurl': _imageurl,
-                'creator': _creator.name,
+                'creator': _creator,
                 'createdatetime': _maintaining.createdatetime,
                 'createcontent': _maintaining.createcontent,
                 'memo': _maintaining.memo,
@@ -2101,8 +2138,14 @@ def view_maintaining(request):
                 'state': _maintaining.state
             })
         else:
-            _assignor = k_user.objects.get(id=_maintaining.assignorid)
-            _editor = k_user.objects.get(id=_maintaining.editorid)
+            try:
+                _assignor = k_user.objects.get(id=_maintaining.assignorid).name
+            except ObjectDoesNotExist:
+                _assignor = '该用户已被删除'
+            try:
+                _editor = k_user.objects.get(id=_maintaining.editorid).name
+            except ObjectDoesNotExist:
+                _editor = '该用户已被删除'
             data.append({
                 'id': _maintaining.id,
                 'classname': _maintaining.classid.name,
@@ -2111,11 +2154,11 @@ def view_maintaining(request):
                 'name': _dn,
                 'position': _dp,
                 'imageurl': _imageurl,
-                'creator': _creator.name,
+                'creator': _creator,
                 'createdatetime': _maintaining.createdatetime,
-                'assignor': _assignor.name,
+                'assignor': _assignor,
                 'assigndatetime': _maintaining.assigndatetime,
-                'editor': _editor.name,
+                'editor': _editor,
                 'createcontent': _maintaining.createcontent,
                 'memo': _maintaining.memo,
                 'priority': _maintaining.get_priority_display(),
@@ -2164,9 +2207,18 @@ def view_maintained(request):
             _db = _device.brief
             _dn = _device.name
             _dp = _device.position
-        _creator = k_user.objects.get(id=_maintained.creatorid)
-        _assignor = k_user.objects.get(id=_maintained.assignorid)
-        _editor = k_user.objects.get(id=_maintained.editorid)
+        try:
+            _creator = k_user.objects.get(id=_maintained.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        try:
+            _assignor = k_user.objects.get(id=_maintained.assignorid).name
+        except ObjectDoesNotExist:
+            _assignor = '该用户已被删除'
+        try:
+            _editor = k_user.objects.get(id=_maintained.editorid).name
+        except ObjectDoesNotExist:
+            _editor = '该用户已被删除'
         if _maintained.image:
             _imageurl = _maintained.image.url
         else:
@@ -2180,11 +2232,11 @@ def view_maintained(request):
                 'name': _dn,
                 'position': _dp,
                 'imageurl': _imageurl,
-                'creator': _creator.name,
+                'creator': _creator,
                 'createdatetime': _maintained.createdatetime,
-                'assignor': _assignor.name,
+                'assignor': _assignor,
                 'assigndatetime': _maintained.assigndatetime,
-                'editor': _editor.name,
+                'editor': _editor,
                 'editdatetime': _maintained.editdatetime,
                 'createcontent': _maintained.createcontent,
                 'memo': _maintained.memo,
@@ -2193,7 +2245,10 @@ def view_maintained(request):
                 'state': _maintained.state
             })
         else:
-            _auditor = k_user.objects.get(id=_maintained.auditorid)
+            try:
+                _auditor = k_user.objects.get(id=_maintained.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
             data.append({
                 'id': _maintained.id,
                 'classname': _maintained.classid.name,
@@ -2202,17 +2257,17 @@ def view_maintained(request):
                 'name': _dn,
                 'position': _dp,
                 'imageurl': _imageurl,
-                'creator': _creator.name,
+                'creator': _creator,
                 'createdatetime': _maintained.createdatetime,
-                'assignor': _assignor.name,
+                'assignor': _assignor,
                 'assigndatetime': _maintained.assigndatetime,
-                'editor': _editor.name,
+                'editor': _editor,
                 'editdatetime': _maintained.editdatetime,
                 'createcontent': _maintained.createcontent,
                 'memo': _maintained.memo,
                 'priority': _maintained.get_priority_display(),
                 'editcontent': _maintained.editcontent,
-                'auditor': _auditor.name,
+                'auditor': _auditor,
                 'auditdatetime': _maintained.auditdatetime,
                 'factor': _maintained.factor,
                 'state': _maintained.state
@@ -2320,24 +2375,28 @@ def submit_maintenance(request):
                 taskscore=2
             )
             project.save()
-        _maintainer = k_user.objects.get(id=_maintenance.editorid)
-        staffscoreinfo = k_staffscoreinfo(
-            userid=_maintainer,
-            score=float(_factor) * float(project.maintenancescore),
-            content=str(project.maintenancescore) + ';' + _factor + ';维修',
-            time=get_current_date()
-        )
-        staffscoreinfo.save()
+        try:
+            _maintainer = k_user.objects.get(id=_maintenance.editorid)
+            staffscoreinfo = k_staffscoreinfo(
+                userid=_maintainer,
+                score=float(_factor) * float(project.maintenancescore),
+                content=str(project.maintenancescore) + ';' + _factor + ';维修',
+                time=get_current_date()
+            )
+            staffscoreinfo.save()
+        except ObjectDoesNotExist:
+            _maintainer = '该用户已被删除'
 
         return HttpResponseRedirect('/view_maintained/')
     elif _id:
         _maintenance = k_maintenance.objects.get(id=_id)
         if _editor != "nopersonchosen":
-            _maintainer = k_user.objects.get(name=_editor)
-            _maintenance.editorid = _maintainer.id
-            _maintenance.assignorid = _user.id
-            _maintenance.assigndatetime = get_current_date()
-            _maintenance.state = 2
+            if _editor != '该用户已被删除':
+                _maintainer = k_user.objects.get(name=_editor)
+                _maintenance.editorid = _maintainer.id
+                _maintenance.assignorid = _user.id
+                _maintenance.assigndatetime = get_current_date()
+                _maintenance.state = 2
         else:
             _maintenance.editorid = 0
             _maintenance.assignorid = 0
@@ -2409,8 +2468,14 @@ def view_upkeeping(request):
     data = []
     for _maintaining in _maintainings:
         _device = _maintaining.deviceid
-        _assignor = k_user.objects.get(id=_maintaining.assignorid)
-        _editor = k_user.objects.get(id=_maintaining.editorid)
+        try:
+            _assignor = k_user.objects.get(id=_maintaining.assignorid).name
+        except ObjectDoesNotExist:
+            _assignor = '该用户已被删除'
+        try:
+            _editor = k_user.objects.get(id=_maintaining.editorid).name
+        except ObjectDoesNotExist:
+            _editor = '该用户已被删除'
         data.append({
             'id': _maintaining.id,
             'classname': _maintaining.classid.name,
@@ -2418,11 +2483,11 @@ def view_upkeeping(request):
             'brief': _device.brief,
             'name': _device.name,
             'position': _device.position,
-            'assignor': _assignor.name,
+            'assignor': _assignor,
             'assigndatetime': _maintaining.assigndatetime,
             #
             'deadline': get_current_date(),
-            'editor': _editor.name,
+            'editor': _editor,
             'createcontent': _maintaining.createcontent,
             'memo': _maintaining.memo,
             'state': _maintaining.state
@@ -2465,8 +2530,14 @@ def view_upkeeped(request):
     for _maintained in _maintaineds:
         _device = _maintained.deviceid
         #_creator = k_user.objects.get(id=_maintained.creatorid)
-        _assignor = k_user.objects.get(id=_maintained.assignorid)
-        _editor = k_user.objects.get(id=_maintained.editorid)
+        try:
+            _assignor = k_user.objects.get(id=_maintained.assignorid).name
+        except ObjectDoesNotExist:
+            _assignor = '该用户已被删除'
+        try:
+            _editor = k_user.objects.get(id=_maintained.editorid).name
+        except ObjectDoesNotExist:
+            _editor = '该用户已被删除'
         if _maintained.auditorid == 0:
             data.append({
                 'id': _maintained.id,
@@ -2477,11 +2548,11 @@ def view_upkeeped(request):
                 'position': _device.position,
                 #'creator': _creator.name,
                 #'createdatetime': _maintained.createdatetime,
-                'assignor': _assignor.name,
+                'assignor': _assignor,
                 'assigndatetime': _maintained.assigndatetime,
                 #
                 'deadline': get_current_date(),
-                'editor': _editor.name,
+                'editor': _editor,
                 'editdatetime': _maintained.editdatetime,
                 'createcontent': _maintained.createcontent,
                 'memo': _maintained.memo,
@@ -2490,7 +2561,10 @@ def view_upkeeped(request):
                 'state': _maintained.state
             })
         else:
-            _auditor = k_user.objects.get(id=_maintained.auditorid)
+            try:
+                _auditor = k_user.objects.get(id=_maintained.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
             data.append({
                 'id': _maintained.id,
                 'classname': _maintained.classid.name,
@@ -2500,17 +2574,17 @@ def view_upkeeped(request):
                 'position': _device.position,
                 #'creator': _creator.name,
                 #'createdatetime': _maintained.createdatetime,
-                'assignor': _assignor.name,
+                'assignor': _assignor,
                 'assigndatetime': _maintained.assigndatetime,
                 #
                 'deadline': get_current_date(),
-                'editor': _editor.name,
+                'editor': _editor,
                 'editdatetime': _maintained.editdatetime,
                 'createcontent': _maintained.createcontent,
                 'memo': _maintained.memo,
                 #'priority': _maintained.get_priority_display(),
                 'editcontent': _maintained.editcontent,
-                'auditor': _auditor.name,
+                'auditor': _auditor,
                 'auditdatetime': _maintained.auditdatetime,
                 'factor': _maintained.factor,
                 'state': _maintained.state
@@ -2557,14 +2631,17 @@ def submit_upkeep(request):
             taskscore=2
         )
         project.save()
-    _maintainer = k_user.objects.get(id=_maintenance.editorid)
-    staffscoreinfo = k_staffscoreinfo(
-        userid=_maintainer,
-        score=float(_factor) * float(project.maintenancescore),
-        content=str(project.maintenancescore) + ';' + _factor + ';保养',
-        time=get_current_date()
-    )
-    staffscoreinfo.save()
+    try:
+        _maintainer = k_user.objects.get(id=_maintenance.editorid)
+        staffscoreinfo = k_staffscoreinfo(
+            userid=_maintainer,
+            score=float(_factor) * float(project.maintenancescore),
+            content=str(project.maintenancescore) + ';' + _factor + ';保养',
+            time=get_current_date()
+        )
+        staffscoreinfo.save()
+    except ObjectDoesNotExist:
+        _maintainer = '该用户已被删除'
 
     return HttpResponseRedirect('/view_upkeeped/')
 
@@ -2599,12 +2676,15 @@ def view_tasking(request):
 
     data = []
     for _maintaining in _maintainings:
-        _creator = k_user.objects.get(id=_maintaining.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_maintaining.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
         data.append({
             'id': _maintaining.id,
             'classname': _maintaining.classid.name,
             'title': _maintaining.title,
-            'creator': _creator.name,
+            'creator': _creator,
             'createdatetime': _maintaining.createdatetime,
             'createcontent': _maintaining.createcontent,
             'memo': _maintaining.memo,
@@ -2638,12 +2718,15 @@ def view_tasked(request):
 
     data = []
     for _maintained in _maintaineds:
-        _creator = k_user.objects.get(id=_maintained.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_maintained.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
         data.append({
             'id': _maintained.id,
             'classname': _maintained.classid.name,
             'title': _maintained.title,
-            'creator': _creator.name,
+            'creator': _creator,
             'createdatetime': _maintained.createdatetime,
             'createcontent': _maintained.createcontent,
             'memo': _maintained.memo,
@@ -2752,22 +2835,31 @@ def view_taskitem(request):
     for _taskitem in _taskitems:
         dataitem = {}
 
-        _creator = k_user.objects.get(id=_taskitem.creatorid)
-        _editor = k_user.objects.get(id=_taskitem.editorid)
+        try:
+            _creator = k_user.objects.get(id=_taskitem.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        try:
+            _editor = k_user.objects.get(id=_taskitem.editorid).name
+        except ObjectDoesNotExist:
+            _editor = '该用户已被删除'
         _helpersid = _taskitem.helpersid.split(";")
         _helpers = []
         if _helpersid != ['']:
             for _helperid in _helpersid:
-                _helper = k_user.objects.get(id=int(_helperid))
-                _helpers.append(_helper.name)
+                try:
+                    _helper = k_user.objects.get(id=int(_helperid))
+                    _helpers.append(_helper.name)
+                except ObjectDoesNotExist:
+                    _helper = '该用户已被删除'
         dataitem['id'] = _taskitem.id
         dataitem['title'] = _taskitem.title
         dataitem['createcontent'] = _taskitem.createcontent
-        dataitem['creator'] = _creator.name
+        dataitem['creator'] = _creator
         dataitem['createdatetime'] = _taskitem.createdatetime
         dataitem['priority'] = _taskitem.get_priority_display()
         dataitem['memo'] = _taskitem.memo
-        dataitem['editor'] = _editor.name
+        dataitem['editor'] = _editor
         dataitem['helpers'] = ";".join(_helpers)
         dataitem['state'] = _taskitem.get_state_display()
 
@@ -2776,8 +2868,11 @@ def view_taskitem(request):
             dataitem['editcontent'] = _taskitem.editcontent
 
         if _taskitem.state == "4":
-            _auditor = k_user.objects.get(id=_taskitem.auditorid)
-            dataitem['auditor'] = _auditor.name
+            try:
+                _auditor = k_user.objects.get(id=_taskitem.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
+            dataitem['auditor'] = _auditor
             dataitem['auditdatetime'] = _taskitem.auditdatetime
             dataitem['factor'] = _taskitem.factor
         data.append(dataitem)
@@ -2871,14 +2966,17 @@ def submit_taskitem(request):
                 taskscore=2
             )
             project.save()
-        _tasker = k_user.objects.get(id=_taskitem.editorid)
-        staffscoreinfo = k_staffscoreinfo(
-            userid=_tasker,
-            score=float(_factor) * float(project.taskscore),
-            content=str(project.taskscore) + ';' + _factor + ';任务',
-            time=get_current_date()
-        )
-        staffscoreinfo.save()
+        try:
+            _tasker = k_user.objects.get(id=_taskitem.editorid)
+            staffscoreinfo = k_staffscoreinfo(
+                userid=_tasker,
+                score=float(_factor) * float(project.taskscore),
+                content=str(project.taskscore) + ';' + _factor + ';任务',
+                time=get_current_date()
+            )
+            staffscoreinfo.save()
+        except ObjectDoesNotExist:
+            _tasker = '该用户已被删除'
 
         return HttpResponseRedirect('/view_taskitem?id=%i' % _taskitem.taskid_id)
     
@@ -2895,8 +2993,9 @@ def submit_taskitem(request):
     _taskitem.createcontent = _createcontent
     _taskitem.priority = _priority
     _taskitem.memo = _memo
-    _tasker = k_user.objects.get(name=_editor)
-    _taskitem.editorid = _tasker.id
+    if _editor != '该用户已被删除':
+        _tasker = k_user.objects.get(name=_editor)
+        _taskitem.editorid = _tasker.id
     _helpers = request.GET.get('helpersstring')
     _helpers = _helpers.split(";")
     _helpersid = []
@@ -2953,7 +3052,11 @@ def view_spare(request):
     for _spare in _spares:
         dataitem = {}
 
-        _creator = k_user.objects.get(id=_spare.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_spare.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        
         dataitem['id'] = _spare.id
         dataitem['classname'] = _spare.classid.name
         dataitem['brand'] = _spare.brand
@@ -2969,17 +3072,25 @@ def view_spare(request):
         dataitem['ineligiblestock'] = _spare.ineligiblestock
         dataitem['content'] = _spare.content
         dataitem['memo'] = _spare.memo
-        dataitem['creator'] = _creator.name
+        dataitem['creator'] = _creator
         dataitem['createdatetime'] = _spare.createdatetime
 
         if _spare.editorid != 0:
-            _editor = k_user.objects.get(id=_spare.editorid)
-            dataitem['editor'] = _editor.name
+            try:
+                _editor = k_user.objects.get(id=_spare.editorid).name
+            except ObjectDoesNotExist:
+                _editor = '该用户已被删除'
+            
+            dataitem['editor'] = _editor
             dataitem['editdatetime'] = _spare.editdatetime
 
         if _spare.auditorid != 0:
-            _auditor = k_user.objects.get(id=_spare.auditorid)
-            dataitem['auditor'] = _auditor.name
+            try:
+                _auditor = k_user.objects.get(id=_spare.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
+            
+            dataitem['auditor'] = _auditor
             dataitem['auditdatetime'] = _spare.auditdatetime
 
         data.append(dataitem)
@@ -3193,7 +3304,11 @@ def view_sparebill(request):
     for _sparebill in _sparebills:
         dataitem = {}
 
-        _creator = k_user.objects.get(id=_sparebill.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_sparebill.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        
         _spare = k_spare.objects.get(id=_sparebill.spareid_id)
         dataitem['id'] = _sparebill.id
         dataitem['brief'] = _spare.brief
@@ -3204,19 +3319,27 @@ def view_sparebill(request):
         dataitem['rejected'] = _sparebill.rejected
         dataitem['user'] = _sparebill.user
         dataitem['memo'] = _sparebill.memo
-        dataitem['creator'] = _creator.name
+        dataitem['creator'] = _creator
         dataitem['createdatetime'] = _sparebill.createdatetime
 
         dataitem['notreturned'] = dataitem['using'] - dataitem['returned'] - dataitem['depleted'] - dataitem['damaged'] - dataitem['rejected']
 
         if _sparebill.editorid != 0:
-            _editor = k_user.objects.get(id=_sparebill.editorid)
-            dataitem['editor'] = _editor.name
+            try:
+                _editor = k_user.objects.get(id=_sparebill.editorid).name
+            except ObjectDoesNotExist:
+                _editor = '该用户已被删除'
+            
+            dataitem['editor'] = _editor
             dataitem['editdatetime'] = _sparebill.editdatetime
 
         if _sparebill.auditorid != 0:
-            _auditor = k_user.objects.get(id=_sparebill.auditorid)
-            dataitem['auditor'] = _auditor.name
+            try:
+                _auditor = k_user.objects.get(id=_sparebill.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
+            
+            dataitem['auditor'] = _auditor
             dataitem['auditdatetime'] = _sparebill.auditdatetime
         elif _sparebill.using == _sparebill.returned + _sparebill.depleted + _sparebill.damaged + _sparebill.rejected:
             dataitem['audit'] = 'audit'
@@ -3372,7 +3495,11 @@ def view_sparecount(request):
     for _sparecount in _sparecounts:
         dataitem = {}
 
-        _creator = k_user.objects.get(id=_sparecount.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_sparecount.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        
         _spare = k_spare.objects.get(id=_sparecount.spareid_id)
         dataitem['id'] = _sparecount.id
         dataitem['sparebillid'] = _sparecount.sparebillid
@@ -3381,17 +3508,25 @@ def view_sparecount(request):
         dataitem['state'] = _sparecount.get_state_display()
         dataitem['iseligible'] = _sparecount.get_iseligible_display()
         dataitem['memo'] = _sparecount.memo
-        dataitem['creator'] = _creator.name
+        dataitem['creator'] = _creator
         dataitem['createdatetime'] = _sparecount.createdatetime
 
         if _sparecount.editorid != 0:
-            _editor = k_user.objects.get(id=_sparecount.editorid)
-            dataitem['editor'] = _editor.name
+            try:
+                _editor = k_user.objects.get(id=_sparecount.editorid).name
+            except ObjectDoesNotExist:
+                _editor = '该用户已被删除'
+            
+            dataitem['editor'] = _editor
             dataitem['editdatetime'] = _sparecount.editdatetime
 
         if _sparecount.auditorid != 0:
-            _auditor = k_user.objects.get(id=_sparecount.auditorid)
-            dataitem['auditor'] = _auditor.name
+            try:
+                _auditor = k_user.objects.get(id=_sparecount.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
+            
+            dataitem['auditor'] = _auditor
             dataitem['auditdatetime'] = _sparecount.auditdatetime
         """
         if _sparecount.sparebillid != 0:
@@ -3560,7 +3695,11 @@ def view_tool(request):
     for _tool in _tools:
         dataitem = {}
 
-        _creator = k_user.objects.get(id=_tool.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_tool.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        
         dataitem['id'] = _tool.id
         dataitem['classname'] = _tool.classid.name
         dataitem['brand'] = _tool.brand
@@ -3576,18 +3715,26 @@ def view_tool(request):
         dataitem['ineligiblestock'] = _tool.ineligiblestock
         dataitem['content'] = _tool.content
         dataitem['memo'] = _tool.memo
-        dataitem['creator'] = _creator.name
+        dataitem['creator'] = _creator
         dataitem['createdatetime'] = _tool.createdatetime
         dataitem['ownername'] = _tool.ownerid.name
 
         if _tool.editorid != 0:
-            _editor = k_user.objects.get(id=_tool.editorid)
-            dataitem['editor'] = _editor.name
+            try:
+                _editor = k_user.objects.get(id=_tool.editorid).name
+            except ObjectDoesNotExist:
+                _editor = '该用户已被删除'
+            
+            dataitem['editor'] = _editor
             dataitem['editdatetime'] = _tool.editdatetime
 
         if _tool.auditorid != 0:
-            _auditor = k_user.objects.get(id=_tool.auditorid)
-            dataitem['auditor'] = _auditor.name
+            try:
+                _auditor = k_user.objects.get(id=_tool.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
+            
+            dataitem['auditor'] = _auditor
             dataitem['auditdatetime'] = _tool.auditdatetime
 
         data.append(dataitem)
@@ -3782,7 +3929,11 @@ def view_tooluse(request):
     for _tooluse in _tooluses:
         dataitem = {}
 
-        _creator = k_user.objects.get(id=_tooluse.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_tooluse.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        
         _tool = k_tool.objects.get(id=_tooluse.toolid_id)
         dataitem['id'] = _tooluse.id
         dataitem['brief'] = _tool.brief
@@ -3793,19 +3944,27 @@ def view_tooluse(request):
         dataitem['rejected'] = _tooluse.rejected
         dataitem['user'] = _tooluse.user
         dataitem['memo'] = _tooluse.memo
-        dataitem['creator'] = _creator.name
+        dataitem['creator'] = _creator
         dataitem['createdatetime'] = _tooluse.createdatetime
 
         dataitem['notreturned'] = dataitem['using'] - dataitem['returned'] - dataitem['depleted'] - dataitem['damaged'] - dataitem['rejected']
 
         if _tooluse.editorid != 0:
-            _editor = k_user.objects.get(id=_tooluse.editorid)
-            dataitem['editor'] = _editor.name
+            try:
+                _editor = k_user.objects.get(id=_tooluse.editorid).name
+            except ObjectDoesNotExist:
+                _editor = '该用户已被删除'
+            
+            dataitem['editor'] = _editor
             dataitem['editdatetime'] = _tooluse.editdatetime
 
         if _tooluse.auditorid != 0:
-            _auditor = k_user.objects.get(id=_tooluse.auditorid)
-            dataitem['auditor'] = _auditor.name
+            try:
+                _auditor = k_user.objects.get(id=_tooluse.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
+            
+            dataitem['auditor'] = _auditor
             dataitem['auditdatetime'] = _tooluse.auditdatetime
         elif _tooluse.using == _tooluse.returned + _tooluse.depleted + _tooluse.damaged + _tooluse.rejected:
             dataitem['audit'] = 'audit'
@@ -3961,7 +4120,11 @@ def view_toolcount(request):
     for _toolcount in _toolcounts:
         dataitem = {}
 
-        _creator = k_user.objects.get(id=_toolcount.creatorid)
+        try:
+            _creator = k_user.objects.get(id=_toolcount.creatorid).name
+        except ObjectDoesNotExist:
+            _creator = '该用户已被删除'
+        
         _tool = k_tool.objects.get(id=_toolcount.toolid_id)
         dataitem['id'] = _toolcount.id
         dataitem['tooluseid'] = _toolcount.tooluseid
@@ -3970,17 +4133,25 @@ def view_toolcount(request):
         dataitem['state'] = _toolcount.get_state_display()
         dataitem['iseligible'] = _toolcount.get_iseligible_display()
         dataitem['memo'] = _toolcount.memo
-        dataitem['creator'] = _creator.name
+        dataitem['creator'] = _creator
         dataitem['createdatetime'] = _toolcount.createdatetime
 
         if _toolcount.editorid != 0:
-            _editor = k_user.objects.get(id=_toolcount.editorid)
-            dataitem['editor'] = _editor.name
+            try:
+                _editor = k_user.objects.get(id=_toolcount.editorid).name
+            except ObjectDoesNotExist:
+                _editor = '该用户已被删除'
+            
+            dataitem['editor'] = _editor
             dataitem['editdatetime'] = _toolcount.editdatetime
 
         if _toolcount.auditorid != 0:
-            _auditor = k_user.objects.get(id=_toolcount.auditorid)
-            dataitem['auditor'] = _auditor.name
+            try:
+                _auditor = k_user.objects.get(id=_toolcount.auditorid).name
+            except ObjectDoesNotExist:
+                _auditor = '该用户已被删除'
+            
+            dataitem['auditor'] = _auditor
             dataitem['auditdatetime'] = _toolcount.auditdatetime
         """
         if _toolcount.tooluseid != 0:
