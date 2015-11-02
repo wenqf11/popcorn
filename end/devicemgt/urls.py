@@ -130,6 +130,7 @@ urlpatterns = patterns(
     url(r'^view_deviceplan/$', view_deviceplan),
     url(r'^submit_deviceplan/$', submit_deviceplan),
     url(r'^delete_deviceplan/$', delete_deviceplan),
+    url(r'^add_deviceplan/$', add_deviceplan),
 
     url(r'^view_maintaining/$', view_maintaining),
     url(r'^view_maintained/$', view_maintained),

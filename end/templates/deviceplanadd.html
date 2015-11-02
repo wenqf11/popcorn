@@ -10,24 +10,18 @@
 {% endblock %}
 
 {% block pageheader %}
-    添加维修任务
+    添加保养计划
 {% endblock %}
 
 {% block maincontent %}
 <div class="row well" style="width: 60%;margin: auto;">
     <div class="col-xs-12">
-        <form class="form-horizontal" action="/submit_maintenance/" role="form" id="maintenanceform" enctype="multipart/form-data">
+        <form class="form-horizontal" action="/submit_deviceplan/" role="form" id="maintenanceform" enctype="multipart/form-data">
             <fieldset>
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">维修标题<span class="required">*</span></label>
+                <label class="col-sm-3 control-label no-padding-top">保养标题<span class="required">*</span></label>
                 <div class="col-sm-9">
-                    <input type="text" name="title" value="">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">报修人<span class="required">*</span></label>
-                <div class="col-sm-9">
-                    <input type="text" name="memo" value="">
+                    <input type="text" name="title" value="" />
                 </div>
             </div><!--
             <div class="form-group">
@@ -37,43 +31,59 @@
                 </div>
             </div>-->
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">设备编号</label>
+                <label class="col-sm-3 control-label no-padding-top">设备编号<span class="required">*</span></label>
                 <div class="col-sm-2">
                     <select class="chosen-select" id="brief" name="brief" type="text">
-                        <option value="nopersonchosen" selected="selected"></option>
                         {% for brief in briefs %}
                             <option value="{{ brief }}">{{ brief }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
-            {% if "指派维修" in modelsshow %}
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
+                <label class="col-sm-3 control-label no-padding-top">指派保养人<span class="required">*</span></label>
                 <div class="col-sm-2">
                     <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
-                        <option value="nopersonchosen" selected="selected"></option>
                         {% for maintainer in maintainers %}
-                            <option value="{{ maintainer }}">{{ maintainer }}</option>
+                        <option value="{{ maintainer }}">{{ maintainer }}</option>
                         {% endfor %}
+                        <option value="" style="display:none"></option>
                     </select>
                 </div>
             </div>
-            {% endif %}
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">故障描述<span class="required">*</span></label>
+                <label class="col-sm-3 control-label no-padding-top">保养周期<span class="required">*</span></label>
                 <div class="col-sm-9">
-                    <input type="text" name="createcontent" value="">
+                    <select id="period" name="period" form="maintenanceform">
+                        <option value="day">天</option>
+                        <option value="week">周</option>
+                        <option value="halfmonth">半个月</option>
+                        <option value="month" selected="selected">月</option>
+                        <option value="twomonth">两个月</option>
+                        <option value="threemonth">季度</option>
+                        <option value="fourmonth">四个月</option>
+                        <option value="halfyear">半年</option>
+                        <option value="year">年</option>
+                        <option value="twoyear">两年</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top">优先级<span class="required">*</span></label>
+                <label class="col-sm-3 control-label no-padding-top">计划描述<span class="required">*</span></label>
                 <div class="col-sm-9">
-                    <select id="priority" name="priority" form="maintenanceform">
-                        <option value="1" selected="selected">一般</option>
-                        <option value="2">重要</option>
-                        <option value="3">紧急</option>
-                    </select>
+                    <input type="text" name="createcontent" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-top">备注</label>
+                <div class="col-sm-9">
+                    <input type="text" name="memo" value="" />
+                </div>
+            </div>
+            <div class="form-group" style="display:none">
+                <label class="col-sm-3 control-label no-padding-top">id</label>
+                <div class="col-sm-9">
+                    <input type="text" name="id" value="" />
                 </div>
             </div>
             <div class="clearfix form-actions">
@@ -161,8 +171,8 @@
             if(title.length < 1 || title.length > 40) {
                 $("[name='title']").select();
                 $.gritter.add({
-                title: '添加维修任务失败！',
-                text: '维修标题长度为1-40个字符！',
+                title: '添加保养计划失败！',
+                text: '保养标题长度为1-40个字符！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;
@@ -176,7 +186,7 @@
             if(correctb == 0) {
                 $("[name='brief']").select();
                 $.gritter.add({
-                title: '添加维修任务失败！',
+                title: '添加保养计划失败！',
                 text: '请输入正确的设备编号！',
                 class_name: 'gritter-error gritter-center'
                 });
@@ -186,17 +196,17 @@
             if(createcontent.length < 1 || createcontent.length > 80) {
                 $("[name='createcontent']").select();
                 $.gritter.add({
-                title: '添加维修任务失败！',
-                text: '故障描述长度为1-80个字符！',
+                title: '添加保养计划失败！',
+                text: '计划描述长度为1-80个字符！',
                 class_name: 'gritter-error gritter-center'
                 });
                 return false;
             }
-            if(memo.length < 1 || memo.length > 80) {
+            if(memo.length > 80) {
                 $("[name='memo']").select();
                 $.gritter.add({
-                    title: '添加维修任务失败！',
-                    text: '报修人长度为1-80个字符！',
+                    title: '添加保养计划失败！',
+                    text: '备注长度为0-80个字符！',
                     class_name: 'gritter-error gritter-center'
                 });
                 return false;
