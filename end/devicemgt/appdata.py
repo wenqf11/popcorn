@@ -323,9 +323,11 @@ def app_form(request, para, user):
                 _f.new_content[c['name']] = _tmp_content
             #_f.new_content.append(_tmp_item)
         #print _f.new_content
+        
     response = {
         'status': 'ok',
-        'data': [{'id': _f.id, 'name': _f.brief, 'content': json.dumps(_f.new_content)} for _f in forms]
+        'data': [{'id': _f.id, 'name': k_device.objects.filter(brief=_f.brief)[0].name if len(k_device.objects.filter(brief=_f.brief))>0 else "",
+         'brief': _f.brief, 'content': json.dumps(_f.new_content)} for _f in forms]
     }
     return HttpResponse(json.dumps(response))
 
