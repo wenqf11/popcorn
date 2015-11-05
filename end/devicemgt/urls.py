@@ -186,6 +186,7 @@ urlpatterns = patterns(
     url(r'^meter/$', meter),
     url(r'^meter_device/$', meter_device),
     url(r'^meter_date/$', meter_date),
+    url(r'^meter_export/$', meter_export),
 
     url(r'^score/$', score),
     url(r'^score/submit/$', score_submit),

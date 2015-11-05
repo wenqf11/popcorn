@@ -4803,7 +4803,6 @@ def receive_bonus(request, bonus_record_id=""):
         return HttpResponse("error")
 
 
-
 def meter(request):
     if request.method == 'GET':
         user = k_user.objects.get(username=request.user.username)
@@ -4849,15 +4848,17 @@ def meter_device(request):
 
 
 def meter_date(request):
-    date_string = request.GET.get('date')
-    _date = datetime.strptime(date_string, '%Y-%m-%d').date()
+    date_string_start = request.GET.get('date_start')
+    date_string_end = request.GET.get('date_end')
+    date_start = datetime.strptime(date_string_start, '%Y-%m-%d').date()
+    date_end = datetime.strptime(date_string_end, '%Y-%m-%d').date()
 
     user = k_user.objects.get(username=request.user.username)
 
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
 
-    meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)), classid__in=result)
+    meters = k_meter.objects.filter(metertime__range=(date_start, date_end + timedelta(days=1)), classid__in=result)
     data = []
     for m in meters:
         d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
@@ -4878,6 +4879,16 @@ def meter_date(request):
         'username':user.username,
         'useravatar': user.avatar
     })
+
+
+def meter_export(request):
+    user = k_user.objects.get(username=request.user.username)
+    server_msg = request.GET.get("msg")
+    if server_msg:
+        server_msg = ""
+
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar,'server_msg': server_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'meter_export.html', variables)
 
 
 @login_required
