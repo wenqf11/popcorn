@@ -722,6 +722,7 @@
 	- access_token，`string`，用户认证用的token
 	- **device_brief**，`int`，设备简称
 	- **title**，`string`，报修标题
+	- **image**， `File`， 图片
 	- **description**，`string`，情况描述
 	- **memo**，`string`，备注
 	- timestamp，`int`，时间戳，暂时没有用
