@@ -34,13 +34,13 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
                                 {% if useravatar %}
                                     {% if MEDIA_URL %}
-								        <img class="nav-user-photo" src="{{ MEDIA_URL }}{{ useravatar }}" alt="头像" width ="32" height="32"/>
+								        <img class="nav-user-photo" src="{{ MEDIA_URL }}/user_avatar/{{ useravatar }}" alt="头像" width ="32" height="32"/>
                                     {% else %}
                                         <img class="nav-user-photo" src="/static/images/user_avatar/{{ useravatar }}" alt="头像" width ="32" height="32"/>
                                     {% endif %}
 								{% else %}
                                     {% if MEDIA_URL %}
-								        <img class="nav-user-photo" src="{{ MEDIA_URL }}default-user.png" alt="头像" width ="32" height="32"/>
+								        <img class="nav-user-photo" src="{{ MEDIA_URL }}/user_avatar/default-user.png" alt="头像" width ="32" height="32"/>
                                     {% else %}
                                         <img class="nav-user-photo" src="/static/images/user_avatar/default-user.png" alt="头像" width ="32" height="32"/>
                                     {% endif %}
@@ -291,6 +291,17 @@
 								<a href="/view_upkeeped">
 									<i class="menu-icon fa fa-caret-right"></i>
 									保养记录
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							{% endif %}
+
+							{% if "添加保养计划" in modelsshow %}
+							<li id="f_add_maintenance" class="">
+								<a href="/add_deviceplan">
+									<i class="menu-icon fa fa-caret-right"></i>
+									添加保养计划
 								</a>
 
 								<b class="arrow"></b>

@@ -130,6 +130,7 @@ urlpatterns = patterns(
     url(r'^view_deviceplan/$', view_deviceplan),
     url(r'^submit_deviceplan/$', submit_deviceplan),
     url(r'^delete_deviceplan/$', delete_deviceplan),
+    url(r'^add_deviceplan/$', add_deviceplan),
 
     url(r'^view_maintaining/$', view_maintaining),
     url(r'^view_maintained/$', view_maintained),
@@ -185,6 +186,7 @@ urlpatterns = patterns(
     url(r'^meter/$', meter),
     url(r'^meter_device/$', meter_device),
     url(r'^meter_date/$', meter_date),
+    url(r'^meter_export/$', meter_export),
 
     url(r'^score/$', score),
     url(r'^score/submit/$', score_submit),

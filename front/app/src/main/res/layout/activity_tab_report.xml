@@ -173,12 +173,12 @@
                     android:textSize="12sp"
                     android:text="拍照上传"/>
 
-                <Button
+                <!--<Button
                     android:id="@+id/tab_report_browse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:text="本地上传"/>
+                    android:text="本地上传"/>-->
             </LinearLayout>
         </LinearLayout>
     </TableRow>

@@ -76,53 +76,57 @@ public class RepairActivity extends Activity {
         String note = repairResultEditText.getText().toString();
         updatedNote = note;
 
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("username", Config.DEBUG_USERNAME);
-        params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
-        params.addBodyParameter("maintain_id", id);
-        params.addBodyParameter("note", note);
-        progressDialog.show();
 
-        HttpUtils http = new HttpUtils();
-        http.send(HttpRequest.HttpMethod.POST,
-                Config.REPAIR_TASK_UPDATE_URL,
-                params,
-                new RequestCallBack<String>() {
+        if(note.length() <  2){
+            Toast.makeText(getApplicationContext(), "维修结论太短，暂存失败！", Toast.LENGTH_SHORT).show();
+        }else {
+            RequestParams params = new RequestParams();
+            params.addBodyParameter("username", Config.DEBUG_USERNAME);
+            params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
+            params.addBodyParameter("maintain_id", id);
+            params.addBodyParameter("note", note);
+            progressDialog.show();
 
-                    @Override
-                    public void onStart() {
-                    }
+            HttpUtils http = new HttpUtils();
+            http.send(HttpRequest.HttpMethod.POST,
+                    Config.REPAIR_TASK_UPDATE_URL,
+                    params,
+                    new RequestCallBack<String>() {
 
-                    @Override
-                    public void onLoading(long total, long current, boolean isUploading) {
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-
-                        try{
-                            JSONObject jsonObject = new JSONObject(responseInfo.result);
-                            String status = jsonObject.getString("status");
-                            if(status.equals("ok")) {
-                                Toast.makeText(getApplicationContext(), "暂存成功", Toast.LENGTH_SHORT).show();
-                                isUpdated = true;
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(), "暂存失败，请重新提交", Toast.LENGTH_SHORT).show();
-                            }
-                        }catch (JSONException e){
-                            e.printStackTrace();
+                        @Override
+                        public void onStart() {
                         }
-                        progressDialog.hide();
-                    }
+
+                        @Override
+                        public void onLoading(long total, long current, boolean isUploading) {
+                        }
+
+                        @Override
+                        public void onSuccess(ResponseInfo<String> responseInfo) {
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseInfo.result);
+                                String status = jsonObject.getString("status");
+                                if (status.equals("ok")) {
+                                    Toast.makeText(getApplicationContext(), "暂存成功", Toast.LENGTH_SHORT).show();
+                                    isUpdated = true;
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "暂存失败，请重新提交", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            progressDialog.hide();
+                        }
 
 
-                    @Override
-                    public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
-                        progressDialog.hide();
-                    }
-                });
+                        @Override
+                        public void onFailure(HttpException error, String msg) {
+                            Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                            progressDialog.hide();
+                        }
+                    });
+        }
     }
 
     @ViewInject(R.id.repair_submit)
@@ -131,15 +135,19 @@ public class RepairActivity extends Activity {
     @OnClick(R.id.repair_submit)
     private void submitRepairButtonClick(View v) {
         if (repairSubmitButton.getText().equals("提交")) {
-            new AlertDialog.Builder(RepairActivity.this)
-                    .setTitle("提示")
-                    .setMessage("提交后内容将无法修改，是否确定提交？")
-                    .setNegativeButton("确定",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialoginterface, int i) {
-                                    submitData();
-                                }
-                            }).setPositiveButton("取消", null).show();
+            if(repairResultEditText.getText().toString().length() <  2){
+                Toast.makeText(getApplicationContext(), "维修结论太短，提交失败！", Toast.LENGTH_SHORT).show();
+            }else {
+                new AlertDialog.Builder(RepairActivity.this)
+                        .setTitle("提示")
+                        .setMessage("提交后内容将无法修改，是否确定提交？")
+                        .setNegativeButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialoginterface, int i) {
+                                        submitData();
+                                    }
+                                }).setPositiveButton("取消", null).show();
+            }
         }else{
             acceptTask();
         }

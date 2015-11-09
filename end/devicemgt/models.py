@@ -167,7 +167,7 @@ class k_user(models.Model):
     face = models.CharField(max_length=50)
 
     def content_file_name(instance, filename):
-        image_name = '{0}'.format(instance.username) + '.' + filename.split('.')[-1]
+        image_name = 'user_avatar/{0}'.format(instance.username) + '.' + filename.split('.')[-1]
         fullname = os.path.join(settings.MEDIA_ROOT, image_name)
         if os.path.exists(fullname):
             os.remove(fullname)
@@ -381,17 +381,17 @@ class k_maintenance(models.Model):
         ('2', '重要'),
         ('3', '紧急'),
     )
-    classid = models.ForeignKey(k_class, related_name='maintenance_set',blank=True, null=True, on_delete=models.SET_NULL)
-    deviceid = models.ForeignKey(k_device, related_name='maintenance_set',blank=True, null=True, on_delete=models.SET_NULL)
+    classid = models.ForeignKey(k_class, related_name='maintenance_set', blank=True, null=True, on_delete=models.SET_NULL)
+    deviceid = models.ForeignKey(k_device, related_name='maintenance_set', blank=True, null=True, on_delete=models.SET_NULL)
     state = models.CharField(max_length=1, choices=MAINTENANCE_STATUS, default='1')
     title = models.CharField(max_length=50)
     createcontent = models.CharField(max_length=200)
 
     def content_file_name(instance, filename):
-        return '../static/maintenance_image/{0}_{1}'.format(
+        return 'maintenance_image/{0}_{1}'.format(
             datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
-            filename
-        )
+            instance.creatorid
+        ) + '.' + filename.split('.')[-1]
     image = models.FileField(upload_to=content_file_name)
 
     editcontent = models.CharField(max_length=200)

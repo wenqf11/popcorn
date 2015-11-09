@@ -47,7 +47,7 @@ purviewhash = {
     26: ["库存","所有工具信息","添加工具信息","编辑工具信息"],#ok
     27: ["库存","所有工具信息","删除工具信息","审核工具信息"],#ok
     28: ["保养","维修保养","尚未保养","保养记录","设备管理","所有设备","保养计划"],#ok
-    29: ["保养","设备管理","所有设备","保养计划","添加保养","编辑保养"],#ok
+    29: ["保养","设备管理","所有设备","保养计划","添加保养","编辑保养","添加保养计划"],#ok
     30: ["保养","维修保养","保养记录","设备管理","所有设备","保养计划","删除保养","审核保养"],#ok
     31: ["维修","维修保养","尚未维修","维修记录"],#ok
     32: ["维修","维修保养","尚未维修","指派维修"],#ok
@@ -2027,8 +2027,42 @@ def view_deviceplan(request):
 
 
 @login_required
+def add_deviceplan(request):
+    #权限判断
+    # _msg = check_purview(request.user.username, 33)
+    # if _msg != 0:
+    #     return HttpResponseRedirect('/?msg='+_msg)
+    
+    #分类筛选
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+    _users = k_user.objects.filter(classid__in=result)
+    _maintainers = []
+    for _user in _users:
+        _maintainers.append(_user.name)
+    _devices = k_device.objects.filter(classid__in=result)
+    _briefs = []
+    for _device in _devices:
+        _briefs.append(_device.brief)
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return get_purviews_and_render_to_response(request.user.username, 'deviceplanadd.html', {'maintainers': _maintainers, 'briefs': _briefs,
+                                                                                              'purview_msg': purview_msg,
+                                                                                              'username':user.username,
+                                                                                              'useravatar': user.avatar})
+
+@login_required
 def submit_deviceplan(request):
     _deviceid = request.GET.get('deviceid')
+    if _deviceid == None:
+        _brief = request.GET.get('brief')
+        _device = k_device.objects.get(brief=_brief)
+        _deviceid = str(_device.id)
     #权限判断
     # _msg = check_purview(request.user.username, 29)
     # if _msg != 0:
@@ -2116,6 +2150,10 @@ def view_maintaining(request):
             _creator = k_user.objects.get(id=_maintaining.creatorid).name
         except ObjectDoesNotExist:
             _creator = '该用户已被删除'
+        memo = _maintaining.memo
+        if _maintaining.creatorid == 0:
+            _creator = _maintaining.memo
+            memo = ""
         
         if _maintaining.image:
             _imageurl = _maintaining.image.url
@@ -2133,7 +2171,7 @@ def view_maintaining(request):
                 'creator': _creator,
                 'createdatetime': _maintaining.createdatetime,
                 'createcontent': _maintaining.createcontent,
-                'memo': _maintaining.memo,
+                'memo': memo,
                 'priority': _maintaining.get_priority_display(),
                 'state': _maintaining.state
             })
@@ -2160,7 +2198,7 @@ def view_maintaining(request):
                 'assigndatetime': _maintaining.assigndatetime,
                 'editor': _editor,
                 'createcontent': _maintaining.createcontent,
-                'memo': _maintaining.memo,
+                'memo': memo,
                 'priority': _maintaining.get_priority_display(),
                 'state': _maintaining.state
             })
@@ -2211,6 +2249,10 @@ def view_maintained(request):
             _creator = k_user.objects.get(id=_maintained.creatorid).name
         except ObjectDoesNotExist:
             _creator = '该用户已被删除'
+        memo = _maintained.memo
+        if _maintained.creatorid == 0:
+            _creator = _maintained.memo
+            memo = ""
         try:
             _assignor = k_user.objects.get(id=_maintained.assignorid).name
         except ObjectDoesNotExist:
@@ -2239,7 +2281,7 @@ def view_maintained(request):
                 'editor': _editor,
                 'editdatetime': _maintained.editdatetime,
                 'createcontent': _maintained.createcontent,
-                'memo': _maintained.memo,
+                'memo': memo,
                 'priority': _maintained.get_priority_display(),
                 'editcontent': _maintained.editcontent,
                 'state': _maintained.state
@@ -2264,7 +2306,7 @@ def view_maintained(request):
                 'editor': _editor,
                 'editdatetime': _maintained.editdatetime,
                 'createcontent': _maintained.createcontent,
-                'memo': _maintained.memo,
+                'memo': memo,
                 'priority': _maintained.get_priority_display(),
                 'editcontent': _maintained.editcontent,
                 'auditor': _auditor,
@@ -2412,7 +2454,7 @@ def submit_maintenance(request):
             createcontent=_createcontent,
             priority=_priority,
             memo=_memo,
-            creatorid=_user.id,
+            creatorid=0,
             createdatetime=get_current_date(),
             state=1,
             mtype=2
@@ -3260,9 +3302,9 @@ def delete_spare(request):
         _spare = k_spare.objects.get(id=_id)
         _sparebills = k_sparebill.objects.filter(spareid=_spare)
         _sparecounts = k_sparecount.objects.filter(spareid=_spare)
-        _spare.delete()
         _sparebills.delete()
         _sparecounts.delete()
+        _spare.delete()
     return HttpResponseRedirect('/view_spare')
 
 
@@ -3308,8 +3350,10 @@ def view_sparebill(request):
             _creator = k_user.objects.get(id=_sparebill.creatorid).name
         except ObjectDoesNotExist:
             _creator = '该用户已被删除'
-        
-        _spare = k_spare.objects.get(id=_sparebill.spareid_id)
+        try:
+            _spare = k_spare.objects.get(id=_sparebill.spareid_id)
+        except ObjectDoesNotExist:
+            continue
         dataitem['id'] = _sparebill.id
         dataitem['brief'] = _spare.brief
         dataitem['using'] = _sparebill.using
@@ -3500,7 +3544,10 @@ def view_sparecount(request):
         except ObjectDoesNotExist:
             _creator = '该用户已被删除'
         
-        _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+        try:
+            _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+        except ObjectDoesNotExist:
+            continue
         dataitem['id'] = _sparecount.id
         dataitem['sparebillid'] = _sparecount.sparebillid
         dataitem['brief'] = _spare.brief
@@ -3907,9 +3954,9 @@ def delete_tool(request):
         _tool = k_tool.objects.get(id=_id)
         _tooluses = k_tooluse.objects.filter(toolid=_tool)
         _toolcounts = k_toolcount.objects.filter(toolid=_tool)
-        _tool.delete()
         _tooluses.delete()
         _toolcounts.delete()
+        _tool.delete()
     return HttpResponseRedirect('/view_tool')
 
 
@@ -3934,7 +3981,10 @@ def view_tooluse(request):
         except ObjectDoesNotExist:
             _creator = '该用户已被删除'
         
-        _tool = k_tool.objects.get(id=_tooluse.toolid_id)
+        try:
+            _tool = k_tool.objects.get(id=_tooluse.toolid_id)
+        except ObjectDoesNotExist:
+            continue
         dataitem['id'] = _tooluse.id
         dataitem['brief'] = _tool.brief
         dataitem['using'] = _tooluse.using
@@ -4125,7 +4175,10 @@ def view_toolcount(request):
         except ObjectDoesNotExist:
             _creator = '该用户已被删除'
         
-        _tool = k_tool.objects.get(id=_toolcount.toolid_id)
+        try:
+            _tool = k_tool.objects.get(id=_toolcount.toolid_id)
+        except ObjectDoesNotExist:
+            continue
         dataitem['id'] = _toolcount.id
         dataitem['tooluseid'] = _toolcount.tooluseid
         dataitem['brief'] = _tool.brief
@@ -4750,7 +4803,6 @@ def receive_bonus(request, bonus_record_id=""):
         return HttpResponse("error")
 
 
-
 def meter(request):
     if request.method == 'GET':
         user = k_user.objects.get(username=request.user.username)
@@ -4796,15 +4848,17 @@ def meter_device(request):
 
 
 def meter_date(request):
-    date_string = request.GET.get('date')
-    _date = datetime.strptime(date_string, '%Y-%m-%d').date()
+    date_string_start = request.GET.get('date_start')
+    date_string_end = request.GET.get('date_end')
+    date_start = datetime.strptime(date_string_start, '%Y-%m-%d').date()
+    date_end = datetime.strptime(date_string_end, '%Y-%m-%d').date()
 
     user = k_user.objects.get(username=request.user.username)
 
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
 
-    meters = k_meter.objects.filter(metertime__range=(_date, _date + timedelta(days=1)), classid__in=result)
+    meters = k_meter.objects.filter(metertime__range=(date_start, date_end + timedelta(days=1)), classid__in=result)
     data = []
     for m in meters:
         d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
@@ -4825,6 +4879,16 @@ def meter_date(request):
         'username':user.username,
         'useravatar': user.avatar
     })
+
+
+def meter_export(request):
+    user = k_user.objects.get(username=request.user.username)
+    server_msg = request.GET.get("msg")
+    if server_msg:
+        server_msg = ""
+
+    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar,'server_msg': server_msg})
+    return get_purviews_and_render_to_response(request.user.username, 'meter_export.html', variables)
 
 
 @login_required

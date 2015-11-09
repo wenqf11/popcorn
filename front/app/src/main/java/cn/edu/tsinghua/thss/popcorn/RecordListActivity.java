@@ -51,7 +51,7 @@ import hirondelle.date4j.DateTime;
 public class RecordListActivity extends Activity {
 
     ProgressDialog progressDialog;
-    private String[] mBrief, mFormContent, mFormId;
+    private String[] mBrief, mName, mFormContent, mFormId;
     private TableListAdapter mAdapter;
     private String mRouteId;
     private static int REQUEST_CODE = 2, ONE_SUBMIT_FINISHED = 3;
@@ -144,21 +144,25 @@ public class RecordListActivity extends Activity {
                         try {
                             JSONObject jsonObject = new JSONObject(responseInfo.result);
                             String status = jsonObject.getString("status");
-                            ArrayList<String> tmp_title = new ArrayList<String>();
+                            ArrayList<String> tmp_brief = new ArrayList<String>();
+                            ArrayList<String> tmp_name = new ArrayList<String>();
                             ArrayList<String> tmp_form_content = new ArrayList<String>();
                             ArrayList<String> tmp_id = new ArrayList<String>();
                             if (status.equals("ok")) {
                                 JSONArray results = jsonObject.getJSONArray("data");
                                 for (int i = 0; i < results.length(); ++i) {
                                     JSONObject result = results.getJSONObject(i);
+                                    String brief = result.getString("brief");
                                     String name = result.getString("name");
                                     String form_content = result.getString("content");
                                     String id = result.getString("id");
-                                    tmp_title.add(name);
+                                    tmp_brief.add(brief);
+                                    tmp_name.add(name);
                                     tmp_form_content.add(form_content);
                                     tmp_id.add(id);
                                 }
-                                mBrief = tmp_title.toArray(new String[]{});
+                                mBrief = tmp_brief.toArray(new String[]{});
+                                mName = tmp_name.toArray(new String[]{});
                                 mFormContent = tmp_form_content.toArray(new String[]{});
                                 mFormId = tmp_id.toArray(new String[]{});
                                 myListView.setAdapter(mAdapter);
@@ -313,7 +317,8 @@ public class RecordListActivity extends Activity {
     };
 
     class ViewHolder {
-        public TextView title;
+        public TextView brief;
+        public TextView name;
         public FontAwesomeText faText;
     }
 
@@ -350,14 +355,16 @@ public class RecordListActivity extends Activity {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = mInflater.inflate(R.layout.listview_record, null);
-                holder.title = (TextView) convertView.findViewById(R.id.title);
+                holder.brief = (TextView) convertView.findViewById(R.id.brief);
+                holder.name = (TextView) convertView.findViewById(R.id.name);
                 holder.faText = (FontAwesomeText) convertView.findViewById(R.id.front_icon);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.title.setText(mBrief[position]);
+            holder.brief.setText(mBrief[position]);
+            holder.name.setText(mName[position]);
 
             SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
             if(!sp.getString("route_" + mRouteId +"_form_" + mFormId[position], "").equals("")) {

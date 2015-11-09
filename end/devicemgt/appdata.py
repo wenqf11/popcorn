@@ -323,9 +323,11 @@ def app_form(request, para, user):
                 _f.new_content[c['name']] = _tmp_content
             #_f.new_content.append(_tmp_item)
         #print _f.new_content
+        
     response = {
         'status': 'ok',
-        'data': [{'id': _f.id, 'name': _f.brief, 'content': json.dumps(_f.new_content)} for _f in forms]
+        'data': [{'id': _f.id, 'name': k_device.objects.filter(brief=_f.brief)[0].name if len(k_device.objects.filter(brief=_f.brief))>0 else "",
+         'brief': _f.brief, 'content': json.dumps(_f.new_content)} for _f in forms]
     }
     return HttpResponse(json.dumps(response))
 
@@ -500,10 +502,10 @@ def app_maintain_list_2(request, para, user):
 @token_required
 def app_maintain_add(request, para, user):
     para['device_brief'] = request.POST.get('device_brief')
-    para['title'] = request.POST.get('title')
-    para['description'] = request.POST.get('description')
-    # para['image'] = request.POST.get('image')
-    para['memo'] = request.POST.get('memo')
+    para['title'] = request.POST.get('title', '')
+    para['description'] = request.POST.get('description', '')
+    para['image'] = request.FILES.get('image')  # 报修图片
+    para['memo'] = request.POST.get('memo', '')
 
     task = k_maintenance()
 
@@ -519,7 +521,7 @@ def app_maintain_add(request, para, user):
     task.state = '1'
     task.title = para['title']
     task.createcontent = para['description']
-    # task.image = para['image']
+    task.image = para['image']  # 报修图片
     task.classid = user.classid
     task.memo = para['memo']
     task.mtype = '2'

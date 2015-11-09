@@ -66,12 +66,13 @@ public class ReportFragment extends Fragment {
     String file_path = file_str + "/willwings/photos";
     File mars_file = new File(file_path);
     File file_go = new File(file_path+"/origin.jpg");
+    File imageFile = null;
 
     @ViewInject(R.id.tab_report_camera)
     private Button cameraButton;
 
-    @ViewInject(R.id.tab_report_browse)
-    private Button browseButton;
+    //@ViewInject(R.id.tab_report_browse)
+  //  private Button browseButton;
 
     @ViewInject(R.id.tab_report_submit_btn)
     private Button submitButton;
@@ -113,12 +114,15 @@ public class ReportFragment extends Fragment {
                     .show();
             return ;
         }
-
+        imageFile = new File(Config.REPORT_FILE_PATH);
         RequestParams params = new RequestParams();
         params.addBodyParameter("username", Config.DEBUG_USERNAME);
         params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
         params.addBodyParameter("device_brief", deviceBrief);
         params.addBodyParameter("title", reportTitle);
+        if(imageFile.exists()) {
+            params.addBodyParameter("image", imageFile);
+        }
         params.addBodyParameter("description", faultDescription);
         params.addBodyParameter("memo", reportMemo);
 
@@ -142,66 +146,15 @@ public class ReportFragment extends Fragment {
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
                         progressDialog.hide();
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(responseInfo.result);
-                            String status = jsonObject.getString("status");
-
-
-                            if (status.equals("ok")) {
-                                String repairTaskId = jsonObject.getString("data");
-                                if(image_view.getDrawable() != null){
-                                    RequestParams params = new RequestParams();
-                                    params.addBodyParameter("username", Config.DEBUG_USERNAME);
-                                    params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
-                                    params.addBodyParameter("id", repairTaskId);
-                                    params.addBodyParameter("image", new File(Config.REPORT_FILE_PATH));
-
-                                    HttpUtils http = new HttpUtils();
-                                    http.send(HttpRequest.HttpMethod.POST,
-                                            Config.SUBMIT_REPORT_IMAGE_URL,
-                                            params,
-                                            new RequestCallBack<String>() {
-
-                                                @Override
-                                                public void onStart() {
-                                                }
-
-                                                @Override
-                                                public void onLoading(long total, long current, boolean isUploading) {
-
-                                                }
-
-                                                @Override
-                                                public void onSuccess(ResponseInfo<String> responseInfo) {
-                                                    Toast.makeText(getActivity().getApplicationContext(), "报修成功", Toast.LENGTH_SHORT).show();
-                                                    reportTitleText.setText("");
-                                                    deviceBriefText.setText("");
-                                                    faultDescriptionText.setText("");
-                                                    reportMemoText.setText("");
-                                                    image_view.setImageBitmap(null);
-                                                }
-
-                                                @Override
-                                                public void onFailure(HttpException error, String msg) {
-                                                }
-                                            }
-                                    );
-                                }else{
-                                    Toast.makeText(getActivity().getApplicationContext(), "报修成功", Toast.LENGTH_SHORT).show();
-                                    reportTitleText.setText("");
-                                    deviceBriefText.setText("");
-                                    faultDescriptionText.setText("");
-                                    reportMemoText.setText("");
-                                }
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "数据提交失败，请重试", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        Toast.makeText(getActivity().getApplicationContext(), "报修成功", Toast.LENGTH_SHORT).show();
+                        reportTitleText.setText("");
+                        deviceBriefText.setText("");
+                        faultDescriptionText.setText("");
+                        reportMemoText.setText("");
+                        image_view.setImageResource(android.R.color.transparent);
+                        if (imageFile.exists()){
+                            imageFile.delete();
                         }
-
                     }
 
                     @Override
@@ -230,13 +183,13 @@ public class ReportFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.tab_report_browse)
+   /* @OnClick(R.id.tab_report_browse)
     private void browseButtonClick(View v){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, BROWSE);
-    }
+    }*/
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){

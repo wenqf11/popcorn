@@ -524,7 +524,8 @@
 			data: [
 				{
 					id: 12,
-					name: "kt094732",
+					name: "螺杆式风冷冷水机组",
+					brief: "kt094732",
 					content: [
 						"冷供水温度  ℃": {
 					        type": "integer",
@@ -543,7 +544,8 @@
 				},
 				{
 					id: 32,
-					name: "ms383831",
+					name: "冷冻水泵",
+					brief: "ms383831",
 					content: [
 						"水位": {
 					        type: "integer",
@@ -720,6 +722,7 @@
 	- access_token，`string`，用户认证用的token
 	- **device_brief**，`int`，设备简称
 	- **title**，`string`，报修标题
+	- **image**， `File`， 图片
 	- **description**，`string`，情况描述
 	- **memo**，`string`，备注
 	- timestamp，`int`，时间戳，暂时没有用
