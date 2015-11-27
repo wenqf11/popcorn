@@ -2120,7 +2120,9 @@ def delete_deviceplan(request):
     
     if _id:
         _deviceplan = k_deviceplan.objects.get(id=_id)
+        _maintenance = k_maintenance.objects.filter(id=_deviceplan.maintenanceid_id)
         _deviceplan.delete()
+        _maintenance.delete()
     return HttpResponseRedirect('/view_deviceplan/?id='+_deviceid)
 
 
@@ -2510,6 +2512,11 @@ def view_upkeeping(request):
     data = []
     for _maintaining in _maintainings:
         _device = _maintaining.deviceid
+        _db = _dn = _dp = "该设备已被删除"
+        if _device != None:
+            _db = _device.brief
+            _dn = _device.name
+            _dp = _device.position
         try:
             _assignor = k_user.objects.get(id=_maintaining.assignorid).name
         except ObjectDoesNotExist:
@@ -2522,9 +2529,9 @@ def view_upkeeping(request):
             'id': _maintaining.id,
             'classname': _maintaining.classid.name,
             'title': _maintaining.title,
-            'brief': _device.brief,
-            'name': _device.name,
-            'position': _device.position,
+            'brief': _db,
+            'name': _dn,
+            'position': _dp,
             'assignor': _assignor,
             'assigndatetime': _maintaining.assigndatetime,
             #
@@ -2571,6 +2578,11 @@ def view_upkeeped(request):
     data = []
     for _maintained in _maintaineds:
         _device = _maintained.deviceid
+        _db = _dn = _dp = "该设备已被删除"
+        if _device != None:
+            _db = _device.brief
+            _dn = _device.name
+            _dp = _device.position
         #_creator = k_user.objects.get(id=_maintained.creatorid)
         try:
             _assignor = k_user.objects.get(id=_maintained.assignorid).name
@@ -2585,9 +2597,9 @@ def view_upkeeped(request):
                 'id': _maintained.id,
                 'classname': _maintained.classid.name,
                 'title': _maintained.title,
-                'brief': _device.brief,
-                'name': _device.name,
-                'position': _device.position,
+                'brief': _db,
+                'name': _dn,
+                'position': _dp,
                 #'creator': _creator.name,
                 #'createdatetime': _maintained.createdatetime,
                 'assignor': _assignor,
@@ -2611,9 +2623,9 @@ def view_upkeeped(request):
                 'id': _maintained.id,
                 'classname': _maintained.classid.name,
                 'title': _maintained.title,
-                'brief': _device.brief,
-                'name': _device.name,
-                'position': _device.position,
+                'brief': _db,
+                'name': _dn,
+                'position': _dp,
                 #'creator': _creator.name,
                 #'createdatetime': _maintained.createdatetime,
                 'assignor': _assignor,
