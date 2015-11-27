@@ -218,7 +218,7 @@
                         <div class="col-sm-9">
                             <select class="chosen-select" id="brief2" name="brief" onchange="setMax()" form="countform" data-placeholder="请选择备件">
                                 {% for b in briefinfos %}
-                                <option value="{{ b.brief }}">{{ b.brief }}(合格: {{ b.eligiblestock }}, 不合格: {{ b.ineligiblestock }})</option>
+                                <option value="{{ b.brief }}">{{ b.sparename }}(简称:{{ b.brief }})(合格:{{ b.eligiblestock }}, 不合格:{{ b.ineligiblestock }})</option>
                                 {% endfor %}
                             </select>
                             <!--<input id="brief2" name="brief" form="countform" type="text" data-provide="typeahead" oninput="setIndex()">-->

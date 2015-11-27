@@ -3399,6 +3399,7 @@ def view_sparebill(request):
     for s in _spares:
         _spare = dict()
         _spare["brief"] = s.brief
+        _spare['sparename'] = s.name
         _spare["eligiblestock"] = s.eligiblestock
         _spare["ineligiblestock"] = s.ineligiblestock
         _briefinfos.append(_spare)
@@ -3598,6 +3599,7 @@ def view_sparecount(request):
     for s in _spares:
         _spare = dict()
         _spare["brief"] = s.brief
+        _spare['sparename'] = s.name
         _spare["eligiblestock"] = s.eligiblestock
         _spare["ineligiblestock"] = s.ineligiblestock
         _briefinfos.append(_spare)
@@ -4030,6 +4032,7 @@ def view_tooluse(request):
     for s in _tools:
         _tool = dict()
         _tool["brief"] = s.brief
+        _tool['toolname'] = s.name
         _tool["eligiblestock"] = s.eligiblestock
         _tool["ineligiblestock"] = s.ineligiblestock
         _briefinfos.append(_tool)
@@ -4229,6 +4232,7 @@ def view_toolcount(request):
     for s in _tools:
         _tool = dict()
         _tool["brief"] = s.brief
+        _tool['toolname'] = s.name
         _tool["eligiblestock"] = s.eligiblestock
         _tool["ineligiblestock"] = s.ineligiblestock
         _briefinfos.append(_tool)
