@@ -101,7 +101,7 @@
                             <th>维修时间</th>
                             <th>故障描述</th>
                             <th>优先级</th>
-                            <th>备注</th>
+                            <!--<th>备注</th>-->
                             <th>维修结论</th>
                             <th>审核人</th>
                             <th>审核时间</th>
@@ -126,7 +126,7 @@
                             <td>{{ dataitem.editdatetime | date:'Y-m-d'}}</td>
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.priority }}</td>
-                            <td>{{ dataitem.memo }}</td>
+                            <!--<td>{{ dataitem.memo }}</td>-->
                             <td>{{ dataitem.editcontent }}</td>
                             <td>{{ dataitem.auditor }}</td>
                             <td>{{ dataitem.auditdatetime | date:'Y-m-d'}}</td>
@@ -216,7 +216,7 @@
 
                 var factors = factor.getElementsByTagName("option");
                 var flength = factors.length;
-                var thefactor = dataline[17].innerHTML;
+                var thefactor = dataline[16].innerHTML;
                 factors[0].setAttribute("selected", "selected");
                 for(var i = 1; i < flength; i++) {
                     if(factors[i].value == thefactor) {
@@ -230,14 +230,33 @@
 
                 factor.parentNode.parentNode.nextSibling.nextSibling.childNodes[3].childNodes[1].value = this.parentNode.id;
             });
-            $(".fa-search").click(function() {
-                var imageurl = this.nextSibling.nextSibling.innerHTML;
-                var img = document.getElementById("maintenanceimg");
-                img.src = imageurl;
-                if(imageurl == "..") {
-                    alert("没有图片");
-                    return false;
-                }
+            reactivate = function(){
+                $(".fa-search").click(function() {
+                    var imageurl = this.nextSibling.nextSibling.innerHTML;
+                    var img = document.getElementById("maintenanceimg");
+                    img.src = imageurl;
+                    if(imageurl == "..") {
+                        alert("没有图片");
+                        return false;
+                    }
+                });
+            };
+            reactivate();
+            $('tr').click(function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('input[aria-controls="maintenance"]').bind('input', function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('select[aria-controls="maintenance"]').bind('change', function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('div.dataTables_paginate').click(function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
             });
         });
     </script>

@@ -268,51 +268,70 @@
         setIndex = function(){
         	$(".special-for-modal").css("z-index","9999");
         };
-        $(".fa-pencil").click(function() {
-            var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-            var state = document.getElementById("state");
-            var divs = state.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
+        reactivate = function(){
+            $(".fa-pencil").click(function() {
+                var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+                var state = document.getElementById("state");
+                var divs = state.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
-            divs[1].childNodes[3].childNodes[1].setAttribute("disabled", "");
-            $(divs[1].childNodes[3].childNodes[2]).addClass("chosen-disabled");
-            divs[1].childNodes[3].childNodes[4].setAttribute("disabled", "");
-            $(divs[1].childNodes[3].childNodes[2]).css("display", "none");
-            $(divs[1].childNodes[3].childNodes[4]).css("display", "");
-            divs[1].childNodes[3].childNodes[4].value = dataline[0].innerHTML;
+                divs[1].childNodes[3].childNodes[1].setAttribute("disabled", "");
+                $(divs[1].childNodes[3].childNodes[2]).addClass("chosen-disabled");
+                divs[1].childNodes[3].childNodes[4].setAttribute("disabled", "");
+                $(divs[1].childNodes[3].childNodes[2]).css("display", "none");
+                $(divs[1].childNodes[3].childNodes[4]).css("display", "");
+                divs[1].childNodes[3].childNodes[4].value = dataline[0].innerHTML;
 
-            var states = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
-            var plength = states.length;
-            var thestate = dataline[1].innerHTML;
-            for(var i = 0; i < plength; i++) {
-                if(states[i].innerHTML == thestate) {
-                    states[i].setAttribute("selected", "selected");
+                var states = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var plength = states.length;
+                var thestate = dataline[1].innerHTML;
+                for(var i = 0; i < plength; i++) {
+                    if(states[i].innerHTML == thestate) {
+                        states[i].setAttribute("selected", "selected");
+                    }
+                    else {
+                        states[i].removeAttribute("selected");
+                    }
                 }
-                else {
-                    states[i].removeAttribute("selected");
-                }
-            }
 
-            var iseligibles = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
-            var plength = iseligibles.length;
-            var theiseligible = dataline[2].innerHTML;
-            for(var i = 0; i < plength; i++) {
-                if(iseligibles[i].innerHTML == theiseligible) {
-                    iseligibles[i].setAttribute("selected", "selected");
+                var iseligibles = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
+                var plength = iseligibles.length;
+                var theiseligible = dataline[2].innerHTML;
+                for(var i = 0; i < plength; i++) {
+                    if(iseligibles[i].innerHTML == theiseligible) {
+                        iseligibles[i].setAttribute("selected", "selected");
+                    }
+                    else {
+                        iseligibles[i].removeAttribute("selected");
+                    }
                 }
-                else {
-                    iseligibles[i].removeAttribute("selected");
-                }
-            }
 
-            var count = parseInt(dataline[3].innerHTML);
-            if(count < 0)
-                count = -count;
-            divs[4].childNodes[3].childNodes[1].value = count;
-            divs[5].childNodes[3].childNodes[1].value = dataline[4].innerHTML;
+                var count = parseInt(dataline[3].innerHTML);
+                if(count < 0)
+                    count = -count;
+                divs[4].childNodes[3].childNodes[1].value = count;
+                divs[5].childNodes[3].childNodes[1].value = dataline[4].innerHTML;
 
-            divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
-            $(".countitemtitle").text("修改出入库记录");
-            $("[type='reset']").css("display", "none");
+                divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
+                $(".countitemtitle").text("修改出入库记录");
+                $("[type='reset']").css("display", "none");
+            });
+        };
+        reactivate();
+        $('tr').click(function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
+        });
+        $('input[aria-controls="count"]').bind('input', function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
+        });
+        $('select[aria-controls="count"]').bind('change', function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
+        });
+        $('div.dataTables_paginate').click(function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
         });
     });
     </script>

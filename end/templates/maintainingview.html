@@ -65,12 +65,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">备注</label>
                         <div class="col-sm-9">
                             <input type="text" name="memo" value="" />
                         </div>
-                    </div>
+                    </div>-->
                     <div class="form-group" style="display:none">
                         <label class="col-sm-3 control-label no-padding-top">id</label>
                         <div class="col-sm-9">
@@ -136,7 +136,7 @@
                             <th>维修人</th>
                             <th>故障描述</th>
                             <th>优先级</th>
-                            <th>备注</th>
+                            <!--<th>备注</th>-->
                             <th>状态</th>
                             <th></th>
                         </tr>
@@ -156,7 +156,7 @@
                             <td>{{ dataitem.editor }}</td>
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.priority }}</td>
-                            <td>{{ dataitem.memo }}</td>
+                            <!--<td>{{ dataitem.memo }}</td>-->
                             {% ifequal dataitem.state '1' %}
                             <td>未指派</td>
                             {% else %}
@@ -253,7 +253,7 @@
         function checkvalid() {
             var title = $("[name='title']").val();
             var createcontent = $("[name='createcontent']").val();
-            var memo = $("[name='memo']").val();
+            //var memo = $("[name='memo']").val();
             if(title.length < 1 || title.length > 40) {
                 $("[name='title']").select();
                 $.gritter.add({
@@ -272,15 +272,15 @@
                 });
                 return false;
             }
-            if(memo.length > 80) {
-                $("[name='memo']").select();
-                $.gritter.add({
-                    title: '修改维修计划失败！',
-                    text: '备注长度为0-80个字符！',
-                    class_name: 'gritter-error gritter-center'
-                });
-                return false;
-            }
+            //if(memo.length > 80) {
+            //    $("[name='memo']").select();
+            //    $.gritter.add({
+            //        title: '修改维修计划失败！',
+            //        text: '备注长度为0-80个字符！',
+            //        class_name: 'gritter-error gritter-center'
+            //    });
+            //    return false;
+            //}
             return true;
         }
         function delcfm() {
@@ -312,69 +312,90 @@
                 $('#maintenance_filter input').val($(this).html());
                 $('#maintenance_filter input').select();
             });
-            $(".fa-pencil").click(function() {
-                var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-                var editor = document.getElementById("editor");
-                var divs = editor.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
+            reactivate = function(){
+                $(".fa-pencil").click(function() {
+                    var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+                    var editor = document.getElementById("editor");
+                    var divs = editor.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
-                divs[1].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
-                var maintainers = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
-                var mlength = maintainers.length;
-                var themaintainer = dataline[9].innerHTML;
-                maintainers[0].setAttribute("selected", "selected");
-                var hasthemaintainer = false;
-                for(var i = 1; i < mlength - 1; i++) {
-                    if(maintainers[i].value == themaintainer) {
-                        maintainers[i].setAttribute("selected", "selected");
-                        maintainers[0].removeAttribute("selected");
+                    divs[1].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
+                    var maintainers = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
+                    var mlength = maintainers.length;
+                    var themaintainer = dataline[9].innerHTML;
+                    maintainers[0].setAttribute("selected", "selected");
+                    var hasthemaintainer = false;
+                    for(var i = 1; i < mlength - 1; i++) {
+                        if(maintainers[i].value == themaintainer) {
+                            maintainers[i].setAttribute("selected", "selected");
+                            maintainers[0].removeAttribute("selected");
+                            var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                            show.innerHTML = themaintainer;
+                            hasthemaintainer = true;
+                        }
+                        else {
+                            maintainers[i].removeAttribute("selected");
+                        }
+                    }
+                    if(hasthemaintainer == false) {
+                        maintainers[mlength - 1].setAttribute("selected", "selected");
+                        maintainers[mlength - 1].setAttribute("style", "");
+                        maintainers[mlength - 1].value = themaintainer;
+                        maintainers[mlength - 1].innerHTML = themaintainer;
                         var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
                         show.innerHTML = themaintainer;
-                        hasthemaintainer = true;
+                        $("#editor").trigger("chosen:updated");
                     }
                     else {
-                        maintainers[i].removeAttribute("selected");
+                        maintainers[mlength - 1].removeAttribute("selected", "selected");
+                        maintainers[mlength - 1].setAttribute("style", "display:none");
+                        $("#editor").trigger("chosen:updated");
                     }
-                }
-                if(hasthemaintainer == false) {
-                    maintainers[mlength - 1].setAttribute("selected", "selected");
-                    maintainers[mlength - 1].setAttribute("style", "");
-                    maintainers[mlength - 1].value = themaintainer;
-                    maintainers[mlength - 1].innerHTML = themaintainer;
-                    var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
-                    show.innerHTML = themaintainer;
-                    $("#editor").trigger("chosen:updated");
-                }
-                else {
-                    maintainers[mlength - 1].removeAttribute("selected", "selected");
-                    maintainers[mlength - 1].setAttribute("style", "display:none");
-                    $("#editor").trigger("chosen:updated");
-                }
 
-                divs[3].childNodes[3].childNodes[1].value = dataline[10].innerHTML;
+                    divs[3].childNodes[3].childNodes[1].value = dataline[10].innerHTML;
 
-                var priorities = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
-                var plength = priorities.length;
-                var thepriority = dataline[11].innerHTML;
-                for(var i = 0; i < plength; i++) {
-                    if(priorities[i].innerHTML == thepriority) {
-                        priorities[i].setAttribute("selected", "selected");
+                    var priorities = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
+                    var plength = priorities.length;
+                    var thepriority = dataline[11].innerHTML;
+                    for(var i = 0; i < plength; i++) {
+                        if(priorities[i].innerHTML == thepriority) {
+                            priorities[i].setAttribute("selected", "selected");
+                        }
+                        else {
+                            priorities[i].removeAttribute("selected");
+                        }
                     }
-                    else {
-                        priorities[i].removeAttribute("selected");
-                    }
-                }
-                divs[5].childNodes[3].childNodes[1].value = dataline[12].innerHTML;
+                    //divs[5].childNodes[3].childNodes[1].value = dataline[12].innerHTML;
 
-                divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
+                    divs[5].childNodes[3].childNodes[1].value = this.parentNode.id;
+                });
+                $(".fa-search").click(function(e) {
+                    var imageurl = this.nextSibling.nextSibling.innerHTML;
+                    var img = document.getElementById("maintenanceimg");
+                    img.src = imageurl;
+                    e.preventDefault();
+                    if(imageurl == "..") {
+                        alert("没有图片");
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            };
+            reactivate();
+            $('tr').click(function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
             });
-            $(".fa-search").click(function() {
-                var imageurl = this.nextSibling.nextSibling.innerHTML;
-                var img = document.getElementById("maintenanceimg");
-                img.src = imageurl;
-                if(imageurl == "..") {
-                    alert("没有图片");
-                    return false;
-                }
+            $('input[aria-controls="maintenance"]').bind('input', function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('select[aria-controls="maintenance"]').bind('change', function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('div.dataTables_paginate').click(function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
             });
         });
     </script>

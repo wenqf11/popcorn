@@ -2434,7 +2434,7 @@ def submit_maintenance(request):
         return HttpResponseRedirect('/view_maintained/')
     elif _id:
         _maintenance = k_maintenance.objects.get(id=_id)
-        if _editor != "nopersonchosen":
+        if _editor != "nopersonchosen" and _editor != "":
             if _editor != '该用户已被删除':
                 _maintainer = k_user.objects.get(name=_editor)
                 _maintenance.editorid = _maintainer.id
@@ -2448,7 +2448,7 @@ def submit_maintenance(request):
         _maintenance.title = _title
         _maintenance.createcontent = _createcontent
         _maintenance.priority = _priority
-        _maintenance.memo = _memo
+        #_maintenance.memo = _memo
     else:
         _maintenance = k_maintenance.objects.create(
             classid=_user.classid,
@@ -2461,10 +2461,10 @@ def submit_maintenance(request):
             state=1,
             mtype=2
         )
-        if _brief != 'nopersonchosen':
+        if _brief != 'nopersonchosen' and _brief != "":
             _device = k_device.objects.filter(brief=_brief)
             _maintenance.deviceid=_device[0]
-        if _editor != 'nopersonchosen':
+        if _editor != 'nopersonchosen' and _editor != "":
             _maintenance.assignorid = _user.id
             _maintenance.assigndatetime = get_current_date()
             _maintainer = k_user.objects.get(name=_editor)

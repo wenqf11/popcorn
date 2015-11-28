@@ -350,15 +350,34 @@
         setIndex = function(){
             $(".special-for-modal").css("z-index","9999");
         };
-        $(".fa-pencil").click(function() {
-            var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-            var brief = document.getElementById("brief");
-            var divs = brief.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
+        reactivate = function(){
+            $(".fa-pencil").click(function() {
+                var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+                var brief = document.getElementById("brief");
+                var divs = brief.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
-            for(var i = 0; i < 9; i++)
-                divs[i+1].childNodes[3].childNodes[1].value = dataline[i].innerHTML;
+                for(var i = 0; i < 9; i++)
+                    divs[i+1].childNodes[3].childNodes[1].value = dataline[i].innerHTML;
 
-            divs[10].childNodes[3].childNodes[1].value = this.parentNode.id;
+                divs[10].childNodes[3].childNodes[1].value = this.parentNode.id;
+            });
+        };
+        reactivate();
+        $('tr').click(function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
+        });
+        $('input[aria-controls="count"]').bind('input', function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
+        });
+        $('select[aria-controls="count"]').bind('change', function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
+        });
+        $('div.dataTables_paginate').click(function(e){
+            setTimeout("reactivate();", 100);
+            e.preventDefault();
         });
         setNotreturned = function(){
             var using = $("[name='using']").val();

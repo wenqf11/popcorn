@@ -195,25 +195,44 @@
                 $('#maintenance_filter input').val($(this).html());
                 $('#maintenance_filter input').select();
             });
-            $(".fa-check").click(function() {
-                var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
-                var factor = document.getElementById("factor");
+            reactivate = function(){
+                $(".fa-check").click(function() {
+                    var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+                    var factor = document.getElementById("factor");
 
-                var factors = factor.getElementsByTagName("option");
-                var flength = factors.length;
-                var thefactor = dataline[15].innerHTML;
-                factors[0].setAttribute("selected", "selected");
-                for(var i = 1; i < flength; i++) {
-                    if(factors[i].value == thefactor) {
-                        factors[i].setAttribute("selected", "selected");
-                        factors[0].removeAttribute("selected");
+                    var factors = factor.getElementsByTagName("option");
+                    var flength = factors.length;
+                    var thefactor = dataline[15].innerHTML;
+                    factors[0].setAttribute("selected", "selected");
+                    for(var i = 1; i < flength; i++) {
+                        if(factors[i].value == thefactor) {
+                            factors[i].setAttribute("selected", "selected");
+                            factors[0].removeAttribute("selected");
+                        }
+                        else {
+                            factors[i].removeAttribute("selected");
+                        }
                     }
-                    else {
-                        factors[i].removeAttribute("selected");
-                    }
-                }
 
-                factor.parentNode.parentNode.nextSibling.nextSibling.childNodes[3].childNodes[1].value = this.parentNode.id;
+                    factor.parentNode.parentNode.nextSibling.nextSibling.childNodes[3].childNodes[1].value = this.parentNode.id;
+                });
+            };
+            reactivate();
+            $('tr').click(function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('input[aria-controls="maintenance"]').bind('input', function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('select[aria-controls="maintenance"]').bind('change', function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
+            });
+            $('div.dataTables_paginate').click(function(e){
+                setTimeout("reactivate();", 100);
+                e.preventDefault();
             });
         });
     </script>
