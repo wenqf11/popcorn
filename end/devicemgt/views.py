@@ -380,6 +380,7 @@ def operate_user(request):
 def useradd(request):
     """ add new user
     """
+    login_user = k_user.objects.get(username=request.user.username)
     server_msg = ''
     cur_user_id = 0
     if request.method == 'POST':
@@ -408,11 +409,11 @@ def useradd(request):
                 memo=request.POST['memo'],
                 contact=request.POST['contact'],
                 contactmobile=request.POST['contactmobile'],
-                creatorid=0,
+                creatorid=login_user.id,
                 createdatetime=get_current_date(),
-                editorid=0,
+                editorid=login_user.id,
                 editdatetime=get_current_date(),
-                auditorid=0,
+                auditorid=login_user.id,
                 auditdatetime=get_current_date(),
                 status=0,
             )
@@ -578,10 +579,124 @@ def userbatch_add(request):
 @login_required
 def userbatch_submit(request):
     # 登陆成功
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    variables = RequestContext(request, {'username': user.username,  'useravatar': user.avatar})
-    return get_purviews_and_render_to_response(request.user.username, 'userbatchadd.html', variables)
+    variables = RequestContext(request, {'username': user.username})
+    if request.method == "POST":
+        raw_post_data = request.body
+        json_data = json.loads(raw_post_data)
+        success_num = 0
+        try:
+            for json_key in json_data:
+                obj_datas = json_data[json_key]
+                for obj_data in obj_datas:
+                    _username = obj_data['username']
+                    _name = obj_data['name']
+                    _classname = obj_data['classname']
+                    _classid = k_class.objects.get(name=_classname)
+                    _users = k_user.objects.filter(username=_username)
+                    if len(_users) > 0:
+                        _dev = _users[0]
+                        server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                        server_msg += _classname+'中'+_dev.name+'('+_dev.username+')的用户已存在！'
+                        return HttpResponse(json.dumps({
+                            "server_msg":server_msg
+                            }), content_type="application/json")
+
+                    _gender = 1
+                    if obj_data['gender'] == '女':
+                        _state = 0
+                    elif obj_data['gender'] == '男':
+                        _state = 1
+                    else:
+                        server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                        server_msg += '用户性别有误！'
+                        return HttpResponse(json.dumps({
+                            "server_msg":server_msg
+                            }), content_type="application/json")
+
+                    _state = 0
+                    if obj_data['state'] == '锁定':
+                        _state = 0
+                    elif obj_data['state'] == '在岗':
+                        _state = 1
+                    elif obj_data['state'] == '长假':
+                        _state = 2
+                    elif obj_data['state'] == '离职':
+                        _state = 3
+                    else:
+                        server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                        server_msg += '用户状态有误！'
+                        return HttpResponse(json.dumps({
+                            "server_msg":server_msg
+                            }), content_type="application/json")
+
+                    if obj_data['idcardtype'] != '身份证':
+                        server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                        server_msg += '该用户没有身份证！'
+                        return HttpResponse(json.dumps({
+                            "server_msg":server_msg
+                            }), content_type="application/json")
+
+                    _avatar='default.png'
+
+                    _user = k_user.objects.create(
+                        classid=_classid,
+                        username=_username,
+                        name=_name,
+                        gender=_gender,
+                        state=_state,
+                        mobile=obj_data['mobile'],
+                        email=obj_data['email'],
+                        address=obj_data['address'],
+                        zipcode=obj_data['zipcode'],
+                        birthday=obj_data['birthday'],
+                        idcard=obj_data['idcard'],
+                        idcardtype=0,
+                        memo=obj_data['memo'],
+                        contact=obj_data['contact'],
+                        contactmobile=obj_data['contactmobile'],
+                        status=_state,
+                        avatar=_avatar,
+                        creatorid=request.user.id,
+                        createdatetime=get_current_date(),
+                        editorid=request.user.id,
+                        editdatetime=get_current_date(),
+                        auditorid=request.user.id,
+                        auditdatetime=get_current_date()
+                    )
+
+                    roles = k_role.objects.filter(name=obj_data['roles'])
+                    for role in roles:
+                        _user.roles.add(role.id)
+
+                    raw_password = _username
+                    _user.set_password(raw_password)
+
+                    _olduser = User.objects.create_user(
+                        username=_user.username,
+                        email=_user.email,
+                        password=_user.password
+                    )
+                    _user.save()
+                    _olduser.save()
+                    success_num += 1
+            server_msg = '成功添加'+str(success_num)+'条用户信息！'
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+        except Exception as e:
+            server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门、设备类别和责任人用户名是否正确！'
+            print e
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+    # 读取权限，显示内容
+    server_msg = "导入失败，请检查数据格式是否符合模板要求！"
+    return HttpResponse(json.dumps({
+        "username": user.username,
+        "server_msg":server_msg
+        }), content_type="application/json")
 
 '''
 用户管理结束
@@ -3331,16 +3446,108 @@ def sparebatch_add(request):
 @login_required
 def sparebatch_submit(request):
     # 登陆成功
-    # user = k_user.objects.get(username=request.user.username)
-    user = User.objects.get(username=request.user.username)
+    user = k_user.objects.get(username=request.user.username)
     # 读取权限，显示内容
-    #variables = RequestContext(request, {'username': user.username})
-    #return get_purviews_and_render_to_response(request.user.username, 'sparebatchadd.html', variables)
+    variables = RequestContext(request, {'username': user.username})
+    if request.method == "POST":
+        raw_post_data = request.body
+        json_data = json.loads(raw_post_data)
+        success_num = 0
+        try:
+            for json_key in json_data:
+                obj_datas = json_data[json_key]
+                for obj_data in obj_datas:
+                    _brief = obj_data['brief']
+                    _name = obj_data['name']
+                    _classname = obj_data['classname']
+                    _classid = k_class.objects.get(name=_classname)
+                    if obj_data['producer'] == "无":
+                        _producerid = ''
+                    else:
+                        _producer = k_producer.objects.filter(name=obj_data['producer'])
+                        if len(_producer) == 0:
+                            _producerid = k_producer.objects.create(
+                                name=obj_data['producer'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_producer) == 1:
+                            _producerid = _producer[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加生产厂家出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
+                    if obj_data['supplier'] == "无":
+                        _supplierid = ''
+                    else:
+                        _supplier = k_supplier.objects.filter(name=obj_data['supplier'])
+                        if len(_supplier) == 0:
+                            _supplierid = k_supplier.objects.create(
+                                name=obj_data['supplier'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_supplier) == 1:
+                            _supplierid = _supplier[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加供应商出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
+                    _spares = k_spare.objects.filter(brief=_brief)
+                    _spares = _spares.filter(name=_name)
+                    if len(_spares) > 0:
+                        _dev = _spares[0]
+                        server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                        server_msg += _classname+'中'+_dev.name+'('+_dev.brief+')的备件已存在！'
+                        return HttpResponse(json.dumps({
+                            "server_msg":server_msg
+                            }), content_type="application/json")
+                    _minimum = obj_data['minimum']
+                    if not isinstance(_minimum, int):
+                        if isinstance(_minimum, str):
+                            if _minimum.isdigit():
+                                _minimum = int(_minimum)
+                            else:
+                                server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                                server_msg += '最小库存应为正整数！'
+                                return HttpResponse(json.dumps({
+                                    "server_msg":server_msg
+                                    }), content_type="application/json")
+                    _spare = k_spare.objects.create(
+                        classid=_classid,
+                        name=obj_data['name'],
+                        brief=obj_data['brief'],
+                        brand=obj_data['brand'],
+                        model=obj_data['model'],
+                        content=obj_data['content'],
+                        memo=obj_data['memo'],
+                        minimum=_minimum,
+                        creatorid=request.user.id,
+                        createdatetime=get_current_date(),
+                        editorid=request.user.id,
+                        editdatetime=get_current_date()
+                    )
+                    if _supplierid != '':
+                        _spare.supplierid = _supplierid
+                    if _producerid != '':
+                        _spare.producerid = _producerid
+                    _spare.save()
+                    success_num += 1
+            server_msg = '成功添加'+str(success_num)+'条备品备件信息！'
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+        except Exception as e:
+            server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门、备件名称和最小库存等是否正确！'
+            print e
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+    server_msg = "导入失败，请检查数据格式是否符合模板要求！"
     return HttpResponse(json.dumps({
-                "username": user.username,
-                "test":"test"
-                }
-            ), content_type="application/json")
+        "username": user.username,
+        "server_msg":server_msg
+        }), content_type="application/json")
 
 def view_sparebill(request):
     #权限判断

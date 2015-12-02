@@ -59,9 +59,10 @@ function clickUpload() {
     <!-- /block -->
 </div>
 <p>
-    <a class="btn btn-warning" href="/userbatch_submit">开始导入</a>
+    <a class="btn btn-warning" id="begin_import" >开始导入</a>
 </p>
 <pre id="out" style="display: none;"></pre>
+<p id="batch_data" style="display: none;"></p>
 {% endblock %}
 
 {% block tailjs %}
@@ -81,13 +82,43 @@ function clickUpload() {
                 class_name: 'gritter-error gritter-center'
             });
         }
+        var server_msg="{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '系统消息',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
     });
 </script>
     <script type="text/javascript">
+
+
     $(document).ready(function() {
+        $('#begin_import').click(function (){
+            //var params=$('out').serialize(); //序列化表单的值
+            var batchdata = document.getElementById('batch_data').value;
+            //alert(batchdata);
+            $.ajax({
+                url:'/userbatch_submit/', //后台处理程序
+                type:'post',         //数据发送方式
+                dataType:'json',     //接受数据格式
+                data:batchdata,         //要传递的数据
+                success:function(data) {
+                    if (data.server_msg) {
+                        $.gritter.add({
+                            title: '系统消息',
+                            text: data.server_msg,
+                            class_name: 'gritter-error gritter-center'
+                        });
+                    }
+                } //回传函数(这里是函数名)
+            });
+        });
         var table = $('#maintenance').DataTable({
-            scrollX: "100%",
-            oLanguage : {
+              scrollX: "100%",
+                oLanguage : {
                 "sLengthMenu" : "每页显示 _MENU_ 条记录",
                 "sZeroRecords" : "对不起，没有匹配的数据",
                 "sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
@@ -260,6 +291,7 @@ function process_wb(wb) {
 	if(out.innerText === undefined) out.textContent = output;
 	else out.innerText = output;
 
+    document.getElementById('batch_data').value = output;
     var i;
     var data_array = [];
     var obj_map = JSON.parse(output);
