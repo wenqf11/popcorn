@@ -883,6 +883,64 @@
 			data: "maintain task not exist"
 		}
 
+
+### 获取我的维修记录
+
+- 请求地址：http://domain.com/app/maintain/record/
+- 请求方式：GET
+- 请求参数：
+	- username，`string`，用户名
+	- access_token，`string`，用户认证用的token
+	- **start_date**，`string`，要查询的开始日期，如“2015-05-22”
+	- **end_date**，`string`，要查询的结束日期，如“2015-12-12”
+	- timestamp，`int`，时间戳，暂时没有用
+- 返回结果：根据edit_datetime的起始和结束（包含起始和结束日期），也就是维修提交的时间来获取到的维修记录列表，以数组形式返回
+- json示例：
+
+		{
+			status: "ok",
+			data: [
+				{
+					id: 18,
+					title: "空调04进风管报修",
+					device_name: "空调04",
+					device_brief: "kt273311",
+					creator: "张三",
+					create_time: "2015-04-21 12:02:02",
+					description: "进风管损坏，需更换",
+					image: "http://domain.com/static/12.jpg", // 若未上传图片则为空字符串
+					memo: "需携带配件",
+					editor: "王五",
+					edit_datime: "2015-05-22 12:02:02",
+					is_audit: false,                      //是否审核确认
+					note: "更换了进风管，修好了"
+				},
+				{
+					id: 20,
+					title: "空调04损坏",
+					device_name: "无相关设备",
+					device_brief: "无相关设备",
+					creator: "李四",
+					create_time: "2015-05-04 21:06:01",
+					description: "空调损坏，原因不明",
+					image: "http://domain.com/static/30.jpg",
+					memo: "",
+					editor: "李四",
+					edit_datime: "2015-05-21 12:02:02",
+					is_audit: true,						 //是否审核确认
+					note: "初步检修完毕，等待下一步继续维修"
+				}
+			]
+		}
+	或
+
+		{
+			status: "ok",
+			data: []
+		}
+
+
+
 ## 任务模块
 
 ### 获取子任务列表

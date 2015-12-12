@@ -49,6 +49,7 @@
     <string name="title_activity_about_info">关于</string>
     <string name="title_activity_rank">积分排名</string>
     <string name="title_activity_bonus">抽奖</string>
+    <string name="title_repair_record">维修记录</string>
     <string name="get_lottery">抽奖</string>
     <string name="title_activity_user_info">用户信息</string>
     <string name="title_activity_task">任务</string>

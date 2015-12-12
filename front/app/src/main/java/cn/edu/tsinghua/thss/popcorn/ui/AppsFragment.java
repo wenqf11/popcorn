@@ -129,6 +129,17 @@ public class AppsFragment extends Fragment {
             }
         });
 
+        //维修记录
+        View mAppsRepairRecordLayout = appsView.findViewById(R.id.main_body_app_repair_record);
+        mAppsRepairRecordLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), TaskListActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
         //任务
         View mAppsTaskLayout = appsView.findViewById(R.id.id_apps_task_ll);
         mAppsTaskLayout.setOnClickListener(new View.OnClickListener() {
