@@ -911,7 +911,7 @@
 					image: "http://domain.com/static/12.jpg", // 若未上传图片则为空字符串
 					memo: "需携带配件",
 					editor: "王五",
-					edit_datime: "2015-05-22 12:02:02",
+					edit_datetime: "2015-05-22 12:02:02",
 					is_audit: false,                      //是否审核确认
 					note: "更换了进风管，修好了"
 				},

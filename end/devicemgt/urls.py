@@ -42,6 +42,7 @@ urlpatterns = patterns(
     url(r'^app/maintain/confirm/$', app_maintain_confirm),
     url(r'^app/maintain/update/$', app_maintain_update),
     url(r'^app/maintain/submit/$', app_maintain_submit),
+    url(r'^app/maintain/record/$', app_maintain_record),
 
     url(r'^app/task/list/$', app_task_list),
     url(r'^app/task/confirm/$', app_task_confirm),

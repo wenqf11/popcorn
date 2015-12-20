@@ -23,11 +23,12 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.get('/app/device/class/', {
-                username: 'syb1001',
+            $.get('/app/maintain/record/', {
+                username: 'huang0720jian',
                 access_token: 'hello_world',
+                start_date: '2015-10-01',
+                end_date: '2015-12-20',
                 timestamp: 1383712332,
-                class_id: 1
             }, function(data) {
                 console.log(data);
                 $('#div-status').text(data.status);

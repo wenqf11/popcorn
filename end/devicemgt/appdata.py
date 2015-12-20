@@ -613,6 +613,39 @@ def app_maintain_submit(request, para, user):
 
 @get_required
 @token_required
+def app_maintain_record(request, para, user):
+    start_date = datetime.strptime(request.GET.get('start_date'), '%Y-%m-%d').date()
+    end_date = datetime.strptime(request.GET.get('end_date'), '%Y-%m-%d').date()
+    tasks = k_maintenance.objects.filter(
+        mtype='2',
+        editorid=user.id,
+        state='4',
+        editdatetime__range=(start_date, end_date + timedelta(days=1))
+    )
+    data = [{
+        'id': task.id,
+        'title': task.title,
+        'device_name': task.deviceid.name if task.deviceid else '',
+        'device_brief': task.deviceid.brief if task.deviceid else '',
+        'creator': k_user.objects.filter(id=task.creatorid)[0].name if len(k_user.objects.filter(id=task.creatorid)) > 0 else "",
+        'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
+        'assignor': k_user.objects.filter(id=task.assignorid)[0].name if len(k_user.objects.filter(id=task.assignorid)) > 0 else "",
+        'description': task.createcontent,
+        'image': task.image.url if task.image else '',
+        'memo': task.memo,
+        'editor': user.name,
+        'edit_datetime': task.editdatetime.strftime('%Y-%m-%d %H:%M:%S'),
+        'is_audit': (task.state == '5'),
+        'note': task.editcontent
+            } for task in tasks]
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+        'data': data
+    }))
+
+
+@get_required
+@token_required
 def app_task_list(request, para, user):
     tasks = k_taskitem.objects.filter(
         editorid=user.id,

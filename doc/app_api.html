@@ -949,7 +949,8 @@ img {
     data: [
         {
             id: 12,
-            name: &quot;kt094732&quot;,
+            name: &quot;螺杆式风冷冷水机组&quot;,
+            brief: &quot;kt094732&quot;,
             content: [
                 &quot;冷供水温度  ℃&quot;: {
                     type&quot;: &quot;integer&quot;,
@@ -968,7 +969,8 @@ img {
         },
         {
             id: 32,
-            name: &quot;ms383831&quot;,
+            name: &quot;冷冻水泵&quot;,
+            brief: &quot;ms383831&quot;,
             content: [
                 &quot;水位&quot;: {
                     type: &quot;integer&quot;,
@@ -1188,6 +1190,7 @@ img {
 <li>access_token，<code>string</code>，用户认证用的token</li>
 <li><strong>device_brief</strong>，<code>int</code>，设备简称</li>
 <li><strong>title</strong>，<code>string</code>，报修标题</li>
+<li><strong>image</strong>， <code>File</code>， 图片</li>
 <li><strong>description</strong>，<code>string</code>，情况描述</li>
 <li><strong>memo</strong>，<code>string</code>，备注</li>
 <li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
@@ -1389,6 +1392,69 @@ img {
 <pre><code>{
     status: &quot;error&quot;,
     data: &quot;maintain task not exist&quot;
+}
+</code></pre>
+
+</li>
+</ul>
+<h3>获取我的维修记录</h3>
+<ul>
+<li>请求地址：http://domain.com/app/maintain/record/</li>
+<li>请求方式：GET</li>
+<li>
+请求参数：
+<ul>
+<li>username，<code>string</code>，用户名</li>
+<li>access_token，<code>string</code>，用户认证用的token</li>
+<li><strong>start_date</strong>，<code>string</code>，要查询的开始日期，如“2015-05-22”</li>
+<li><strong>end_date</strong>，<code>string</code>，要查询的结束日期，如“2015-12-12”</li>
+<li>timestamp，<code>int</code>，时间戳，暂时没有用</li>
+</ul>
+</li>
+<li>返回结果：根据edit_datetime的起始和结束（包含起始和结束日期），也就是维修提交的时间来获取到的维修记录列表，以数组形式返回</li>
+<li>
+<p>json示例：</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: [
+        {
+            id: 18,
+            title: &quot;空调04进风管报修&quot;,
+            device_name: &quot;空调04&quot;,
+            device_brief: &quot;kt273311&quot;,
+            creator: &quot;张三&quot;,
+            create_time: &quot;2015-04-21 12:02:02&quot;,
+            description: &quot;进风管损坏，需更换&quot;,
+            image: &quot;http://domain.com/static/12.jpg&quot;, // 若未上传图片则为空字符串
+            memo: &quot;需携带配件&quot;,
+            editor: &quot;王五&quot;,
+            edit_datetime: &quot;2015-05-22 12:02:02&quot;,
+            is_audit: false,                      //是否审核确认
+            note: &quot;更换了进风管，修好了&quot;
+        },
+        {
+            id: 20,
+            title: &quot;空调04损坏&quot;,
+            device_name: &quot;无相关设备&quot;,
+            device_brief: &quot;无相关设备&quot;,
+            creator: &quot;李四&quot;,
+            create_time: &quot;2015-05-04 21:06:01&quot;,
+            description: &quot;空调损坏，原因不明&quot;,
+            image: &quot;http://domain.com/static/30.jpg&quot;,
+            memo: &quot;&quot;,
+            editor: &quot;李四&quot;,
+            edit_datime: &quot;2015-05-21 12:02:02&quot;,
+            is_audit: true,                      //是否审核确认
+            note: &quot;初步检修完毕，等待下一步继续维修&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>或</p>
+<pre><code>{
+    status: &quot;ok&quot;,
+    data: []
 }
 </code></pre>
 
