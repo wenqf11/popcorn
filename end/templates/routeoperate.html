@@ -153,6 +153,28 @@
             multiselect.multiSelect('refresh');
             arr = $('#route-input').val().split(',');
         });
+
+        $('button[type="submit"]').on('click', function(e) {
+            if (!$('input[name="name"]').val()) {
+                alert('请输入路线名称');
+                e.preventDefault();
+            } else if (!$('input[name="period"]').val()) {
+                alert('请输入抄表时间周期');
+                e.preventDefault();
+            } else if (!$('input[name="startHour"]').val()) {
+                alert('请输入起始时间');
+                e.preventDefault();
+            } else if (!$('input[name="startMinute"]').val()) {
+                alert('请输入起始时间');
+                e.preventDefault();
+            } else if (!$('input[name="endHour"]').val()) {
+                alert('请输入结束时间');
+                e.preventDefault();
+            } else if (!$('input[name="endMinute"]').val()) {
+                alert('请输入结束时间');
+                e.preventDefault();
+            }
+        });
     });
 </script>
 {% endblock %}

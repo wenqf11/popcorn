@@ -1963,7 +1963,6 @@ def operate_route(request):
         data['forms'] = []
         for _form in all_form:
             _device = k_device.objects.get(brief=_form.brief)
-            _device = k_device.objects.get(brief=_form.brief)
             data['forms'].append({
                 'id': _form.id,
                 'brief': _form.brief,
@@ -1978,6 +1977,7 @@ def operate_route(request):
 def submit_route(request, _id=''):
     _user = k_user.objects.get(username=request.user.username)
     _editor = _user.id
+    error_list = []
     _forms = request.POST.get('routeString')
     _name = request.POST.get('name')
     _period = request.POST.get('period')
@@ -1994,6 +1994,7 @@ def submit_route(request, _id=''):
     else:
         route = k_route(classid=_user.classid)
         route.creatorid = _editor
+
     route.name = _name
     route.formid = _forms
     route.starttime = datetime.strptime(_start_time, '%H:%M').time()
