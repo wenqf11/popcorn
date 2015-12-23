@@ -14,7 +14,7 @@ from models import *
 from forms import *
 from index import *
 from datetime import datetime, timedelta, time
-from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node
+from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list
 import json
 import xlwt
 
@@ -728,8 +728,21 @@ def devicemgt(request):
     if server_msg == None:
         server_msg = ''
     devicetypes = k_devicetype.objects.all()
-    parents = 0
-    datas = get_device_node(devicetypes, parents) #获取节点树
+    type_parents = 0
+    class_parents = 0
+    filter_classidx = request.GET.get('classid')
+    if filter_classidx:
+        class_parents = int(filter_classidx)
+
+    classes = k_class.objects.all()
+    if class_parents > 0:
+        sub_classes_list = list()
+        sub_classes_list.append(class_parents)
+        get_sub_classes_list(classes, sub_classes_list, class_parents)
+        class_parents = sub_classes_list
+    else:
+        class_parents = classes
+    datas = get_device_node(devicetypes, type_parents, class_parents) #获取节点树
     _id = request.GET.get('id')
     deviceinfo = dict()
     if (_id):

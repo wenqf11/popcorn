@@ -30,17 +30,17 @@ def get_current_date():
 
 
 # 获取设备的节点树
-def get_device_node(devicetypes, parent):
+def get_device_node(devicetypes, type_parent, class_parent):
     datas = list()
     for type in devicetypes:
-        if type.parentid == parent:
+        if type.parentid == type_parent:
             cur_data = dict()
             cur_data['text'] = type.name.decode('utf-8')
             device_list = list()
-            devices = k_device.objects.filter(typeid_id = type.id)
+            devices = k_device.objects.filter(typeid_id = type.id, classid_id__in=class_parent)
             for d in devices:
                 device_list.append({"text":(d.name+"(简称:"+d.brief+")").decode('utf-8'), "href":"/device?id=" + str(d.id)})
-            sub_nodes = get_device_node(devicetypes, type.id)
+            sub_nodes = get_device_node(devicetypes, type.id, class_parent)
             if len(sub_nodes) > 0 and len(device_list) > 0:
                 cur_data['nodes'] = device_list
                 for sub_node in sub_nodes:
@@ -49,7 +49,14 @@ def get_device_node(devicetypes, parent):
                 cur_data['nodes'] = device_list
             elif len(sub_nodes) > 0 and len(device_list) == 0:
                 cur_data['nodes'] = sub_nodes
-            cur_data['text'] += '(设备数:' + str(len(device_list)) + ')'
+
+            cur_data['number'] = len(device_list)
+            if cur_data.has_key('nodes'):
+                for sub_data in cur_data['nodes']:
+                    if sub_data.has_key('nodes'): # not decive list, but a subclass
+                        cur_data['number'] += sub_data['number']
+
+            cur_data['text'] += '(设备数:' + str(cur_data['number']) + ')'
             datas.append(cur_data)
 
     return datas
@@ -84,16 +91,36 @@ def get_dept_type_node(devicetypes, parent):
     return datas
 
 
+def get_device_class_node(classes, parent):
+    datas = list()
+    for c in classes:
+        if c.parentid == parent:
+            cur_data = dict()
+            cur_data['text'] = c.name.decode('utf-8')
+            cur_data['href'] = "/device?classid=" + str(c.id)
+            tmp = get_device_class_node(classes, c.id)
+            if tmp and len(tmp) > 0:
+                cur_data['nodes'] = tmp
+            datas.append(cur_data)
+    return datas
+
 def get_device_by_class(classes, parent):
     datas = list()
     for cls in classes:
         if cls.parentid == parent:
             cur_data = dict()
             cur_data['text'] = cls.name.decode('utf-8')
-            cur_data['href'] = "/device"#?id=" + str(cls.id)
-            tmp = get_type_node(classes, cls.id)
-            if len(tmp) > 0:
+            cur_data['href'] = "/device?classid=" + str(cls.id)
+            tmp = get_device_class_node(classes, cls.id)
+            if tmp and len(tmp) > 0:
                 cur_data['nodes'] = tmp
             datas.append(cur_data)
 
     return datas
+
+
+def get_sub_classes_list(classes, sub_classes_list, class_parent):
+    for cls in classes:
+        if cls.parentid == class_parent:
+            sub_classes_list.append(cls.id)
+            get_sub_classes_list(classes,sub_classes_list,cls.id)
