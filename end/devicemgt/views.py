@@ -179,10 +179,12 @@ def get_node(child_leaf_list, child_node_list):
         userdata = dict()
         userdata["text"] = leaf.name.decode('utf-8')
         userdata["href"] = "/user?id=" + str(leaf.id)
+        userdata["number"] = 0
         result.append(userdata)
     for c in child_node_list:
         userdata = dict()
         userdata["text"] = c.name.decode('utf-8')
+        userdata["nodes"] = list()
         sub_child_list = k_class.objects.filter(parentid = c.id)
         sub_leaf_list = k_user.objects.filter(classid_id=c.id)
         if sub_child_list:
@@ -190,6 +192,12 @@ def get_node(child_leaf_list, child_node_list):
         elif sub_leaf_list:
             userdata["nodes"] = get_leaf(sub_leaf_list)
         result.append(userdata)
+
+        userdata["number"] = len(sub_leaf_list)
+        for sub_node in userdata["nodes"]:
+            if sub_node.has_key("nodes"):
+                userdata["number"] += sub_node["number"]
+        userdata["text"] +=  '(人数:' + str(userdata['number']) + ')'
     return result
 
 
@@ -208,8 +216,8 @@ def usermgt(request):
     if current_class:
         userdatas = list()
         class_set = k_class.objects.filter(parentid=current_class_id)
-        leaf_list = k_user.objects.filter(classid_id=current_class_id)
-        for leaf in leaf_list:
+        leaf_set = k_user.objects.filter(classid_id=current_class_id)
+        for leaf in leaf_set:
             userdata = dict()
             userdata["text"] = leaf.name.decode('utf-8')
             userdata["href"] = "/user?id=" + str(leaf.id)
@@ -219,16 +227,27 @@ def usermgt(request):
             userdata["text"] = c.name.decode('utf-8')
             child_list = k_class.objects.filter(parentid = c.id)
             leaf_list = k_user.objects.filter(classid_id=c.id)
-            #if child_list:
             userdata["nodes"] = get_node(leaf_list, child_list)
-            #elif leaf_list:
-            #    userdata["nodes"] = get_leaf(leaf_list)
+
+            userdata["number"] = len(leaf_list)
+            for sub_node in userdata["nodes"]:
+                if sub_node.has_key("nodes"):
+                    userdata["number"] += sub_node["number"]
+            userdata["text"] +=  '(人数:' + str(userdata['number']) + ')'
+
             userdatas.append(userdata)
 
         cur_datas = dict()
         datas = list()
         cur_datas["text"] = current_class.name.decode('utf-8')
         cur_datas['nodes'] = userdatas
+
+        cur_datas["number"] = len(leaf_set)
+        for sub_node in cur_datas["nodes"]:
+            if sub_node.has_key("nodes"):
+                cur_datas["number"] += sub_node["number"]
+        cur_datas["text"] +=  '(人数:' + str(cur_datas['number']) + ')'
+
         datas.append(cur_datas)
 
     _id = request.GET.get('id')
