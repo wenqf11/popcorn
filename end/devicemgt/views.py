@@ -731,6 +731,7 @@ def devicebyclass(request):
     datas = list()
     data = dict()
     data['text'] = parents.name
+    data['href'] = "/device"
     data['nodes'] = get_device_by_class(classes, parents.id)
     if data['nodes']:
         datas.append(data)
