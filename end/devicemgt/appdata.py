@@ -8,6 +8,7 @@ from models import *
 from datetime import date, datetime, time, timedelta
 from django.contrib.auth.hashers import make_password, check_password
 from .views import get_class_set
+from helper import get_current_date
 import json, random
 
 
