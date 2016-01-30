@@ -302,14 +302,15 @@ def app_form(request, para, user):
             _tmp_content["id"] = str(_item_id)
             _tmp_content["default"] = ""
             _tmp_content["priority"] = 0
-            _tmp_content["max"] = c['max']
-            _tmp_content["min"] = c['min']
             if c['choice']:
                 _tmp_content["type"] = "integer"
                 _tmp_content["options"] = dict()
                 for i in xrange(0, len(c['choices'])):
                     _tmp_content["options"][str(i)] = c['choices'][i]
+                _tmp_content["default"] = '0'
             else:
+            	_tmp_content["max"] = c['max']
+            	_tmp_content["min"] = c['min']
                 _tmp_content["type"] = "integer"
                 _tmp_content["hint"] = ""
                 if c['min'] and not c['max']:
@@ -324,7 +325,7 @@ def app_form(request, para, user):
                 _f.new_content[c['name']] = _tmp_content
             #_f.new_content.append(_tmp_item)
         #print _f.new_content
-        
+    print json.dumps(_f.new_content)   
     response = {
         'status': 'ok',
         'data': [{'id': _f.id, 'name': k_device.objects.filter(brief=_f.brief)[0].name if len(k_device.objects.filter(brief=_f.brief))>0 else "",

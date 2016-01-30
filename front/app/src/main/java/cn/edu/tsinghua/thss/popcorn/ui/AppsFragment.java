@@ -16,6 +16,7 @@ import cn.edu.tsinghua.thss.popcorn.MaintainListActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
 import cn.edu.tsinghua.thss.popcorn.RankActivity;
 import cn.edu.tsinghua.thss.popcorn.RepairListActivity;
+import cn.edu.tsinghua.thss.popcorn.RepairRecordActivity;
 import cn.edu.tsinghua.thss.popcorn.TaskActivity;
 import cn.edu.tsinghua.thss.popcorn.TaskListActivity;
 
@@ -133,7 +134,7 @@ public class AppsFragment extends Fragment {
         View mAppsRepairRecordLayout = appsView.findViewById(R.id.main_body_app_repair_record);
         mAppsRepairRecordLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), TaskListActivity.class);
+                Intent intent=new Intent(getActivity(), RepairRecordActivity.class);
                 Bundle bundle=new Bundle();
                 intent.putExtras(bundle);
                 startActivity(intent);

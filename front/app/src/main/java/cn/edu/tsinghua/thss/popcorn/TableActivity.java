@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,8 @@ public class TableActivity extends FormActivity{
         }
         editor.putString("route_" + mRouteId+"_form_" + mFormId, json.toString());
         editor.apply();
+
+        TableActivity.this.finish();
     }
 
     @Override
@@ -92,8 +95,11 @@ public class TableActivity extends FormActivity{
                 e.printStackTrace();
             }
         }
+
         LinearLayout container = generateForm( form_content_json );
 
+        final ScrollView sc = (ScrollView)container.getChildAt(0);
+        LinearLayout layoutInSc = (LinearLayout)sc.getChildAt(sc.getChildCount()-1);
         LinearLayout list = new LinearLayout(this);
         list.setGravity(Gravity.RIGHT);
         Button btn = new Button(this);
@@ -119,7 +125,9 @@ public class TableActivity extends FormActivity{
 
         list.addView(resultTextView);
         list.addView(btn);
-        container.addView(list);
+
+        //container.addView(list);
+        layoutInSc.addView(list);
 
         Button submitBtn = new Button(this);
         submitBtn.setText("暂存");
@@ -162,7 +170,7 @@ public class TableActivity extends FormActivity{
                 saveButtonClick(json);
             }
         });
-        container.addView(submitBtn);
+        layoutInSc.addView(submitBtn);
 
         container.setPadding(20, 20, 20, 20);
         setContentView(container);
