@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fontawesometext="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+
+
+    >
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="时间标题"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:singleLine="true"
+        />
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="6dp"
+        android:lines="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="事件的描述\n事件备注"
+        android:textSize="15sp"
+        android:textColor="#a000"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <com.beardedhen.androidbootstrap.FontAwesomeText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="2dp"
+
+            fontawesometext:fa_icon="fa-clock-o"
+            android:textSize="11sp"
+            android:textColor="#669999"
+            android:layout_gravity="center_vertical"
+            />
+            <TextView
+                android:id="@+id/tv_time"
+                android:text="5分钟前"
+                style="@style/list_text_info"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp">
+            <com.beardedhen.androidbootstrap.FontAwesomeText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="2dp"
+
+                fontawesometext:fa_icon="fa-comments-o"
+                android:textSize="11sp"
+                android:textColor="#669999"
+                android:layout_gravity="center_vertical"
+                />
+            <TextView
+                android:id="@+id/tv_comment_count"
+                android:text="2"
+                style="@style/list_text_info" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#6666"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"/>
+
+
+
+
+
+        <!--<TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fa_commont"
+            android:textSize="50sp"
+            android:textColor="#F59012"
+            android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+
+</LinearLayout>

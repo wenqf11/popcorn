@@ -363,6 +363,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="visible"
             android:id="@+id/id_apps_task_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -410,6 +411,68 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="任务"
+                android:textColor="#000"
+                android:textSize="14sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_span="3"
+            android:clickable="true"
+            android:background="@drawable/layout_selector2"
+            android:orientation="vertical"
+            android:padding="5dp">
+        </LinearLayout>
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/id_apps_bad_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:background="@drawable/layout_selector2"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:saveEnabled="false"
+            android:gravity="center">
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    fontawesometext:fa_icon="fa-tasks"
+                    android:textSize="48sp"
+                    android:textColor="#0099CC"
+                    android:layout_gravity="center|center_vertical"
+                    />
+                <FrameLayout
+                    android:layout_gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/main_body_app_bad_id"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/tips_circle"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="报警"
                 android:textColor="#000"
                 android:textSize="14sp" />
         </LinearLayout>

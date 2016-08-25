@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -98,6 +99,7 @@ public class RankActivity extends Activity {
         params.addQueryStringParameter("month", String.valueOf(pickedMonth));
 
         progressDialog.show();
+//        SystemClock.sleep(3000);
 
         HttpUtils http = new HttpUtils();
         http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);

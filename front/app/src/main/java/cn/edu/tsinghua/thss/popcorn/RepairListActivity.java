@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -78,6 +79,7 @@ public class RepairListActivity extends ListActivity {
         progressDialog.show();
         //getRepairTaskList();
         timer.schedule(task, Config.REPAIR_UPDATE_DELAY, Config.REPAIR_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+//        SystemClock.sleep(3000);//睡3秒
         progressDialog.hide();
     }
 

@@ -53,6 +53,7 @@
     <string name="get_lottery">抽奖</string>
     <string name="title_activity_user_info">用户信息</string>
     <string name="title_activity_task">任务</string>
+    <string name="title_activity_bad">报警</string>
     <string name="title_activity_task_list">任务列表</string>
     <string name="accept_task">接受任务</string>
     <string name="title_activity_checkin">签到</string>
@@ -63,4 +64,6 @@
     <string name="task_result">任务结论：</string>
     <string name="title_activity_bonus_history">中奖历史</string>
     <string name="title_activity_repair_record">维修记录</string>
+
+    <string name="fa_commont">&#xf0e5;</string>
 </resources>

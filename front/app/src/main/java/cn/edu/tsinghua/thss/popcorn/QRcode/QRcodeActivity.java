@@ -33,8 +33,8 @@ import cn.edu.tsinghua.thss.popcorn.R;
 
 public class QRcodeActivity extends Activity {
 
-    private Camera mCamera;
     private CameraPreview mPreview;
+    private Camera mCamera;
     private Handler autoFocusHandler;
     private CameraManager mCameraManager;
 
@@ -124,6 +124,13 @@ public class QRcodeActivity extends Activity {
         }
     };
 
+    // Mimic continuous auto-focusing
+    AutoFocusCallback autoFocusCB = new AutoFocusCallback() {
+        public void onAutoFocus(boolean success, Camera camera) {
+            autoFocusHandler.postDelayed(doAutoFocus, 1000);
+        }
+    };
+
     PreviewCallback previewCb = new PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera) {
             Size size = camera.getParameters().getPreviewSize();
@@ -158,13 +165,6 @@ public class QRcodeActivity extends Activity {
                 startActivity(intent);
                 QRcodeActivity.this.finish();
             }
-        }
-    };
-
-    // Mimic continuous auto-focusing
-    AutoFocusCallback autoFocusCB = new AutoFocusCallback() {
-        public void onAutoFocus(boolean success, Camera camera) {
-            autoFocusHandler.postDelayed(doAutoFocus, 1000);
         }
     };
 

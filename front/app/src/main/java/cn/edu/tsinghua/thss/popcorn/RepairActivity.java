@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,6 +87,7 @@ public class RepairActivity extends Activity {
             params.addBodyParameter("maintain_id", id);
             params.addBodyParameter("note", note);
             progressDialog.show();
+
 
             HttpUtils http = new HttpUtils();
             http.send(HttpRequest.HttpMethod.POST,

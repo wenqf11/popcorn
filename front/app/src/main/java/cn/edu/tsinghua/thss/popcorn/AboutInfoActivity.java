@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,6 +135,7 @@ public class AboutInfoActivity extends Activity {
         PackageManager packageManager = getPackageManager();
         PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),
                 0);
+//        Log.e("ban",packInfo.versionName);
         return packInfo.versionName;
     }
     public class CheckVersionTask implements Runnable {
@@ -178,6 +180,8 @@ public class AboutInfoActivity extends Activity {
                 case UPDATA_NONEED:
                     Toast.makeText(getApplicationContext(), "已是最新版本，不需要更新",
                             Toast.LENGTH_SHORT).show();
+
+//                    Log.e("URL",info.getUrl());
                     break;
                 case UPDATA_CLIENT:
                     showUpdataDialog();
