@@ -175,6 +175,7 @@
         }
         $(document).ready(function() {
             $('#maintenance').DataTable({
+                "aaSorting": [[ 6, "desc" ]],
                 "oLanguage" : {
                     "sLengthMenu" : "每页显示 _MENU_ 条记录",
                     "sZeroRecords" : "对不起，没有匹配的数据",
@@ -190,10 +191,6 @@
                         "sLast" : " 最后一页 "
                     }
                 }
-            });
-            $('td:not(.unsearchable)').click(function(){
-                $('#maintenance_filter input').val($(this).html());
-                $('#maintenance_filter input').select();
             });
             reactivate = function(){
                 $(".fa-check").click(function() {
@@ -217,8 +214,19 @@
                     factor.parentNode.parentNode.nextSibling.nextSibling.childNodes[3].childNodes[1].value = this.parentNode.id;
                 });
             };
+            $('td:not(.unsearchable)').click(function(){
+                $('#maintenance_filter input').val($(this).html());
+                $('#maintenance_filter input').select();
+                document.onkeydown = function(event){
+                    var e = event || window.event || arguments.callee.caller.arguments[0];
+                    if(e && e.keyCode == 13){
+                        setTimeout("reactivate();", 100);
+                        e.preventDefault();
+                    }
+                };
+            });
             reactivate();
-            $('tr').click(function(e){
+            $('th').click(function(e){
                 setTimeout("reactivate();", 100);
                 e.preventDefault();
             });
