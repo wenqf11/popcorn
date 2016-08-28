@@ -783,6 +783,72 @@ def devicemgt(request):
                 deviceinfo['owner'] = owner[0].name
             else:
                 deviceinfo['owner'] = "未指定负责人"
+            _m_record = k_maintenance.objects.filter(deviceid_id=_id, mtype=2).order_by('createdatetime')
+            if len(_m_record) >= 1:
+                _m_record = _m_record[len(_m_record)-1]
+                deviceinfo['m_record_title'] = _m_record.title
+                deviceinfo['m_record_content'] = _m_record.createcontent
+                deviceinfo['m_createtime'] = _m_record.createdatetime
+                deviceinfo['m_status'] = dict(k_maintenance.MAINTENANCE_STATUS)[_m_record.state]
+                deviceinfo['m_priority'] = dict(k_maintenance.MAINTENANCE_PRIORITY)[_m_record.priority]
+                if _m_record.state != '1':
+                    _m_assignor = k_user.objects.filter(id = _m_record.assignorid)
+                    if len(_m_assignor) == 1:
+                        deviceinfo['m_assignor'] = _m_assignor[0].name
+                        deviceinfo['m_assigntime'] = _m_record.assigndatetime
+                        deviceinfo['has_m_assignor'] = 1
+                _m_creator = k_user.objects.filter(id = _m_record.creatorid)
+                if len(_m_creator) == 1:
+                    deviceinfo['m_creator'] = _m_creator[0].name
+                else:
+                    deviceinfo['m_creator'] = "(创建者不存在!)"
+                deviceinfo['has_m_record'] = 1
+            else:
+                deviceinfo['m_record_title'] = "暂无"
+                deviceinfo['m_record_content'] = "暂无"
+                deviceinfo['has_m_record'] = 0
+            _k_record = k_maintenance.objects.filter(deviceid_id=_id, mtype=1).order_by('createdatetime')
+            if len(_k_record) >= 1:
+                _k_record = _k_record[len(_k_record)-1]
+                deviceinfo['k_record_title'] = _k_record.title
+                deviceinfo['k_record_content'] = _k_record.createcontent
+                deviceinfo['k_createtime'] = _k_record.createdatetime
+                deviceinfo['k_status'] = dict(k_maintenance.MAINTENANCE_STATUS)[_k_record.state]
+                deviceinfo['k_priority'] = dict(k_maintenance.MAINTENANCE_PRIORITY)[_k_record.priority]
+                if _k_record.state != '1':
+                    _k_assignor = k_user.objects.filter(id = _k_record.assignorid)
+                    if len(_k_assignor) == 1:
+                        deviceinfo['k_assignor'] = _k_assignor[0].name
+                        deviceinfo['k_assigntime'] = _k_record.assigndatetime
+                        deviceinfo['has_k_assignor'] = 1
+                _k_creator = k_user.objects.filter(id = _k_record.creatorid)
+                if len(_k_creator) == 1:
+                    deviceinfo['k_creator'] = _k_creator[0].name
+                else:
+                    deviceinfo['k_creator'] = "(创建者不存在!)"
+                deviceinfo['has_k_record'] = 1
+            else:
+                deviceinfo['k_record_title'] = "暂无"
+                deviceinfo['k_record_content'] = "暂无"
+                deviceinfo['has_k_record'] = 0
+            _t_record = k_meter.objects.filter(brief=device.brief).order_by('metertime')
+            if len(_t_record) >= 1:
+                _t_record = _t_record[len(_t_record)-1]
+                _t_user = k_user.objects.filter(id=_t_record.userid_id)
+                if len(_t_user) == 1:
+                    deviceinfo['t_user'] = _t_user[0].name
+                else:
+                    deviceinfo['t_user'] = "(抄表者不存在!)"
+                _t_route = k_route.objects.filter(id=_t_record.routeid_id)
+                if len(_t_route) == 1:
+                    deviceinfo['t_route'] = _t_route[0].name
+                else:
+                    deviceinfo['t_route'] = "(线路不存在!)"   
+                deviceinfo['t_record_content'] = _t_record.json
+                deviceinfo['t_metertime'] = _t_record.metertime
+                deviceinfo['has_t_record'] = 1
+            else:
+                deviceinfo['has_t_record'] = 0
             _c = k_class.objects.filter(id=device.classid_id)
             if len(_c) == 1:
                 _c_list = list()
@@ -1568,7 +1634,7 @@ def login(request):
                 auth_login(request, user)
                 kuser = k_user.objects.filter(username = username)
                 if len(kuser) == 1:
-                    return get_purviews_and_render_to_response(request.user.username, 'index.html', {'username': username, 'useravatar': kuser[0].avatar})
+                    return HttpResponseRedirect('/')
                 else:
                     variables = RequestContext(request, {'msg': "数据库中存在重名用户！请联系管理员！"})
                     return render_to_response('login.html', variables)

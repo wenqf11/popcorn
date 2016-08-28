@@ -100,15 +100,26 @@
                         </a>
                     </div>
                 </div>
-
                 <div class="widget-body">
                     <div class="widget-main">
+                        {% if deviceinfo.has_m_record %}
                         <p class="alert alert-info">
-                            xx于yy创建此维修，由xx于yy进行维修。
+                            <b>{{ deviceinfo.m_creator }}</b> 于 {{ deviceinfo.m_createtime |date:"Y-m-d" }} 创建 <b>[{{ deviceinfo.m_record_title}}]</b>。
+                            {% if deviceinfo.has_m_assignor %} 
+                                任务于 {{ deviceinfo.m_assigntime |date:"Y-m-d" }} 分配给 <b>{{ deviceinfo.m_assignor }}</b>。
+                            {% endif %}
+                            <br/>
+                            优先级:<b style="color:red">[{{ deviceinfo.m_priority }}]</b>, 
+                            当前状态: <b style="color:red">[{{ deviceinfo.m_status }}]</b>
                         </p>
                         <p class="alert alert-success">
-                            维修内容：.
+                            维修内容：{{ deviceinfo.m_record_content }}
                         </p>
+                        {% else %}
+                        <p class="alert alert-info">
+                            暂无
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -138,12 +149,24 @@
 
                 <div class="widget-body">
                     <div class="widget-main">
+                        {% if deviceinfo.has_k_record %}
                         <p class="alert alert-info">
-                            xx于yy创建此维修，由xx于yy进行维修。
+                            <b>{{ deviceinfo.k_creator }}</b> 于 {{ deviceinfo.k_createtime |date:"Y-m-d" }} 创建 <b>[{{ deviceinfo.k_record_title}}]</b>。
+                            {% if deviceinfo.has_k_assignor %} 
+                                任务于 {{ deviceinfo.k_assigntime |date:"Y-m-d" }} 分配给 <b>{{ deviceinfo.k_assignor }}</b>。
+                            {% endif %}
+                            <br/>
+                            优先级:<b style="color:red">[{{ deviceinfo.k_priority }}]</b>, 
+                            当前状态: <b style="color:red">[{{ deviceinfo.k_status }}]</b>
                         </p>
                         <p class="alert alert-success">
-                            保养内容：
+                            保养内容：{{ deviceinfo.k_record_content }}
                         </p>
+                        {% else %}
+                        <p class="alert alert-info">
+                            暂无
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -173,12 +196,18 @@
 
                 <div class="widget-body">
                     <div class="widget-main">
+                        {% if deviceinfo.has_t_record %}
                         <p class="alert alert-info">
-                            xx于yy在路线。
+                            该设备属于 <b>{{ deviceinfo.t_route }}</b> 线路，<b>{{ deviceinfo.t_user }}</b> 于 {{ deviceinfo.t_metertime |date:"Y-m-d H:m:s" }} 抄录了设备数据。
                         </p>
                         <p class="alert alert-success">
-                            抄表内容：
+                            抄表内容：{{ deviceinfo.t_record_content }}
                         </p>
+                        {% else %}
+                        <p class="alert alert-info">
+                            暂无
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
