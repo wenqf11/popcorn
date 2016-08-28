@@ -43,6 +43,7 @@ urlpatterns = patterns(
     url(r'^app/maintain/update/$', app_maintain_update),
     url(r'^app/maintain/submit/$', app_maintain_submit),
     url(r'^app/maintain/record/$', app_maintain_record),
+    url(r'^app/maintain/test/$', app_maintain_test),
 
     url(r'^app/task/list/$', app_task_list),
     url(r'^app/task/confirm/$', app_task_confirm),

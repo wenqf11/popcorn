@@ -1,4 +1,4 @@
-# -*- encoding=UTF-8 -*-
+﻿# -*- encoding=UTF-8 -*-
 __author__ = 'SYB'
 
 from django.http import HttpResponse
@@ -1029,6 +1029,35 @@ def app_class_device_type_classified(request, para, user):
     return HttpResponse(json.dumps({
         'status': 'ok',
         'data': result
+    }))
+
+@get_required
+@token_required
+def app_maintain_test(request, para, user):
+    tasks = k_maintenance.objects.filter(
+        mtype='2',
+        editorid=user.id,
+        state__range=(2, 3)
+    )
+    data = [{
+            'id': task.id,
+            'title': task.title,
+            'device_name': task.deviceid.name if task.deviceid  else "",
+            'device_brief': task.deviceid.brief if task.deviceid else "",
+            'creator': k_user.objects.filter(id=task.creatorid)[0].name if len(k_user.objects.filter(id=task.creatorid)) > 0 else "",
+            'create_time': task.createdatetime.strftime('%Y-%m-%d %H:%M:%S'),
+            'assignor': k_user.objects.filter(id=task.assignorid)[0].name if len(k_user.objects.filter(id=task.assignorid)) > 0 else "",
+            'description': task.createcontent,
+            'image': task.image.url if task.image else '',
+            'memo': task.memo,
+            'confirmed': (task.state == "3"),
+            'note': task.editcontent
+        } for task in tasks]
+    sorted_data = sorted(data, key = lambda x:(x['note'], x['confirmed'])) 
+    return HttpResponse(json.dumps({
+        'status': 'ok',
+	'result':'where is renult',
+        'data': sorted_data
     }))
 
 
