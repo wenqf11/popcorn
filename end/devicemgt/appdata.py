@@ -118,7 +118,7 @@ def app_password(request, para, user):
     para['password'] = request.POST.get('password')
     para['new_password'] = request.POST.get('new_password')
 
-    if not user.password == para['password']:
+    if not check_password(para['password'], user.password):
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'wrong password'
@@ -130,7 +130,7 @@ def app_password(request, para, user):
             'data': 'new password required'
         }))
 
-    user.password = make_password(para['new_password'])
+    user.set_password(para['new_password'])
     user.save()
     return HttpResponse(json.dumps({
         'status': 'ok',
@@ -606,6 +606,7 @@ def app_maintain_submit(request, para, user):
         }))
 
     task.state = '4'
+    task.editcontent = para['note']
     task.save()
     return HttpResponse(json.dumps({
         'status': 'ok',
@@ -770,6 +771,11 @@ def app_feedback(request, para, user):
 def app_device_brief(request, para, user):
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
+    parent_classid = user.classid.parentid
+    while parent_classid != 0:
+    	result.append(parent_classid)
+    	parent_class = k_class.objects.get(id=parent_classid)
+    	parent_classid = parent_class.parentid
     devices = k_device.objects.filter(classid__in=result)
 
     name_dict = dict()

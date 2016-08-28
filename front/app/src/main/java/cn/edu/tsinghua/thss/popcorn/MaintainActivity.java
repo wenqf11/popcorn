@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,6 +112,7 @@ public class MaintainActivity extends Activity {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
+//                        SystemClock.sleep(3000);
                         progressDialog.hide();
                     }
 
@@ -136,6 +138,7 @@ public class MaintainActivity extends Activity {
                                 }
                             }).setPositiveButton("取消", null).show();
         }else{
+            maintainResultEditText.setVisibility(View.GONE);
             acceptTask();
         }
     }
@@ -186,7 +189,9 @@ public class MaintainActivity extends Activity {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
+//                        SystemClock.sleep(3000);
                         progressDialog.hide();
+                        maintainResultEditText.setVisibility(View.VISIBLE);
                     }
 
 

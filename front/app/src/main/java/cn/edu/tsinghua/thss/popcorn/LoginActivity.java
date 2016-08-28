@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,10 +41,13 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import cn.edu.tsinghua.thss.popcorn.utils.PasswordMd5;
 
 
 /**
@@ -101,6 +105,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         String password = sp.getString("PASSWORD", "");
         mUsernameView.setText(username);
         if(username.length() > 0 && password.length() > 0){
+            Log.e("password----","================"+password);
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
@@ -276,7 +281,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         private boolean isLogedIn;
 
         UserLoginTask(String username, String password) {
-            mUsername = username;
+
+            mUsername =username;
             mPassword = password;
         }
 
@@ -351,6 +357,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             showProgress(false);
 
             if (success) {
+                Log.e("password","================"+mPassword);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             } else {
@@ -365,6 +372,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             showProgress(false);
         }
     }
+
+
 }
 
 

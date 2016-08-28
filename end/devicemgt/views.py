@@ -3017,8 +3017,10 @@ def delete_task(request):
     #         return HttpResponseRedirect('/view_tasking/?msg='+_msg)
         
     if _id:
-        _maintenance = k_task.objects.get(id=_id)
-        _maintenance.delete()
+        _task = k_task.objects.get(id=_id)
+        _taskitems = k_taskitem.objects.filter(taskid_id=_task.id)
+        _taskitems.delete()
+        _task.delete()
     if _type == "1":
         return HttpResponseRedirect('/view_tasked/')
     else:

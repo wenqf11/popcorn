@@ -147,6 +147,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".BadListActivity"
+            android:label="@string/title_activity_bad"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".TaskListActivity"
             android:label="@string/title_activity_task_list"
             android:screenOrientation="portrait" >
@@ -175,6 +180,16 @@
         <activity
             android:name=".RepairRecordActivity"
             android:label="@string/title_activity_repair_record" >
+        </activity>
+        <activity
+            android:name=".RepairRecordItemActivity"
+            android:label="维修记录表"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".BadItemActivity"
+            android:label="报警详情"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

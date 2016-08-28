@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import android.util.Log;
 import android.util.Xml;
 
 import cn.edu.tsinghua.thss.popcorn.AboutInfoActivity;
@@ -49,6 +50,8 @@ public class UpdateInfoParser {
                 is = conn.getInputStream();
             }
             info = UpdateInfoParser.getUpdataInfo(is);
+            Log.e("info",info.getUrl());
+            Log.e("version",info.getVersion());
             return info.getVersion();
         }catch (Exception e) {
             e.printStackTrace();

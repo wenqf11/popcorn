@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fontawesometext="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="title"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="5dp"
+        android:singleLine="true"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="5dp"
+
+                    fontawesometext:fa_icon="fa-clock-o"
+                    android:textSize="11sp"
+                    android:textColor="#669999"
+                    android:layout_gravity="center_vertical"
+                    />
+                <TextView
+
+                    android:id="@+id/tv_time"
+                    android:text="5分钟前"
+                    style="@style/list_text_info"
+                    android:layout_marginRight="10dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                >
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="2dp"
+
+                    fontawesometext:fa_icon="fa-comments-o"
+                    android:textSize="11sp"
+                    android:textColor="#669999"
+                    android:layout_gravity="center_vertical"
+                    />
+                <TextView
+                    android:id="@+id/tv_comment_count"
+                    android:text="2"
+                    style="@style/list_text_info" />
+            </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="description报警详情description报警详情description报警详情description报警详情description报警详情description报警详情description报警详情description报警详情description报警详情"
+        android:textColor="#aa000000"
+        android:textSize="17sp"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#99000000"/>
+    <TextView
+        android:id="@+id/tv_comment_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="评论(2)"
+        android:padding="5dp"
+
+        android:textSize="15sp"
+        android:textColor="#88000000"
+        android:background="#35000000"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#99000000"/>
+    <ListView
+        android:layout_marginLeft="5dp"
+        android:id="@+id/lv_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#99000000"
+            android:layout_marginBottom="5dp"/>
+
+    <EditText
+        android:id="@+id/et_comment"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="  发表评论"
+        android:textSize="18sp"
+        android:background="@drawable/et"
+        android:layout_marginBottom="5dp"
+        />
+    </LinearLayout>
+</RelativeLayout>

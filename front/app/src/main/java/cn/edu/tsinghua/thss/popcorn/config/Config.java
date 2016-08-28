@@ -7,12 +7,19 @@ import android.os.Environment;
  */
 public class Config {
 
+    public static final String REPAIR_RECORD_JSON = "repair_record_json";
+    public static final String START_DAY ="start_day";
+    public static final String END_DAY ="end_day";
+
+
     public static String ACCESS_TOKEN = "hello_world";
-    public static String LOCAL_IP = "http://d.willwings.com";
-    //public static String LOCAL_IP = "http://59.66.95.199:8000";
+    //public static String LOCAL_IP = "http://d.willwings.com";
+    public static String LOCAL_IP = "http://59.66.97.7:8000";
     public static String REPORT_URL =  LOCAL_IP + "/app/maintain/add/";
-    public static String ROUTE_GET_URL = LOCAL_IP + "/app/route";
-    public static String FORM_GET_URL = LOCAL_IP + "/app/form";
+//    public static String ROUTE_GET_URL = LOCAL_IP + "/app/route";
+    public static String ROUTE_GET_URL = LOCAL_IP + "/app/route/";
+//    public static String FORM_GET_URL = LOCAL_IP + "/app/form";
+    public static String FORM_GET_URL = LOCAL_IP + "/app/form/";
 
     public static String ATTENDANCE_POST_URL = LOCAL_IP + "/app/check/";
     public static String ATTENDANCE_GET_URL = LOCAL_IP + "/app/checkinfo/";
@@ -23,8 +30,10 @@ public class Config {
     public static String GET_DEVICE_INFO_URL = LOCAL_IP + "/app/device/info/";
     public static String GET_USER_INFO_URL = LOCAL_IP + "/app/userinfo/";
     public static String GET_BONUS_URL = LOCAL_IP + "/app/egg/";
-    public static String GET_BONUS_TIME_URL = LOCAL_IP + "/app/egg/time";
-    public static String GET_BONUS_INFO_URL = LOCAL_IP + "/app/egg/info";
+//    public static String GET_BONUS_TIME_URL = LOCAL_IP + "/app/egg/time";
+//    public static String GET_BONUS_INFO_URL = LOCAL_IP + "/app/egg/info";
+    public static String GET_BONUS_TIME_URL = LOCAL_IP + "/app/egg/time/";
+    public static String GET_BONUS_INFO_URL = LOCAL_IP + "/app/egg/info/";
     public static String LOGIN_URL = LOCAL_IP +"/app/login/";
     public static String SUBMIT_METER_URL = LOCAL_IP + "/app/meter/";
     public static String SUBMIT_USER_INFO_URL = LOCAL_IP + "/app/userinfo/submit/";
@@ -44,11 +53,16 @@ public class Config {
     public static String TASK_UPDATE_URL = LOCAL_IP + "/app/task/update/";
     public static String TASK_CONFIRM_URL = LOCAL_IP + "/app/task/confirm/";
 
+    public static String REPAIR_RECORD=LOCAL_IP+"/app/maintain/record/";
+    public static String REPAIR_BAD=LOCAL_IP+"/app/maintain/test/";
+
     public static String WILL_WINGS_ORG_WEBSITE = "http://www.willwings.com";
     public static String AVATAR_FILE_DIR = Environment.getExternalStorageDirectory().getPath() + "/willwings/avatar/";
     public static String REPORT_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/willwings/photos/report.jpg";
     public static String DEBUG_USERNAME = "";
     public static int MAX_NETWORK_TIME = 3000;
+
+
 
     public static int MAIN_UPDATE_DELAY = 0;
     public static int REPAIR_UPDATE_DELAY = 0;

@@ -127,6 +127,7 @@ public class MainActivity extends FragmentActivity {
 
         HttpUtils http = new HttpUtils();
         http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
+        //抽奖
         http.send(HttpRequest.HttpMethod.GET,
                 Config.GET_BONUS_TIME_URL,
                 params,
@@ -193,7 +194,8 @@ public class MainActivity extends FragmentActivity {
                 // TODO Auto-generated method stub
                 super.run();
                 remoteVersion = UpdateInfoParser.getRemoteVersion();
-                Message message = new Message();
+//                Message message = new Message();
+                Message message=Message.obtain();
                 message.what = UPDATE_VERSION;
                 handler.sendMessage(message);
             }
@@ -464,6 +466,7 @@ public class MainActivity extends FragmentActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
+            //二维码
             case R.id.scan_btn:
                 try {
                     Intent intent = new Intent(this, QRcodeActivity.class);

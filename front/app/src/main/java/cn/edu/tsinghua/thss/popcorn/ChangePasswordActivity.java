@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import cn.edu.tsinghua.thss.popcorn.utils.PasswordMd5;
 
 
 public class ChangePasswordActivity extends Activity {
@@ -42,9 +43,9 @@ public class ChangePasswordActivity extends Activity {
     @OnClick(R.id.submit_passwd_btn)
     private void submitPasswordButtonClick(View v) {
         String oldPassword = oldPasswordEditText.getText().toString();
-        String newPassword = newPasswordEditText.getText().toString();
-        String confirmPassword = confirmPasswordEditText.getText().toString();
-        if(newPassword.length() < 6 || confirmPassword.length() < 6){
+        String newPassword =newPasswordEditText.getText().toString();
+        String confirmPassword =confirmPasswordEditText.getText().toString();
+        if(newPasswordEditText.getText().toString().length() < 6 || confirmPasswordEditText.getText().toString().length() < 6){
             Toast.makeText(getApplicationContext(), "密码至少6位", Toast.LENGTH_SHORT).show();
         }
         else if(!newPassword.equals(confirmPassword)){

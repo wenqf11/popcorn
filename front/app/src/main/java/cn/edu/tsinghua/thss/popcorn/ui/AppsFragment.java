@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cn.edu.tsinghua.thss.popcorn.AttendanceActivity;
+import cn.edu.tsinghua.thss.popcorn.BadListActivity;
 import cn.edu.tsinghua.thss.popcorn.BonusActivity;
 import cn.edu.tsinghua.thss.popcorn.DeviceInfoSearchActivity;
 import cn.edu.tsinghua.thss.popcorn.MaintainListActivity;
@@ -151,9 +152,21 @@ public class AppsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        //报警
+        View mAppsBadLayout = appsView.findViewById(R.id.id_apps_bad_ll);
+        mAppsBadLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), BadListActivity.class);
+                Bundle bundle=new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
         return appsView;
     }
+
+
 
 
     @Override

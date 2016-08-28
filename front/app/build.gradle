@@ -9,8 +9,8 @@ android {
         applicationId 'cn.edu.tsinghua.thss.popcorn'
         minSdkVersion 14
         targetSdkVersion 20
-        versionCode 1
-        versionName '0.0.7'
+        versionCode 3
+        versionName '0.0.9'
     }
     buildTypes {
         release {
@@ -30,10 +30,11 @@ configurations {
     all*.exclude group: 'com.android.support', module: 'support-v4'
 }
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v4:23.0.0'
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.beardedhen:androidbootstrap:1.0.0'
     compile 'com.roomorama:caldroid:2.1.0'
     //compile files('libs/locSDK_6.05.jar')
+    compile 'org.immutables:gson:2.2.4'
 }
