@@ -21,11 +21,11 @@
             <div>
                 <span class="profile-picture">
                     {% if userinfo.avatar %}
-                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}{{ userinfo.avatar }}" />
+                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}/user_avatar/{{ userinfo.avatar }}" />
                     {% elif user_avatar %}
-                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}{{ user_avatar }}" />
+                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}/user_avatar/{{ user_avatar }}" />
                     {% else %}
-                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}default-user.png" />
+                        <img id="avatar" class="editable img-responsive" alt="用户头像" width="180" height="180" src="{{ MEDIA_URL }}/user_avatar/default-user.png" />
                     {% endif %}
                 </span>
 
@@ -435,7 +435,7 @@
 
                         deferred.done(function(res){
                             if(res.status == 'OK') {
-                                $('#avatar').get(0).src = "{{ MEDIA_URL }}" + res.useravatar;
+                                $('#avatar').get(0).src = "{{ MEDIA_URL }}/user_avatar/" + res.useravatar;
                                 $.gritter.add({
                                     title: '修改个人信息成功！',
                                     text: '头像更新成功！',

@@ -349,9 +349,25 @@
                 </div>
 
                 <div class="form-group">
+                
                     <label class="col-sm-3 control-label no-padding-right">备件列表</label>
+                <!---
                     <div class="col-sm-9">
                         <input name="spare" type="text" class="span6 m-wrap" value="{{ data.spare }}"/>
+                    </div>
+                -->
+                    <div class="col-sm-9">
+                        <div class="col-sm-6" style="margin-left:-12px">
+                            <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="选择备品备件" name="spare">
+                                {% for spare in data.spare_list %}
+                                    {% if spare in data.chosen_spares %}
+                                        <option value="{{ spare }}" selected="selected">{{ spare }}</option>
+                                    {% else %}
+                                        <option value="{{ spare }}">{{ spare }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
 

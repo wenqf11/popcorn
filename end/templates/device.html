@@ -37,7 +37,7 @@
     <hr style="margin: 10px"/>
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-phone info-icon"></i>
+            <i class="ace-icon fa fa-book info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
               设备编号：{{ deviceinfo.brief }}
@@ -46,7 +46,7 @@
     <hr style="margin: 10px"/>
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-envelope info-icon"></i>
+            <i class="ace-icon fa fa-paw info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
               设备位置：{{ deviceinfo.position }}
@@ -55,16 +55,7 @@
     <hr style="margin: 10px" />
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-trophy info-icon"></i>
-        </div>
-        <h5 class="col-xs-9 info-text">
-              所属部门：{{ deviceinfo.class }}
-        </h5>
-    </div>
-    <hr style="margin: 10px" />
-    <div class="row">
-        <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-trophy info-icon"></i>
+            <i class="ace-icon fa fa-cube info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
               设备分类：{{ deviceinfo.devicetype }}
@@ -73,7 +64,25 @@
     <hr style="margin: 10px" />
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-trophy info-icon"></i>
+            <i class="ace-icon fa fa-database info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              备品备件：{{ deviceinfo.spares }}
+        </h5>
+    </div>
+    <hr style="margin: 10px" />
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-ra info-icon"></i>
+        </div>
+        <h5 class="col-xs-9 info-text">
+              所属部门：{{ deviceinfo.class }}
+        </h5>
+    </div>
+    <hr style="margin: 10px" />
+    <div class="row">
+        <div class="col-xs-2 my-user-info">
+            <i class="ace-icon fa fa-tree info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
               负责人：{{ deviceinfo.owner }}
@@ -82,12 +91,12 @@
     <hr style="margin: 10px" />
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-trophy info-icon"></i>
+            <i class="ace-icon fa fa-cogs info-icon"></i>
         </div>
         <h5 class="col-xs-10 info-text">
             <div class="widget-box">
                 <div class="widget-header">
-                    <h5 class="widget-title">维修信息</h5>
+                    <h5 class="widget-title">维修信息 (共维修 {{ deviceinfo.m_record_size }} 次)</h5>
 
                     <div class="widget-toolbar">
 
@@ -128,12 +137,12 @@
     <hr style="margin: 10px" />
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-trophy info-icon"></i>
+            <i class="ace-icon fa fa-cloud info-icon"></i>
         </div>
         <h5 class="col-xs-10 info-text">
             <div class="widget-box">
                 <div class="widget-header">
-                    <h5 class="widget-title">保养信息</h5>
+                    <h5 class="widget-title">保养信息 (共保养 {{ deviceinfo.k_record_size }} 次)</h5>
 
                     <div class="widget-toolbar">
 
@@ -175,12 +184,12 @@
     <hr style="margin: 10px" />
     <div class="row">
         <div class="col-xs-2 my-user-info">
-            <i class="ace-icon fa fa-trophy info-icon"></i>
+            <i class="ace-icon fa fa-calendar info-icon"></i>
         </div>
         <h5 class="col-xs-10 info-text">
             <div class="widget-box">
                 <div class="widget-header">
-                    <h5 class="widget-title">抄表信息</h5>
+                    <h5 class="widget-title">抄表信息 (共抄表 {{ deviceinfo.t_record_size }} 次)</h5>
 
                     <div class="widget-toolbar">
 

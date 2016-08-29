@@ -783,8 +783,17 @@ def devicemgt(request):
                 deviceinfo['owner'] = owner[0].name
             else:
                 deviceinfo['owner'] = "未指定负责人"
+            str_spares = ''
+            spares = k_spare.objects.filter(k_device=_id)
+            for s in spares:
+                str_spares += s.name + ','
+            if str_spares != '':
+                deviceinfo['spares'] = str_spares[0:len(str_spares)-1]
+            else:
+                deviceinfo['spares'] = '无'
             _m_record = k_maintenance.objects.filter(deviceid_id=_id, mtype=2).order_by('createdatetime')
             if len(_m_record) >= 1:
+                deviceinfo['m_record_size'] = len(_m_record)
                 _m_record = _m_record[len(_m_record)-1]
                 deviceinfo['m_record_title'] = _m_record.title
                 deviceinfo['m_record_content'] = _m_record.createcontent
@@ -807,8 +816,10 @@ def devicemgt(request):
                 deviceinfo['m_record_title'] = "暂无"
                 deviceinfo['m_record_content'] = "暂无"
                 deviceinfo['has_m_record'] = 0
+                deviceinfo['m_record_size'] = 0
             _k_record = k_maintenance.objects.filter(deviceid_id=_id, mtype=1).order_by('createdatetime')
             if len(_k_record) >= 1:
+                deviceinfo['k_record_size'] = len(_k_record)
                 _k_record = _k_record[len(_k_record)-1]
                 deviceinfo['k_record_title'] = _k_record.title
                 deviceinfo['k_record_content'] = _k_record.createcontent
@@ -831,8 +842,10 @@ def devicemgt(request):
                 deviceinfo['k_record_title'] = "暂无"
                 deviceinfo['k_record_content'] = "暂无"
                 deviceinfo['has_k_record'] = 0
+                deviceinfo['k_record_size'] = 0
             _t_record = k_meter.objects.filter(brief=device.brief).order_by('metertime')
             if len(_t_record) >= 1:
+                deviceinfo['t_record_size'] = len(_t_record)
                 _t_record = _t_record[len(_t_record)-1]
                 _t_user = k_user.objects.filter(id=_t_record.userid_id)
                 if len(_t_user) == 1:
@@ -849,6 +862,7 @@ def devicemgt(request):
                 deviceinfo['has_t_record'] = 1
             else:
                 deviceinfo['has_t_record'] = 0
+                deviceinfo['t_record_size'] = 0
             _c = k_class.objects.filter(id=device.classid_id)
             if len(_c) == 1:
                 _c_list = list()
@@ -901,6 +915,7 @@ def operate_device(request):
     supplier_list = list()
     producer_list = list()
     people_list = list()
+    spare_list = list()
     classes = k_class.objects.filter(id__in=result)
     for c in classes:
         class_list.append(c.name)
@@ -913,6 +928,9 @@ def operate_device(request):
     producers = k_producer.objects.all()
     for p in producers:
         producer_list.append(p.name)
+    spares = k_spare.objects.all()
+    for s in spares:
+        spare_list.append(s.name)
     people = k_user.objects.filter(classid__in=result)
     for p in people:
         person = dict()
@@ -925,6 +943,7 @@ def operate_device(request):
     userdata['supplier_list'] = supplier_list
     userdata['producer_list'] = producer_list
     userdata['people'] = people_list
+    userdata['spare_list'] = spare_list
     if _id:
         thedevice = k_device.objects.filter(id = _id)[0]
         key_list = ['name', 'brand', 'brief', 'serial', 'model', 'buytime', 'content', 'qrcode', 'position', 'memo',
@@ -941,6 +960,13 @@ def operate_device(request):
             userdata['chosen_supplier'] = '无'
         userdata['chosen_class'] = thedevice.classid.name
         userdata['chosen_type'] = thedevice.typeid.name
+
+        k_chosed_spares = k_spare.objects.filter(k_device=_id)
+        chosed_spares = []
+        for k_chosed_spare in k_chosed_spares:
+            chosed_spares.append(k_chosed_spare.name)
+        userdata['chosen_spares'] = chosed_spares
+
         _owner = k_user.objects.filter(id=thedevice.ownerid)
         if len(_owner) == 1:
             _owner = _owner[0]
@@ -1032,6 +1058,12 @@ def deviceadd(request):
                 _device.supplierid = _supplierid
             if _producerid != '':
                 _device.producerid = _producerid
+            
+            # 建立device和spare的关系
+            spares = k_spare.objects.filter(name=request.POST['spare'])
+            for s in spares:
+                _device.spare.add(spare.id)
+
             _device.save()
             server_msg = '添加设备成功！'
             return HttpResponseRedirect('/operate_device/?id='+str(_device.id)+'&msg='+server_msg)
@@ -1045,7 +1077,6 @@ def deviceadd(request):
             _dev.content = request.POST['content']
             _dev.position = request.POST['position']
             _dev.memo = request.POST['memo']
-            _dev.spare = request.POST['spare']
             _dev.notice = request.POST['notice']
             _dev.editorid = request.user.id
             _dev.editdatetime = get_current_date()
@@ -1056,6 +1087,15 @@ def deviceadd(request):
                 _dev.supplierid = _supplierid
             _dev.typeid = _typeid
             _dev.ownerid = _ownerid.id
+            tmp_devs = _dev.spare.filter(k_device=_dev.id)
+            for t_dev in tmp_devs:
+                _dev.spare.remove(t_dev)
+            # 建立user和role的关系
+            spares_name = request.POST.getlist('spare')
+            for s_name in spares_name:
+                spares = k_spare.objects.filter(name=s_name)
+                for spare in spares:
+                    _dev.spare.add(spare.id)
             _dev.save()
             server_msg = _classname + '中' + _dev.name + '(' + _dev.brief + ')的设备信息已成功更新！'
             return HttpResponseRedirect('/operate_device/?id=' + str(_dev.id) + '&msg=' + server_msg)
