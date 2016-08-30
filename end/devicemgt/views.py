@@ -2659,6 +2659,13 @@ def submit_maintenance(request):
         _maintenance.auditdatetime = get_current_date()
         _maintenance.factor = _factor
         _maintenance.state = 5
+        if int(_factor) < 0:
+            _maintenance.factor = 0
+            _maintenance.editorid = 0
+            _maintenance.assignorid = 0
+            _maintenance.state = 1
+            _maintenance.save()
+            return HttpResponseRedirect('/view_maintained/')
         _maintenance.save()
 
         "记录积分"
@@ -2925,6 +2932,12 @@ def submit_upkeep(request):
     _maintenance.auditdatetime = get_current_date()
     _maintenance.factor = _factor
     _maintenance.state = 5
+    if int(_factor) < 0:
+        _maintenance.factor = 0
+        _maintenance.assignorid = 0
+        _maintenance.state = 2
+        _maintenance.save()
+        return HttpResponseRedirect('/view_upkeeped/')
     _maintenance.save()
 
     "记录积分"
@@ -3253,6 +3266,16 @@ def submit_taskitem(request):
         _taskitem.auditdatetime = get_current_date()
         _taskitem.factor = _factor
         _taskitem.state = 4
+        if int(_factor) < 0:
+            _taskitem.factor = 0
+            _taskitem.editorid = 0
+            _taskitem.assignorid = 0
+            _taskitem.state = 1
+            _taskitem.save()
+            _task = k_task.objects.get(id=_taskitem.taskid_id)
+            _task.state = 1
+            _task.save()
+            return HttpResponseRedirect('/view_taskitem?id=%i' % _taskitem.taskid_id)
         _taskitem.save()
         _taskitems = k_taskitem.objects.filter(taskid_id=_taskitem.taskid_id)
         _auditcomplete = True
