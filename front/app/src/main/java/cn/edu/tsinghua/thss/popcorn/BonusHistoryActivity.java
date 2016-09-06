@@ -120,7 +120,7 @@ public class BonusHistoryActivity extends FragmentActivity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障或服务器内部错误", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络连接异常或服务器内部错误", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -177,7 +177,7 @@ public class RecordListActivity extends Activity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障或服务器内部错误", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络连接异常或服务器内部错误", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -305,7 +305,7 @@ public class RecordListActivity extends Activity {
                         }
                     } else {
                         new AlertDialog.Builder(RecordListActivity.this)
-                                .setTitle("网络故障，请重新提交！")
+                                .setTitle("网络连接异常，请连接网络后重新提交！")
                                 .setPositiveButton("确定", null)
                                 .show();
                     }

@@ -555,7 +555,7 @@ public class MainActivity extends FragmentActivity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                         isUnRepairCallbackFinished = true;
                     }
                 });
@@ -627,7 +627,7 @@ public class MainActivity extends FragmentActivity {
                     }
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                         isUnRecordCallbackFinished = true;
                     }
                 });
@@ -707,7 +707,7 @@ public class MainActivity extends FragmentActivity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                         isUnMaintainCallbackFinished = true;
                     }
                 });
@@ -780,7 +780,7 @@ public class MainActivity extends FragmentActivity {
                     }
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
                         isUnTaskCallbackFinished = true;
                     }
                 });

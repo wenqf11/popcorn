@@ -252,7 +252,7 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

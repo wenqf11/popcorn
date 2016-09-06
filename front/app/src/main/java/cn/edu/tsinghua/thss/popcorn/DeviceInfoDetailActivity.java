@@ -119,7 +119,7 @@ public class DeviceInfoDetailActivity extends Activity {
 
                                 setDeviceInfoView();
                             }else{
-                                Toast.makeText(getApplicationContext(), "网络故障或者设备不存在", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "网络连接异常或者设备不存在", Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
@@ -130,7 +130,7 @@ public class DeviceInfoDetailActivity extends Activity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

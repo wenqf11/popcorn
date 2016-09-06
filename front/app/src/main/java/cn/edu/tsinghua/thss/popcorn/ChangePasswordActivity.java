@@ -93,7 +93,7 @@ public class ChangePasswordActivity extends Activity {
                         @Override
                         public void onFailure(HttpException error, String msg) {
                             progressDialog.hide();
-                            Toast.makeText(getApplicationContext(), error.getExceptionCode() + ":" + msg, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                         }
                     });
         }

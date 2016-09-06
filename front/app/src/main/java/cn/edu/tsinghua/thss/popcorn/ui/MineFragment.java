@@ -225,7 +225,7 @@ public class MineFragment extends Fragment {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getActivity().getApplicationContext(), "网络故障", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
