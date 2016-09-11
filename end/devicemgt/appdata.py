@@ -596,6 +596,7 @@ def app_maintain_update(request, para, user):
 @token_required
 def app_maintain_submit(request, para, user):
     para['maintain_id'] = int(request.POST.get('maintain_id'))
+    para['note'] = request.POST.get('note')
 
     try:
         task = k_maintenance.objects.get(id=para['maintain_id'])
