@@ -31,7 +31,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">给分系数<span class="required">*</span></label>
                         <div class="col-sm-9">
-                            <select id="factor" name="factor" form="maintenanceform">
+                            <select id="factor" name="factor" form="maintenanceform" onchange="auditChange()">
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -46,6 +46,12 @@
                         <label class="col-sm-3 control-label no-padding-top">id</label>
                         <div class="col-sm-9">
                             <input type="text" name="id" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group" id="auditreason" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top">不通过的理由</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="failedreason" value="" />
                         </div>
                     </div>
                 </div>
@@ -146,7 +152,7 @@
                                     </a>
                                     {% endif %}
                                     {% if "审核维修" in modelsshow %}
-                                    <a class="blue" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal">
+                                    <a class="blue" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal" onclick="$('#auditreason').hide();">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
                                     {% endif %}
@@ -186,6 +192,12 @@
             if (!confirm("确认要删除？")) {
                 window.event.returnValue = false;
             }
+        }
+        function auditChange() {
+            if($('#factor').val() == -1)
+                $('#auditreason').show();
+            else
+                $('#auditreason').hide();
         }
     </script>
     <script type="text/javascript">

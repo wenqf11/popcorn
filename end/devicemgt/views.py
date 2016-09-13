@@ -2410,7 +2410,7 @@ def view_maintaining(request):
             _creator = '该用户已被删除'
         memo = _maintaining.memo
         if _maintaining.creatorid == 0:
-            _creator = _maintaining.memo
+            _creator = _maintaining.memo.split("审核未通过：")[0]
             memo = ""
         
         if _maintaining.image:
@@ -2509,7 +2509,7 @@ def view_maintained(request):
             _creator = '该用户已被删除'
         memo = _maintained.memo
         if _maintained.creatorid == 0:
-            _creator = _maintained.memo
+            _creator = _maintained.memo.split("审核未通过：")[0]
             memo = ""
         try:
             _assignor = k_user.objects.get(id=_maintained.assignorid).name
@@ -2660,6 +2660,7 @@ def submit_maintenance(request):
         _maintenance.factor = _factor
         _maintenance.state = 5
         if int(_factor) < 0:
+            _maintenance.memo = _maintenance.memo + "审核未通过：" + request.GET.get('failedreason')
             _maintenance.factor = 0
             _maintenance.editorid = 0
             _maintenance.assignorid = 0
@@ -2933,6 +2934,7 @@ def submit_upkeep(request):
     _maintenance.factor = _factor
     _maintenance.state = 5
     if int(_factor) < 0:
+        _maintenance.memo = "审核未通过：" + request.GET.get('failedreason')
         _maintenance.factor = 0
         _maintenance.assignorid = 0
         _maintenance.state = 2
@@ -3267,6 +3269,7 @@ def submit_taskitem(request):
         _taskitem.factor = _factor
         _taskitem.state = 4
         if int(_factor) < 0:
+            _taskitem.memo = "审核未通过：" + request.GET.get('failedreason')
             _taskitem.factor = 0
             _taskitem.editorid = 0
             _taskitem.assignorid = 0

@@ -107,7 +107,7 @@
                                                         </a>
                                                         {% endif %}
                                                         {% if "审核任务" in modelsshow %}
-                                                        <a class="blue" id="{{ dataitem.id }}" href="#my-modal2" data-toggle="modal">
+                                                        <a class="blue" id="{{ dataitem.id }}" href="#my-modal2" data-toggle="modal" onclick="$('#auditreason').hide();">
                                                             <i class="ace-icon fa fa-check bigger-130 fa-pencil2"></i>
                                                         </a>
                                                         {% endif %}
@@ -241,7 +241,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">给分系数<span class="required">*</span></label>
                         <div class="col-sm-9">
-                            <select id="factor" name="factor" form="taskitemform2">
+                            <select id="factor" name="factor" form="taskitemform2" onchange="auditChange()">
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -262,6 +262,12 @@
                         <label class="col-sm-3 control-label no-padding-top">type</label>
                         <div class="col-sm-9">
                             <input type="text" name="submittype" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group" id="auditreason" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top">不通过的理由</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="failedreason" value="" />
                         </div>
                     </div>
                 </div>
@@ -380,6 +386,12 @@
             if (!confirm("确认要删除？")) {
                 window.event.returnValue = false;
             }
+        }
+        function auditChange() {
+            if($('#factor').val() == -1)
+                $('#auditreason').show();
+            else
+                $('#auditreason').hide();
         }
     </script>
     <script type="text/javascript">
