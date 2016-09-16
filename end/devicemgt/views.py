@@ -2661,6 +2661,7 @@ def submit_maintenance(request):
         _maintenance.state = 5
         if int(_factor) < 0:
             _maintenance.memo = _maintenance.memo + "审核未通过：" + request.GET.get('failedreason')
+            _maintenance.factor = 0
             _maintenance.state = 2
             _maintenance.save()
             return HttpResponseRedirect('/view_maintained/')
@@ -2932,6 +2933,7 @@ def submit_upkeep(request):
     _maintenance.state = 5
     if int(_factor) < 0:
         _maintenance.memo = "审核未通过：" + request.GET.get('failedreason')
+        _maintenance.factor = 0
         _maintenance.state = 2
         _maintenance.save()
         return HttpResponseRedirect('/view_upkeeped/')
@@ -3265,6 +3267,7 @@ def submit_taskitem(request):
         _taskitem.state = 4
         if int(_factor) < 0:
             _taskitem.memo = "审核未通过：" + request.GET.get('failedreason')
+            _taskitem.factor = 0
             _taskitem.state = 2
             _taskitem.save()
             _task = k_task.objects.get(id=_taskitem.taskid_id)
