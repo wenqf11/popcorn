@@ -2660,7 +2660,7 @@ def submit_maintenance(request):
         _maintenance.factor = _factor
         _maintenance.state = 5
         if int(_factor) < 0:
-            _maintenance.memo = _maintenance.memo + "审核未通过：" + request.GET.get('failedreason')
+            _maintenance.memo = _maintenance.memo.split("审核未通过：")[0] + "审核未通过：" + request.GET.get('failedreason')
             _maintenance.factor = 0
             _maintenance.state = 2
             _maintenance.save()
