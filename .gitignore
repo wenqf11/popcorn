@@ -36,3 +36,6 @@ end/static/images/qrcode/
 
 # maintenance images
 end/static/images/maintenance_image/
+
+# user avatar
+end/static/images/user_avatar/
