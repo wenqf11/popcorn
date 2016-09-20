@@ -1045,7 +1045,6 @@ def deviceadd(request):
                 content=request.POST['content'],
                 position=request.POST['position'],
                 memo=request.POST['memo'],
-                spare=request.POST['spare'],
                 notice=request.POST['notice'],
                 maintenanceperiod = 1,
                 #status=2,
@@ -1062,7 +1061,7 @@ def deviceadd(request):
             # 建立device和spare的关系
             spares = k_spare.objects.filter(name=request.POST['spare'])
             for s in spares:
-                _device.spare.add(spare.id)
+                _device.spare.add(s.id)
 
             _device.save()
             server_msg = '添加设备成功！'
