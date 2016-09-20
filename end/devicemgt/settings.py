@@ -71,6 +71,7 @@ MEDIA_URL = '/static/images/'
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
 #STATIC_ROOT = '/devicemgt/static/'
+WEBSET_ROOT_PATH = 'D:/website/popcorn/end/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"

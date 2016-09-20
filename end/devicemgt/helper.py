@@ -13,7 +13,7 @@ def handle_uploaded_file(username, f):
     #path = settings.IMG_DIR+'/'+username+'.'+f.name.split('.')[-1]
     filename = username+'.'+f.name.split('.')[-1]
     #path = os.getcwd() + settings.MEDIA_URL + '/user_avatar/' + filename
-    path = 'D:/website/popcorn/end/'+settings.MEDIA_URL + '/user_avatar/' + filename
+    path = settings.WEBSET_ROOT_PATH+settings.MEDIA_URL + '/user_avatar/' + filename
     with open(path, 'wb+') as info:
         for chunk in f.chunks():
             info.write(chunk)

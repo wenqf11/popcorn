@@ -61,7 +61,7 @@ def print_qrcode(request):
 def download_qrcode(request):
     user = k_user.objects.get(username=request.user.username)
     server_msg = ''
-    path = os.getcwd() + '/static/images/qrcode/'
+    path = os.path.join(settings.WEBSET_ROOT_PATH+settings.MEDIA_URL,'qrcode/')
     if request.method == "POST":
         filelist = request.POST.getlist("filelist[]")
         '''elegant way but doesn't work yet
@@ -85,9 +85,13 @@ def download_qrcode(request):
         ''' Not elegant but ok
        '''
         archive = zipfile.ZipFile(path+'qrcode.zip', 'w')
+        os.chdir(path)
+        ori_path = os.getcwd()
         for _f in filelist:
             filename = gen_qrcode(path, _f)
-            archive.write(path+filename)
+            #archive.write(path+filename)
+            archive.write(filename)
+        os.chdir(ori_path)
         archive.close()
         return HttpResponse(json.dumps({
             "link": "/static/images/qrcode/qrcode.zip"
