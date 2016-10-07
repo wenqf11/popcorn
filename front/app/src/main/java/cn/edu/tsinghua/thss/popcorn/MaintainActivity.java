@@ -301,6 +301,9 @@ public class MaintainActivity extends Activity {
             e.printStackTrace();
         }
 
+        int index = maintainMemo.indexOf("审核未通过：");
+        maintainMemo = maintainMemo.substring(index);
+
         maintainTitleTextView.setText(title);
         deviceNumberTextView.setText(deviceNumber);
         maintainDescriptionTextView.setText(faultDescription);

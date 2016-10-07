@@ -13,8 +13,8 @@ public class Config {
 
 
     public static String ACCESS_TOKEN = "hello_world";
-    //public static String LOCAL_IP = "http://d.willwings.com";
-    public static String LOCAL_IP = "http://59.66.97.7:8000";
+    public static String LOCAL_IP = "http://d.willwings.com";
+    //public static String LOCAL_IP = "http://59.66.97.7:8000";
     public static String REPORT_URL =  LOCAL_IP + "/app/maintain/add/";
 //    public static String ROUTE_GET_URL = LOCAL_IP + "/app/route";
     public static String ROUTE_GET_URL = LOCAL_IP + "/app/route/";
