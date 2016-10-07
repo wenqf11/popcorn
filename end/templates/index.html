@@ -28,6 +28,7 @@
     <div>
         <div class="col-sm-7 infobox-container">
             {% if "所有用户" in modelsshow %}
+            <a href="/user" style="text-decoration:none;color:green">
             <div class="infobox infobox-green">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-group"></i>
@@ -35,21 +36,24 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
-                        <a href="/user" style="text-decoration:none;color:green">
+                        
                         {% if data.usernum %}
                             {{ data.usernum }}
                         {% else %}
                             0
                         {% endif %}
-                        </a>
+                        
                     </span>
                     <div class="infobox-content">当前项目部人数</div>
                 </div>
 
                 <!--<div class="stat stat-success">8%</div>-->
             </div>
+            </a>
             {% endif %}
+
             {% if "所有设备" in modelsshow %}
+            <a href="/devicebyclass/" style="text-decoration:none;color:cornflowerblue">
             <div class="infobox infobox-blue">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-dashboard"></i>
@@ -57,18 +61,22 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
-                        <a href="/devicebyclass/" style="text-decoration:none;color:cornflowerblue">
+                        
                         {% if data.devicenum %}
                             {{ data.devicenum }}
                         {% else %}
                             0
                         {% endif %}
-                        </a>
+                        
                     </span>
                     <div class="infobox-content">当前项目部设备数</div>
                 </div>
             </div>
+            </a>
             {% endif %}
+
+            {% if "积分记录" in modelsshow %}
+            <a href="/score_history/">
             <div class="infobox infobox-pink">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-trophy"></i>
@@ -76,16 +84,16 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
-                        <a href="/score_history/" style="text-decoration:none;color:purple">
+                        
                         {% if data.userscore %}
                             {{ data.userscore }}
                         {% else %}
                             0
                         {% endif %}
-                        </a>
                     </span>
-                    <div class="infobox-content">当前积分与排名</div>
+                    <div class="infobox-content">当月积分与排名</div>
                 </div>
+                
 
                 <div class="stat stat-success">
                     {% if data.userrank %}
@@ -95,7 +103,11 @@
                     {% endif %}
                 </div>
             </div>
+            </a>
+            {% endif %}
+
             {% if "维修" in modelsshow %}
+            <a href="/view_maintaining/" style="text-decoration:none;color:red">
             <div class="infobox infobox-red">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-wrench"></i>
@@ -103,19 +115,21 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
-                        <a href="/view_maintaining/" style="text-decoration:none;color:red">
+                        
                         {% if data.unmaintenance1 %}
                             {{ data.unmaintenance1 }}
                         {% else %}
                             0
                         {% endif %}
-                        </a>
                     </span>
                     <div class="infobox-content">尚未维修</div>
                 </div>
             </div>
             {% endif %}
+            </a>
+
             {% if "保养" in modelsshow %}
+            <a href="/view_upkeeping/" style="text-decoration:none;color:orangered">
             <div class="infobox infobox-orange2">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-shopping-cart"></i>
@@ -123,19 +137,20 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
-                        <a href="/view_upkeeping/" style="text-decoration:none;color:orangered">
                         {% if data.unmaintenance2 %}
                             {{ data.unmaintenance2 }}
                         {% else %}
                             0
                         {% endif %}
-                        </a>
                     </span>
                     <div class="infobox-content">尚未保养</div>
                 </div>
             </div>
+            </a>
             {% endif %}
+
             {% if "未完成任务" in modelsshow %}
+            <a href="/view_tasking/" style="text-decoration:none;color:dodgerblue">
             <div class="infobox infobox-blue2">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-tasks"></i>
@@ -143,17 +158,18 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number">
-                        <a href="/view_tasking/" style="text-decoration:none;color:dodgerblue">
+                        
                         {% if data.unfinishedtask %}
                             {{ data.unfinishedtask }}
                         {% else %}
                             0
                         {% endif %}
-                        </a>
+                        
                     </span>
                     <div class="infobox-content">未完成任务</div>
                 </div>
             </div>
+            </a>
             {% endif %}
 
         </div>
@@ -274,6 +290,19 @@
         </div>
         {% endif %}
     </div>
+
+    <div class="col-xs-12" style="margin-top: 20px;">
+        <!-- PAGE CONTENT BEGINS -->
+        <div class="alert alert-block alert-success">
+            <button type="button" class="close" data-dismiss="alert">
+                <i class="ace-icon fa fa-times"></i>
+            </button>
+            <div style="font-size: 18px;font-weight: 400;">
+                请查看以下统计信息，合理分配人员，及时完成任务。
+            </div>
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

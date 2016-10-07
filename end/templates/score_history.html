@@ -30,11 +30,37 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">所属部门</label>
+                <div class="col-sm-5">
+                    <select class="chosen-select" name="classname">
+                        {% for class in class_list %}
+                        <option value="{{ class }}"{%ifequal classname class%} selected {% endifequal%}>
+                        {{ class }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-sm-3 control-label">姓名</label>
                 <div class="col-sm-9">
                     <input  name="name" type="text" class="span8 m-wrap" value="{{ name }}" />
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">显示类型</label>
+                <div class="col-sm-9">
+                    <label class="radio-inline">
+                      <input type="radio" name="show_record_type"  value="monthly" checked> 逐月显示
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="show_record_type"  value="detail" 
+                      {% ifequal show_record_type "detail"%} checked {% endifequal %}> 详细记录
+                    </label>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary" style="float: right;" onclick="return validateForm();">查找</button>
         </form>
     </div>
@@ -49,21 +75,29 @@
                     <th>姓名</th>
                     <th>部门</th>
                     <th>获得积分</th>
+                    {% ifequal show_record_type "detail"%}
                     <th>基本分</th>
                     <th>给分系数</th>
                     <th>积分类型</th>
+                    {% endifequal %}
                 </tr>
             </thead>
             <tbody>
                 {% for record in bonus_records %}
                 <tr>
+                    {% ifequal show_record_type "detail"%}
                     <td>{{ record.date | date:"Y-m-d" }}</td>
+                    {% else %}
+                    <td>{{ record.date }}</td>
+                    {% endifequal %}
                     <td>{{ record.name }}</td>
                     <td>{{ record.dept }}</td>
                     <td>{{ record.score }}</td>
+                    {% ifequal show_record_type "detail"%}
                     <td>{{ record.scorebase }}</td>
                     <td>{{ record.scorefactor }}</td>
                     <td>{{ record.scoretype }}</td>
+                    {% endifequal %}
                 </tr>
                 {% endfor %}
             </tbody>

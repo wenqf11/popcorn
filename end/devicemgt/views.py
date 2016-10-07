@@ -4996,15 +4996,67 @@ def score_submit(request):
 def score_history(request):
     user = k_user.objects.get(username=request.user.username)
     if request.method == "GET":
+        #分类筛选
+        user = k_user.objects.get(username=request.user.username)
+        result = [user.classid.id]
+        get_class_set(result, user.classid.id)
+        class_list = list()
+        classes = k_class.objects.filter(id__in=result)
+        for c in classes:
+            class_list.append(c.name)
+
+        bonus_records = k_staffscoreinfo.objects.all()
+        start_date_str = datetime.today().strftime("%Y-%m-01")
+        start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
+        bonus_records = bonus_records.filter(time__gte=start_date)
+
+
+        bonus_users = k_user.objects.filter(classid__in=classes)
+        bonus_records = bonus_records.filter(userid__in=bonus_users)
+
+        show_record_type = 'monthly'
+        data = []
+        score_dict = dict()
+        for bonus_record in bonus_records:
+            key = str(bonus_record.userid.id) +  ',' + bonus_record.time.strftime("%Y-%m") \
+            + ',' +bonus_record.userid.name + ',' + bonus_record.userid.classid.name
+            score_dict[key] = score_dict.get(key, 0) + bonus_record.score
+        
+        for key, value in score_dict.items():
+            res = key.split(',')
+            d = {
+                'date': res[1],
+                'name': res[2],
+                'dept': res[3],
+                'score': value
+            }
+            data.append(d)
+        data = sorted(data, key=lambda elem: (elem['date'], -elem['score'])) 
         return get_purviews_and_render_to_response(request.user.username, "score_history.html", {
+            'bonus_records': data,
+            'start_date': start_date_str,
             'username':user.username,
-            'useravatar': user.avatar
+            'useravatar': user.avatar,
+            'class_list': class_list,
+            'classname': user.classid.name,
+            'show_record_type': show_record_type
         })
+
     else:
         start_date_str = request.POST.get("start-date", "")
         end_date_str = request.POST.get("end-date", "")
         name = request.POST.get("name", "")
+        classname = request.POST.get('classname', "")
+        show_record_type = request.POST.get('show_record_type', "")
         bonus_records = k_staffscoreinfo.objects.all()
+
+        user = k_user.objects.get(username=request.user.username)
+        result = [user.classid.id]
+        get_class_set(result, user.classid.id)
+        class_list = list()
+        classes = k_class.objects.filter(id__in=result)
+        for c in classes:
+            class_list.append(c.name)
 
         if start_date_str != "":
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
@@ -5014,32 +5066,72 @@ def score_history(request):
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
             bonus_records = bonus_records.filter(time__lte=end_date)
 
+        if classname != "":
+            classid = k_class.objects.filter(name=classname)[0]
+            res = [classid.id]
+            get_class_set(res, classid.id)
+            classlist = k_class.objects.filter(id__in=res)
+            bonus_users = k_user.objects.filter(classid__in=classlist)
+            bonus_records = bonus_records.filter(userid__in=bonus_users)
 
         if len(name) > 0:
             bonus_users = k_user.objects.filter(name=name)
             bonus_records = bonus_records.filter(userid__in=bonus_users)
 
-        data = []
-        for bonus_record in bonus_records:
-            d = {
-                'id': bonus_record.id,
-                'date': bonus_record.time,
-                'name': bonus_record.userid.name,
-                'dept': bonus_record.userid.classid.name,
-                'score': bonus_record.score,
-                'scorebase': bonus_record.content.split(";")[0],
-                'scorefactor': bonus_record.content.split(";")[1],
-                'scoretype': bonus_record.content.split(";")[2]
-            }
-            data.append(d)
-        return get_purviews_and_render_to_response(request.user.username, "score_history.html", {
-            'bonus_records': data,
-            'start_date': start_date_str,
-            'end_date': end_date_str,
-            'username':user.username,
-            'useravatar': user.avatar,
-            'name': name
-        })
+
+        if show_record_type == 'detail':
+            data = []
+            for bonus_record in bonus_records:
+                d = {
+                    'date': bonus_record.time,
+                    'name': bonus_record.userid.name,
+                    'dept': bonus_record.userid.classid.name,
+                    'score': bonus_record.score,
+                    'scorebase': bonus_record.content.split(";")[0],
+                    'scorefactor': bonus_record.content.split(";")[1],
+                    'scoretype': bonus_record.content.split(";")[2]
+                }
+                data.append(d)
+            return get_purviews_and_render_to_response(request.user.username, "score_history.html", {
+                'bonus_records': data,
+                'start_date': start_date_str,
+                'end_date': end_date_str,
+                'username':user.username,
+                'useravatar': user.avatar,
+                'name': name,
+                'class_list': class_list,
+                'classname': classname,
+                'show_record_type': show_record_type
+            })
+        else:
+            data = []
+            score_dict = dict()
+            for bonus_record in bonus_records:
+                key = str(bonus_record.userid.id) +  ',' + bonus_record.time.strftime("%Y-%m") \
+                + ',' +bonus_record.userid.name + ',' + bonus_record.userid.classid.name
+                score_dict[key] = score_dict.get(key, 0) + bonus_record.score
+            
+            for key, value in score_dict.items():
+                res = key.split(',')
+                d = {
+                    'date': res[1],
+                    'name': res[2],
+                    'dept': res[3],
+                    'score': value
+                }
+                data.append(d)
+            data = sorted(data, key=lambda elem: (elem['date'], -elem['score'])) 
+            return get_purviews_and_render_to_response(request.user.username, "score_history.html", {
+                'bonus_records': data,
+                'start_date': start_date_str,
+                'end_date': end_date_str,
+                'username':user.username,
+                'useravatar': user.avatar,
+                'name': name,
+                'class_list': class_list,
+                'classname': classname,
+                'show_record_type': show_record_type
+            })
 
 
 @login_required
