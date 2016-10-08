@@ -1059,9 +1059,11 @@ def deviceadd(request):
                 _device.producerid = _producerid
             
             # 建立device和spare的关系
-            spares = k_spare.objects.filter(name=request.POST['spare'])
-            for s in spares:
-                _device.spare.add(s.id)
+            spares_name = request.POST.getlist('spare')
+            for s_name in spares_name:
+                spares = k_spare.objects.filter(name=s_name)
+                for spare in spares:
+                    _device.spare.add(spare.id)
 
             _device.save()
             server_msg = '添加设备成功！'
@@ -1217,7 +1219,7 @@ def devicebatch_submit(request):
                         content=obj_data['content'],
                         position=obj_data['position'],
                         memo=obj_data['memo'],
-                        spare=obj_data['spare'],
+                        #spare=obj_data['spare'],
                         notice=obj_data['notice'],
                         maintenanceperiod = 1,
                         #status=2,
@@ -1230,6 +1232,7 @@ def devicebatch_submit(request):
                         _device.supplierid = _supplierid
                     if _producerid != '':
                         _device.producerid = _producerid
+                                # 建立device和spare的关系
                     _device.save()
                     success_num += 1
             server_msg = '成功添加'+str(success_num)+'条设备信息！'
@@ -1237,7 +1240,7 @@ def devicebatch_submit(request):
                 "server_msg":server_msg
                 }), content_type="application/json")
         except Exception as e:
-            server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门、设备类别和责任人用户名是否正确！'
+            server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门、设备类别和责任人用户名是否正确！' + str(e)
             print e
             return HttpResponse(json.dumps({
                 "server_msg":server_msg
@@ -4915,7 +4918,7 @@ def department_del(request):
     if _id:
         _department = k_class.objects.filter(id=_id)
         if len(_department) == 1:
-            _user = k_user.objects.filter(classid_id=id)
+            _user = k_user.objects.filter(classid_id=_id)
             if len(_user) > 0:
                 msg = "有"+str(len(_user))+"个用户属于该部门，无法删除部门："+_department[0].name
             else:

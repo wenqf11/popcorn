@@ -43,7 +43,6 @@ function clickUpload() {
                             <th>序列号</th>
                             <th>型号</th>
                             <th>购买时间</th>
-                            <th>备件列表</th>
                             <th>机器说明</th>
                             <th>安装位置</th>
                             <th>注意事项</th>
@@ -306,7 +305,7 @@ function process_wb(wb) {
             for (var key in obj) {
                 data_array.push(obj[key]);
             }
-            if (data_array.length == 17) {
+            if (data_array.length == 16) {
                 $('#maintenance').dataTable().fnAddData(data_array);
             } else {
                 $.gritter.add({
