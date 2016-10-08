@@ -288,6 +288,9 @@ public class TaskActivity extends Activity {
             e.printStackTrace();
         }
 
+        int index = taskMemo.indexOf("审核未通过：");
+        taskMemo = taskMemo.substring(index);
+
         taskTitleTextView.setText(title);
         taskDescriptionTextView.setText(faultDescription);
         taskMemoTextView.setText(taskMemo);

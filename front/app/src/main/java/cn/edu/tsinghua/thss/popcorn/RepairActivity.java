@@ -315,6 +315,9 @@ public class RepairActivity extends Activity {
             e.printStackTrace();
         }
 
+        int index = repairMemo.indexOf("审核未通过：");
+        repairMemo = repairMemo.substring(index);
+
         reportTitleTextView.setText(title);
         reporterTextView.setText(creator);
         reportDatetimeTextView.setText(create_time);
