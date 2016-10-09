@@ -731,7 +731,7 @@ def devicebyclass(request):
     datas = list()
     data = dict()
     data['text'] = parents.name
-    data['href'] = "/device"
+    data['href'] = "/device?classid=" + str(parents.id)
     data['nodes'] = get_device_by_class(classes, parents.id)
     if data['nodes']:
         datas.append(data)
@@ -5308,6 +5308,8 @@ def meter_device(request):
     meters = k_meter.objects.filter(brief=brief, classid__in=result)
     data = []
     for m in meters:
+        if m.routeid == None or m.userid == None:
+            continue
         d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
         json_dict = json.loads(m.json)
         if 'qrcode' in json_dict:
