@@ -153,17 +153,29 @@
                             <td>{{ dataitem.createdatetime | date:'Y-m-d' }}</td>
                             <td>{{ dataitem.assignor }}</td>
                             <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
+                            {% ifequal dataitem.state 'b' %}
+                            <td></td>
+                            {% else %}
                             <td>{{ dataitem.editor }}</td>
+                            {% endifequal %}
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.priority }}</td>
                             <!--<td>{{ dataitem.memo }}</td>-->
                             {% ifequal dataitem.state '1' %}
                             <td>未指派</td>
                             {% else %}
-                                {% ifequal dataitem.state '2' %}
-                                <td>已指派</td>
+                                {% ifequal dataitem.state 'b' %}
+                                <td>未指派</td>
                                 {% else %}
-                                <td>维修中</td>
+                                    {% ifequal dataitem.state '2' %}
+                                    <td>已指派</td>
+                                    {% else %}
+                                        {% ifequal dataitem.state 'a' %}
+                                        <td>已指派</td>
+                                        {% else %}
+                                        <td>维修中</td>
+                                        {% endifequal %}
+                                    {% endifequal %}
                                 {% endifequal %}
                             {% endifequal %}
                             <td class="unsearchable">

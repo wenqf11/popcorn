@@ -2352,6 +2352,7 @@ def submit_deviceplan(request):
     if _editor != '该用户已被删除':
         _maintenance.editorid = _editor.id
     _maintenance.memo = _memo
+    _maintenance.state = 2
     _maintenance.save()
 
     _deviceplan.assignorid = _user.id
@@ -2395,7 +2396,10 @@ def view_maintaining(request):
     user = k_user.objects.get(username=request.user.username)
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
-    _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=2, state__lte=3)
+    thedeviceid = request.GET.get('deviceid')
+    _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=2, state__in=[1,2,3,'a','b'])
+    if thedeviceid:
+        _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=2, state__in=[1,2,3,'a','b'], deviceid_id=thedeviceid)
     # _maintainings = k_maintenance.objects.filter(mtype=2, state__lte=3)
 
     data = []
@@ -2493,7 +2497,10 @@ def view_maintained(request):
     user = k_user.objects.get(username=request.user.username)
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
-    _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=2, state__gte=4)
+    thedeviceid = request.GET.get('deviceid')
+    _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=2, state__in=[4,5])
+    if thedeviceid:
+        _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=2, state__in=[4,5], deviceid_id=thedeviceid)
     # _maintaineds = k_maintenance.objects.filter(mtype=2, state__gte=4)
 
 
@@ -2664,7 +2671,10 @@ def submit_maintenance(request):
         if int(_factor) < 0:
             _maintenance.memo = _maintenance.memo.split("审核未通过：")[0] + "审核未通过：" + request.GET.get('failedreason')
             _maintenance.factor = 0
-            _maintenance.state = 2
+            if request.GET.get('issameperson') == '1':
+                _maintenance.state = 'a'
+            else:
+                _maintenance.state = 'b'
             _maintenance.save()
             return HttpResponseRedirect('/view_maintained/')
         _maintenance.save()
@@ -2770,7 +2780,7 @@ def view_upkeeping(request):
     user = k_user.objects.get(username=request.user.username)
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
-    _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=1, state__lte=3)
+    _maintainings = k_maintenance.objects.filter(classid__in=result, mtype=1, state__in=[1,2,3,'a','b'])
     # _maintainings = k_maintenance.objects.filter(mtype=1, state__lte=3)
 
     data = []
@@ -2836,7 +2846,10 @@ def view_upkeeped(request):
     user = k_user.objects.get(username=request.user.username)
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
-    _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=1, state__gte=4)
+    thedeviceid = request.GET.get('deviceid')
+    _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=1, state__in=[4,5])
+    if thedeviceid:
+        _maintaineds = k_maintenance.objects.filter(classid__in=result, mtype=1, state__in=[4,5], deviceid_id=thedeviceid)
     # _maintaineds = k_maintenance.objects.filter(mtype=1, state__gte=4)
 
     data = []
@@ -2936,7 +2949,10 @@ def submit_upkeep(request):
     if int(_factor) < 0:
         _maintenance.memo = "审核未通过：" + request.GET.get('failedreason')
         _maintenance.factor = 0
-        _maintenance.state = 2
+        if request.GET.get('issameperson') == '1':
+            _maintenance.state = 'a'
+        else:
+            _maintenance.state = 'b'
         _maintenance.save()
         return HttpResponseRedirect('/view_upkeeped/')
     _maintenance.save()
@@ -2995,7 +3011,7 @@ def view_tasking(request):
     user = k_user.objects.get(username=request.user.username)
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
-    _maintainings = k_task.objects.filter(classid__in=result, state__lte=2)
+    _maintainings = k_task.objects.filter(classid__in=result, state__in=[1,2,'a','b'])
     # _maintainings = k_task.objects.filter(state__lte=2)
 
     data = []
@@ -3037,7 +3053,7 @@ def view_tasked(request):
     user = k_user.objects.get(username=request.user.username)
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
-    _maintaineds = k_task.objects.filter(classid__in=result, state__gte=3)
+    _maintaineds = k_task.objects.filter(classid__in=result, state__in=[3,4])
     # _maintaineds = k_task.objects.filter(state__gte=3)
 
     data = []
@@ -3270,7 +3286,10 @@ def submit_taskitem(request):
         if int(_factor) < 0:
             _taskitem.memo = "审核未通过：" + request.GET.get('failedreason')
             _taskitem.factor = 0
-            _taskitem.state = 2
+            if request.GET.get('issameperson') == '1':
+                _maintenance.state = 'a'
+            else:
+                _maintenance.state = 'b'
             _taskitem.save()
             _task = k_task.objects.get(id=_taskitem.taskid_id)
             _task.state = 2
@@ -3328,6 +3347,7 @@ def submit_taskitem(request):
     _taskitem.createcontent = _createcontent
     _taskitem.priority = _priority
     _taskitem.memo = _memo
+    _taskitem.state = 1
     if _editor != '该用户已被删除':
         _tasker = k_user.objects.get(name=_editor)
         _taskitem.editorid = _tasker.id
@@ -3381,7 +3401,10 @@ def view_spare(request):
     user = k_user.objects.get(username=request.user.username)
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
+    thedeviceid = request.GET.get('deviceid')
     _spares = k_spare.objects.filter(classid__in=result)
+    if thedeviceid:
+        _spares = k_spare.objects.filter(classid__in=result, k_device=thedeviceid)
 
     data = []
     for _spare in _spares:

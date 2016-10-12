@@ -54,6 +54,15 @@
                             <input type="text" name="failedreason" value="" />
                         </div>
                     </div>
+                    <div class="form-group" id="ifchangeperson" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top">是否改变保养人</label>
+                        <div class="col-sm-9">
+                            <select id="issameperson" name="issameperson" form="maintenanceform">
+                                <option value="1">否</option>
+                                <option value="0">是</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -140,7 +149,7 @@
                                     </a>
                                     {% endif %}
                                     {% if "审核保养" in modelsshow %}
-                                    <a class="blue" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal" onclick="$('#auditreason').hide();">
+                                    <a class="blue" id="{{ dataitem.id }}" href="#my-modal" data-toggle="modal" onclick="$('#auditreason').hide();$('#ifchangeperson').hide();">
                                         <i class="ace-icon fa fa-check bigger-130"></i>
                                     </a>
                                     {% endif %}
@@ -181,10 +190,14 @@
             }
         }
         function auditChange() {
-            if($('#factor').val() == -1)
+            if($('#factor').val() == -1) {
                 $('#auditreason').show();
-            else
+                $('#ifchangeperson').show();
+            }
+            else {
                 $('#auditreason').hide();
+                $('#ifchangeperson').hide();
+            }
         }
         $(document).ready(function() {
             $('#maintenance').DataTable({

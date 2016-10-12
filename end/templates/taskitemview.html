@@ -100,6 +100,20 @@
                                                         </a>
                                                         {% endif %}
                                                         {% endifequal %}
+
+                                                        {% ifequal dataitem.state '计划（需改变执行者）' %}
+                                                        {% if "编辑任务" in modelsshow %}
+                                                        <a class="green" id="{{ dataitem.id }}" href="#my-modal1" data-toggle="modal">
+                                                            <i class="ace-icon fa fa-pencil bigger-130 fa-pencil1"></i>
+                                                        </a>
+                                                        {% endif %}
+                                                        {% if "删除任务" in modelsshow %}
+                                                        <a class="red" href="/delete_taskitem?id={{ dataitem.id }}" onclick="delcfm()">
+                                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                        {% endif %}
+                                                        {% endifequal %}
+
                                                         {% ifequal dataitem.state '执行完成' %}
                                                         {% if "删除任务" in modelsshow %}
                                                         <a class="red" href="/delete_taskitem?id={{ dataitem.id }}" onclick="delcfm()">
@@ -107,7 +121,7 @@
                                                         </a>
                                                         {% endif %}
                                                         {% if "审核任务" in modelsshow %}
-                                                        <a class="blue" id="{{ dataitem.id }}" href="#my-modal2" data-toggle="modal" onclick="$('#auditreason').hide();">
+                                                        <a class="blue" id="{{ dataitem.id }}" href="#my-modal2" data-toggle="modal" onclick="$('#auditreason').hide();$('#ifchangeperson').hide();">
                                                             <i class="ace-icon fa fa-check bigger-130 fa-pencil2"></i>
                                                         </a>
                                                         {% endif %}
@@ -270,6 +284,15 @@
                             <input type="text" name="failedreason" value="" />
                         </div>
                     </div>
+                    <div class="form-group" id="ifchangeperson" style="display:none">
+                        <label class="col-sm-3 control-label no-padding-top">是否改变任务执行人</label>
+                        <div class="col-sm-9">
+                            <select id="issameperson" name="issameperson" form="taskitemform2">
+                                <option value="1">否</option>
+                                <option value="0">是</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -388,10 +411,14 @@
             }
         }
         function auditChange() {
-            if($('#factor').val() == -1)
+            if($('#factor').val() == -1) {
                 $('#auditreason').show();
-            else
+                $('#ifchangeperson').show();
+            }
+            else {
                 $('#auditreason').hide();
+                $('#ifchangeperson').hide();
+            }
         }
     </script>
     <script type="text/javascript">

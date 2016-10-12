@@ -46,13 +46,25 @@
                             <td>{{ dataitem.assignor }}</td>
                             <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
                             <!--<td>{{ dataitem.deadline }}</td>-->
+                            {% ifequal dataitem.state 'b' %}
+                            <td>请前往“设备管理”中相应设备的“保养计划”指派新的保养人</td>
+                            {% else %}
                             <td>{{ dataitem.editor }}</td>
+                            {% endifequal %}
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.memo }}</td>
-                            {% ifequal dataitem.state '2' %}
-                            <td>已指派</td>
+                            {% ifequal dataitem.state 'b' %}
+                            <td>未指派</td>
                             {% else %}
-                            <td>保养中</td>
+                                {% ifequal dataitem.state '2' %}
+                                <td>已指派</td>
+                                {% else %}
+                                    {% ifequal dataitem.state 'a' %}
+                                    <td>已指派</td>
+                                    {% else %}
+                                    <td>保养中</td>
+                                    {% endifequal %}
+                                {% endifequal %}
                             {% endifequal %}
                         </tr>
                         {% endfor %}
