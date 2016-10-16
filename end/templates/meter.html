@@ -15,34 +15,29 @@
 {% block maincontent %}
 <div class="row-fluid" style="width: 80%;">
 	{% if "抄表数据" in modelsshow %}
-	<div class="col-sm-5 col-sm-offset-1 well">
-		<form action="/meter_device/" class="form-horizontal" method="GET">
-			<h4 class="header blue bolder smaller">按设备查找</h4>
+	<div class="col-sm-7 col-sm-offset-3 well">
+		<form action="/meter_device_date/" class="form-horizontal" method="GET">
+			<h4 class="header blue bolder smaller">按设备和日期查找</h4>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">设备编号</label>
-				<div class="col-sm-9">
-					<input name="brief" type="text" class="span8 m-wrap" value="" />
-					<button type="submit" class="btn btn-primary" style="float: right;">查找</button>
+				<div class="col-sm-6">
+					<input name="brief" type="text" class="m-wrap" value="" />
 				</div>
+				<label class="col-sm-3 control-label" style="text-align: left;">（可选）</label>
 			</div>
-		</form>
-	</div>
-	<div class="col-sm-5 col-sm-offset-1 well">
-		<form action="/meter_date/" class="form-horizontal" method="GET">
-			<h4 class="header blue bolder smaller">按日期查找</h4>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">起始日期</label>
 				<div class="col-sm-9">
-					<input name="date_start" type="text" id="date-start" class="m-wrap" placeholder="单击此处选择日期" value="{% now "Y-m-d" %}">
+					<input name="date_start" type="text" id="date-start" class="m-wrap" placeholder="单击此处选择日期" value="{{ start_date | date:'Y-m-d' }}">
 				</div>
 			</div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">结束日期</label>
-                <div class="col-sm-9">
-                    <input name="date_end" type="text" id="date-end" class="m-wrap" placeholder="单击此处选择日期" value="{% now "Y-m-d" %}">
-                    <button type="submit" class="btn btn-primary" style="float: right;">查找</button>
-                </div>
-            </div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">结束日期</label>
+				<div class="col-sm-9">
+					<input name="date_end" type="text" id="date-end" class="m-wrap" placeholder="单击此处选择日期" value="{{ end_date | date:'Y-m-d' }}">
+					<button type="submit" class="btn btn-primary" style="float: right;">查找</button>
+				</div>
+			</div>
 		</form>
 	</div>
 	{% else %}
@@ -71,7 +66,7 @@
 			startView: 0,
 			todayHighlight: true
 		});
-        $('#date-end').datepicker({
+		$('#date-end').datepicker({
 			format: 'yyyy-mm-dd',
 			startView: 0,
 			todayHighlight: true

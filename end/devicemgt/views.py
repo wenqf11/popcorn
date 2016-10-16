@@ -14,6 +14,7 @@ from models import *
 from forms import *
 from index import *
 from datetime import datetime, timedelta, time
+from dateutil.relativedelta import relativedelta
 from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list
 import json
 import xlwt
@@ -5309,20 +5310,20 @@ def receive_bonus(request, bonus_record_id=""):
 
 def meter(request):
     if request.method == 'GET':
+        today_this_month = date.today()
+        today_last_month = date.today() - relativedelta(months=1)
         user = k_user.objects.get(username=request.user.username)
         return get_purviews_and_render_to_response(request.user.username, 'meter.html', {
             'username': user.username,
-            'useravatar': user.avatar
+            'useravatar': user.avatar,
+            'start_date': today_last_month,
+            'end_date': today_this_month
         })
 
 
 def meter_device(request):
     brief = request.GET.get('brief')
 
-    # try:
-    #     k_device.objects.get(brief=brief)
-    # except ObjectDoesNotExist:
-    #     return HttpResponseRedirect('/meter/')
     user = k_user.objects.get(username=request.user.username)
 
     result = [user.classid.id]
@@ -5385,6 +5386,48 @@ def meter_date(request):
     return get_purviews_and_render_to_response(request.user.username, 'meterview.html', {
         'meters': data,
         'search_type': 'date',
+        'date_start': date_string_start,
+        'date_end': date_string_end,
+        'username':user.username,
+        'useravatar': user.avatar
+    })
+
+
+def meter_device_date(request):
+    brief = request.GET.get('brief')
+    date_string_start = request.GET.get('date_start')
+    date_string_end = request.GET.get('date_end')
+    date_start = datetime.strptime(date_string_start, '%Y-%m-%d').date()
+    date_end = datetime.strptime(date_string_end, '%Y-%m-%d').date()
+
+    user = k_user.objects.get(username=request.user.username)
+
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+
+    meters = k_meter.objects.filter(metertime__range=(date_start, date_end + timedelta(days=1)), classid__in=result)
+    if brief:
+        meters = meters.filter(brief=brief)
+
+    data = []
+    for m in meters:
+        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
+        json_dict = json.loads(m.json)
+        if 'qrcode' in json_dict:
+            if json_dict['qrcode'] == m.brief:
+                d['check'] = u'已签到'
+            else:
+                d['check'] = u'签到错误'
+            del json_dict['qrcode']
+        else:
+            d['check'] = u'未签到'
+        d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
+        data.append(d)
+
+    return get_purviews_and_render_to_response(request.user.username, 'meterview.html', {
+        'meters': data,
+        'search_type': 'date_device' if brief else 'date',
+        'brief': brief,
         'date_start': date_string_start,
         'date_end': date_string_end,
         'username':user.username,
@@ -5488,6 +5531,73 @@ def meter_export_date(request, start_date='', end_date=''):
     response = HttpResponse(mimetype='application/ms-excel')
     # 文件名
     response['Content-Disposition'] = 'attachment;filename=抄表数据_%s_%s.xls' % (smart_str(start_date), smart_str(end_date))
+    # 文件对象
+    book = xlwt.Workbook(encoding='utf-8')
+    # 工作表对象
+    sheet = book.add_sheet('抄表数据')
+    # 定义导出列
+    columns = [
+        {'key': 'time', 'head': '抄表时间', 'width': 256 * 22},
+        {'key': 'user', 'head': '抄表人', 'width': 256 * 10},
+        {'key': 'route', 'head': '抄表路线', 'width': 256 * 20},
+        {'key': 'brief', 'head': '设备编号', 'width': 256 * 15},
+        {'key': 'check', 'head': '签到状态', 'width': 256 * 12},
+        {'key': 'content', 'head': '表单内容', 'width': 256 * 80}
+    ]
+    # 设置表头样式
+    head_style = xlwt.easyxf('font: bold on;')
+    # 写表头
+    for col, item in enumerate(columns):
+        sheet.write(0, col, item['head'], head_style)
+        sheet.col(col).width = item['width']
+    # 设置数据样式
+    data_style = xlwt.easyxf('font: bold off;')
+    # 写数据
+    for row, m in enumerate(data):
+        for col, x in enumerate(columns):
+            sheet.write(row + 1, col, m[x['key']], data_style)
+
+    book.save(response)
+    return response
+
+
+def meter_export_device_date(request, brief='', start_date='', end_date=''):
+    user = k_user.objects.get(username=request.user.username)
+
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+
+    date_start = datetime.strptime(start_date, '%Y-%m-%d').date()
+    date_end = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+    meters = k_meter.objects.filter(metertime__range=(date_start, date_end + timedelta(days=1)), classid__in=result)
+    if brief:
+        meters = meters.filter(brief=brief)
+
+    data = []
+    for m in meters:
+        d = {
+            'brief': m.brief,
+            'route': m.routeid.name,
+            'user': m.userid.name,
+            'time': m.metertime.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        json_dict = json.loads(m.json)
+        if 'qrcode' in json_dict:
+            if json_dict['qrcode'] == m.brief:
+                d['check'] = u'已签到'
+            else:
+                d['check'] = u'签到错误'
+            del json_dict['qrcode']
+        else:
+            d['check'] = u'未签到'
+        d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
+        data.append(d)
+
+    # 响应设置
+    response = HttpResponse(mimetype='application/ms-excel')
+    # 文件名
+    response['Content-Disposition'] = 'attachment;filename=抄表数据_%s_%s_%s.xls' % (smart_str(brief), smart_str(start_date), smart_str(end_date))
     # 文件对象
     book = xlwt.Workbook(encoding='utf-8')
     # 工作表对象
