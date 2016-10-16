@@ -448,7 +448,7 @@ def app_maintain_list_1(request, para, user):
     tasks = k_maintenance.objects.filter(
         mtype='1',
         editorid=user.id,
-        state__range=(2, 3)
+        state__in=['2', '3','a']
     )
 
     data = [{
@@ -477,7 +477,7 @@ def app_maintain_list_2(request, para, user):
     tasks = k_maintenance.objects.filter(
         mtype='2',
         editorid=user.id,
-        state__range=(2, 3)
+        state__in=['2', '3','a']
     )
     data = [{
             'id': task.id,
@@ -653,7 +653,7 @@ def app_maintain_record(request, para, user):
 def app_task_list(request, para, user):
     tasks = k_taskitem.objects.filter(
         editorid=user.id,
-        state__range=(1, 2)
+        state__in=['1', '2','a']
     )
     return HttpResponse(json.dumps({
         'status': 'ok',
