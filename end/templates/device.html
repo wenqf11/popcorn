@@ -67,7 +67,7 @@
             <i class="ace-icon fa fa-database info-icon"></i>
         </div>
         <h5 class="col-xs-9 info-text">
-              <a href="/view_spare">备品备件</a>：{{ deviceinfo.spares }}
+              <a href="/view_spare?deviceid={{ deviceinfo.id }}">备品备件</a>：{{ deviceinfo.spares }}
         </h5>
     </div>
     <hr style="margin: 10px" />
@@ -96,7 +96,7 @@
         <h5 class="col-xs-10 info-text">
             <div class="widget-box">
                 <div class="widget-header">
-                    <h5 class="widget-title"><a href="/view_maintained">维修信息 (共维修 {{ deviceinfo.m_record_size }} 次)</a></h5>
+                    <h5 class="widget-title"><a href="/view_maintained?deviceid={{ deviceinfo.id }}">维修信息 (共维修 {{ deviceinfo.m_record_size }} 次)</a></h5>
 
                     <div class="widget-toolbar">
 
@@ -142,7 +142,7 @@
         <h5 class="col-xs-10 info-text">
             <div class="widget-box">
                 <div class="widget-header">
-                    <h5 class="widget-title"><a href="/view_upkeeped">保养信息 (共保养 {{ deviceinfo.k_record_size }} 次)</a></h5>
+                    <h5 class="widget-title"><a href="/view_upkeeped?deviceid={{ deviceinfo.id }}">保养信息 (共保养 {{ deviceinfo.k_record_size }} 次)</a></h5>
 
                     <div class="widget-toolbar">
 
