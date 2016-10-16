@@ -13,6 +13,8 @@
         <a class="btn btn-success" style="border:0px;float:right;margin-right: 30px;" href="/meter_export/device/{{ brief }}/">数据导出</a>
     {% elif search_type == 'date' %}
         <a class="btn btn-success" style="border:0px;float:right;margin-right: 30px;" href="/meter_export/date/{{ date_start }}/{{ date_end }}/">数据导出</a>
+    {% else %}
+        <a class="btn btn-success" style="border:0px;float:right;margin-right: 30px;" href="/meter_export/device_date/{{ brief }}/{{ date_start }}/{{ date_end }}/">数据导出</a>
     {% endif %}
     
 {% endblock %}
