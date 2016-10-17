@@ -15,7 +15,7 @@ from forms import *
 from index import *
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
-from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list
+from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list, get_decivetype_by_class, get_parent_classid
 import json
 import xlwt
 
@@ -748,7 +748,8 @@ def devicemgt(request):
     server_msg = request.GET.get('msg')
     if server_msg == None:
         server_msg = ''
-    devicetypes = k_devicetype.objects.all()
+    #devicetypes = k_devicetype.objects.all()
+    devicetypes = get_decivetype_by_class(user.classid_id)
     type_parents = 0
     class_parents = 0
     filter_classidx = request.GET.get('classid')
@@ -756,6 +757,14 @@ def devicemgt(request):
         class_parents = int(filter_classidx)
 
     classes = k_class.objects.all()
+
+    _id = request.GET.get('id')
+    if (_id):
+            tmp_device = k_device.objects.filter(id=_id)
+            if len(tmp_device) == 1:
+                tmp_device = tmp_device[0]
+                class_parents = int(tmp_device.classid_id)
+
     if class_parents > 0:
         sub_classes_list = list()
         sub_classes_list.append(class_parents)
@@ -764,7 +773,6 @@ def devicemgt(request):
     else:
         class_parents = classes
     datas = get_device_node(devicetypes, type_parents, class_parents) #获取节点树
-    _id = request.GET.get('id')
     deviceinfo = dict()
     if (_id):
         device = k_device.objects.filter(id=_id)
@@ -920,7 +928,8 @@ def operate_device(request):
     classes = k_class.objects.filter(id__in=result)
     for c in classes:
         class_list.append(c.name)
-    types = k_devicetype.objects.all()
+    #types = k_devicetype.objects.all()
+    types = get_decivetype_by_class(user.classid_id)
     for t in types:
         type_list.append(t.name)
     suppliers = k_supplier.objects.all()
@@ -1028,6 +1037,18 @@ def deviceadd(request):
             if len(_devs) > 0:
                 _dev = _devs[0]
                 server_msg = _classname+'中'+_dev.name+'('+_dev.brief+')的设备已存在！'
+                return HttpResponseRedirect('/operate_device/?msg='+server_msg)
+
+            _tmp_devs = k_device.objects.filter(brief=_brief)
+            if len(_tmp_devs) > 0:
+                _dev = _tmp_devs[0]
+                server_msg = _classname+'中简称为:'+_dev.brief+'的设备已存在！'
+                return HttpResponseRedirect('/operate_device/?msg='+server_msg)
+                
+            _tmp_devs = k_device.objects.filter(name=_name)
+            if len(_tmp_devs) > 0:
+                _dev = _tmp_devs[0]
+                server_msg = _classname+'中名字为:'+_dev.name+'的设备已存在！'
                 return HttpResponseRedirect('/operate_device/?msg='+server_msg)
 
             _device = k_device.objects.create(
@@ -1255,7 +1276,8 @@ def devicebatch_submit(request):
 @login_required
 def device_type(request):
     user = k_user.objects.get(username=request.user.username)
-    devicetypes = k_devicetype.objects.all()
+    #devicetypes = k_devicetype.objects.all()
+    devicetypes = get_decivetype_by_class(user.classid_id)
     parents = 0
     datas = get_type_node(devicetypes, parents) #获取节点树
     server_msg = request.GET.get("msg")
@@ -1288,7 +1310,8 @@ def device_type(request):
 @login_required
 def device_type_add(request):
     user = k_user.objects.get(username=request.user.username)
-    k_devicetypes = k_devicetype.objects.all()
+    #k_devicetypes = k_devicetype.objects.all()
+    k_devicetypes = get_decivetype_by_class(user.classid_id)
     devicetypes = list()
     for k_type in k_devicetypes:
         devicetypes.append(k_type.name)
@@ -1302,6 +1325,10 @@ def device_type_submit(request):
         _parentname = request.GET.get('parentname')
         _name = request.GET.get('name')
         _memo = request.GET.get('memo')
+        _user = k_user.objects.get(username=request.user.username)
+        _parent_classid = get_parent_classid(_user.classid_id)
+        if _parent_classid != 2 and _parent_classid != 3:
+            return HttpResponseRedirect('/device_type/?msg="无权限添加新的设备类型！"')
         if len(_parentname) == 0:
             _id = 0
             _depth = 0
@@ -1310,6 +1337,7 @@ def device_type_submit(request):
                 parentid=_id,
                 depth=_depth,
                 memo=_memo,
+                status=_parent_classid,
                 creatorid=request.user.id,
                 createdatetime=get_current_date(),
                 editorid=request.user.id,
@@ -1327,6 +1355,7 @@ def device_type_submit(request):
                     parentid=_id,
                     depth=_depth,
                     memo=_memo,
+                    status=_parent_classid,
                     creatorid=request.user.id,
                     createdatetime=get_current_date(),
                     editorid=request.user.id,

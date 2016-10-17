@@ -4,7 +4,7 @@ __author__ = 'LY'
 
 import settings
 import time
-from models import k_device
+from models import k_device, k_class, k_devicetype
 import os
 
 
@@ -125,3 +125,26 @@ def get_sub_classes_list(classes, sub_classes_list, class_parent):
         if cls.parentid == class_parent:
             sub_classes_list.append(cls.id)
             get_sub_classes_list(classes,sub_classes_list,cls.id)
+
+
+def get_decivetype_by_class(classid):
+        tmp_class = k_class.objects.filter(id = classid)
+        while True:
+            if len(tmp_class)== 1:
+                if tmp_class[0].depth <= 1:
+                    tmp_id = tmp_class[0].id
+                    return k_devicetype.objects.filter(status=tmp_id)
+                tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
+            else:
+                return k_devicetype.objects.all()
+
+
+def get_parent_classid(classid):
+        tmp_class = k_class.objects.filter(id = classid)
+        while True:
+            if len(tmp_class)== 1:
+                if tmp_class[0].depth <= 1:
+                    return tmp_class[0].id
+                tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
+            else:
+                return classid
