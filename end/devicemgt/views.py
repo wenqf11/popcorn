@@ -2705,8 +2705,9 @@ def submit_maintenance(request):
                 _maintenance.state = 'a'
             else:
                 _maintenance.state = 'b'
+            _maintenance.assigndatetime = get_current_date()
             _maintenance.save()
-            return HttpResponseRedirect('/view_maintained/')
+            return HttpResponseRedirect('/view_maintaining/')
         _maintenance.save()
 
         "记录积分"
@@ -2983,8 +2984,9 @@ def submit_upkeep(request):
             _maintenance.state = 'a'
         else:
             _maintenance.state = 'b'
+        _maintenance.assigndatetime = get_current_date()
         _maintenance.save()
-        return HttpResponseRedirect('/view_upkeeped/')
+        return HttpResponseRedirect('/view_upkeeping/')
     _maintenance.save()
 
     "记录积分"
@@ -3317,9 +3319,10 @@ def submit_taskitem(request):
             _taskitem.memo = "审核未通过：" + request.GET.get('failedreason')
             _taskitem.factor = 0
             if request.GET.get('issameperson') == '1':
-                _maintenance.state = 'a'
+                _taskitem.state = 'a'
             else:
-                _maintenance.state = 'b'
+                _taskitem.state = 'b'
+            _taskitem.createdatetime = get_current_date()
             _taskitem.save()
             _task = k_task.objects.get(id=_taskitem.taskid_id)
             _task.state = 2

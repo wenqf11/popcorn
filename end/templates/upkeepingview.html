@@ -44,11 +44,12 @@
                             <td>{{ dataitem.name }}</td>
                             <td>{{ dataitem.position }}</td>
                             <td>{{ dataitem.assignor }}</td>
-                            <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
                             <!--<td>{{ dataitem.deadline }}</td>-->
                             {% ifequal dataitem.state 'b' %}
+                            <td></td>
                             <td>请前往“设备管理”中相应设备的“保养计划”指派新的保养人</td>
                             {% else %}
+                            <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
                             <td>{{ dataitem.editor }}</td>
                             {% endifequal %}
                             <td>{{ dataitem.createcontent }}</td>

@@ -152,10 +152,11 @@
                             <td>{{ dataitem.creator }}</td>
                             <td>{{ dataitem.createdatetime | date:'Y-m-d' }}</td>
                             <td>{{ dataitem.assignor }}</td>
-                            <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
                             {% ifequal dataitem.state 'b' %}
                             <td></td>
+                            <td></td>
                             {% else %}
+                            <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
                             <td>{{ dataitem.editor }}</td>
                             {% endifequal %}
                             <td>{{ dataitem.createcontent }}</td>
