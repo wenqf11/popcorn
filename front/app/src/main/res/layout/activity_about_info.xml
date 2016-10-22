@@ -25,7 +25,7 @@
             android:id="@+id/about_version_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.0.4"
+            android:text="1.0.0"
             android:textSize="16sp"
             android:textColor="#808080"/>
     </LinearLayout>
