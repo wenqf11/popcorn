@@ -4,6 +4,7 @@ __author__ = 'SYB'
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.core.exceptions import *
+from itertools import groupby
 from models import *
 from datetime import date, datetime, time, timedelta
 from django.contrib.auth.hashers import make_password, check_password
@@ -220,6 +221,10 @@ def app_score(request, para, user):
         }))
 
 
+def my_reduce(obj1, obj2):
+	return {'username':obj1['username'], 'name': obj1['name'], 'score':obj1['score'] + obj2['score']}
+
+
 @get_required
 @token_required
 def app_score_rank(request, para, user):
@@ -227,9 +232,12 @@ def app_score_rank(request, para, user):
     para['month'] = request.GET.get('month')
 
     scores = k_staffscoreinfo.objects.filter(time__year=int(para['year']), time__month=int(para['month']))
-    scores = scores.order_by('-score')
+    #scores = scores.order_by('-score')
 
+    
     result = [{'username': _s.userid.username, 'name': _s.userid.name, 'score': _s.score} for _s in scores]
+    result = [reduce(my_reduce, group) for _, group in groupby(sorted(result), lambda p:p['username'])]
+    result = sorted(result, lambda x, y: cmp(x['score'], y['score']), reverse=True)
 
     return HttpResponse(json.dumps({
         'status': 'ok',

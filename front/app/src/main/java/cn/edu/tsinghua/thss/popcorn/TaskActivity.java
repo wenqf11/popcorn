@@ -289,6 +289,9 @@ public class TaskActivity extends Activity {
         }
 
         int index = taskMemo.indexOf("审核未通过：");
+        if (index < 0){
+            index = 0;
+        }
         taskMemo = taskMemo.substring(index);
 
         taskTitleTextView.setText(title);

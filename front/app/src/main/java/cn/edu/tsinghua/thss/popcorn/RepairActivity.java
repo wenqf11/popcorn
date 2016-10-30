@@ -316,6 +316,9 @@ public class RepairActivity extends Activity {
         }
 
         int index = repairMemo.indexOf("审核未通过：");
+        if (index < 0){
+            index = 0;
+        }
         repairMemo = repairMemo.substring(index);
 
         reportTitleTextView.setText(title);
