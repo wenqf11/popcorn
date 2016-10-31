@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import cn.edu.tsinghua.thss.popcorn.utils.NoRepeatToast;
 
 public class MaintainListActivity extends ListActivity {
     static private int REQUEST_CODE = 2;
@@ -96,7 +97,8 @@ public class MaintainListActivity extends ListActivity {
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         progressDialog.hide();
-                        Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
                     }
                 });
     }

@@ -51,6 +51,7 @@ import com.baidu.location.BDNotifyListener;//假如用到位置提醒功能，�
 import com.baidu.location.Poi;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import cn.edu.tsinghua.thss.popcorn.utils.NoRepeatToast;
 
 public class AttendanceActivity extends FragmentActivity implements View.OnClickListener{
     public LocationClient mLocationClient = null;
@@ -252,7 +253,8 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
                     }
                 });
     }

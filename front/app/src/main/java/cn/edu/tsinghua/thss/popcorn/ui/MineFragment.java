@@ -43,6 +43,7 @@ import cn.edu.tsinghua.thss.popcorn.R;
 import cn.edu.tsinghua.thss.popcorn.UserInfoActivity;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 import cn.edu.tsinghua.thss.popcorn.update.UpdateInfoParser;
+import cn.edu.tsinghua.thss.popcorn.utils.NoRepeatToast;
 
 
 /**
@@ -225,7 +226,8 @@ public class MineFragment extends Fragment {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getActivity().getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        NoRepeatToast.showToast(getActivity().getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
                     }
                 });
     }

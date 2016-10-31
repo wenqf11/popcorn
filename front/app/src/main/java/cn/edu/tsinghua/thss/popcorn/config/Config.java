@@ -13,8 +13,8 @@ public class Config {
 
 
     public static String ACCESS_TOKEN = "hello_world";
-    public static String LOCAL_IP = "http://d.willwings.com";
-    //public static String LOCAL_IP = "http://59.66.97.7:8000";
+    //public static String LOCAL_IP = "http://d.willwings.com";
+    public static String LOCAL_IP = "http://59.66.96.148:8000";
     public static String REPORT_URL =  LOCAL_IP + "/app/maintain/add/";
 //    public static String ROUTE_GET_URL = LOCAL_IP + "/app/route";
     public static String ROUTE_GET_URL = LOCAL_IP + "/app/route/";
@@ -60,7 +60,7 @@ public class Config {
     public static String AVATAR_FILE_DIR = Environment.getExternalStorageDirectory().getPath() + "/willwings/avatar/";
     public static String REPORT_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/willwings/photos/report.jpg";
     public static String DEBUG_USERNAME = "";
-    public static int MAX_NETWORK_TIME = 3000;
+    public static int MAX_NETWORK_TIME = 2000;
 
 
 

@@ -26,7 +26,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dtr.zbar.build.ZBarDecoder;
+import net.sourceforge.zbar.Config;
+import net.sourceforge.zbar.Image;
+import net.sourceforge.zbar.ImageScanner;
+import net.sourceforge.zbar.Symbol;
+import net.sourceforge.zbar.SymbolSet;
 
 import cn.edu.tsinghua.thss.popcorn.DeviceInfoDetailActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
@@ -48,6 +52,7 @@ public class QRcodeActivity extends Activity {
     private Rect mCropRect = null;
     private boolean barcodeScanned = false;
     private boolean previewing = true;
+    private ImageScanner mImageScanner = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +88,10 @@ public class QRcodeActivity extends Activity {
     }
 
     private void initViews() {
+        mImageScanner = new ImageScanner();
+        mImageScanner.setConfig(0, Config.X_DENSITY, 3);
+        mImageScanner.setConfig(0, Config.Y_DENSITY, 3);
+
         autoFocusHandler = new Handler();
         mCameraManager = new CameraManager(this);
         try {
@@ -148,10 +157,25 @@ public class QRcodeActivity extends Activity {
             size.height = tmp;
 
             initCrop();
-            ZBarDecoder zBarDecoder = new ZBarDecoder();
-            String result = zBarDecoder.decodeCrop(rotatedData, size.width, size.height, mCropRect.left, mCropRect.top, mCropRect.width(), mCropRect.height());
+            //ZBarDecoder zBarDecoder = new ZBarDecoder();
+            //String result = zBarDecoder.decodeCrop(rotatedData, size.width, size.height, mCropRect.left, mCropRect.top, mCropRect.width(), mCropRect.height());
 
-            if (!TextUtils.isEmpty(result)) {
+            Image barcode = new Image(size.width, size.height, "Y800");
+            barcode.setData(rotatedData);
+            barcode.setCrop(mCropRect.left, mCropRect.top, mCropRect.width(),
+                    mCropRect.height());
+
+            int result = mImageScanner.scanImage(barcode);
+            String resultStr = null;
+
+            if (result != 0) {
+                SymbolSet syms = mImageScanner.getResults();
+                for (Symbol sym : syms) {
+                    resultStr = sym.getData();
+                }
+            }
+
+            if (!TextUtils.isEmpty(resultStr)) {
                 previewing = false;
                 mCamera.setPreviewCallback(null);
                 mCamera.stopPreview();
@@ -160,7 +184,7 @@ public class QRcodeActivity extends Activity {
 
                 Intent intent = new Intent(getApplicationContext(), DeviceInfoDetailActivity.class);
                 Bundle bundle = new Bundle();
-                intent.putExtra("device_brief", result);
+                intent.putExtra("device_brief", resultStr);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 QRcodeActivity.this.finish();

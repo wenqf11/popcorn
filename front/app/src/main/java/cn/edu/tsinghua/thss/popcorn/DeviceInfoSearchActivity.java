@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import cn.edu.tsinghua.thss.popcorn.utils.NoRepeatToast;
 
 
 public class DeviceInfoSearchActivity extends Activity implements
@@ -152,7 +153,8 @@ public class DeviceInfoSearchActivity extends Activity implements
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
+                        NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
                     }
                 });
     }
