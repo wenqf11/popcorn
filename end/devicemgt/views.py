@@ -5366,7 +5366,7 @@ def meter_device(request):
     for m in meters:
         if m.routeid == None or m.userid == None:
             continue
-        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
+        d = {'brief': m.brief, 'route': m.routeid.name if m.routeid else '', 'user': m.userid.name, 'time': m.metertime}
         json_dict = json.loads(m.json)
         if 'qrcode' in json_dict:
             if json_dict['qrcode'] == m.brief:
@@ -5402,7 +5402,7 @@ def meter_date(request):
     meters = k_meter.objects.filter(metertime__range=(date_start, date_end + timedelta(days=1)), classid__in=result)
     data = []
     for m in meters:
-        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
+        d = {'brief': m.brief, 'route': m.routeid.name if m.routeid else '', 'user': m.userid.name, 'time': m.metertime}
         json_dict = json.loads(m.json)
         if 'qrcode' in json_dict:
             if json_dict['qrcode'] == m.brief:
@@ -5443,7 +5443,7 @@ def meter_device_date(request):
 
     data = []
     for m in meters:
-        d = {'brief': m.brief, 'route': m.routeid.name, 'user': m.userid.name, 'time': m.metertime}
+        d = {'brief': m.brief, 'route': m.routeid.name if m.routeid else '', 'user': m.userid.name, 'time': m.metertime}
         json_dict = json.loads(m.json)
         if 'qrcode' in json_dict:
             if json_dict['qrcode'] == m.brief:
@@ -5478,7 +5478,7 @@ def meter_export_device(request, brief=''):
     for m in meters:
         d = {
             'brief': m.brief,
-            'route': m.routeid.name,
+            'route': m.routeid.name if m.routeid else '',
             'user': m.userid.name,
             'time': m.metertime.strftime('%Y-%m-%d %H:%M:%S')
         }
@@ -5497,7 +5497,7 @@ def meter_export_device(request, brief=''):
     # 响应设置
     response = HttpResponse(mimetype='application/ms-excel')
     # 文件名
-    response['Content-Disposition'] = 'attachment;filename=抄表数据_%s.xls' % smart_str(brief)
+    response['Content-Disposition'] = 'attachment;filename=%s_%s.xls' % (smart_str('抄表数据'), smart_str(brief))
     # 文件对象
     book = xlwt.Workbook(encoding='utf-8')
     # 工作表对象
@@ -5543,7 +5543,7 @@ def meter_export_date(request, start_date='', end_date=''):
     for m in meters:
         d = {
             'brief': m.brief,
-            'route': m.routeid.name,
+            'route': m.routeid.name if m.routeid else '',
             'user': m.userid.name,
             'time': m.metertime.strftime('%Y-%m-%d %H:%M:%S')
         }
@@ -5562,7 +5562,7 @@ def meter_export_date(request, start_date='', end_date=''):
     # 响应设置
     response = HttpResponse(mimetype='application/ms-excel')
     # 文件名
-    response['Content-Disposition'] = 'attachment;filename=抄表数据_%s_%s.xls' % (smart_str(start_date), smart_str(end_date))
+    response['Content-Disposition'] = 'attachment;filename=%s_%s_%s.xls' % (smart_str('抄表数据'), smart_str(start_date), smart_str(end_date))
     # 文件对象
     book = xlwt.Workbook(encoding='utf-8')
     # 工作表对象
@@ -5610,7 +5610,7 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
     for m in meters:
         d = {
             'brief': m.brief,
-            'route': m.routeid.name,
+            'route': m.routeid.name if m.routeid else '',
             'user': m.userid.name,
             'time': m.metertime.strftime('%Y-%m-%d %H:%M:%S')
         }
@@ -5629,7 +5629,7 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
     # 响应设置
     response = HttpResponse(mimetype='application/ms-excel')
     # 文件名
-    response['Content-Disposition'] = 'attachment;filename=抄表数据_%s_%s_%s.xls' % (smart_str(brief), smart_str(start_date), smart_str(end_date))
+    response['Content-Disposition'] = 'attachment;filename=%s_%s_%s_%s.xls' % (smart_str('抄表数据'), smart_str(brief), smart_str(start_date), smart_str(end_date))
     # 文件对象
     book = xlwt.Workbook(encoding='utf-8')
     # 工作表对象
