@@ -50,6 +50,7 @@ import cn.edu.tsinghua.thss.popcorn.ui.MineFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.RecordFragment;
 import cn.edu.tsinghua.thss.popcorn.ui.ReportFragment;
 import cn.edu.tsinghua.thss.popcorn.update.UpdateInfoParser;
+import cn.edu.tsinghua.thss.popcorn.utils.NoRepeatToast;
 
 /**
  * @author wenqingfu
@@ -512,7 +513,8 @@ public class MainActivity extends FragmentActivity {
                                 mRepairUnfinished = repairTaskList.length();
                             }
                             else{
-                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                NoRepeatToast.showToast(getApplicationContext(), "服务器内部出错！", Toast.LENGTH_SHORT);
                             }
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -587,7 +589,8 @@ public class MainActivity extends FragmentActivity {
                                 JSONArray maintainTaskList = jsonObject.getJSONArray("data");
                                 mMaintainUnfinished = maintainTaskList.length();
                             } else {
-                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                NoRepeatToast.showToast(getApplicationContext(), "服务器内部出错！", Toast.LENGTH_SHORT);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -663,7 +666,8 @@ public class MainActivity extends FragmentActivity {
                                 JSONArray results = jsonObject.getJSONArray("data");
                                 mRecordUnfinished = results.length();
                             }else{
-                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                NoRepeatToast.showToast(getApplicationContext(), "服务器内部出错！", Toast.LENGTH_SHORT);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -740,7 +744,8 @@ public class MainActivity extends FragmentActivity {
                                 JSONArray taskList = jsonObject.getJSONArray("data");
                                 mTaskUnfinished = taskList.length();
                             } else {
-                                Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "服务器内部错误", Toast.LENGTH_SHORT).show();
+                                NoRepeatToast.showToast(getApplicationContext(), "服务器内部出错！", Toast.LENGTH_SHORT);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

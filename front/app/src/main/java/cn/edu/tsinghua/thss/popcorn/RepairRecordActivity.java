@@ -109,7 +109,8 @@ public class RepairRecordActivity extends FragmentActivity implements View.OnCli
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.close_btn) {
+            RepairRecordActivity.this.finish();
             return true;
         }
 
@@ -133,23 +134,27 @@ public class RepairRecordActivity extends FragmentActivity implements View.OnCli
                 break;
             case R.id.repair_record_submit_passwd_btn:
                 START_DATE=start_date.getText().toString();
-
                 END_DATE=end_date.getText().toString();
+
                 SharedPreferencesUtil.putString(this,Config.START_DAY,START_DATE);
                 SharedPreferencesUtil.putString(this,Config.END_DAY,END_DATE);
-                if(endMap.get(END_DATE).getTime()< startMap.get(START_DATE).getTime()){
-                    new AlertDialog.Builder(this)
-                            .setTitle("截止日期不能小于起始日期")
-                            .setPositiveButton("知道了",null)
-                            .show();
-                }
+
                 if(START_DATE.equals("")||END_DATE.equals("")){
                     new AlertDialog.Builder(RepairRecordActivity.this)
                             .setTitle("日期不能有空")
                             .setPositiveButton("确定",null)
                             .show();
-//                    return;
+                    return;
                 }
+
+                if(endMap.get(END_DATE).getTime()< startMap.get(START_DATE).getTime()){
+                    new AlertDialog.Builder(this)
+                            .setTitle("截止日期不能小于起始日期")
+                            .setPositiveButton("确定",null)
+                            .show();
+                    return;
+                }
+
                 HttpUtils http=new HttpUtils();
                 http.configCurrentHttpCacheExpiry(Config.MAX_NETWORK_TIME);
 

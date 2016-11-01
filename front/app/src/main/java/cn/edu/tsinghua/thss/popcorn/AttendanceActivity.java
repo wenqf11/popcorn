@@ -242,7 +242,8 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
 
                                 String msg = jsonObject.getString("data");
                                 if (msg.equals("can't connect to database")) {
-                                    Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                    NoRepeatToast.showToast(getApplicationContext(), "服务器内部出错！", Toast.LENGTH_SHORT);
                                 }
                             }
                         } catch (JSONException e) {

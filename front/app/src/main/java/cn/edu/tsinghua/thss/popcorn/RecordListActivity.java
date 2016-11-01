@@ -46,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.edu.tsinghua.thss.popcorn.config.Config;
+import cn.edu.tsinghua.thss.popcorn.utils.NoRepeatToast;
 import hirondelle.date4j.DateTime;
 
 public class RecordListActivity extends Activity {
@@ -177,7 +178,8 @@ public class RecordListActivity extends Activity {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getApplicationContext(), "网络连接异常或服务器内部错误", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "或服务器内部错误", Toast.LENGTH_SHORT).show();
+                        NoRepeatToast.showToast(getApplicationContext(), "网络连接异常！", Toast.LENGTH_SHORT);
                     }
                 });
     }

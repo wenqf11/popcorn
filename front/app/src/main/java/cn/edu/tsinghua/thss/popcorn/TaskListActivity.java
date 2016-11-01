@@ -85,7 +85,8 @@ public class TaskListActivity extends ListActivity {
                                 adapter = new TaskListAdapter(TaskListActivity.this);
                                 setListAdapter(adapter);
                             } else {
-                                Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
+                                NoRepeatToast.showToast(getApplicationContext(), "服务器内部出错！", Toast.LENGTH_SHORT);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

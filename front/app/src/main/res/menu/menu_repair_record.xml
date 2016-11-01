@@ -2,6 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="cn.edu.tsinghua.thss.popcorn.RepairRecordActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:id="@+id/close_btn"
+        android:showAsAction="always"
+        android:title="关闭"/>
 </menu>
