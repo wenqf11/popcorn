@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
 from index import *
+from device import *
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list, get_decivetype_by_class, get_parent_classid, have_right_to_devicemgt
@@ -723,6 +724,87 @@ def userbatch_submit(request):
 用户管理结束
 设备管理开始
 '''
+
+@login_required
+def device_view_all(request):
+    user = k_user.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    server_msg = request.GET.get('msg')
+    if server_msg == None:
+        server_msg = ''
+    devicetypes = get_decivetype_by_class(user.classid_id)
+    dev_type_id_list = list()
+    for dtype in devicetypes:
+        dev_type_id_list.append(dtype.id)
+
+    device = k_device.objects.all()
+
+    data = []
+    for d in device:
+        if not d.typeid_id in dev_type_id_list:
+            continue
+        dataitem = {}
+        
+        if d.classid:
+            dataitem['classname'] = d.classid.name
+        else:
+            dataitem['classname'] = "未指定部门"
+        dataitem['brief'] = d.brief
+        dataitem['name'] = d.name
+        dataitem['position'] = d.position
+        dataitem['brand'] = d.brand
+        dataitem['model'] = d.model
+        dataitem['serial'] = d.serial
+        dataitem['content'] = d.content
+        dataitem['buytime'] = d.buytime
+        dataitem['notice'] = d.notice
+        dataitem['memo'] = d.memo
+
+        # device type
+        devicetype = k_devicetype.objects.filter(id=d.typeid_id)
+        if len(devicetype) == 1:
+            dataitem['devicetype'] = devicetype[0].name
+        else:
+            dataitem['devicetype'] = "未指定设备分类"
+
+        # producer/supplier
+        if d.producerid:
+            dataitem['producer'] = d.producerid.name
+        else:
+            dataitem['producer'] = '无'
+        if d.supplierid:
+            dataitem['supplier'] = d.supplierid.name
+        else:
+            dataitem['supplier'] = '无'
+
+        # owner
+        owner = k_user.objects.filter(id=d.ownerid)
+        if len(owner) == 1:
+            dataitem['owner'] = owner[0].name
+        else:
+            dataitem['owner'] = "未指定负责人或该用户已被删除"
+
+        # spare
+        str_spares = ''
+        spares = k_spare.objects.filter(k_device=d.id)
+        for s in spares:
+            str_spares += '%s (编号:%s, 型号:%s)'%(s.name, s.brief, s.model) + ','
+        if str_spares != '':
+            dataitem['spares'] = str_spares[0:len(str_spares)-1]
+        else:
+            dataitem['spares'] = '无'
+
+        data.append(dataitem)
+
+    #非法权限信息
+    purview_msg = request.GET.get('msg')
+    if purview_msg == None:
+       purview_msg = ''
+    #, 'purview_msg': purview_msg
+
+    return get_purviews_and_render_to_response(request.user.username, 'device_view_all.html', {"data": data, 'purview_msg': purview_msg,
+                                                                                     'username':user.username, 'useravatar': user.avatar})
+
 
 @login_required
 def devicebyclass(request):

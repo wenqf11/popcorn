@@ -93,6 +93,7 @@ urlpatterns = patterns(
     url(r'^device_type_revise/$', device_type_revise),
     url(r'^device_type_del/$', device_type_del),
     url(r'^operate_device/$', operate_device),
+    url(r'^device_view_all/$', device_view_all),
 
     url(r'^supplier/$', supplier),
     url(r'^add_supplier/$', add_supplier),
