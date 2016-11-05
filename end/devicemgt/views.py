@@ -15,7 +15,7 @@ from forms import *
 from index import *
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
-from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list, get_decivetype_by_class, get_parent_classid
+from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list, get_decivetype_by_class, get_parent_classid, have_right_to_devicemgt
 import json
 import xlwt
 
@@ -727,7 +727,8 @@ def userbatch_submit(request):
 @login_required
 def devicebyclass(request):
     user = k_user.objects.get(username=request.user.username)
-    parents = user.classid
+    _parent_classid = get_parent_classid(user.classid_id)
+    '''
     classes = k_class.objects.all()
     datas = list()
     data = dict()
@@ -738,6 +739,9 @@ def devicebyclass(request):
         datas.append(data)
         variables=RequestContext(request,{'username':user.username,  'useravatar': user.avatar, 'data':datas})
         return get_purviews_and_render_to_response(request.user.username, 'devicebyclass.html',variables)
+    '''
+    if have_right_to_devicemgt(_parent_classid):
+        return HttpResponseRedirect('/device?classid=%d'%_parent_classid)
     else:
         return HttpResponseRedirect('/device/')
 
@@ -795,7 +799,7 @@ def devicemgt(request):
             str_spares = ''
             spares = k_spare.objects.filter(k_device=_id)
             for s in spares:
-                str_spares += s.name + ','
+                str_spares += '%s (编号:%s, 型号:%s)'%(s.name, s.brief, s.model) + ','
             if str_spares != '':
                 deviceinfo['spares'] = str_spares[0:len(str_spares)-1]
             else:
@@ -925,6 +929,7 @@ def operate_device(request):
     producer_list = list()
     people_list = list()
     spare_list = list()
+    spare_detail_list = list()
     classes = k_class.objects.filter(id__in=result)
     for c in classes:
         class_list.append(c.name)
@@ -941,6 +946,12 @@ def operate_device(request):
     spares = k_spare.objects.all()
     for s in spares:
         spare_list.append(s.name)
+        tmp_dict = dict()
+        tmp_dict['name'] = s.name
+        tmp_dict['brief'] = s.brief
+        tmp_dict['model'] = s.model
+        spare_detail_list.append(tmp_dict)
+        #spare_detail_list.append( {'name': s.name, 'brief': s.brief, 'model:': s.model} )
     people = k_user.objects.filter(classid__in=result)
     for p in people:
         person = dict()
@@ -954,6 +965,7 @@ def operate_device(request):
     userdata['producer_list'] = producer_list
     userdata['people'] = people_list
     userdata['spare_list'] = spare_list
+    userdata['spare_detail_list'] = spare_detail_list
     if _id:
         thedevice = k_device.objects.filter(id = _id)[0]
         key_list = ['name', 'brand', 'brief', 'serial', 'model', 'buytime', 'content', 'qrcode', 'position', 'memo',
@@ -974,7 +986,8 @@ def operate_device(request):
         k_chosed_spares = k_spare.objects.filter(k_device=_id)
         chosed_spares = []
         for k_chosed_spare in k_chosed_spares:
-            chosed_spares.append(k_chosed_spare.name)
+            #chosed_spares.append( '%s(%s,%s)'%(k_chosed_spare.name, k_chosed_spare.model, k_chosed_spare.brief) )
+            chosed_spares.append(k_chosed_spare.brief)
         userdata['chosen_spares'] = chosed_spares
 
         _owner = k_user.objects.filter(id=thedevice.ownerid)
@@ -1081,9 +1094,9 @@ def deviceadd(request):
                 _device.producerid = _producerid
             
             # 建立device和spare的关系
-            spares_name = request.POST.getlist('spare')
-            for s_name in spares_name:
-                spares = k_spare.objects.filter(name=s_name)
+            spares_brief = request.POST.getlist('spare')
+            for s_brief in spares_brief:
+                spares = k_spare.objects.filter(brief=s_brief)
                 for spare in spares:
                     _device.spare.add(spare.id)
 
@@ -1114,11 +1127,11 @@ def deviceadd(request):
             for t_dev in tmp_devs:
                 _dev.spare.remove(t_dev)
             # 建立user和role的关系
-            spares_name = request.POST.getlist('spare')
-            for s_name in spares_name:
-                spares = k_spare.objects.filter(name=s_name)
+            spares_brief = request.POST.getlist('spare')
+            for s_brief in spares_brief:
+                spares = k_spare.objects.filter(brief=s_brief)
                 for spare in spares:
-                    _dev.spare.add(spare.id)
+                    _device.spare.add(spare.id)
             _dev.save()
             server_msg = _classname + '中' + _dev.name + '(' + _dev.brief + ')的设备信息已成功更新！'
             return HttpResponseRedirect('/operate_device/?id=' + str(_dev.id) + '&msg=' + server_msg)
@@ -1263,7 +1276,16 @@ def devicebatch_submit(request):
                 }), content_type="application/json")
         except Exception as e:
             server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门、设备类别和责任人用户名是否正确！' + str(e)
-            print e
+            tmp_decivetype = k_devicetype.objects.filter(name=obj_data['typename'])
+            if len(tmp_decivetype) <= 0:
+                server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查设备类别是否正确！' + str(e)
+            tmp_class = k_class.objects.filter(name=_classname)
+            if len(tmp_class) <= 0:
+                server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门是否正确！' + str(e)
+            tmp_ownerid = k_user.objects.filter(username=obj_data['owner'])
+            if len(tmp_ownerid) <= 0:
+                server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查责任人用户名是否正确！' + str(e)
+            #print e
             return HttpResponse(json.dumps({
                 "server_msg":server_msg
                 }), content_type="application/json")
@@ -1327,7 +1349,7 @@ def device_type_submit(request):
         _memo = request.GET.get('memo')
         _user = k_user.objects.get(username=request.user.username)
         _parent_classid = get_parent_classid(_user.classid_id)
-        if _parent_classid != 2 and _parent_classid != 3:
+        if not have_right_to_devicemgt(_parent_classid):
             return HttpResponseRedirect('/device_type/?msg="无权限添加新的设备类型！"')
         if len(_parentname) == 0:
             _id = 0

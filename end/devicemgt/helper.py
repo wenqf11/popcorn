@@ -131,9 +131,11 @@ def get_decivetype_by_class(classid):
         tmp_class = k_class.objects.filter(id = classid)
         while True:
             if len(tmp_class)== 1:
-                if tmp_class[0].depth <= 1:
+                if tmp_class[0].depth == 1:
                     tmp_id = tmp_class[0].id
                     return k_devicetype.objects.filter(status=tmp_id)
+                elif tmp_class[0].depth == 0:
+                    return k_devicetype.objects.all()
                 tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
             else:
                 return k_devicetype.objects.all()
@@ -148,3 +150,10 @@ def get_parent_classid(classid):
                 tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
             else:
                 return classid
+
+
+def have_right_to_devicemgt(classid):
+        if classid in [0,1,2,3]:
+            return True
+        else:
+            return False

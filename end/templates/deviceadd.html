@@ -359,11 +359,11 @@
                     <div class="col-sm-9">
                         <div class="col-sm-6" style="margin-left:-12px">
                             <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="选择备品备件" name="spare">
-                                {% for spare in data.spare_list %}
-                                    {% if spare in data.chosen_spares %}
-                                        <option value="{{ spare }}" selected="selected">{{ spare }}</option>
+                                {% for spare in data.spare_detail_list %}
+                                    {% if spare.brief in data.chosen_spares %}
+                                        <option value="{{ spare.biref }}" selected="selected">{{ spare.name }} (编号:{{ spare.brief }}, 型号:{{ spare.model }})</option>
                                     {% else %}
-                                        <option value="{{ spare }}">{{ spare }}</option>
+                                        <option value="{{ spare.brief }}">{{ spare.name }} (编号:{{ spare.brief }}, 型号:{{ spare.model }})</option>
                                     {% endif %}
                                 {% endfor %}
                             </select>
