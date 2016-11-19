@@ -811,16 +811,18 @@ def devicebyclass(request):
     user = k_user.objects.get(username=request.user.username)
     _parent_classid = get_parent_classid(user.classid_id)
     '''
-    classes = k_class.objects.all()
-    datas = list()
-    data = dict()
-    data['text'] = parents.name
-    data['href'] = "/device?classid=" + str(parents.id)
-    data['nodes'] = get_device_by_class(classes, parents.id)
-    if data['nodes']:
-        datas.append(data)
-        variables=RequestContext(request,{'username':user.username,  'useravatar': user.avatar, 'data':datas})
-        return get_purviews_and_render_to_response(request.user.username, 'devicebyclass.html',variables)
+    parents = user.classid
+    if parents.depth == 0:  
+        classes = k_class.objects.all()
+        datas = list()
+        data = dict()
+        data['text'] = parents.name
+        data['href'] = "/device?classid=" + str(parents.id)
+        data['nodes'] = get_device_by_class(classes, parents.id)
+        if data['nodes']:
+            datas.append(data)
+            variables=RequestContext(request,{'username':user.username,  'useravatar': user.avatar, 'data':datas})
+            return get_purviews_and_render_to_response(request.user.username, 'devicebyclass.html',variables)
     '''
     if have_right_to_devicemgt(_parent_classid):
         return HttpResponseRedirect('/device?classid=%d'%_parent_classid)
@@ -835,7 +837,7 @@ def devicemgt(request):
     if server_msg == None:
         server_msg = ''
     #devicetypes = k_devicetype.objects.all()
-    devicetypes = get_decivetype_by_class(user.classid_id)
+    
     type_parents = 0
     class_parents = 0
     filter_classidx = request.GET.get('classid')
@@ -851,14 +853,42 @@ def devicemgt(request):
                 tmp_device = tmp_device[0]
                 class_parents = int(tmp_device.classid_id)
 
-    if class_parents > 0:
-        sub_classes_list = list()
-        sub_classes_list.append(class_parents)
-        get_sub_classes_list(classes, sub_classes_list, class_parents)
-        class_parents = sub_classes_list
+
+    datas = list()
+    tmp_parents = user.classid
+    if tmp_parents.depth == 0:  
+        #data = dict()
+        #data['text'] = tmp_parents.name
+        #data['href'] = "#"
+        sub_datas = list()
+        for c in classes:
+            if c.parentid == tmp_parents.id:
+                sub_data = dict()
+                sub_data['text'] = c.name
+                sub_data['href'] = "#"
+                class_parents = c.id
+                sub_classes_list = list()
+                devicetypes = get_decivetype_by_class(class_parents)
+                sub_classes_list.append(class_parents)
+                get_sub_classes_list(classes, sub_classes_list, class_parents)
+                class_parents = sub_classes_list
+                sub_data['nodes'] = get_device_node(devicetypes, type_parents, class_parents) #获取节点树
+                sub_datas.append(sub_data)
+        #data['nodes'] = sub_datas
+        #datas = list()
+        #datas.append(data)
+        datas = sub_datas
     else:
-        class_parents = classes
-    datas = get_device_node(devicetypes, type_parents, class_parents) #获取节点树
+        if class_parents > 0:
+            sub_classes_list = list()
+            sub_classes_list.append(class_parents)
+            get_sub_classes_list(classes, sub_classes_list, class_parents)
+            class_parents = sub_classes_list
+        else:
+            class_parents = classes
+        devicetypes = get_decivetype_by_class(user.classid_id)
+        datas = get_device_node(devicetypes, type_parents, class_parents) #获取节点树
+
     deviceinfo = dict()
     if (_id):
         device = k_device.objects.filter(id=_id)
