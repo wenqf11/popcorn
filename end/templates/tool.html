@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
     <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/TableTools/css/dataTables.tableTools.min.css" />
 {% endblock %}
 
 {% block pageheader %}
@@ -12,6 +13,7 @@
 {% endblock %}
 
 {% block content %}
+<a id="tabletools"></a>
  <div class="row-fluid">
     <!-- block -->
     <div class="block">
@@ -105,6 +107,7 @@
 {% block tailjs %}
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
+    <script src="../static/TableTools/js/dataTables.tableTools.min.js" charset="utf-8" ></script>
 <script>
     $(function(){
         var purview_msg = "{{ purview_msg }}";
@@ -129,7 +132,7 @@
         }
     }
     $(document).ready(function() {
-        $('#maintenance').DataTable({
+        var table = $('#maintenance').DataTable({
             "oLanguage" : {
                 "sLengthMenu" : "每页显示 _MENU_ 条记录",
                 "sZeroRecords" : "对不起，没有匹配的数据",
@@ -150,6 +153,16 @@
             $('#maintenance_filter input').val($(this).html());
             $('#maintenance_filter input').select();
         });
+        var tableTools = new $.fn.dataTable.TableTools( table, {
+            "sSwfPath": "../static/TableTools/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [
+                "copy",
+                "xls",
+                //"pdf",
+                "print"
+            ]
+        } );
+        $( tableTools.fnContainer() ).insertAfter($('#tabletools'));
     });
     </script>
 {% endblock %}

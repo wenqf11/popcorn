@@ -26,7 +26,7 @@
                     <div class="form-group" style="display:none">
                         <label class="col-sm-3 control-label no-padding-top"></label>
                         <div class="col-sm-9">
-                            <input type="file" id="name" name="file" />
+                            <input type="file" id="name" name="file_tmp" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -214,7 +214,7 @@
             var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
             var name = document.getElementById("name");
             var divs = name.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
-            console.log(divs);
+            //console.log(divs);
             divs[1].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
             divs[2].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
             divs[3].childNodes[3].childNodes[1].value = dataline[2].innerHTML;

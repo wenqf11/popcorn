@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
     <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
     <link href="../static/assets/css/chosen.min.css" rel="stylesheet"  media="screen">
+    <link rel="stylesheet" href="../static/TableTools/css/dataTables.tableTools.min.css" />
 {% endblock %}
 
 {% block pageheader %}
@@ -21,6 +22,7 @@
             <a class="btn btn-success btn-bold" href="#my-modal2" onclick="setMax()" role="button" data-toggle="modal">
                 <i class="ace-icon fa fa-plus bigger-130"></i>添加
             </a>
+            <a id="tabletools"></a>
         </div>
     </p>
     {% endif %}
@@ -283,6 +285,7 @@
 {% block tailjs %}
     <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
+    <script src="../static/TableTools/js/dataTables.tableTools.min.js" charset="utf-8" ></script>
 <script>
     $(function(){
         var purview_msg = "{{ purview_msg }}";
@@ -307,7 +310,7 @@
         }
     });
     $(document).ready(function() {
-        $('#count').DataTable({
+        var table = $('#count').DataTable({
             "oLanguage" : {
                 "sLengthMenu" : "每页显示 _MENU_ 条记录",
                 "sZeroRecords" : "对不起，没有匹配的数据",
@@ -407,6 +410,16 @@
                     $("[name='notreturned']").val(notreturned);
             }
         };
+        var tableTools = new $.fn.dataTable.TableTools( table, {
+            "sSwfPath": "../static/TableTools/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [
+                "copy",
+                "xls",
+                //"pdf",
+                "print"
+            ]
+        } );
+        $( tableTools.fnContainer() ).insertAfter($('#tabletools'));
     });
     </script>
     <script type="text/javascript">
