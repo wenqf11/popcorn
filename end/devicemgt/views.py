@@ -5593,7 +5593,8 @@ def meter_device_date(request):
         d['content'] = []
         for x in arr:
             k, v = x.split(':')
-            d['content'].append(v.strip())
+            if not k == 'qrcode':
+                d['content'].append(v.strip())
         data.append(d)
 
     table_heads = []
@@ -5774,7 +5775,8 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
         d['content'] = []
         for x in arr:
             k, v = x.split(':')
-            d['content'].append(v.strip())
+            if not k == 'qrcode':
+                d['content'].append(v.strip())
         data.append(d)
 
     table_heads = []
