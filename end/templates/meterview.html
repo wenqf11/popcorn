@@ -30,7 +30,15 @@
                     <th>抄表路线</th>
                     <th>设备编号</th>
                     <th>签到状态</th>
-                    <th>表单内容</th>
+                    {% if search_type == 'device' %}
+                        <th>表单内容</th>
+                    {% elif search_type == 'date' %}
+                        <th>表单内容</th>
+                    {% else %}
+                        {% for h in heads %}
+                        <th>{{ h }}</th>
+                        {% endfor %}
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +50,15 @@
                     <td>{{ meter.brief }}</td>
 {#                      <td>{{ meter.content | truncatechars:30 }}</td>#}
                     <td>{{ meter.check }}</td>
-                    <td>{{ meter.content }}</td>
+                    {% if search_type == 'device' %}
+                        <td>{{ meter.content }}</td>
+                    {% elif search_type == 'date' %}
+                        <td>{{ meter.content }}</td>
+                    {% else %}
+                        {% for c in meter.content %}
+                        <td>{{ c }}</td>
+                        {% endfor %}
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

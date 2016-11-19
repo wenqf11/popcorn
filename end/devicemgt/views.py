@@ -13,7 +13,6 @@ from django.contrib.auth.decorators import login_required
 from models import *
 from forms import *
 from index import *
-from device import *
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from helper import handle_uploaded_file, get_current_time, get_current_date, get_type_node, get_device_node, get_device_by_class, get_dept_type_node, get_sub_classes_list, get_decivetype_by_class, get_parent_classid, have_right_to_devicemgt
@@ -5565,6 +5564,8 @@ def meter_device_date(request):
     date_string_end = request.GET.get('date_end')
     date_start = datetime.strptime(date_string_start, '%Y-%m-%d').date()
     date_end = datetime.strptime(date_string_end, '%Y-%m-%d').date()
+    if not brief:
+        return HttpResponseRedirect('/meter_date/?date_start=%s&date_end=%s' % (date_string_start, date_string_end))
 
     user = k_user.objects.get(username=request.user.username)
 
@@ -5576,6 +5577,7 @@ def meter_device_date(request):
         meters = meters.filter(brief=brief)
 
     data = []
+    arr = []
     for m in meters:
         d = {'brief': m.brief, 'route': m.routeid.name if m.routeid else '', 'user': m.userid.name, 'time': m.metertime}
         json_dict = json.loads(m.json)
@@ -5587,10 +5589,20 @@ def meter_device_date(request):
             del json_dict['qrcode']
         else:
             d['check'] = u'未签到'
-        d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
+        arr = m.json.lstrip('{').rstrip('}').replace('\"', '').split(',')
+        d['content'] = []
+        for x in arr:
+            k, v = x.split(':')
+            d['content'].append(v.strip())
         data.append(d)
 
+    table_heads = []
+    for x in arr:
+        k, v = x.split(':')
+        table_heads.append(k.strip())
+
     return get_purviews_and_render_to_response(request.user.username, 'meterview.html', {
+        'heads': table_heads,
         'meters': data,
         'search_type': 'date_device' if brief else 'date',
         'brief': brief,
@@ -5631,7 +5643,7 @@ def meter_export_device(request, brief=''):
     # 响应设置
     response = HttpResponse(mimetype='application/ms-excel')
     # 文件名
-    response['Content-Disposition'] = 'attachment;filename=%s_%s.xls' % (smart_str('抄表数据'), smart_str(brief))
+    response['Content-Disposition'] = 'attachment;filename=Data_%s.xls' % smart_str(brief)
     # 文件对象
     book = xlwt.Workbook(encoding='utf-8')
     # 工作表对象
@@ -5696,7 +5708,7 @@ def meter_export_date(request, start_date='', end_date=''):
     # 响应设置
     response = HttpResponse(mimetype='application/ms-excel')
     # 文件名
-    response['Content-Disposition'] = 'attachment;filename=%s_%s_%s.xls' % (smart_str('抄表数据'), smart_str(start_date), smart_str(end_date))
+    response['Content-Disposition'] = 'attachment;filename=Data_%s_%s.xls' % (smart_str(start_date), smart_str(end_date))
     # 文件对象
     book = xlwt.Workbook(encoding='utf-8')
     # 工作表对象
@@ -5741,6 +5753,7 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
         meters = meters.filter(brief=brief)
 
     data = []
+    arr = []
     for m in meters:
         d = {
             'brief': m.brief,
@@ -5757,13 +5770,22 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
             del json_dict['qrcode']
         else:
             d['check'] = u'未签到'
-        d['content'] = json.dumps(json_dict, ensure_ascii=False).lstrip('{').rstrip('}').replace('\"', '')
+        arr = m.json.lstrip('{').rstrip('}').replace('\"', '').split(',')
+        d['content'] = []
+        for x in arr:
+            k, v = x.split(':')
+            d['content'].append(v.strip())
         data.append(d)
+
+    table_heads = []
+    for x in arr:
+        k, v = x.split(':')
+        table_heads.append(k.strip())
 
     # 响应设置
     response = HttpResponse(mimetype='application/ms-excel')
     # 文件名
-    response['Content-Disposition'] = 'attachment;filename=%s_%s_%s_%s.xls' % (smart_str('抄表数据'), smart_str(brief), smart_str(start_date), smart_str(end_date))
+    response['Content-Disposition'] = 'attachment;filename=Data_%s_%s_%s.xls' % (smart_str(brief), smart_str(start_date), smart_str(end_date))
     # 文件对象
     book = xlwt.Workbook(encoding='utf-8')
     # 工作表对象
@@ -5775,8 +5797,15 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
         {'key': 'route', 'head': '抄表路线', 'width': 256 * 20},
         {'key': 'brief', 'head': '设备编号', 'width': 256 * 15},
         {'key': 'check', 'head': '签到状态', 'width': 256 * 12},
-        {'key': 'content', 'head': '表单内容', 'width': 256 * 80}
+        # {'key': 'content', 'head': '表单内容', 'width': 256 * 80}
     ]
+    for i, h in enumerate(table_heads):
+        columns.append({
+            'content': True,
+            'key': i,
+            'head': h,
+            'width': 256 * 20
+        })
     # 设置表头样式
     head_style = xlwt.easyxf('font: bold on;')
     # 写表头
@@ -5788,7 +5817,10 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
     # 写数据
     for row, m in enumerate(data):
         for col, x in enumerate(columns):
-            sheet.write(row + 1, col, m[x['key']], data_style)
+            if 'content' in x:
+                sheet.write(row + 1, col, m['content'][x['key']], data_style)
+            else:
+                sheet.write(row + 1, col, m[x['key']], data_style)
 
     book.save(response)
     return response
