@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="vibrate_duration">
+        <item>一直</item>
+        <item>120s</item>
+        <item>90s</item>
+        <item>60s</item>
+    </string-array>
+</resources>

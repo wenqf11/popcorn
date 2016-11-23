@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 import cn.edu.tsinghua.thss.popcorn.AboutInfoActivity;
+import cn.edu.tsinghua.thss.popcorn.ChangeLocalSettingActivity;
 import cn.edu.tsinghua.thss.popcorn.ChangePasswordActivity;
 import cn.edu.tsinghua.thss.popcorn.FeedBackActivity;
 import cn.edu.tsinghua.thss.popcorn.R;
@@ -88,6 +89,14 @@ public class MineFragment extends Fragment {
     @OnClick(R.id.feed_back)
     private void onFeedBackClick(View v) {
         Intent intent = new Intent(getActivity(), FeedBackActivity.class);
+        Bundle bundle = new Bundle();
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.local_setting)
+    private void onChangeLocalSetting(View v) {
+        Intent intent = new Intent(getActivity(), ChangeLocalSettingActivity.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
         startActivity(intent);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.edu.tsinghua.thss.popcorn" >
+    package="cn.edu.tsinghua.thss.popcorn">
 
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -36,12 +36,12 @@
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:windowSoftInputMode="adjustResize|stateVisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name=".LoginActivity" />
@@ -52,126 +52,102 @@
 
         <receiver
             android:name=".AlarmReceiver"
-            android:process=":remote" >
-        </receiver>
+            android:process=":remote"></receiver>
 
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".AttendanceActivity"
             android:label="@string/title_activity_attendance"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".RecordListActivity"
             android:label="@string/title_activity_record"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".TableActivity"
             android:label="@string/title_activity_table"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".QRcode.QRcodeActivity"
             android:label="@string/title_activity_qrcode"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".RepairListActivity"
             android:label="@string/title_activity_repair_list"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".RepairActivity"
             android:label="@string/title_activity_repair"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MaintainListActivity"
             android:label="@string/title_activity_maintain_list"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MaintainActivity"
             android:label="@string/title_activity_maintain"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".DeviceInfoSearchActivity"
             android:label="@string/title_activity_device_info_search"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".DeviceInfoDetailActivity"
             android:label="@string/title_activity_device_info_detail"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ChangePasswordActivity"
             android:label="@string/title_activity_change_password"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".FeedBackActivity"
             android:label="@string/title_activity_feedback"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".AboutInfoActivity"
             android:label="@string/title_activity_about_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".RankActivity"
             android:label="@string/title_activity_rank"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".BonusActivity"
             android:label="@string/title_activity_bonus"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".UserInfoActivity"
             android:label="@string/title_activity_user_info"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".TaskActivity"
             android:label="@string/title_activity_task"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".BadListActivity"
             android:label="@string/title_activity_bad"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".TaskListActivity"
             android:label="@string/title_activity_task_list"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".QRcode.CheckinActivity"
             android:label="@string/title_activity_checkin"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".BonusHistoryActivity"
             android:label="@string/title_activity_bonus_history"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
-        </service>
+            android:process=":remote"></service>
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -179,18 +155,16 @@
 
         <activity
             android:name=".RepairRecordActivity"
-            android:label="@string/title_activity_repair_record" >
-        </activity>
+            android:label="@string/title_activity_repair_record"></activity>
         <activity
             android:name=".RepairRecordItemActivity"
             android:label="维修记录表"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".BadItemActivity"
             android:label="报警详情"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".ChangeLocalSettingActivity"></activity>
     </application>
 
 </manifest>

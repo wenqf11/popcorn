@@ -10,6 +10,7 @@ public class Config {
     public static final String REPAIR_RECORD_JSON = "repair_record_json";
     public static final String START_DAY ="start_day";
     public static final String END_DAY ="end_day";
+    public static final String VIBRATE_DURATION = "vibrate_duration";
 
 
     public static String ACCESS_TOKEN = "hello_world";

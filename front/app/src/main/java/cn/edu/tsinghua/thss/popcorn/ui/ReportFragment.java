@@ -159,7 +159,11 @@ public class ReportFragment extends Fragment {
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        Toast.makeText(getActivity().getApplicationContext(), "网络故障，数据提交失败！如故障紧急请电话联系相应负责人！", Toast.LENGTH_SHORT).show();
+                       //Toast.makeText(getActivity().getApplicationContext(), "网络故障，数据提交失败！如故障紧急请电话联系相应负责人！", Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("网络故障，数据提交失败！如故障紧急请电话联系相应负责人！")
+                                .setPositiveButton("确定",null)
+                                .show();
                         progressDialog.hide();
                     }
                 });

@@ -73,16 +73,20 @@
                 android:clickable="true"
                 android:background="@drawable/layout_selector"
                 >
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                fontawesometext:fa_icon="fa-lock"
-                android:textSize="28sp"
-                android:textColor="#33B5E5"
-                android:layout_gravity="center|center_vertical"
-                />
-
+                android:layout_gravity="center|center_vertical">
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    fontawesometext:fa_icon="fa-lock"
+                    android:textSize="28sp"
+                    android:textColor="#33B5E5"
+                    android:layout_gravity="center|center_vertical"
+                    />
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,23 +114,69 @@
             android:padding="10dp"
             android:clickable="true"
             android:background="@drawable/layout_selector"
+            android:orientation="horizontal"
             >
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical">
             <com.beardedhen.androidbootstrap.FontAwesomeText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 fontawesometext:fa_icon="fa-comments"
-                android:textSize="28sp"
+                android:textSize="24sp"
+                android:layout_marginLeft="20dp"
                 android:textColor="#33B5E5"
-                android:layout_gravity="center|center_vertical"
-                />
-
+                android:layout_gravity="center|center_vertical" />
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
                 android:layout_marginLeft="20dp"
                 android:text="意见反馈"
+                android:textColor="#000"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </TableRow>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DCDCDC" />
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/local_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:clickable="true"
+            android:background="@drawable/layout_selector"
+            android:orientation="horizontal"
+            >
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical">
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fontawesometext:fa_icon="fa-cog"
+                    android:textSize="24sp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#33B5E5"
+                    android:layout_gravity="center|center_vertical" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="20dp"
+                android:text="设置"
                 android:textColor="#000"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -149,28 +199,34 @@
             android:clickable="true"
             android:background="@drawable/layout_selector"
             >
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                fontawesometext:fa_icon="fa-info-circle"
-                android:textSize="28sp"
-                android:textColor="#33B5E5"
-                android:layout_gravity="center|center_vertical"
-                />
-
+            <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical">
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    fontawesometext:fa_icon="fa-info-circle"
+                    android:textSize="28sp"
+                    android:textColor="#33B5E5"
+                    android:layout_gravity="center|center_vertical"
+                    />
+            </LinearLayout>
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:paddingRight="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="关于"
                     android:textColor="#000"
                     android:textSize="14sp" />
+
                 <FrameLayout
                     android:layout_gravity="end"
                     android:layout_width="wrap_content"
@@ -180,6 +236,7 @@
                     <TextView
                         android:id="@+id/tab_mine_about_hint"
                         android:visibility = "gone"
+                        android:layout_marginLeft="10dp"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:background="@drawable/tips_circle"
@@ -205,16 +262,20 @@
             android:clickable="true"
             android:background="@drawable/layout_selector"
             >
-            <com.beardedhen.androidbootstrap.FontAwesomeText
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                fontawesometext:fa_icon="fa-close"
-                android:textSize="28sp"
-                android:textColor="#33B5E5"
-                android:layout_gravity="center|center_vertical"
-                />
-
+                android:layout_gravity="center|center_vertical">
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    fontawesometext:fa_icon="fa-sign-out"
+                    android:textSize="28sp"
+                    android:textColor="#33B5E5"
+                    android:layout_gravity="center|center_vertical"
+                    />
+            </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
