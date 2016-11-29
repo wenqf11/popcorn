@@ -306,6 +306,9 @@ public class MaintainActivity extends Activity {
         }
 
         int index = maintainMemo.indexOf("审核未通过：");
+        if (index < 0){
+            index = 0;
+        }
         maintainMemo = maintainMemo.substring(index);
 
         maintainTitleTextView.setText(title);
