@@ -2267,7 +2267,11 @@ def operate_route(request):
         all_form = k_form.objects.all()
         data['forms'] = []
         for _form in all_form:
-            _device = k_device.objects.get(brief=_form.brief)
+            try:
+                _device = k_device.objects.get(brief=_form.brief)
+            except ObjectDoesNotExist:
+                print(_form.brief + '_' + str(_form.id))
+                continue
             data['forms'].append({
                 'id': _form.id,
                 'brief': _form.brief,
