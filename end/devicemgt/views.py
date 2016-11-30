@@ -2221,8 +2221,6 @@ def operate_route(request):
 
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
-    _all_classes = k_class.objects.filter(id__in=result)
-    _classes = [c.name for c in _all_classes]  # 参照role得到的，还没有使用
 
     data = {}
     _id = request.GET.get('id')
@@ -2247,7 +2245,7 @@ def operate_route(request):
             data['editor'] = '该用户已被删除'
         data['editTime'] = _route.editdatetime
 
-        all_form = k_form.objects.all()
+        all_form = k_form.objects.filter(classid__in=result)
         data['forms'] = []
         for _form in all_form:
             _device = k_device.objects.get(brief=_form.brief)
@@ -2264,7 +2262,7 @@ def operate_route(request):
                                                                                                 'username':user.username, 'useravatar': user.avatar})
     else:
         # 添加路线
-        all_form = k_form.objects.all()
+        all_form = k_form.objects.filter(classid__in=result)
         data['forms'] = []
         for _form in all_form:
             try:
