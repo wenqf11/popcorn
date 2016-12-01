@@ -179,6 +179,8 @@ urlpatterns = patterns(
     url(r'^view_toolcount/$', view_toolcount),
     url(r'^submit_toolcount/$', submit_toolcount),
     url(r'^delete_toolcount/$', delete_toolcount),
+    url(r'^toolbatch_add/$', toolbatch_add),
+    url(r'^toolbatch_submit/$', toolbatch_submit),
 
     url(r'^department/$', department),
     url(r'^departmentadd/$', departmentadd),

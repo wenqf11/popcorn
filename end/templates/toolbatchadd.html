@@ -1,0 +1,346 @@
+{% extends 'userframe.html' %}
+{% block css %}
+    <link href="../static/assets/DT_bootstrap.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../static/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/assets/fonts/fonts.googleapis.com.css" />
+    <link rel="stylesheet" href="../static/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+{% endblock %}
+
+{% block pageheader %}
+    批量导入工具
+{% endblock %}
+
+{% block content %}
+
+<script>
+function clickUpload() {
+    document.getElementById("xlf").click();
+}
+</script>
+ <div class="row-fluid">
+    <!-- block -->
+    <p>
+        <a class="btn btn-success" onclick="clickUpload()">上传EXCEL文件</a>
+        <input type="file" name="xlfile" id="xlf" style="display:none;">
+    </p>
+    <div class="block">
+        <div class="block-content collapse in">
+            <div class="span12">
+
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="maintenance"
+                         width="100%" style="overflow-x:scroll">
+                    <thead>
+                        <tr>
+                            <th>部门</th>
+                            <th>名称</th>
+                            <th>编号</th>
+                            <th>品牌</th>
+                            <th>生产厂家</th>
+                            <th>供应商</th>
+                            <th>型号</th>
+                            <th>内容</th>
+                            <th>备注</th>
+                            <th>最小库存</th>
+                            <th>使用班组</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /block -->
+</div>
+<p>
+    <a id="begin_import" class="btn btn-warning" >开始导入</a>
+</p>
+<pre id="out" style="display: none;"></pre>
+<p id="batch_data" style="display: none;"></p>
+{% endblock %}
+
+{% block tailjs %}
+    <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="../static/vendors/datatables/js/fixedcloumn.js"></script>
+    <script src="../static/assets/DT_bootstrap.js"></script>
+    <script src="../static/xlsx/shim.js"></script>
+    <script src="../static/xlsx/jszip.js"></script>
+    <script src="../static/xlsx/xlsx.js"></script>
+<script>
+    $(function(){
+        var purview_msg = "{{ purview_msg }}";
+        if (purview_msg) {
+            $.gritter.add({
+                title: '您没有权限进行此操作',
+                text: purview_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+        var server_msg="{{ server_msg }}";
+        if (server_msg) {
+            $.gritter.add({
+                title: '系统消息',
+                text: server_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+    });
+</script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+      $('#begin_import').click(function (){
+        var batchdata = document.getElementById('batch_data').value;
+        $.ajax({
+           url:'/toolbatch_submit/', //后台处理程序
+           type:'post',         //数据发送方式
+           dataType:'json',     //接受数据格式
+           data:batchdata,         //要传递的数据
+           success:function(data) {
+                if (data.server_msg) {
+                    $.gritter.add({
+                        title: '系统消息',
+                        text: data.server_msg,
+                        class_name: 'gritter-error gritter-center'
+                    });
+                }
+           } //回传函数(这里是函数名)
+         });
+         // $.post('/toolbatch_submit/',batchdata);
+      });
+
+        var table = $('#maintenance').DataTable({
+            scrollX: "100%",
+            oLanguage : {
+                "sLengthMenu" : "每页显示 _MENU_ 条记录",
+                "sZeroRecords" : "对不起，没有匹配的数据",
+                "sInfo" : "第 _START_ - _END_ 条 / 共 _TOTAL_ 条数据",
+                "sInfoEmpty" : "没有数据",
+                "sInfoFiltered" : "(数据表中共 _MAX_ 条记录)",
+                "sProcessing" : "正在加载中...",
+                "sSearch" : "搜索：",
+                "oPaginate" : {
+                    "sFirst" : "第一页",
+                    "sPrevious" : " 上一页 ",
+                    "sNext" : " 下一页 ",
+                    "sLast" : " 最后一页 "
+                }
+            }
+        });
+        new $.fn.dataTable.FixedColumns( table , {
+            "rightColumns": 1
+        });
+        $('td:not(.unsearchable)').click(function(){
+            $('#maintenance_filter input').val($(this).html());
+            $('#maintenance_filter input').select();
+        });
+        $(".fa-pencil").click(function() {
+
+            var dataline = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("td");
+            var name = document.getElementById("name");
+            var divs = name.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
+            console.log(divs);
+            divs[1].childNodes[3].childNodes[1].value = dataline[0].innerHTML;
+            divs[2].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
+            divs[3].childNodes[3].childNodes[1].value = dataline[2].innerHTML;
+            divs[4].childNodes[3].childNodes[1].value = dataline[3].innerHTML;
+            divs[5].childNodes[3].childNodes[1].value = dataline[4].innerHTML;
+            divs[6].childNodes[3].childNodes[1].value = dataline[5].innerHTML;
+        });
+    });
+    </script>
+<script>
+function delcfm() {
+    if (!confirm("确认要删除？")) {
+        window.event.returnValue = false;
+    }
+}
+</script>
+
+<script>
+var X = XLSX;
+var XW = {
+	/* worker message */
+	msg: 'xlsx',
+	/* worker scripts */
+	rABS: './xlsxworker2.js',
+	norABS: './xlsxworker1.js',
+	noxfer: './xlsxworker.js'
+};
+
+var wtf_mode = false;
+
+function fixdata(data) {
+	var o = "", l = 0, w = 10240;
+	for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
+	o+=String.fromCharCode.apply(null, new Uint8Array(data.slice(l*w)));
+	return o;
+}
+
+function ab2str(data) {
+	var o = "", l = 0, w = 10240;
+	for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint16Array(data.slice(l*w,l*w+w)));
+	o+=String.fromCharCode.apply(null, new Uint16Array(data.slice(l*w)));
+	return o;
+}
+
+function s2ab(s) {
+	var b = new ArrayBuffer(s.length*2), v = new Uint16Array(b);
+	for (var i=0; i != s.length; ++i) v[i] = s.charCodeAt(i);
+	return [v, b];
+}
+
+function xw_noxfer(data, cb) {
+	var worker = new Worker(XW.noxfer);
+	worker.onmessage = function(e) {
+		switch(e.data.t) {
+			case 'ready': break;
+			case 'e': console.error(e.data.d); break;
+			case XW.msg: cb(JSON.parse(e.data.d)); break;
+		}
+	};
+	var arr = rABS ? data : btoa(fixdata(data));
+	worker.postMessage({d:arr,b:rABS});
+}
+
+function xw_xfer(data, cb) {
+	var worker = new Worker(rABS ? XW.rABS : XW.norABS);
+	worker.onmessage = function(e) {
+		switch(e.data.t) {
+			case 'ready': break;
+			case 'e': console.error(e.data.d); break;
+			default: xx=ab2str(e.data).replace(/\n/g,"\\n").replace(/\r/g,"\\r"); console.log("done"); cb(JSON.parse(xx)); break;
+		}
+	};
+	if(rABS) {
+		var val = s2ab(data);
+		worker.postMessage(val[1], [val[1]]);
+	} else {
+		worker.postMessage(data, [data]);
+	}
+}
+
+function xw(data, cb) {
+	transferable = false;
+	if(transferable) xw_xfer(data, cb);
+	else xw_noxfer(data, cb);
+}
+
+function get_radio_value( radioName ) {
+	var radios = document.getElementsByName( radioName );
+	for( var i = 0; i < radios.length; i++ ) {
+		if( radios[i].checked || radios.length === 1 ) {
+			return radios[i].value;
+		}
+	}
+}
+
+function to_json(workbook) {
+	var result = {};
+	workbook.SheetNames.forEach(function(sheetName) {
+		var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+		if(roa.length > 0){
+			result[sheetName] = roa;
+		}
+	});
+	return result;
+}
+
+function to_csv(workbook) {
+	var result = [];
+	workbook.SheetNames.forEach(function(sheetName) {
+		var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+		if(csv.length > 0){
+			result.push("SHEET: " + sheetName);
+			result.push("");
+			result.push(csv);
+		}
+	});
+	return result.join("\n");
+}
+
+function to_formulae(workbook) {
+	var result = [];
+	workbook.SheetNames.forEach(function(sheetName) {
+		var formulae = X.utils.get_formulae(workbook.Sheets[sheetName]);
+		if(formulae.length > 0){
+			result.push("SHEET: " + sheetName);
+			result.push("");
+			result.push(formulae.join("\n"));
+		}
+	});
+	return result.join("\n");
+}
+
+var tarea = document.getElementById('b64data');
+function b64it() {
+	var wb = X.read(tarea.value, {type: 'base64',WTF:wtf_mode});
+	process_wb(wb);
+}
+
+function process_wb(wb) {
+	var output = "";
+	output = JSON.stringify(to_json(wb), 2, 2);
+	if(out.innerText === undefined) out.textContent = output;
+	else out.innerText = output;
+
+    document.getElementById('batch_data').value = output;
+    var i;
+    var data_array = [];
+    var obj_map = JSON.parse(output);
+    $('#maintenance').dataTable().fnClearTable();
+    for(var idx in obj_map) {
+        var obj_list = obj_map[idx];
+        for(i = 0; i<obj_list.length; ++i) {
+            data_array = [];
+            var obj = obj_list[i];
+            for (var key in obj) {
+                data_array.push(obj[key]);
+            }
+            if (data_array.length == 11) {
+                $('#maintenance').dataTable().fnAddData(data_array);
+            } else {
+                $.gritter.add({
+                    title: '数据不完整！',
+                    text: 'EXCEL中第'+(i+1)+'行数据有遗漏！请补充完整后重新导入或录入当前显示的数据。',
+                    class_name: 'gritter-error gritter-center'
+                });
+            }
+        }
+    }
+}
+
+var xlf = document.getElementById('xlf');
+function handleFile(e) {
+	rABS = false;
+	use_worker = false;
+	var files = e.target.files;
+	var f = files[0];
+	{
+		var reader = new FileReader();
+		var name = f.name;
+		reader.onload = function(e) {
+			var data = e.target.result;
+			if(use_worker) {
+				xw(data, process_wb);
+			} else {
+				var wb;
+				if(rABS) {
+					wb = X.read(data, {type: 'binary'});
+				} else {
+				var arr = fixdata(data);
+					wb = X.read(btoa(arr), {type: 'base64'});
+				}
+				process_wb(wb);
+			}
+		};
+		if(rABS) reader.readAsBinaryString(f);
+		else reader.readAsArrayBuffer(f);
+	}
+}
+
+if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+</script>
+
+{% endblock %}

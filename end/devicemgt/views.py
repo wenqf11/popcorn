@@ -4538,6 +4538,124 @@ def delete_tool(request):
     return HttpResponseRedirect('/view_tool')
 
 
+@login_required
+def toolbatch_add(request):
+    # 登陆成功
+    user = k_user.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username':user.username, 'useravatar': user.avatar})
+    return get_purviews_and_render_to_response(request.user.username, 'toolbatchadd.html', variables)
+
+@login_required
+def toolbatch_submit(request):
+    # 登陆成功
+    user = k_user.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': user.username})
+    if request.method == "POST":
+        raw_post_data = request.body
+        json_data = json.loads(raw_post_data)
+        success_num = 0
+        try:
+            for json_key in json_data:
+                obj_datas = json_data[json_key]
+                for obj_data in obj_datas:
+                    _brief = obj_data['brief']
+                    _name = obj_data['name']
+                    _classname = obj_data['classname']
+                    _classid = k_class.objects.get(name=_classname)
+                    _ownername = obj_data['ownername']
+                    _ownerid = k_class.objects.get(name=_ownername)
+                    if obj_data['producer'] == "无":
+                        _producerid = ''
+                    else:
+                        _producer = k_producer.objects.filter(name=obj_data['producer'])
+                        if len(_producer) == 0:
+                            _producerid = k_producer.objects.create(
+                                name=obj_data['producer'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_producer) == 1:
+                            _producerid = _producer[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加生产厂家出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
+                    if obj_data['supplier'] == "无":
+                        _supplierid = ''
+                    else:
+                        _supplier = k_supplier.objects.filter(name=obj_data['supplier'])
+                        if len(_supplier) == 0:
+                            _supplierid = k_supplier.objects.create(
+                                name=obj_data['supplier'], creatorid = request.user.id, createdatetime=get_current_date(),
+                                editorid=request.user.id, editdatetime=get_current_date()
+                            )
+                        elif len(_supplier) == 1:
+                            _supplierid = _supplier[0]
+                        else:
+                            server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加供应商出错：'
+                            return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
+                    _tools = k_tool.objects.filter(brief=_brief)
+                    _tools = _tools.filter(name=_name)
+                    if len(_tools) > 0:
+                        _dev = _tools[0]
+                        server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                        server_msg += _classname+'中'+_dev.name+'('+_dev.brief+')的工具已存在！'
+                        return HttpResponse(json.dumps({
+                            "server_msg":server_msg
+                            }), content_type="application/json")
+                    _minimum = obj_data['minimum']
+                    if not isinstance(_minimum, int):
+                        if isinstance(_minimum, str):
+                            if _minimum.isdigit():
+                                _minimum = int(_minimum)
+                            else:
+                                server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条出错：'
+                                server_msg += '最小库存应为正整数！'
+                                return HttpResponse(json.dumps({
+                                    "server_msg":server_msg
+                                    }), content_type="application/json")
+                    _tool = k_tool.objects.create(
+                        classid=_classid,
+                        ownerid=_ownerid,
+                        name=obj_data['name'],
+                        brief=obj_data['brief'],
+                        brand=obj_data['brand'],
+                        model=obj_data['model'],
+                        content=obj_data['content'],
+                        memo=obj_data['memo'],
+                        minimum=_minimum,
+                        creatorid=request.user.id,
+                        createdatetime=get_current_date(),
+                        editorid=request.user.id,
+                        editdatetime=get_current_date()
+                    )
+                    if _supplierid != '':
+                        _tool.supplierid = _supplierid
+                    if _producerid != '':
+                        _tool.producerid = _producerid
+                    _tool.save()
+                    success_num += 1
+            server_msg = '成功添加'+str(success_num)+'条工具信息！'
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+        except Exception as e:
+            server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查所属部门、工具名称和最小库存等是否正确！'
+            print e
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+    server_msg = "导入失败，请检查数据格式是否符合模板要求！"
+    return HttpResponse(json.dumps({
+        "username": user.username,
+        "server_msg":server_msg
+        }), content_type="application/json")
+
+
 def view_tooluse(request):
     #权限判断
     # _msg = check_purview(request.user.username, 41)
