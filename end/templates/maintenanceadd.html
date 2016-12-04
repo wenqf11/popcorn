@@ -38,11 +38,11 @@
             </div>-->
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">设备编号</label>
-                <div class="col-sm-2">
+                <div class="col-sm-6">
                     <select class="chosen-select" id="brief" name="brief" type="text">
                         <option value="nopersonchosen" selected="selected"></option>
-                        {% for brief in briefs %}
-                            <option value="{{ brief }}">{{ brief }}</option>
+                        {% for device in devices %}
+                            <option value="{{ device.brief }}">{{ device.name }}(简称:{{ device.brief }})</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -50,7 +50,7 @@
             {% if "指派维修" in modelsshow %}
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-top">指派维修人</label>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
                         <option value="nopersonchosen" selected="selected"></option>
                         {% for maintainer in maintainers %}

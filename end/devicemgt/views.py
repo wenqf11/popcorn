@@ -2772,16 +2772,16 @@ def add_maintenance(request):
     for _user in _users:
         _maintainers.append(_user.name)
     _devices = k_device.objects.filter(classid__in=result)
-    _briefs = []
-    for _device in _devices:
-        _briefs.append(_device.brief)
+    #_briefs = []
+    #for _device in _devices:
+    #    _briefs.append(_device.brief)
     #非法权限信息
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'maintenanceadd.html', {'maintainers': _maintainers, 'briefs': _briefs,
+    return get_purviews_and_render_to_response(request.user.username, 'maintenanceadd.html', {'maintainers': _maintainers, 'devices': _devices,
                                                                                               'purview_msg': purview_msg,
                                                                                               'username':user.username,
                                                                                               'useravatar': user.avatar})
@@ -2874,7 +2874,7 @@ def submit_maintenance(request):
         return HttpResponseRedirect('/view_maintained/')
     elif _id:
         _maintenance = k_maintenance.objects.get(id=_id)
-        if _editor != "nopersonchosen" and _editor != "":
+        if _editor != "nopersonchosen" and _editor:
             if _editor != '该用户已被删除':
                 _maintainer = k_user.objects.get(name=_editor)
                 _maintenance.editorid = _maintainer.id
@@ -2904,7 +2904,7 @@ def submit_maintenance(request):
         if _brief != 'nopersonchosen' and _brief != "":
             _device = k_device.objects.filter(brief=_brief)
             _maintenance.deviceid=_device[0]
-        if _editor != 'nopersonchosen' and _editor != "":
+        if _editor != 'nopersonchosen' and _editor:
             _maintenance.assignorid = _user.id
             _maintenance.assigndatetime = get_current_date()
             _maintainer = k_user.objects.get(name=_editor)
