@@ -336,6 +336,9 @@ class k_formitem(models.Model):
     auditdatetime = models.DateField(blank=True, default=date.today)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
+    def __str__(self):
+        return self.name
+
 
 
 """

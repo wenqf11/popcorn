@@ -23,11 +23,10 @@
 <script>
     $(document).ready(function() {
         $('#btn-test').click(function() {
-            $.get('/app/maintain/record/', {
+            $.get('/app/form/', {
                 username: 'huang0720jian',
                 access_token: 'hello_world',
-                start_date: '2015-10-01',
-                end_date: '2015-12-20',
+                route_id: 17,
                 timestamp: 1383712332,
             }, function(data) {
                 console.log(data);

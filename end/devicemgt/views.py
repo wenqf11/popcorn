@@ -5951,6 +5951,10 @@ def meter_export_device_date(request, brief='', start_date='', end_date=''):
 @login_required
 def attendance_history(request):
     user = k_user.objects.get(username=request.user.username)
+
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+
     if request.method == "GET":
         return get_purviews_and_render_to_response(request.user.username, "attendance_history.html", {
             'username': user.username,
@@ -5960,7 +5964,7 @@ def attendance_history(request):
         start_date_str = request.POST.get("start-date", "")
         end_date_str = request.POST.get("end-date", "")
         name = request.POST.get("name", "")
-        attendance_records = k_staffworkinfo.objects.all()
+        attendance_records = k_staffworkinfo.objects.filter(classid__in=result)
 
         if start_date_str != "":
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()

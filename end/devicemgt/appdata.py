@@ -287,7 +287,7 @@ def app_form(request, para, user):
         forms = []
 
     for _f in forms:
-        _items = k_formitem.objects.filter(formid=_f)
+        _items = k_formitem.objects.filter(formid=_f).order_by('id')
         _f.content = [{
             'name': _item.name,
             'choice': True,
