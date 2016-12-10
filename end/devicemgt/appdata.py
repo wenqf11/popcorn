@@ -302,10 +302,9 @@ def app_form(request, para, user):
             'memo': _item.memo
         } for _item in _items]
 
-        _f.new_content = dict()
+        _f.new_content = []
         for _item_id in xrange(0, len(_f.content)):
             c = _f.content[_item_id]
-            _tmp_item = dict()
             _tmp_content = dict()
             _tmp_content["id"] = str(_item_id)
             _tmp_content["default"] = ""
@@ -328,16 +327,14 @@ def app_form(request, para, user):
                 if c['min'] and c['max']:
                     _tmp_content["hint"] = "正常值在" + str(c['min']) + "和" + str(c['max']) + "之间"
             if c.has_key('unit') and c['unit']:
-                _f.new_content[c['name']+" "+c['unit']] = _tmp_content
+                _tmp_content['name'] = c['name']+" "+c['unit']
             else:
-                _f.new_content[c['name']] = _tmp_content
-            #_f.new_content.append(_tmp_item)
-        #print _f.new_content
-    print json.dumps(_f.new_content)   
+                _tmp_content['name'] = c['name']
+            _f.new_content.append(_tmp_content)
     response = {
         'status': 'ok',
         'data': [{'id': _f.id, 'name': k_device.objects.filter(brief=_f.brief)[0].name if len(k_device.objects.filter(brief=_f.brief))>0 else "",
-         'brief': _f.brief, 'content': json.dumps(_f.new_content)} for _f in forms]
+         'brief': _f.brief, 'content': _f.new_content} for _f in forms]
     }
     return HttpResponse(json.dumps(response))
 

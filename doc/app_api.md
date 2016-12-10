@@ -527,18 +527,20 @@
 					name: "螺杆式风冷冷水机组",
 					brief: "kt094732",
 					content: [
-						"冷供水温度  ℃": {
-					        type": "integer",
-					        id": 0,
+						{
+							name: "冷供水温度  ℃"
+					        type: "integer",
+					        id: 0,
 					        default: "",
 					        priority: "0",
 					        hint:"正常值范围在7-12"
 				    	},
-				    	"冷供水压力  Mpa": {
+				    	{
+							name: "冷供水压力  Mpa"
 					        type: "integer",
 					        id: "1",
-					        "default": "",
-					        "priority": "1"
+					        default: "",
+					        priority: "1"
 					    },
 					]
 				},
@@ -547,7 +549,8 @@
 					name: "冷冻水泵",
 					brief: "ms383831",
 					content: [
-						"水位": {
+						{
+							name: "水位"
 					        type: "integer",
 					        id: "4",
 					        default: "0",
