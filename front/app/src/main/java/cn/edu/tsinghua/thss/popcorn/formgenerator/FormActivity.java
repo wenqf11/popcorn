@@ -74,13 +74,47 @@ public abstract class FormActivity extends Activity
 			String name;
 			FormWidget widget;
 			JSONObject property;
-			JSONObject schema = new JSONObject( data ); 
-			JSONArray names = schema.names();
-			
-			for( int i= 0; i < names.length(); i++ ) 
+			data = "{\"data\":"+data+"}";
+			JSONObject schema = new JSONObject( data );
+			JSONArray jsonArray = schema.getJSONArray("data");
+			for (int i = jsonArray.length()-1; i >= 0; i--) {
+				property = jsonArray.getJSONObject(i);
+
+				name = property.getString("name");
+				if( name.equals( SCHEMA_KEY_META )  ) continue;
+
+				//property = schema.getJSONObject( name );
+
+				boolean toggles  = hasToggles( property );
+				String defaultValue   = getDefault( property );
+				int priority = property.getInt( FormActivity.SCHEMA_KEY_PRIORITY );
+
+				widget = getWidget( name, property );
+				if( widget == null) continue;
+
+				widget.setPriority( priority );
+				widget.setValue( defaultValue );
+
+				if( toggles ){
+					widget.setToggles( processToggles( property ) );
+					widget.setToggleHandler( new FormActivity.FormWidgetToggleHandler() );
+				}
+
+				if( property.has(FormActivity.SCHEMA_KEY_HINT)) widget.setHint( property.getString( FormActivity.SCHEMA_KEY_HINT ) );
+
+				if( property.has(FormActivity.SCHEMA_KEY_MAX) || property.has(FormActivity.SCHEMA_KEY_MIN))
+					widget.setThresholdChecker(property.getString(FormActivity.SCHEMA_KEY_MAX), property.getString(FormActivity.SCHEMA_KEY_MIN));
+
+				if(property.has(FormActivity.SCHEMA_KEY_VALUE))
+					widget.setValue(property.getString(FormActivity.SCHEMA_KEY_VALUE));
+
+				_widgets.add( widget );
+				_map.put( name, widget );
+			}
+			/*for( int i= 0; i < names.length(); i++ )
 			{
 				name = names.getString( i );
-				
+
 				if( name.equals( SCHEMA_KEY_META )  ) continue;
 				
 				property = schema.getJSONObject( name );	
@@ -110,7 +144,7 @@ public abstract class FormActivity extends Activity
 
 				_widgets.add( widget );
 				_map.put( name, widget );
-			}
+			}*/
 		} catch( JSONException e ) {
 			Log.i( "MakeMachine", e.getMessage() );
 		}

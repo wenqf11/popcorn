@@ -47,17 +47,21 @@ public class TableActivity extends FormActivity{
     private TextView resultTextView;
 
     private void saveButtonClick(JSONObject json) {
-        Toast.makeText(getApplicationContext(), "暂存成功", Toast.LENGTH_SHORT).show();
-        SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
+        try {
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
 
-        if(sp.getString("route_" + mRouteId+"_form_" + mFormId, "").equals("")){
-            int numOfForms = sp.getInt("route_" + mRouteId, 0);
-            editor.putInt("route_" + mRouteId, numOfForms + 1);
+            if (sp.getString("route_" + mRouteId + "_form_" + mFormId, "").equals("")) {
+                int numOfForms = sp.getInt("route_" + mRouteId, 0);
+                editor.putInt("route_" + mRouteId, numOfForms + 1);
+            }
+            editor.putString("route_" + mRouteId + "_form_" + mFormId, json.toString());
+            editor.commit();
+        } catch (Exception e){
+            Toast.makeText(getApplicationContext(), "暂存失败", Toast.LENGTH_SHORT).show();
+            TableActivity.this.finish();
         }
-        editor.putString("route_" + mRouteId+"_form_" + mFormId, json.toString());
-        editor.apply();
-
+        Toast.makeText(getApplicationContext(), "暂存成功", Toast.LENGTH_SHORT).show();
         TableActivity.this.finish();
     }
 
@@ -75,22 +79,26 @@ public class TableActivity extends FormActivity{
         }
 
         SharedPreferences sp = getApplicationContext().getSharedPreferences("recordData", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
         String cacheFormData = sp.getString("route_" + mRouteId + "_form_" + mFormId, "");
 
         JSONObject cacheObj = null;
         if(!cacheFormData.equals("")) {
             try {
-                JSONObject schema = new JSONObject(form_content_json);
                 cacheObj = new JSONObject(cacheFormData);
-                JSONObject property;
-                JSONArray names = schema.names();
                 String name;
-                for (int i = 0; i < names.length(); i++) {
-                    name = names.getString(i);
-                    property = schema.getJSONObject(name);
+                JSONObject property;
+                String data = "{\"data\":"+form_content_json+"}";
+                JSONObject schema = new JSONObject( data );
+                JSONArray jsonArray = schema.getJSONArray("data");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    property = jsonArray.getJSONObject(i);
+                    name = property.getString("name");
                     property.put("value", cacheObj.getString(name));
                 }
-                form_content_json = schema.toString();
+
+                form_content_json = schema.getString("data");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
