@@ -151,13 +151,13 @@
                             <td>{{ dataitem.name }}</td>
                             <td>{{ dataitem.position }}</td>
                             <td>{{ dataitem.creator }}</td>
-                            <td>{{ dataitem.createdatetime | date:'Y-m-d' }}</td>
+                            <td>{{ dataitem.createdatetime | date:'Y-m-d H:m:s' }}</td>
                             <td>{{ dataitem.assignor }}</td>
                             {% ifequal dataitem.state 'b' %}
                             <td></td>
                             <td></td>
                             {% else %}
-                            <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
+                            <td>{{ dataitem.assigndatetime | date:'Y-m-d H:m:s' }}</td>
                             <td>{{ dataitem.editor }}</td>
                             {% endifequal %}
                             <td>{{ dataitem.createcontent }}</td>

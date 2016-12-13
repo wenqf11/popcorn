@@ -2511,7 +2511,7 @@ def submit_deviceplan(request):
 
     _maintenance.creatorid = _user.id
     _maintenance.assignorid = _user.id
-    _maintenance.assigndatetime = get_current_date()
+    _maintenance.assigndatetime = get_current_time()
     _maintenance.title = _title
     _maintenance.createcontent = _createcontent
     if _editor != '该用户已被删除':
@@ -2830,7 +2830,7 @@ def submit_maintenance(request):
     if _factor:
         _maintenance = k_maintenance.objects.get(id=_id)
         _maintenance.auditorid = _user.id
-        _maintenance.auditdatetime = get_current_date()
+        _maintenance.auditdatetime = get_current_time()
         _maintenance.factor = _factor
         _maintenance.state = 5
         if int(_factor) < 0:
@@ -2840,7 +2840,7 @@ def submit_maintenance(request):
                 _maintenance.state = 'a'
             else:
                 _maintenance.state = 'b'
-            _maintenance.assigndatetime = get_current_date()
+            _maintenance.assigndatetime = get_current_time()
             _maintenance.save()
             return HttpResponseRedirect('/view_maintaining/')
         _maintenance.save()
@@ -2879,7 +2879,7 @@ def submit_maintenance(request):
                 _maintainer = k_user.objects.get(name=_editor)
                 _maintenance.editorid = _maintainer.id
                 _maintenance.assignorid = _user.id
-                _maintenance.assigndatetime = get_current_date()
+                _maintenance.assigndatetime = get_current_time()
                 _maintenance.state = 2
         else:
             _maintenance.editorid = 0
@@ -2897,7 +2897,7 @@ def submit_maintenance(request):
             priority=_priority,
             memo=_memo,
             creatorid=0,
-            createdatetime=get_current_date(),
+            createdatetime=get_current_time(),
             state=1,
             mtype=2
         )
@@ -2906,7 +2906,7 @@ def submit_maintenance(request):
             _maintenance.deviceid=_device[0]
         if _editor != 'nopersonchosen' and _editor:
             _maintenance.assignorid = _user.id
-            _maintenance.assigndatetime = get_current_date()
+            _maintenance.assigndatetime = get_current_time()
             _maintainer = k_user.objects.get(name=_editor)
             _maintenance.editorid = _maintainer.id
             _maintenance.state = 2
@@ -3109,7 +3109,7 @@ def submit_upkeep(request):
     _user = k_user.objects.get(username=request.user.username)
     _maintenance = k_maintenance.objects.get(id=_id)
     _maintenance.auditorid = _user.id
-    _maintenance.auditdatetime = get_current_date()
+    _maintenance.auditdatetime = get_current_time()
     _maintenance.factor = _factor
     _maintenance.state = 5
     if int(_factor) < 0:
@@ -3119,7 +3119,7 @@ def submit_upkeep(request):
             _maintenance.state = 'a'
         else:
             _maintenance.state = 'b'
-        _maintenance.assigndatetime = get_current_date()
+        _maintenance.assigndatetime = get_current_time()
         _maintenance.save()
         return HttpResponseRedirect('/view_upkeeping/')
     _maintenance.save()
@@ -3447,7 +3447,7 @@ def submit_taskitem(request):
     if _submittype == "1":
         _taskitem = k_taskitem.objects.get(id=_id)
         _taskitem.auditorid = _user.id
-        _taskitem.auditdatetime = get_current_date()
+        _taskitem.auditdatetime = get_current_time()
         _taskitem.factor = _factor
         _taskitem.state = 4
         if int(_factor) < 0:
@@ -3457,7 +3457,7 @@ def submit_taskitem(request):
                 _taskitem.state = 'a'
             else:
                 _taskitem.state = 'b'
-            _taskitem.createdatetime = get_current_date()
+            _taskitem.createdatetime = get_current_time()
             _taskitem.save()
             _task = k_task.objects.get(id=_taskitem.taskid_id)
             _task.state = 2
@@ -3510,7 +3510,7 @@ def submit_taskitem(request):
         _task.state = 1
         _task.save()
     _taskitem.creatorid = _user.id
-    _taskitem.createdatetime = get_current_date()
+    _taskitem.createdatetime = get_current_time()
     _taskitem.title = _title
     _taskitem.createcontent = _createcontent
     _taskitem.priority = _priority

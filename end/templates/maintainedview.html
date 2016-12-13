@@ -137,17 +137,17 @@
                             <td>{{ dataitem.name }}</td>
                             <td>{{ dataitem.position }}</td>
                             <td>{{ dataitem.creator }}</td>
-                            <td>{{ dataitem.createdatetime | date:'Y-m-d' }}</td>
+                            <td>{{ dataitem.createdatetime | date:'Y-m-d H:m:s' }}</td>
                             <td>{{ dataitem.assignor }}</td>
-                            <td>{{ dataitem.assigndatetime | date:'Y-m-d' }}</td>
+                            <td>{{ dataitem.assigndatetime | date:'Y-m-d H:m:s' }}</td>
                             <td>{{ dataitem.editor }}</td>
-                            <td>{{ dataitem.editdatetime | date:'Y-m-d'}}</td>
+                            <td>{{ dataitem.editdatetime | date:'Y-m-d H:m:s'}}</td>
                             <td>{{ dataitem.createcontent }}</td>
                             <td>{{ dataitem.priority }}</td>
                             <!--<td>{{ dataitem.memo }}</td>-->
                             <td>{{ dataitem.editcontent }}</td>
                             <td>{{ dataitem.auditor }}</td>
-                            <td>{{ dataitem.auditdatetime | date:'Y-m-d'}}</td>
+                            <td>{{ dataitem.auditdatetime | date:'Y-m-d H:m:s'}}</td>
                             <td>{{ dataitem.factor }}</td>
                             {% ifequal dataitem.state '4' %}
                             <td>未审核</td>

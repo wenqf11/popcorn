@@ -74,16 +74,16 @@
                                                 <td>{{ dataitem.title }}</td>
                                                 <td>{{ dataitem.createcontent }}</td>
                                                 <td>{{ dataitem.creator }}</td>
-                                                <td>{{ dataitem.createdatetime }}</td>
+                                                <td>{{ dataitem.createdatetime | date:'Y-m-d H:m:s' }}</td>
                                                 <td>{{ dataitem.priority }}</td>
                                                 <td>{{ dataitem.memo }}</td>
                                                 <td>{{ dataitem.editcontent }}</td>
                                                 <td>{{ dataitem.editor }}</td>
                                                 <td>{{ dataitem.helpers }}</td>
-                                                <td>{{ dataitem.editdatetime }}</td>
+                                                <td>{{ dataitem.editdatetime | date:'Y-m-d H:m:s' }}</td>
                                                 <td>{{ dataitem.factor }}</td>
                                                 <td>{{ dataitem.auditor }}</td>
-                                                <td>{{ dataitem.auditdatetime }}</td>
+                                                <td>{{ dataitem.auditdatetime | date:'Y-m-d H:m:s' }}</td>
                                                 <td>{{ dataitem.state }}</td>
                                                 {% if "编辑任务" in modelsshow or "删除任务" in modelsshow or "审核任务" in modelsshow %}
                                                 <td>
