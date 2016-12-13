@@ -3734,9 +3734,9 @@ def submit_spare(request):
         _supplier = None
     if _id:
         _spare = k_spare.objects.get(id=_id)
-        _spares = k_spare.objects.filter(name=_name)
+        _spares = k_spare.objects.filter(name=_name, classid=_class)
         if len(_spares) > 1 or (len(_spares) == 1 and _spares[0].id != int(_id)):
-            server_msg = '名称为'+_spares[0].name+'的备件已存在！'
+            server_msg = '名称为'+_spares[0].name+'且所属为'+_classname+'的备件已存在！'
             return HttpResponseRedirect('/operate_spare/?msg='+server_msg+'&id='+_id)
         _spares = k_spare.objects.filter(brief=_brief)
         if len(_spares) > 1 or (len(_spares) == 1 and _spares[0].id != int(_id)):
@@ -3747,9 +3747,9 @@ def submit_spare(request):
         _spare.auditorid = 0
         _spare.classid = _class
     else:
-        _spares = k_spare.objects.filter(name=_name)
+        _spares = k_spare.objects.filter(name=_name, classid=_class)
         if len(_spares) > 0:
-            server_msg = '名称为'+_spares[0].name+'的备件已存在！'
+            server_msg = '名称为'+_spares[0].name+'且所属为'+_classname+'的备件已存在！'
             return HttpResponseRedirect('/operate_spare/?msg='+server_msg)
         _spares = k_spare.objects.filter(brief=_brief)
         if len(_spares) > 0:
@@ -4479,9 +4479,9 @@ def submit_tool(request):
     _owner = k_class.objects.get(name=_ownername)
     if _id:
         _tool = k_tool.objects.get(id=_id)
-        _tools = k_tool.objects.filter(name=_name)
+        _tools = k_tool.objects.filter(name=_name, classid=_class)
         if len(_tools) > 1 or (len(_tools) == 1 and _tools[0].id != int(_id)):
-            server_msg = '名称为'+_tools[0].name+'的工具已存在！'
+            server_msg = '名称为'+_tools[0].name+'且所属为'+_classname+'的工具已存在！'
             return HttpResponseRedirect('/operate_tool/?msg='+server_msg+'&id='+_id)
         _tools = k_tool.objects.filter(brief=_brief)
         if len(_tools) > 1 or (len(_tools) == 1 and _tools[0].id != int(_id)):
@@ -4493,9 +4493,9 @@ def submit_tool(request):
         _tool.classid = _class
         _tool.ownerid = _owner
     else:
-        _tools = k_tool.objects.filter(name=_name)
+        _tools = k_tool.objects.filter(name=_name, classid=_class)
         if len(_tools) > 0:
-            server_msg = '名称为'+_tools[0].name+'的工具已存在！'
+            server_msg = '名称为'+_tools[0].name+'且所属为'+_classname+'的工具已存在！'
             return HttpResponseRedirect('/operate_tool/?msg='+server_msg)
         _tools = k_tool.objects.filter(brief=_brief)
         if len(_tools) > 0:
