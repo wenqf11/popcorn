@@ -115,9 +115,9 @@
                     <div class="widget-main">
                         {% if deviceinfo.has_m_record %}
                         <p class="alert alert-info">
-                            <b>{{ deviceinfo.m_creator }}</b> 于 {{ deviceinfo.m_createtime |date:"Y-m-d H:m:s" }} 创建 <b>[{{ deviceinfo.m_record_title}}]</b>。
+                            <b>{{ deviceinfo.m_creator }}</b> 于 {{ deviceinfo.m_createtime |date:"Y-m-d H:i:s" }} 创建 <b>[{{ deviceinfo.m_record_title}}]</b>。
                             {% if deviceinfo.has_m_assignor %} 
-                                任务于 {{ deviceinfo.m_assigntime |date:"Y-m-d H:m:s" }} 分配给 <b>{{ deviceinfo.m_assignor }}</b>。
+                                任务于 {{ deviceinfo.m_assigntime |date:"Y-m-d H:i:s" }} 分配给 <b>{{ deviceinfo.m_assignor }}</b>。
                             {% endif %}
                             <br/>
                             优先级:<b style="color:red">[{{ deviceinfo.m_priority }}]</b>, 
@@ -162,9 +162,9 @@
                     <div class="widget-main">
                         {% if deviceinfo.has_k_record %}
                         <p class="alert alert-info">
-                            <b>{{ deviceinfo.k_creator }}</b> 于 {{ deviceinfo.k_createtime |date:"Y-m-d H:m:s" }} 创建 <b>[{{ deviceinfo.k_record_title}}]</b>。
+                            <b>{{ deviceinfo.k_creator }}</b> 于 {{ deviceinfo.k_createtime |date:"Y-m-d H:i:s" }} 创建 <b>[{{ deviceinfo.k_record_title}}]</b>。
                             {% if deviceinfo.has_k_assignor %} 
-                                任务于 {{ deviceinfo.k_assigntime |date:"Y-m-d H:m:s" }} 分配给 <b>{{ deviceinfo.k_assignor }}</b>。
+                                任务于 {{ deviceinfo.k_assigntime |date:"Y-m-d H:i:s" }} 分配给 <b>{{ deviceinfo.k_assignor }}</b>。
                             {% endif %}
                             <br/>
                             优先级:<b style="color:red">[{{ deviceinfo.k_priority }}]</b>, 
@@ -209,7 +209,7 @@
                     <div class="widget-main">
                         {% if deviceinfo.has_t_record %}
                         <p class="alert alert-info">
-                            该设备属于 <b>{{ deviceinfo.t_route }}</b> 线路，<b>{{ deviceinfo.t_user }}</b> 于 {{ deviceinfo.t_metertime |date:"Y-m-d H:m:s" }} 抄录了设备数据。
+                            该设备属于 <b>{{ deviceinfo.t_route }}</b> 线路，<b>{{ deviceinfo.t_user }}</b> 于 {{ deviceinfo.t_metertime |date:"Y-m-d H:i:s" }} 抄录了设备数据。
                         </p>
                         <p class="alert alert-success">
                             抄表内容：{{ deviceinfo.t_record_content }}
