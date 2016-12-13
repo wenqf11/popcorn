@@ -405,13 +405,13 @@ class k_maintenance(models.Model):
     mtype = models.CharField(max_length=1, choices=MAINTENANCE_TYPE, default='1')
     priority = models.CharField(max_length=1, choices=MAINTENANCE_PRIORITY, default='1')
     creatorid = models.PositiveIntegerField(default=0)
-    createdatetime = models.DateField(blank=True, default=date.today)
+    createdatetime = models.DateTimeField(auto_now_add=True)
     assignorid = models.PositiveIntegerField(default=0)
-    assigndatetime = models.DateField(blank=True, default=date.today)
+    assigndatetime = models.DateTimeField(auto_now_add=True)
     editorid = models.PositiveIntegerField(default=0)
-    editdatetime = models.DateField(blank=True, default=date.today)
+    editdatetime = models.DateTimeField(auto_now_add=True)
     auditorid = models.PositiveIntegerField(default=0)
-    auditdatetime = models.DateField(blank=True, default=date.today)
+    auditdatetime = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 class k_deviceplan(models.Model):
@@ -492,11 +492,11 @@ class k_taskitem(models.Model):
     memo = models.CharField(max_length=100)
     priority = models.CharField(max_length=1, choices=TASK_PRIORITY, default='1')
     creatorid = models.PositiveIntegerField(default=0)
-    createdatetime = models.DateField(blank=True, default=date.today)
+    createdatetime = models.DateTimeField(auto_now_add=True)
     editorid = models.PositiveIntegerField(default=0)
-    editdatetime = models.DateField(blank=True, default=date.today)
+    editdatetime = models.DateTimeField(auto_now_add=True)
     auditorid = models.PositiveIntegerField(default=0)
-    auditdatetime = models.DateField(blank=True, default=date.today)
+    auditdatetime = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
 
 
