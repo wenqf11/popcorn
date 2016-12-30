@@ -19,14 +19,26 @@
 <div class="row well" style="width: 60%;margin: auto;">
     <div class="col-xs-12">
         <form class="form-horizontal" action="/department_submit/" role="form" id="devicetypeform">
+            <!-- {% if data.isNew %} -->
+                <div class="form-group">
+                    <div class="col-sm-7">
+                        <input type="text" name="id" style="display:none;" value="{{ data.id }}">
+                    </div>
+                </div>
+            <!-- {% endif %} -->
+
             <div class="form-group">
                 <label class="col-sm-5 control-label no-padding-top">上级分类名称<span class="required">*</span></label>
                 <div class="col-sm-7">
                 <select class="col-sm-6" name="parentname">
                     <option value=""></option>
                     {% for c in data.class_list %}
-                        <option value="{{ c }}">{{ c }}</option>
-                    {% endfor %}
+                        {% if c in data.chosen_class %}
+                        <option value="{{ c }}" selected="selected">{{ c }}</option>
+                        {% else %}
+                            <option value="{{ c }}">{{ c }}</option>
+                        {% endif %}
+                    {% endfor %}                                   
                 </select>
                 </div>
             </div>

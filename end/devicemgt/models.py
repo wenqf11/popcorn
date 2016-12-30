@@ -215,7 +215,7 @@ class k_devicetype(models.Model):
     editdatetime = models.DateField(blank=True, default=date.today)
     auditorid = models.PositiveIntegerField(default=0)
     auditdatetime = models.DateField(blank=True, default=date.today)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='0')
+    status = models.CharField(max_length=100)
 
 class k_supplier(models.Model):
     name = models.CharField(max_length=50)

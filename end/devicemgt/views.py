@@ -1460,11 +1460,23 @@ def device_type_submit(request):
         _memo = request.GET.get('memo')
         _user = k_user.objects.get(username=request.user.username)
         _parent_classid = get_parent_classid(_user.classid_id)
+        _id = 0
+        _depth = 0
         if not have_right_to_devicemgt(_parent_classid):
             return HttpResponseRedirect('/device_type/?msg="无权限添加新的设备类型！"')
         if len(_parentname) == 0:
             _id = 0
             _depth = 0
+        else:
+            _parent = k_devicetype.objects.filter(name=_parentname)
+            if len(_parent) == 1:
+                _id = _parent[0].id
+                _depth = _parent[0].depth+1
+            else:
+                return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
+        _old_name = request.GET.get('old_name')
+        cur_devicetype = k_devicetype.objects.filter(name=_old_name)
+        if len(cur_devicetype) == 0:
             _type = k_devicetype.objects.create(
                 name=_name,
                 parentid=_id,
@@ -1477,29 +1489,20 @@ def device_type_submit(request):
                 editdatetime=get_current_date()
             )
             _type.save()
-            return HttpResponseRedirect('/device_type/')
+            return HttpResponseRedirect('/device_type/?msg="设备类型添加成功！"')
         else:
-            _parent = k_devicetype.objects.filter(name=_parentname)
-            if len(_parent) == 1:
-                _id = _parent[0].id
-                _depth = _parent[0].depth+1
-                _type = k_devicetype.objects.create(
-                    name=_name,
-                    parentid=_id,
-                    depth=_depth,
-                    memo=_memo,
-                    status=_parent_classid,
-                    creatorid=request.user.id,
-                    createdatetime=get_current_date(),
-                    editorid=request.user.id,
-                    editdatetime=get_current_date()
-                )
-                _type.save()
-                return HttpResponseRedirect('/device_type/')
-            else:
-                return HttpResponseRedirect('/device_type/?msg="父级类别有误！"')
+            _type = cur_devicetype[0]
+            _type.name = _name
+            _type.parentid = _id
+            _type.depth = _depth
+            _type.memo = _memo
+            _type.status = _parent_classid
+            _type.editorid = request.user.id
+            _type.editdatetime = get_current_date()
+            _type.save()
+            return HttpResponseRedirect('/device_type/?msg="设备类型名称修改成功！"')
     else:
-        return HttpResponseRedirect('/device_type/?msg="该设备名称已存在！"')
+        return HttpResponseRedirect('/device_type/?msg="该设备类型名称已存在！"')
 
 
 @login_required
@@ -1530,12 +1533,12 @@ def device_type_revise(request):
                 'chosentype':chosentype
             })
         elif len(_dtype) == 0:
-            HttpResponseRedirect('/department/?msg="该设备类型不存在！"')
+            HttpResponseRedirect('/device_type/?msg="该设备类型不存在！"')
         else:
-            HttpResponseRedirect('/department/?msg="该设备类型在数据库中存储错误！"')
+            HttpResponseRedirect('/device_type/?msg="该设备类型在数据库中存储错误！"')
         return get_purviews_and_render_to_response(request.user.username, 'devicetypeadd.html', variables)
     else:
-        HttpResponseRedirect('/department/?msg="非法访问！"')
+        HttpResponseRedirect('/device_type/?msg="非法访问！"')
 
 
 @login_required
@@ -2340,8 +2343,71 @@ def view_form(request):
     else:
         _form = _form[0]
     _formitems = k_formitem.objects.filter(formid_id=_form.id)
-    return get_purviews_and_render_to_response(request.user.username, 'formview.html', {'brief': _brief, 'formid': _form.id, 'data': _formitems,
+    devices = k_form.objects.all()
+    _devices = list()
+    for d in devices:
+        _devices.append(d.brief)
+    return get_purviews_and_render_to_response(request.user.username, 'formview.html', {'brief': _brief, 'formid': _form.id, 'data': _formitems, 'devices': _devices,
                                                                                         'username':user.username, 'useravatar': user.avatar})
+   
+@login_required
+def set_template_form(request):
+    template_brief = request.GET.get('template_brief')
+    _form = k_form.objects.filter(brief=template_brief)
+    if len(_form) > 0:
+        _form = _form[0]
+        formitems = k_formitem.objects.filter(formid_id=_form.id)
+        _formitems = list()
+        datatypelist = list()
+        datatype2str = dict(k_formitem.FORM_DATATYPE)
+        for fi in formitems:
+            datatypelist.append( datatype2str[str(fi.datatype)] )
+            temp = serializers.serialize('json', [fi,])
+            struct = json.loads(temp)
+            _formitems.append(struct[0])
+        return HttpResponse(json.dumps({
+            'flag': 1,
+            'formitems': _formitems,
+            'datatypes': datatypelist,
+            'length': len(_formitems)
+            }
+        ), content_type="application/json")
+    else:
+        return HttpResponse(json.dumps({
+            "flag": 0
+            }
+        ), content_type="application/json")
+
+
+@login_required
+def submit_template_form(request):
+    template_brief = request.GET.get('template_brief')
+    device_brief = request.GET.get('device_brief')
+    # _form = k_form.objects.filter(brief=template_brief)
+    # if len(_form) > 0:
+    #     _form = _form[0]
+    #     formitems = k_formitem.objects.filter(formid_id=_form.id)
+    #     _formitems = list()
+    #     datatypelist = list()
+    #     datatype2str = dict(k_formitem.FORM_DATATYPE)
+    #     for fi in formitems:
+    #         datatypelist.append( datatype2str[str(fi.datatype)] )
+    #         temp = serializers.serialize('json', [fi,])
+    #         struct = json.loads(temp)
+    #         _formitems.append(struct[0])
+    if 1:
+        return HttpResponse(json.dumps({
+            'flag': 1,
+            #'formitems': _formitems,
+            #'datatypes': datatypelist,
+            'msg': device_brief
+            }
+        ), content_type="application/json")
+    else:
+        return HttpResponse(json.dumps({
+            "flag": 0
+            }
+        ), content_type="application/json")
 
 
 @login_required
@@ -4656,6 +4722,7 @@ def toolbatch_submit(request):
         }), content_type="application/json")
 
 
+
 def view_tooluse(request):
     #权限判断
     # _msg = check_purview(request.user.username, 41)
@@ -5108,17 +5175,13 @@ def department_revise(request):
         class_list = list()
         for c in k_classes:
             class_list.append(c.name)
-        k_roles = k_role.objects.filter(classid__in=result)
-        role_list = list()
-        for r in k_roles:
-            role_list.append(r.name)
         datas['class_list'] = class_list
-        datas['role_list'] = role_list
         datas['isNew'] = True
 
         _tmp_class = k_class.objects.filter(id=_id)
         if len(_tmp_class) == 1:
             _existed_info = _tmp_class[0]
+            datas["id"] = _id
             datas["name"] = _existed_info.name
             datas["code"] = _existed_info.code
             datas["logo"] = _existed_info.logo
@@ -5130,7 +5193,10 @@ def department_revise(request):
             datas["memo"] = _existed_info.memo
             if datas['class_list'].count(_existed_info.name) > 0:
                 datas['class_list'].remove(_existed_info.name)
-
+            existed_parentid = _existed_info.parentid
+            parent_classes = k_class.objects.filter(id = existed_parentid)
+            if len(parent_classes) == 1:
+                datas['chosen_class'] = parent_classes[0].name
         #非法权限信息
         purview_msg = request.GET.get('msg')
         if purview_msg == None:
@@ -5187,8 +5253,9 @@ def department_submit(request):
     _licensetype = request.GET.get('licensetype')
     _content = request.GET.get('content')
     _memo = request.GET.get('memo')
-    _tmp_class = k_class.objects.filter(name = request.GET.get('name'))
-    if not _tmp_class:
+    _cur_id = request.GET.get('id')
+    #tmp_class = k_class.objects.filter(name = request.GET.get('name'))
+    if not _cur_id:
         if len(_parentname) > 0:
             _parent = k_class.objects.filter(name=_parentname)
             if len(_parent) == 1:
@@ -5197,14 +5264,21 @@ def department_submit(request):
             else:
                 return HttpResponseRedirect('/department/?msg="父级类别有误！"')
 
-            _class = k_class.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo, code=_code,
-                                            license=_license, logo=_logo, address=_address, zipcode=_zipcode,
-                                            phone=_phone, licensetype=_licensetype,content=_content,
-                                            creatorid = request.user.id, createdatetime=get_current_date(),
-                                            editorid=request.user.id, editdatetime=get_current_date())
-            _class.save()
-            return HttpResponseRedirect('/department/')
+            tmp_class = k_class.objects.filter(name = _name)
+            if len(tmp_class) == 0:
+                _class = k_class.objects.create(name=_name, parentid=_id,depth=_depth,memo=_memo, code=_code,
+                                                license=_license, logo=_logo, address=_address, zipcode=_zipcode,
+                                                phone=_phone, licensetype=_licensetype,content=_content,
+                                                creatorid = request.user.id, createdatetime=get_current_date(),
+                                                editorid=request.user.id, editdatetime=get_current_date())
+                _class.save()
+                return HttpResponseRedirect('/department/')
+            else:
+                return HttpResponseRedirect('/department/?msg=""'+_name+'"已存在！"')
+        else:
+            return HttpResponseRedirect('/department/?msg="父级类别有误！"')
     else:
+        _tmp_class = k_class.objects.filter(id = _cur_id)
         if len(_tmp_class) == 1:
             _tmp_class[0].name = _name
             _tmp_class[0].license = _license

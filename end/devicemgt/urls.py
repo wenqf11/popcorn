@@ -129,6 +129,9 @@ urlpatterns = patterns(
     url(r'^view_form/$', view_form),
     url(r'^submit_form/$', submit_form),
     url(r'^delete_form/$', delete_form),
+    url(r'^set_template_form/$', set_template_form),
+    url(r'^submit_template_form/$', submit_template_form),
+    
 
     url(r'^view_deviceplan/$', view_deviceplan),
     url(r'^submit_deviceplan/$', submit_deviceplan),

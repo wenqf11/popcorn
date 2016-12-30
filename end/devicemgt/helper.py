@@ -153,7 +153,12 @@ def get_parent_classid(classid):
 
 
 def have_right_to_devicemgt(classid):
-        if classid in [0,1,2,3]:
+        class_list = list()
+        right_classidx = k_class.objects.filter(depth__lte=1)
+        for c in right_classidx:
+            class_list.append(c.id)
+        #if classid in [0,1,2,3]:
+        if classid in class_list:
             return True
         else:
             return False
