@@ -638,6 +638,7 @@ class k_schedule(models.Model):
     date = models.DateField()
 
 class k_staffworkinfo(models.Model):
+    classid = models.ForeignKey(k_class, blank=True, null=True, on_delete=models.SET_NULL)
     userid = models.ForeignKey(k_user, related_name='staffworkinfo_set')
     date = models.DateField(blank=True, default=date.today)
     checkin = models.CharField(max_length=100)

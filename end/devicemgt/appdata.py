@@ -437,6 +437,7 @@ def app_check(request, para, user):
         }))
     else:
         _info = k_staffworkinfo.objects.create(userid=user)
+        _info.classid = user.classid
         _info.date = datetime.strptime(para['date'], '%Y-%m-%d').date()
         _info.checkin = para['checkin']
         _info.checkout = para['checkout']
