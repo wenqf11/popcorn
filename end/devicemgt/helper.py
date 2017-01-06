@@ -138,7 +138,7 @@ def get_decivetype_by_class(classid):
                     return k_devicetype.objects.all()
                 tmp_class = k_class.objects.filter(id=tmp_class[0].parentid)
             else:
-                return k_devicetype.objects.all()
+                return 
 
 
 def get_parent_classid(classid):
@@ -157,7 +157,6 @@ def have_right_to_devicemgt(classid):
         right_classidx = k_class.objects.filter(depth__lte=1)
         for c in right_classidx:
             class_list.append(c.id)
-        #if classid in [0,1,2,3]:
         if classid in class_list:
             return True
         else:

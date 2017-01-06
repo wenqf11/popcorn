@@ -855,10 +855,7 @@ def devicemgt(request):
 
     datas = list()
     tmp_parents = user.classid
-    if tmp_parents.depth == 0:  
-        #data = dict()
-        #data['text'] = tmp_parents.name
-        #data['href'] = "#"
+    if tmp_parents.depth == 0:  # handle the topest right
         sub_datas = list()
         for c in classes:
             if c.parentid == tmp_parents.id:
@@ -873,9 +870,7 @@ def devicemgt(request):
                 class_parents = sub_classes_list
                 sub_data['nodes'] = get_device_node(devicetypes, type_parents, class_parents) #获取节点树
                 sub_datas.append(sub_data)
-        #data['nodes'] = sub_datas
-        #datas = list()
-        #datas.append(data)
+
         datas = sub_datas
     else:
         if class_parents > 0:
