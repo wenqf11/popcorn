@@ -270,15 +270,24 @@
         var reg1=new RegExp("&quot;","g");
         var reg2=new RegExp("u&#39;","g");
         var reg3=new RegExp("&#39;","g");
+        var reg4=new RegExp("\n","g");
+        var reg5=new RegExp("\r\n","g");
         var defaultData = '[';
 
         {% for d in data %}
             var tmpdata = '{{ d }}';
+            console.log(tmpdata);
+            tmpdata = tmpdata.replace(/\s+/g,"");
             tmpdata = tmpdata.replace(reg1,"\'");
             tmpdata = tmpdata.replace(reg2,"\"");
             tmpdata = tmpdata.replace(reg3,"\"");
+            tmpdata = tmpdata.replace(reg4,"");
+            tmpdata = tmpdata.replace(reg5,"");
+            console.log(tmpdata);
             defaultData += tmpdata + ',';
         {% endfor %}
+        console.log(defaultData[76040])
+        //console.log(defaultData.substr(76040))
         defaultData = defaultData.substr(0,defaultData.length-1);
         defaultData += ']';
 
