@@ -192,10 +192,8 @@ urlpatterns = patterns(
     url(r'^department_del/$', department_del),
 
     url(r'^meter/$', meter),
-    url(r'^meter_device/$', meter_device),
     url(r'^meter_date/$', meter_date),
     url(r'^meter_device_date/$', meter_device_date),
-    url(r'^meter_export/device/(?P<brief>\S+)/$', meter_export_device),
     url(r'^meter_export/date/(?P<start_date>\S+)/(?P<end_date>\S+)/$', meter_export_date),
     url(r'^meter_export/device_date/(?P<brief>\S+)/(?P<start_date>\S+)/(?P<end_date>\S+)/$', meter_export_device_date),
 
