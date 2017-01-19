@@ -522,10 +522,7 @@ def app_maintain_add(request, para, user):
             device = k_device.objects.get(brief=para['device_brief'])
             task.deviceid = device
         except ObjectDoesNotExist:
-            return HttpResponse(json.dumps({
-                'status': 'error',
-                'data': 'device not exist'
-            }))
+            pass
     task.state = '1'
     task.title = para['title']
     task.createcontent = para['description']
