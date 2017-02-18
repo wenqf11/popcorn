@@ -191,14 +191,11 @@
         <h5 class="col-xs-10 info-text">
             <div class="widget-box">
                 <div class="widget-header">
-                    <h5 class="widget-title"><a href="/meter_device/?brief={{ deviceinfo.brief }}">抄表信息 (共抄表 {{ deviceinfo.t_record_size }} 次)</a></h5>
-
+                    <h5 class="widget-title"><a href="/meter/{% if deviceinfo.brief %}?brief={{ deviceinfo.brief }}{% endif %}">抄表信息 (共抄表 {{ deviceinfo.t_record_size }} 次)</a></h5>
                     <div class="widget-toolbar">
-
                         <a href="#" data-action="fullscreen" class="orange2">
                             <i class="ace-icon fa fa-expand"></i>
                         </a>
-
                         <a href="#" data-action="collapse">
                             <i class="ace-icon fa fa-chevron-up"></i>
                         </a>
@@ -276,7 +273,6 @@
 
         {% for d in data %}
             var tmpdata = '{{ d }}';
-            console.log(tmpdata);
             tmpdata = tmpdata.replace(/\s+/g,"");
             tmpdata = tmpdata.replace(reg1,"\'");
             tmpdata = tmpdata.replace(reg2,"\"");

@@ -5668,7 +5668,10 @@ def meter(request):
         today_this_month = date.today()
         today_last_month = date.today() - relativedelta(months=1)
         user = k_user.objects.get(username=request.user.username)
+        brief = request.GET.get('brief')
+
         return get_purviews_and_render_to_response(request.user.username, 'meter.html', {
+            'brief': brief,
             'username': user.username,
             'useravatar': user.avatar,
             'start_date': today_last_month,
