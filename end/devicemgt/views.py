@@ -2303,8 +2303,16 @@ def submit_route(request, _id=''):
 
     route.name = _name
     route.formid = _forms
-    route.starttime = datetime.strptime(_start_time, '%H:%M').time()
-    route.endtime = datetime.strptime(_end_time, '%H:%M').time()
+    try:
+        route.starttime = datetime.strptime(_start_time, '%H:%M').time()
+    except ValueError:
+        _start_time = _start_time.replace('24:', '0:')
+        route.starttime = datetime.strptime(_start_time, '%H:%M').time()
+    try:
+        route.endtime = datetime.strptime(_end_time, '%H:%M').time()
+    except ValueError:
+        _end_time = _end_time.replace('24:', '0:')
+        route.endtime = datetime.strptime(_end_time, '%H:%M').time()
     route.period = _period
     route.editorid = _editor
     route.editdatetime = _edit_time
