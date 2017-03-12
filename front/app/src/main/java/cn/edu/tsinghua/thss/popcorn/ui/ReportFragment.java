@@ -71,8 +71,8 @@ public class ReportFragment extends Fragment {
     @ViewInject(R.id.tab_report_camera)
     private Button cameraButton;
 
-    //@ViewInject(R.id.tab_report_browse)
-  //  private Button browseButton;
+    @ViewInject(R.id.tab_report_browse)
+    private Button browseButton;
 
     @ViewInject(R.id.tab_report_submit_btn)
     private Button submitButton;
@@ -187,13 +187,13 @@ public class ReportFragment extends Fragment {
         }
     }
 
-   /* @OnClick(R.id.tab_report_browse)
+    @OnClick(R.id.tab_report_browse)
     private void browseButtonClick(View v){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, BROWSE);
-    }*/
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
