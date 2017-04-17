@@ -893,6 +893,7 @@ def devicemgt(request):
             deviceinfo['brief'] = device.brief
             deviceinfo['name']  = device.name
             deviceinfo['position'] = device.position
+            deviceinfo['content'] = device.content
             devicetype = k_devicetype.objects.filter(id=device.typeid_id)
             if len(devicetype) == 1:
                 deviceinfo['devicetype'] = devicetype[0].name
