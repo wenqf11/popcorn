@@ -2587,7 +2587,7 @@ def submit_deviceplan(request):
     _maintenance.createcontent = _createcontent
     if _editor != '该用户已被删除':
         _maintenance.editorid = _editor.id
-    _maintenance.memo = _memo
+    _maintenance.memo = _memo+"（周期为："+dict(k_deviceplan.DEVICEPLAN_PERIODS)[_period]+"）"
     _maintenance.state = 2
     _maintenance.save()
 
