@@ -60,8 +60,9 @@ def print_qrcode(request):
 
 def download_qrcode(request):
     user = k_user.objects.get(username=request.user.username)
-    server_msg = ''
-    path = os.path.join(settings.WEBSET_ROOT_PATH+settings.MEDIA_URL,'qrcode/')
+    server_msg = 'QRCode Error!'
+    path = settings.WEBSET_ROOT_PATH+settings.MEDIA_URL
+    path = os.path.join(path,'qrcode/')
     if request.method == "POST":
         filelist = request.POST.getlist("filelist[]")
         '''elegant way but doesn't work yet
@@ -84,12 +85,12 @@ def download_qrcode(request):
         '''
         ''' Not elegant but ok
        '''
-        archive = zipfile.ZipFile(path+'qrcode.zip', 'w')
-        os.chdir(path)
+        fpath = path+'qrcode.zip'
+        archive = zipfile.ZipFile(fpath, 'w')
         ori_path = os.getcwd()
+        os.chdir(path)
         for _f in filelist:
             filename = gen_qrcode(path, _f)
-            #archive.write(path+filename)
             archive.write(filename)
         os.chdir(ori_path)
         archive.close()
@@ -104,8 +105,13 @@ def download_qrcode(request):
 
 
 def gen_qrcode(path, filename):
-    img = qrcode.make(filename)
-    img.save(path+filename+'.png')
+    try:
+        img = qrcode.make(filename)
+        img.save(path+filename+'.png')
+    except Exception as e:
+        with open('error.txt', 'w') as fd:
+            fd.write('{}\n'.format(str(e)))
+            fd.write(path+filename+'.png\n')
     return filename+'.png'
 
 
