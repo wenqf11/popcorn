@@ -1,4 +1,4 @@
-﻿# -*- encoding=UTF-8 -*-
+# -*- encoding=UTF-8 -*-
 __author__ = 'SYB'
 
 from django.http import HttpResponse
@@ -788,7 +788,7 @@ def app_device_brief(request, para, user):
     return HttpResponse(json.dumps({
         'status': 'ok',
         'data': {
-            'brief': [_d.brief for _d in devices],
+            'brief': sorted([_d.brief for _d in devices]),
             'dict': name_dict
             }
     }))
@@ -813,8 +813,8 @@ def app_device_info(request, para, user):
             'id': d.id,
             'brief': d.brief,
             'name': d.name,
-            'producer': d.producerid.name,
-            'type': d.typeid.name,
+            'producer': d.producerid.name if d.producerid is not None else "",
+            'type': d.typeid.name if d.typeid is not None else "",
             'serial': d.serial,
             'brand': d.brand,
             'model': d.model,
