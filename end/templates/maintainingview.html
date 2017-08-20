@@ -164,10 +164,10 @@
                             <td>{{ dataitem.priority }}</td>
                             <!--<td>{{ dataitem.memo }}</td>-->
                             {% ifequal dataitem.state '1' %}
-                            <td>未指派</td>
+                            <td>*未指派</td>
                             {% else %}
                                 {% ifequal dataitem.state 'b' %}
-                                <td>未指派</td>
+                                <td>*未指派</td>
                                 {% else %}
                                     {% ifequal dataitem.state '2' %}
                                     <td>已指派</td>
@@ -175,7 +175,7 @@
                                         {% ifequal dataitem.state 'a' %}
                                         <td>已指派</td>
                                         {% else %}
-                                        <td>正维修</td>
+                                        <td>维修中</td>
                                         {% endifequal %}
                                     {% endifequal %}
                                 {% endifequal %}
@@ -213,7 +213,7 @@
 {% endblock %}
 
 {% block tailjs %}
-    <script src="../static/vendors/datatables/js/jquery.dataTables.js"></script>
+    <script src="../static/vendors/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../static/assets/DT_bootstrap.js"></script>
     <script src="../static/assets/js/chosen.jquery.min.js"></script>
     <script src="../static/TableTools/js/dataTables.tableTools.min.js" charset="utf-8" ></script>
