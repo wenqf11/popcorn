@@ -34,9 +34,13 @@
                 <label class="col-sm-3 control-label no-padding-top">设备编号<span class="required">*</span></label>
                 <div class="col-sm-2">
                     <select class="chosen-select" id="brief" name="brief" type="text">
-                        {% for brief in briefs %}
-                            <option value="{{ brief }}">{{ brief }}</option>
+                        <option value="nopersonchosen" selected="selected"></option>
+                        {% for device in devices %}
+                            <option value="{{ device.brief }}">{{ device.name }}(简称:{{ device.brief }})</option>
                         {% endfor %}
+                    <!--     {% for brief in briefs %}
+                            <option value="{{ brief }}">{{ brief }}</option>
+                        {% endfor %} -->
                     </select>
                 </div>
             </div>

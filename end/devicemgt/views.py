@@ -2536,16 +2536,16 @@ def add_deviceplan(request):
     for _user in _users:
         _maintainers.append(_user.name)
     _devices = k_device.objects.filter(classid__in=result)
-    _briefs = []
-    for _device in _devices:
-        _briefs.append(_device.brief)
+    # _briefs = []
+    # for _device in _devices:
+    #     _briefs.append(_device.brief)
     #非法权限信息
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
        purview_msg = ''
     #, 'purview_msg': purview_msg
 
-    return get_purviews_and_render_to_response(request.user.username, 'deviceplanadd.html', {'maintainers': _maintainers, 'briefs': _briefs,
+    return get_purviews_and_render_to_response(request.user.username, 'deviceplanadd.html', {'maintainers': _maintainers, 'devices': _devices,
                                                                                               'purview_msg': purview_msg,
                                                                                               'username':user.username,
                                                                                               'useravatar': user.avatar})
@@ -2715,9 +2715,14 @@ def view_maintaining(request):
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
        purview_msg = ''
+    #其他错误信息
+    other_msg = request.GET.get('other_msg')
+    if other_msg == None:
+       other_msg = ''
 
     return get_purviews_and_render_to_response(request.user.username, 'maintainingview.html', {'data': data, 'maintainers': _maintainers,
                                                                                                'purview_msg': purview_msg,
+                                                                                               'other_msg': other_msg,
                                                                                                'username':user.username,
                                                                                                'useravatar': user.avatar})
 
@@ -2947,11 +2952,14 @@ def submit_maintenance(request):
         _maintenance = k_maintenance.objects.get(id=_id)
         if _editor != "nopersonchosen" and _editor:
             if _editor != '该用户已被删除':
-                _maintainer = k_user.objects.get(name=_editor)
-                _maintenance.editorid = _maintainer.id
-                _maintenance.assignorid = _user.id
-                _maintenance.assigndatetime = get_current_time()
-                _maintenance.state = 2
+                try:
+                    _maintainer = k_user.objects.get(name=_editor)
+                    _maintenance.editorid = _maintainer.id
+                    _maintenance.assignorid = _user.id
+                    _maintenance.assigndatetime = get_current_time()
+                    _maintenance.state = 2
+                except:
+                    return HttpResponseRedirect('/view_maintaining/?other_msg=该用户已被删除')
         else:
             _maintenance.editorid = 0
             _maintenance.assignorid = 0

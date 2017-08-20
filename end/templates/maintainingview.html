@@ -175,7 +175,7 @@
                                         {% ifequal dataitem.state 'a' %}
                                         <td>已指派</td>
                                         {% else %}
-                                        <td>维修中</td>
+                                        <td>正维修</td>
                                         {% endifequal %}
                                     {% endifequal %}
                                 {% endifequal %}
@@ -261,6 +261,14 @@
             $.gritter.add({
                 title: '您没有权限进行此操作',
                 text: purview_msg,
+                class_name: 'gritter-error gritter-center'
+            });
+        }
+        var msg = "{{ other_msg }}";
+        if (msg) {
+            $.gritter.add({
+                title: '操作失败',
+                text: msg,
                 class_name: 'gritter-error gritter-center'
             });
         }
