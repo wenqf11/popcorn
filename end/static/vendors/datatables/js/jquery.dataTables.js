@@ -11883,6 +11883,20 @@
 		"numeric-desc": function ( x, y )
 		{
 			return y - x;
+		},
+		
+		
+		/*
+		 * numerical sorting
+		 */
+		"chinese-asc": function ( x, y )
+		{
+			return x.localeCompare(y);
+		},
+		
+		"chinese-desc": function ( x, y )
+		{
+			return y.localeCompare(x);
 		}
 	} );
 	
@@ -11896,6 +11910,12 @@
 		 */
 		function ( sData )
 		{
+			/* Chinese */
+			var reg =/^[\u4e00-\u9fa5]{0,}$/;
+            if (reg.test(sData))
+            {
+                return 'chinese';
+            }
 			/* Allow zero length strings as a number */
 			if ( typeof sData === 'number' )
 			{
