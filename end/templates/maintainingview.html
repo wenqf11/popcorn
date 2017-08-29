@@ -357,16 +357,17 @@
                     devicebrief[0].setAttribute("selected", "selected");
                     for(var i = 1; i < dlength; i++) {
                         if(devicebrief[i].value == thebrief) {
-                            devicebrief[i].setAttribute("selected", "selected");
                             devicebrief[0].removeAttribute("selected");
-                            // var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
-                            // show.innerHTML = devicebrief[i].innerHTML;
+                            devicebrief[i].setAttribute("selected", "selected");
+                            $("#brief").trigger("chosen:updated");
+                            var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                            show.innerHTML = devicebrief[i].innerHTML;
                         }
                         else {
                             devicebrief[i].removeAttribute("selected");
+                            $("#brief").trigger("chosen:updated");
                         }
                     }
-                    $("#brief").trigger("chosen:updated");
 
                     var maintainers = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
                     var mlength = maintainers.length;
@@ -375,17 +376,19 @@
                     // var hasthemaintainer = false;
                     for(var i = 1; i < mlength; i++) {
                         if(maintainers[i].value == themaintainer) {
-                            maintainers[i].setAttribute("selected", "selected");
                             maintainers[0].removeAttribute("selected");
-                            // var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
-                            // show.innerHTML = maintainers[i].innerHTML;
+                            maintainers[i].setAttribute("selected", "selected");
+                            $("#editor").trigger("chosen:updated");
+                            var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                            show.innerHTML = maintainers[i].innerHTML;
                             // hasthemaintainer = true;
                         }
                         else {
                             maintainers[i].removeAttribute("selected");
+                            $("#editor").trigger("chosen:updated");
                         }
                     }
-                    $("#editor").trigger("chosen:updated");
+
                     // if(hasthemaintainer == false) {
                     //     maintainers[mlength - 1].setAttribute("selected", "selected");
                     //     maintainers[mlength - 1].setAttribute("style", "");
