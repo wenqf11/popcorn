@@ -56,7 +56,7 @@
                                 {% for maintainer in maintainers %}
                                 <option value="{{ maintainer }}">{{ maintainer }}</option>
                                 {% endfor %}
-                                <option value="" style="display:none"></option>
+                                <!-- <option value="" style="display:none"></option> -->
                             </select>
                         </div>
                     </div>
@@ -372,33 +372,34 @@
                     var mlength = maintainers.length;
                     var themaintainer = dataline[9].innerHTML;
                     maintainers[0].setAttribute("selected", "selected");
-                    var hasthemaintainer = false;
+                    // var hasthemaintainer = false;
                     for(var i = 1; i < mlength - 1; i++) {
                         if(maintainers[i].value == themaintainer) {
                             maintainers[i].setAttribute("selected", "selected");
                             maintainers[0].removeAttribute("selected");
                             var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
-                            show.innerHTML = themaintainer;
-                            hasthemaintainer = true;
+                            show.innerHTML = maintainers[i].innerHTML;
+                            // hasthemaintainer = true;
                         }
                         else {
                             maintainers[i].removeAttribute("selected");
                         }
                     }
-                    if(hasthemaintainer == false) {
-                        maintainers[mlength - 1].setAttribute("selected", "selected");
-                        maintainers[mlength - 1].setAttribute("style", "");
-                        maintainers[mlength - 1].value = themaintainer;
-                        maintainers[mlength - 1].innerHTML = themaintainer;
-                        var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
-                        show.innerHTML = themaintainer;
-                        $("#editor").trigger("chosen:updated");
-                    }
-                    else {
-                        maintainers[mlength - 1].removeAttribute("selected", "selected");
-                        maintainers[mlength - 1].setAttribute("style", "display:none");
-                        $("#editor").trigger("chosen:updated");
-                    }
+                    $("#editor").trigger("chosen:updated");
+                    // if(hasthemaintainer == false) {
+                    //     maintainers[mlength - 1].setAttribute("selected", "selected");
+                    //     maintainers[mlength - 1].setAttribute("style", "");
+                    //     maintainers[mlength - 1].value = themaintainer;
+                    //     maintainers[mlength - 1].innerHTML = themaintainer;
+                    //     var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                    //     show.innerHTML = themaintainer;
+                    //     $("#editor").trigger("chosen:updated");
+                    // }
+                    // else {
+                    //     maintainers[mlength - 1].removeAttribute("selected", "selected");
+                    //     maintainers[mlength - 1].setAttribute("style", "display:none");
+                    //     $("#editor").trigger("chosen:updated");
+                    // }
 
                     divs[4].childNodes[3].childNodes[1].value = dataline[10].innerHTML;
 
