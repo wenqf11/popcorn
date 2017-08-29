@@ -354,8 +354,7 @@
                     var devicebrief = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
                     var dlength = devicebrief.length;
                     var thebrief = dataline[2].innerHTML;
-                    devicebrief[0].setAttribute("selected", "selected");
-                    $("#brief").trigger("chosen:updated");
+                    var hasthebrief = false;
                     for(var i = 1; i < dlength; i++) {
                         if(devicebrief[i].value == thebrief) {
                             devicebrief[0].removeAttribute("selected");
@@ -363,18 +362,21 @@
                             $("#brief").trigger("chosen:updated");
                             var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
                             show.innerHTML = devicebrief[i].innerHTML;
+                            hasthemaintainer = true;
                         }
                         else {
                             devicebrief[i].removeAttribute("selected");
                         }
                     }
+                    if(hasthebrief == false) {
+                        devicebrief[0].setAttribute("selected", "selected");
+                        $("#brief").trigger("chosen:updated");
+                    }
 
                     var maintainers = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
                     var mlength = maintainers.length;
                     var themaintainer = dataline[9].innerHTML;
-                    maintainers[0].setAttribute("selected", "selected");
-                    $("#editor").trigger("chosen:updated");
-                    // var hasthemaintainer = false;
+                    var hasthemaintainer = false;
                     for(var i = 1; i < mlength; i++) {
                         if(maintainers[i].value == themaintainer) {
                             maintainers[0].removeAttribute("selected");
@@ -382,11 +384,15 @@
                             $("#editor").trigger("chosen:updated");
                             var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
                             show.innerHTML = maintainers[i].innerHTML;
-                            // hasthemaintainer = true;
+                            hasthemaintainer = true;
                         }
                         else {
                             maintainers[i].removeAttribute("selected");
                         }
+                    }
+                    if(hasthemaintainer == false) {
+                        maintainers[0].setAttribute("selected", "selected");
+                        $("#editor").trigger("chosen:updated");
                     }
 
                     // if(hasthemaintainer == false) {
