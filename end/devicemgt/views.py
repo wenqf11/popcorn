@@ -2711,6 +2711,7 @@ def view_maintaining(request):
     _maintainers = []
     for _user in _users:
         _maintainers.append(_user.name)
+    _devices = k_device.objects.filter(classid__in=result)
     #非法权限信息
     purview_msg = request.GET.get('msg')
     if purview_msg == None:
@@ -2720,7 +2721,7 @@ def view_maintaining(request):
     if other_msg == None:
        other_msg = ''
 
-    return get_purviews_and_render_to_response(request.user.username, 'maintainingview.html', {'data': data, 'maintainers': _maintainers,
+    return get_purviews_and_render_to_response(request.user.username, 'maintainingview.html', {'data': data, 'maintainers': _maintainers, 'devices': _devices,
                                                                                                'purview_msg': purview_msg,
                                                                                                'other_msg': other_msg,
                                                                                                'username':user.username,
@@ -2963,7 +2964,12 @@ def submit_maintenance(request):
         else:
             _maintenance.editorid = 0
             _maintenance.assignorid = 0
-            _maintenance.state = 1           
+            _maintenance.state = 1
+        if _brief != 'nopersonchosen' and _brief != "":
+            _device = k_device.objects.filter(brief=_brief)
+            _maintenance.deviceid = _device[0]
+        else:
+            _maintenance.deviceid = None
         _maintenance.title = _title
         _maintenance.createcontent = _createcontent
         _maintenance.priority = _priority
@@ -2982,7 +2988,7 @@ def submit_maintenance(request):
         )
         if _brief != 'nopersonchosen' and _brief != "":
             _device = k_device.objects.filter(brief=_brief)
-            _maintenance.deviceid=_device[0]
+            _maintenance.deviceid = _device[0]
         if _editor != 'nopersonchosen' and _editor:
             _maintenance.assignorid = _user.id
             _maintenance.assigndatetime = get_current_time()

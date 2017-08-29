@@ -36,6 +36,17 @@
                             <input type="text" name="title" value="" />
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-top">设备编号</label>
+                        <div class="col-sm-6">
+                            <select class="chosen-select" id="brief" name="brief" type="text">
+                                <option value="nopersonchosen" selected="selected"></option>
+                                {% for device in devices %}
+                                    <option value="{{ device.brief }}">{{ device.name }}(简称:{{ device.brief }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                     {% if "指派维修" in modelsshow %}
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">指派维修人<span class="required">*</span></label>
@@ -339,7 +350,25 @@
                     var divs = editor.parentNode.parentNode.parentNode.getElementsByClassName("form-group");
 
                     divs[1].childNodes[3].childNodes[1].value = dataline[1].innerHTML;
-                    var maintainers = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
+                    
+                    var devicebrief = divs[2].childNodes[3].childNodes[1].getElementsByTagName("option");
+                    var dlength = devicebrief.length;
+                    var thebrief = dataline[2].innerHTML;
+                    devicebrief[0].setAttribute("selected", "selected");
+                    var hasthemaintainer = false;
+                    for(var i = 1; i < dlength; i++) {
+                        if(devicebrief[i].value == thebrief) {
+                            devicebrief[i].setAttribute("selected", "selected");
+                            devicebrief[0].removeAttribute("selected");
+                            var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                            show.innerHTML = devicebrief[i].innerHTML;
+                        }
+                        else {
+                            devicebrief[i].removeAttribute("selected");
+                        }
+                    }
+
+                    var maintainers = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
                     var mlength = maintainers.length;
                     var themaintainer = dataline[9].innerHTML;
                     maintainers[0].setAttribute("selected", "selected");
@@ -348,7 +377,7 @@
                         if(maintainers[i].value == themaintainer) {
                             maintainers[i].setAttribute("selected", "selected");
                             maintainers[0].removeAttribute("selected");
-                            var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                            var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
                             show.innerHTML = themaintainer;
                             hasthemaintainer = true;
                         }
@@ -361,7 +390,7 @@
                         maintainers[mlength - 1].setAttribute("style", "");
                         maintainers[mlength - 1].value = themaintainer;
                         maintainers[mlength - 1].innerHTML = themaintainer;
-                        var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                        var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
                         show.innerHTML = themaintainer;
                         $("#editor").trigger("chosen:updated");
                     }
@@ -371,9 +400,9 @@
                         $("#editor").trigger("chosen:updated");
                     }
 
-                    divs[3].childNodes[3].childNodes[1].value = dataline[10].innerHTML;
+                    divs[4].childNodes[3].childNodes[1].value = dataline[10].innerHTML;
 
-                    var priorities = divs[4].childNodes[3].childNodes[1].getElementsByTagName("option");
+                    var priorities = divs[5].childNodes[3].childNodes[1].getElementsByTagName("option");
                     var plength = priorities.length;
                     var thepriority = dataline[11].innerHTML;
                     for(var i = 0; i < plength; i++) {
@@ -386,7 +415,7 @@
                     }
                     //divs[5].childNodes[3].childNodes[1].value = dataline[12].innerHTML;
 
-                    divs[5].childNodes[3].childNodes[1].value = this.parentNode.id;
+                    divs[6].childNodes[3].childNodes[1].value = this.parentNode.id;
                 });
                 $(".fa-search").click(function(e) {
                     var imageurl = this.nextSibling.nextSibling.innerHTML;
