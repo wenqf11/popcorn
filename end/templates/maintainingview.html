@@ -40,7 +40,7 @@
                         <label class="col-sm-3 control-label no-padding-top">设备编号</label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="brief" name="brief" type="text">
-                                <option value="nopersonchosen" selected="selected">无</option>
+                                <option value="nopersonchosen" selected="selected"></option>
                                 {% for device in devices %}
                                     <option value="{{ device.brief }}">{{ device.name }}(简称:{{ device.brief }})</option>
                                 {% endfor %}
@@ -52,7 +52,7 @@
                         <label class="col-sm-3 control-label no-padding-top">指派维修人<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
-                                <option value="nopersonchosen" selected="selected">暂不选择</option>
+                                <option value="nopersonchosen" selected="selected"></option>
                                 {% for maintainer in maintainers %}
                                 <option value="{{ maintainer }}">{{ maintainer }}</option>
                                 {% endfor %}
