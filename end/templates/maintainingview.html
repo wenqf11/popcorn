@@ -40,7 +40,7 @@
                         <label class="col-sm-3 control-label no-padding-top">设备编号</label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="brief" name="brief" type="text">
-                                <option value="nopersonchosen" selected="selected"></option>
+                                <option value="nopersonchosen" selected="selected">无</option>
                                 {% for device in devices %}
                                     <option value="{{ device.brief }}">{{ device.name }}(简称:{{ device.brief }})</option>
                                 {% endfor %}
@@ -52,7 +52,7 @@
                         <label class="col-sm-3 control-label no-padding-top">指派维修人<span class="required">*</span></label>
                         <div class="col-sm-9">
                             <select class="chosen-select" id="editor" name="editor" form="maintenanceform">
-                                <option value="nopersonchosen" selected="selected"></option>
+                                <option value="nopersonchosen" selected="selected">暂不选择</option>
                                 {% for maintainer in maintainers %}
                                 <option value="{{ maintainer }}">{{ maintainer }}</option>
                                 {% endfor %}
@@ -359,8 +359,8 @@
                         if(devicebrief[i].value == thebrief) {
                             devicebrief[i].setAttribute("selected", "selected");
                             devicebrief[0].removeAttribute("selected");
-                            var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
-                            show.innerHTML = devicebrief[i].innerHTML;
+                            // var show = divs[2].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                            // show.innerHTML = devicebrief[i].innerHTML;
                         }
                         else {
                             devicebrief[i].removeAttribute("selected");
@@ -377,8 +377,8 @@
                         if(maintainers[i].value == themaintainer) {
                             maintainers[i].setAttribute("selected", "selected");
                             maintainers[0].removeAttribute("selected");
-                            var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
-                            show.innerHTML = maintainers[i].innerHTML;
+                            // var show = divs[3].childNodes[3].childNodes[1].nextSibling.childNodes[0].childNodes[0];
+                            // show.innerHTML = maintainers[i].innerHTML;
                             // hasthemaintainer = true;
                         }
                         else {
