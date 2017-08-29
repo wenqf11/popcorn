@@ -38,7 +38,7 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-top">设备编号</label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <select class="chosen-select" id="brief" name="brief" type="text">
                                 <option value="nopersonchosen" selected="selected"></option>
                                 {% for device in devices %}
@@ -367,6 +367,7 @@
                             devicebrief[i].removeAttribute("selected");
                         }
                     }
+                    $("#brief").trigger("chosen:updated");
 
                     var maintainers = divs[3].childNodes[3].childNodes[1].getElementsByTagName("option");
                     var mlength = maintainers.length;
