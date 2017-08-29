@@ -355,6 +355,7 @@
                     var dlength = devicebrief.length;
                     var thebrief = dataline[2].innerHTML;
                     devicebrief[0].setAttribute("selected", "selected");
+                    $("#brief").trigger("chosen:updated");
                     for(var i = 1; i < dlength; i++) {
                         if(devicebrief[i].value == thebrief) {
                             devicebrief[0].removeAttribute("selected");
@@ -372,6 +373,7 @@
                     var mlength = maintainers.length;
                     var themaintainer = dataline[9].innerHTML;
                     maintainers[0].setAttribute("selected", "selected");
+                    $("#editor").trigger("chosen:updated");
                     // var hasthemaintainer = false;
                     for(var i = 1; i < mlength; i++) {
                         if(maintainers[i].value == themaintainer) {
