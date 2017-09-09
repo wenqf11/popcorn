@@ -431,9 +431,15 @@ def app_check(request, para, user):
     )
 
     if len(info) == 1:
+        _info = info[0]
+        _info.classid = user.classid
+        _info.date = datetime.strptime(para['date'], '%Y-%m-%d').date()
+        _info.checkin = para['checkin']
+        _info.checkout = para['checkout']
+        _info.save()
         return HttpResponse(json.dumps({
-            'status': 'error',
-            'data': 'check info existed'
+            'status': 'ok',
+            'data': 'check in success'
         }))
     else:
         _info = k_staffworkinfo.objects.create(userid=user)

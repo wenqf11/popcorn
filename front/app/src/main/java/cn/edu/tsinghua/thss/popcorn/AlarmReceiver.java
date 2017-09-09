@@ -95,18 +95,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int pos = SharedPreferencesUtil.getInt(context, Config.VIBRATE_DURATION, 0);
-        int vibrateDuration = 0;
+        int vibrateDuration = 1;
         String[] durations = context.getResources().getStringArray(R.array.vibrate_duration);
-        if (durations[pos].equals("60s")) {
-            vibrateDuration = 6;
-        } else if (durations[pos].equals("90s")) {
-            vibrateDuration = 9;
-        } else if (durations[pos].equals("120s")) {
-            vibrateDuration = 12;
+        if (durations[pos].equals("10s")) {
+            vibrateDuration = 5;
+        } else if (durations[pos].equals("30s")) {
+            vibrateDuration = 15;
         }
         PlaySound(context, vibrateDuration);
-        //playAlarmRing(context);
-        //Toast.makeText(context, "您有新的任务，请尽快完成~~", Toast.LENGTH_LONG).show();
     }
 
 }

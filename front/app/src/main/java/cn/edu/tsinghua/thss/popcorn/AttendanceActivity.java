@@ -53,12 +53,13 @@ import com.baidu.location.Poi;
 import cn.edu.tsinghua.thss.popcorn.config.Config;
 import cn.edu.tsinghua.thss.popcorn.utils.NoRepeatToast;
 
-public class AttendanceActivity extends FragmentActivity implements View.OnClickListener{
+public class AttendanceActivity extends FragmentActivity{
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = null;
 
     CaldroidFragment caldroidFragment;
     Date lastSelected = null;
+    private boolean isOffWork = false;
 
     @ViewInject(R.id.id_btn_attend_on_work)
     private Button mButtonOnWork;
@@ -73,10 +74,6 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
     @ViewInject(R.id.id_text_attend_off_work)
     private TextView mTextViewOffWork;
 
-    @Override
-    public void onClick(final View v) {
-        mLocationClient.start();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +100,10 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
                 mLocationClient.stop();
                 return;
             }
-            if(mButtonOffWork.getVisibility()!=View.VISIBLE) {
+            if(!isOffWork) {
                 mTextViewOnWork.setText(sb.toString());
-                mButtonOffWork.setVisibility(View.VISIBLE);
-                mButtonOnWork.setVisibility(View.GONE);
+                //mButtonOffWork.setVisibility(View.VISIBLE);
+                //mButtonOnWork.setVisibility(View.GONE);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String today = dateFormat.format(new Date());
                 SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
@@ -115,7 +112,7 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
                 editor.putString("date", today);
                 editor.apply();
             }else{
-                mButtonOffWork.setVisibility(View.GONE);
+                //mButtonOffWork.setVisibility(View.GONE);
                 mTextViewOffWork.setText(sb.toString());
                 submitData();
             }
@@ -127,8 +124,20 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
         setContentView(R.layout.activity_attendance);
         ViewUtils.inject(this);
 
-        mButtonOnWork.setOnClickListener(this);
-        mButtonOffWork.setOnClickListener(this);
+        mButtonOnWork.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                isOffWork = false;
+                mLocationClient.start();
+            }
+        });
+        mButtonOffWork.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                isOffWork = true;
+                mLocationClient.start();
+            }
+        });
 
         caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
@@ -212,39 +221,37 @@ public class AttendanceActivity extends FragmentActivity implements View.OnClick
                                 String checkOut = results.getString("checkout");
                                 mTextViewOnWork.setText(checkIn);
                                 mTextViewOffWork.setText(checkOut);
-                                mButtonOnWork.setVisibility(View.GONE);
-                                mButtonOffWork.setVisibility(View.GONE);
                             } else {
                                 mTextViewOnWork.setText("");
                                 mTextViewOffWork.setText("");
-                                mButtonOnWork.setVisibility(View.GONE);
-                                mButtonOffWork.setVisibility(View.GONE);
-                                Calendar now = Calendar.getInstance();
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.setTime(date);
-                                if (calendar.get(Calendar.YEAR) == now.get(Calendar.YEAR)
-                                        && now.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
-                                    mButtonOnWork.setVisibility(View.VISIBLE);
-                                    mButtonOffWork.setVisibility(View.GONE);
-
-                                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
-                                    String checkIn = sp.getString("checkin", "");
-                                    String date_str = sp.getString("date", "");
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    String today = dateFormat.format(new Date());
-                                    if (!checkIn.equals("") && date_str.equals(today)) {
-                                        mTextViewOnWork.setText(checkIn);
-                                        mButtonOnWork.setVisibility(View.GONE);
-                                        mButtonOffWork.setVisibility(View.VISIBLE);
-                                    }
-                                }
-
 
                                 String msg = jsonObject.getString("data");
                                 if (msg.equals("can't connect to database")) {
                                     //Toast.makeText(getApplicationContext(), "服务器内部出错", Toast.LENGTH_SHORT).show();
                                     NoRepeatToast.showToast(getApplicationContext(), "服务器内部出错！", Toast.LENGTH_SHORT);
                                 }
+                            }
+
+                            mButtonOnWork.setVisibility(View.GONE);
+                            mButtonOffWork.setVisibility(View.GONE);
+                            Calendar now = Calendar.getInstance();
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(date);
+                            if (calendar.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+                                    && now.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
+                                mButtonOnWork.setVisibility(View.VISIBLE);
+                                mButtonOffWork.setVisibility(View.VISIBLE);
+
+//                                SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
+//                                String checkIn = sp.getString("checkin", "");
+//                                String date_str = sp.getString("date", "");
+//                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                                String today = dateFormat.format(new Date());
+////                                    if (!checkIn.equals("") && date_str.equals(today)) {
+////                                        mTextViewOnWork.setText(checkIn);
+////                                        mButtonOnWork.setVisibility(View.GONE);
+////                                        mButtonOffWork.setVisibility(View.VISIBLE);
+////                                    }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
