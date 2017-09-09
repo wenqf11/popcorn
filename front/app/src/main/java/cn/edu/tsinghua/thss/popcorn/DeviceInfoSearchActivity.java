@@ -85,7 +85,8 @@ public class DeviceInfoSearchActivity extends Activity implements
                 //searchView.setQuery(adapter.getItem(position).toString(), true);
                 Intent intent = new Intent(getApplicationContext(), DeviceInfoDetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("device_brief", deviceBrief.get(position));
+                //bundle.putString("device_brief", deviceBrief.get(position));
+                bundle.putString("device_brief", adapter.nameList.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
