@@ -110,6 +110,7 @@ urlpatterns = patterns(
     url(r'^view_schedule/$', view_schedule),
     url(r'^add_schedule/$', add_schedule),
     url(r'^delete_schedule/$', delete_schedule),
+    url(r'^auto_schedule/$', auto_schedule),
 
     url(r'^view_role/$', view_role),
     url(r'^operate_role/$', operate_role),

@@ -1976,6 +1976,7 @@ def delete_schedule(request):
     }))
 
 
+@login_required
 def view_schedule(request):
     kuser = k_user.objects.get(username=request.user.username)
     result = [kuser.classid.id]
@@ -1996,7 +1997,7 @@ def view_schedule(request):
         route_data = [{'id': _r.id, 'name': _r.name, 'startTime': str(_r.starttime), 'period': _r.period} for _r in routes]
 
         available_shifts = k_schedule.objects.filter(
-            date__range=[date.today() - timedelta(days=30), date.today() + timedelta(days=30)],
+            date__range=[date.today() - timedelta(days=30), date.today() + timedelta(days=80)],
             classid__in=result
         )
         existed_dates = [_d['date'] for _d in available_shifts.values('date').distinct()]
@@ -2016,6 +2017,39 @@ def view_schedule(request):
             shift_data[str(day)] = day_shifts
 
         return HttpResponse(json.dumps({'shifts': shift_data}))
+
+
+@login_required
+def auto_schedule(request):
+    user = k_user.objects.get(username=request.user.username)
+    result = [user.classid.id]
+    get_class_set(result, user.classid.id)
+
+    time_length = request.POST.get('time_length', 1)
+    d = {'week1': 1, 'week2': 2, 'month1': 4, 'month2': 8}
+    num_week = d[time_length]
+
+    day_start = date.today() - timedelta(days=date.today().weekday())
+    schedules = k_schedule.objects.filter(
+        date__range=[day_start, day_start + timedelta(days=80)],
+        classid__in=result
+    )
+
+    for i in range(7):
+        day = day_start + timedelta(days=i)
+        source_schedules = schedules.filter(date=day)
+        for k in range(num_week):
+            target_date = day + timedelta(days=7*(k+1))
+            existed_schedules = schedules.filter(date=target_date)
+            for s in existed_schedules:
+                s.delete()
+            if request.POST.get('operation') == 'copy':
+                for s in source_schedules:
+                    k_schedule.objects.create(classid=s.classid, route=s.route, user=s.user, date=target_date)
+            else:
+                pass
+
+    return HttpResponseRedirect('/view_schedule/')
 
 
 @login_required

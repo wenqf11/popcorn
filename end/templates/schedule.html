@@ -36,6 +36,29 @@
 			</div>
 			{% endfor %}
 		</div>
+        <div class="fc-toolbar" style="margin-top: 40px;">
+            <h2>自动排班</h2>
+        </div>
+        <div>
+            <form action="/auto_schedule/" method="post">
+                <table class="table center" style="margin-bottom: 5px;">
+                    <tbody>
+                        <tr>
+                            <td><label><input type="radio" name="time_length" value="week1" checked="checked">1周</label></td>
+                            <td><label><input type="radio" name="time_length" value="week2">2周</label></td>
+                        </tr>
+                        <tr>
+                            <td><label><input type="radio" name="time_length" value="month1">1月</label></td>
+                            <td><label><input type="radio" name="time_length" value="month2">2月</label></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="float: right;">
+                    <button class="btn btn-sm btn-danger" type="submit" name="operation" value="delete">清除</button>
+                    <button class="btn btn-sm btn-success" type="submit" name="operation" value="copy">排班</button>
+                </div>
+            </form>
+        </div>
 	</div>
 </div>
 
