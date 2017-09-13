@@ -2302,7 +2302,7 @@ def operate_route(request):
             try:
                 _device = k_device.objects.get(brief=_form.brief)
             except ObjectDoesNotExist:
-                print(_form.brief + '_' + str(_form.id))
+                # 表单（设备）中的简称不存在
                 continue
             data['forms'].append({
                 'id': _form.id,
