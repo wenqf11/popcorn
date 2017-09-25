@@ -74,7 +74,7 @@ public class TaskActivity extends Activity {
         params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
         params.addBodyParameter("task_id", id);
         params.addBodyParameter("note", note);
-        progressDialog.show();
+        //progressDialog.show();
 
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
@@ -106,7 +106,7 @@ public class TaskActivity extends Activity {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
 
 
@@ -114,7 +114,7 @@ public class TaskActivity extends Activity {
                     public void onFailure(HttpException error, String msg) {
                         //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                         NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
                 });
     }
@@ -148,7 +148,7 @@ public class TaskActivity extends Activity {
         params.addBodyParameter("username", Config.DEBUG_USERNAME);
         params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
         params.addBodyParameter("task_id", id);
-        progressDialog.show();
+        //progressDialog.show();
 
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
@@ -182,7 +182,7 @@ public class TaskActivity extends Activity {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
 
 
@@ -190,7 +190,7 @@ public class TaskActivity extends Activity {
                     public void onFailure(HttpException error, String msg) {
                         //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                         NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
                 });
     }
@@ -209,7 +209,7 @@ public class TaskActivity extends Activity {
         params.addBodyParameter("access_token", Config.ACCESS_TOKEN);
         params.addBodyParameter("task_id", id);
         params.addBodyParameter("note", note);
-        progressDialog.show();
+        //progressDialog.show();
 
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
@@ -242,7 +242,7 @@ public class TaskActivity extends Activity {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
 
 
@@ -250,7 +250,7 @@ public class TaskActivity extends Activity {
                     public void onFailure(HttpException error, String msg) {
                         //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                         NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
                 });
     }
@@ -266,11 +266,11 @@ public class TaskActivity extends Activity {
             position = bundle.getInt("position");
         }catch (Exception e) {
         }
-        progressDialog = new ProgressDialog(TaskActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("数据加载中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
+        //progressDialog = new ProgressDialog(TaskActivity.this, R.style.buffer_dialog);
+       // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDialog.setMessage("数据加载中...");
+        //progressDialog.setIndeterminate(false);
+        //progressDialog.setCancelable(false);
 
         ViewUtils.inject(this);
         setValueOfTextView();
@@ -312,7 +312,7 @@ public class TaskActivity extends Activity {
 
     @Override
     protected  void onDestroy(){
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         super.onDestroy();
     }
 

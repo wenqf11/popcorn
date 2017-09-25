@@ -70,11 +70,11 @@ public class RankActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rank);
 
-        progressDialog = new ProgressDialog(RankActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("数据加载中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
+        //progressDialog = new ProgressDialog(RankActivity.this, R.style.buffer_dialog);
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDialog.setMessage("数据加载中...");
+        //progressDialog.setIndeterminate(false);
+        //progressDialog.setCancelable(false);
 
         ViewUtils.inject(this);
 
@@ -99,7 +99,7 @@ public class RankActivity extends Activity {
         params.addQueryStringParameter("year", String.valueOf(pickedYear));
         params.addQueryStringParameter("month", String.valueOf(pickedMonth));
 
-        progressDialog.show();
+        //progressDialog.show();
 //        SystemClock.sleep(3000);
 
         HttpUtils http = new HttpUtils();
@@ -135,7 +135,7 @@ public class RankActivity extends Activity {
                         mData = getData();
                         adapter.notifyDataSetChanged();
 
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
 
 
@@ -143,7 +143,7 @@ public class RankActivity extends Activity {
                     public void onFailure(HttpException error, String msg) {
                         //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                         NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
-                        progressDialog.hide();
+                        //progressDialog.hide();
                     }
                 });
     }
@@ -236,7 +236,7 @@ public class RankActivity extends Activity {
 
     @Override
     protected  void onDestroy(){
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         super.onDestroy();
     }
 

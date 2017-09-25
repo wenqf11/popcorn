@@ -111,6 +111,10 @@ public class AttendanceActivity extends FragmentActivity{
                 editor.putString("checkin", sb.toString());
                 editor.putString("date", today);
                 editor.apply();
+
+                if(sb.length() > 10){
+                    mButtonOnWork.setVisibility(View.GONE);
+                }
             }else{
                 //mButtonOffWork.setVisibility(View.GONE);
                 mTextViewOffWork.setText(sb.toString());
@@ -241,17 +245,19 @@ public class AttendanceActivity extends FragmentActivity{
                                     && now.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
                                 mButtonOnWork.setVisibility(View.VISIBLE);
                                 mButtonOffWork.setVisibility(View.VISIBLE);
-
-//                                SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
-//                                String checkIn = sp.getString("checkin", "");
-//                                String date_str = sp.getString("date", "");
-//                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                                String today = dateFormat.format(new Date());
-////                                    if (!checkIn.equals("") && date_str.equals(today)) {
-////                                        mTextViewOnWork.setText(checkIn);
-////                                        mButtonOnWork.setVisibility(View.GONE);
-////                                        mButtonOffWork.setVisibility(View.VISIBLE);
-////                                    }
+                                if(mTextViewOnWork.getText().length() > 10){
+                                    mButtonOnWork.setVisibility(View.GONE);
+                                }
+                                SharedPreferences sp = getApplicationContext().getSharedPreferences("Attendance", Context.MODE_PRIVATE);
+                                String checkIn = sp.getString("checkin", "");
+                                String date_str = sp.getString("date", "");
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                String today = dateFormat.format(new Date());
+                                if (checkIn.length()>10 && date_str.equals(today)) {
+                                    mTextViewOnWork.setText(checkIn);
+                                    mButtonOnWork.setVisibility(View.GONE);
+                                    mButtonOffWork.setVisibility(View.VISIBLE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -47,16 +47,16 @@ public class MaintainListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDialog = new ProgressDialog(MaintainListActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("数据加载中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
+        //progressDialog = new ProgressDialog(MaintainListActivity.this, R.style.buffer_dialog);
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDialog.setMessage("数据加载中...");
+        //progressDialog.setIndeterminate(false);
+        //progressDialog.setCancelable(false);
         getMaintainTaskList();
     }
 
     private void getMaintainTaskList(){
-        progressDialog.show();
+        //progressDialog.show();
         RequestParams params = new RequestParams();
         params.addQueryStringParameter("username", Config.DEBUG_USERNAME);
         params.addQueryStringParameter("access_token", Config.ACCESS_TOKEN);
@@ -91,13 +91,13 @@ public class MaintainListActivity extends ListActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        progressDialog.hide();
+                       // progressDialog.hide();
                     }
 
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
-                        progressDialog.hide();
+                        //progressDialog.hide();
                         //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                         NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
                     }
@@ -259,7 +259,7 @@ public class MaintainListActivity extends ListActivity {
 
     @Override
     protected  void onDestroy(){
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         super.onDestroy();
     }
 

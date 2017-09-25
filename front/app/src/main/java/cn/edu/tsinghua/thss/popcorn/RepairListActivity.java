@@ -72,16 +72,16 @@ public class RepairListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDialog = new ProgressDialog(RepairListActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("数据加载中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        //getRepairTaskList();
-        timer.schedule(task, Config.REPAIR_UPDATE_DELAY, Config.REPAIR_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
+        //progressDialog = new ProgressDialog(RepairListActivity.this, R.style.buffer_dialog);
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDialog.setMessage("数据加载中...");
+       // progressDialog.setIndeterminate(false);
+        //progressDialog.setCancelable(false);
+       // progressDialog.show();
+        getRepairTaskList();
+        //timer.schedule(task, Config.REPAIR_UPDATE_DELAY, Config.REPAIR_UPDATE_INTERVAL); // 1s后执行task,经过2s再次执行
 //        SystemClock.sleep(3000);//睡3秒
-        progressDialog.hide();
+        //progressDialog.hide();
     }
 
     private void getRepairTaskList(){
@@ -287,9 +287,9 @@ public class RepairListActivity extends ListActivity {
 
     @Override
     protected  void onDestroy(){
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         super.onDestroy();
-        timer.cancel();
+        //timer.cancel();
     }
 
     @Override

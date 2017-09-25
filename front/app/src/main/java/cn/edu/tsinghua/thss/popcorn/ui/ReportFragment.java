@@ -126,8 +126,8 @@ public class ReportFragment extends Fragment {
         params.addBodyParameter("description", faultDescription);
         params.addBodyParameter("memo", reportMemo);
 
-        progressDialog.setMessage("数据发送中...");
-        progressDialog.show();
+        //progressDialog.setMessage("数据发送中...");
+        //progressDialog.show();
 
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST,
@@ -145,7 +145,7 @@ public class ReportFragment extends Fragment {
 
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {
-                        progressDialog.hide();
+                        //progressDialog.hide();
                         Toast.makeText(getActivity().getApplicationContext(), "报修成功", Toast.LENGTH_SHORT).show();
                         reportTitleText.setText("");
                         deviceBriefText.setText("");
@@ -164,7 +164,7 @@ public class ReportFragment extends Fragment {
                                 .setTitle("网络故障，数据提交失败！如故障紧急请电话联系相应负责人！")
                                 .setPositiveButton("确定",null)
                                 .show();
-                        progressDialog.hide();
+                       // progressDialog.hide();
                     }
                 });
     }
@@ -213,10 +213,10 @@ public class ReportFragment extends Fragment {
         //return reportView;
 
         ViewUtils.inject(this, reportView);
-        progressDialog = new ProgressDialog(getActivity(), R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(true);
+        //progressDialog = new ProgressDialog(getActivity(), R.style.buffer_dialog);
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDialog.setIndeterminate(false);
+        //progressDialog.setCancelable(true);
 
         return reportView;
 	}

@@ -53,7 +53,7 @@ public class ChangePasswordActivity extends Activity {
             Toast.makeText(getApplicationContext(), "两次密码输入不一致", Toast.LENGTH_SHORT).show();
         }
         else {
-            progressDialog.show();
+            //progressDialog.show();
 
             RequestParams params = new RequestParams();
             params.addBodyParameter("username", Config.DEBUG_USERNAME);
@@ -87,13 +87,13 @@ public class ChangePasswordActivity extends Activity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            progressDialog.hide();
+                            //progressDialog.hide();
                         }
 
 
                         @Override
                         public void onFailure(HttpException error, String msg) {
-                            progressDialog.hide();
+                            //progressDialog.hide();
                             //Toast.makeText(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT).show();
                             NoRepeatToast.showToast(getApplicationContext(), "网络连接异常，请检查网络连接！", Toast.LENGTH_SHORT);
                         }
@@ -103,7 +103,7 @@ public class ChangePasswordActivity extends Activity {
 
     @Override
     protected  void onDestroy(){
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
         super.onDestroy();
     }
 
@@ -114,11 +114,11 @@ public class ChangePasswordActivity extends Activity {
 
         ViewUtils.inject(this);
 
-        progressDialog = new ProgressDialog(ChangePasswordActivity.this, R.style.buffer_dialog);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("加载中...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCancelable(false);
+        //progressDialog = new ProgressDialog(ChangePasswordActivity.this, R.style.buffer_dialog);
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+       // progressDialog.setMessage("加载中...");
+        //progressDialog.setIndeterminate(false);
+        //progressDialog.setCancelable(false);
     }
 
 
