@@ -2025,6 +2025,8 @@ def auto_schedule(request):
     result = [user.classid.id]
     get_class_set(result, user.classid.id)
 
+    route_ids = [int(r) for r in request.POST.getlist('routes')]
+
     time_length = request.POST.get('time_length', 1)
     d = {'week1': 1, 'week2': 2, 'month1': 4, 'month2': 8}
     num_week = d[time_length]
@@ -2037,16 +2039,16 @@ def auto_schedule(request):
 
     for i in range(7):
         day = day_start + timedelta(days=i)
-        source_schedules = schedules.filter(date=day)
+        source_schedules = schedules.filter(date=day, route__in=route_ids)
         for k in range(num_week):
             target_date = day + timedelta(days=7*(k+1))
-            existed_schedules = schedules.filter(date=target_date)
+            existed_schedules = schedules.filter(date=target_date, route__in=route_ids)
             for s in existed_schedules:
                 s.delete()
             if request.POST.get('operation') == 'copy':
                 for s in source_schedules:
                     k_schedule.objects.create(classid=s.classid, route=s.route, user=s.user, date=target_date)
-            else:
+            else:  # operation = delete
                 pass
 
     return HttpResponseRedirect('/view_schedule/')

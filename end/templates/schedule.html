@@ -29,36 +29,48 @@
 			<h2>班组抄表路线</h2>
 		</div>
 		<div id="routes">
-			{% for route in routes %}
-			<div class="external-event label-info" data-id="{{ route.id }}" data-start="{{ route.startTime | date:"c" }}" data-name="{{ route.name }}">
-				<i class="ace-icon fa fa-arrows"></i>
-				{{ route.name }}
-			</div>
-			{% endfor %}
+			<table style="width: 100%;">
+				<tbody>
+					{% for route in routes %}
+			<tr>
+				<td>
+					<div class="external-event label-info" data-id="{{ route.id }}" data-start="{{ route.startTime | date:"c" }}" data-name="{{ route.name }}">
+						<i class="ace-icon fa fa-arrows"></i>
+						{{ route.name }}
+					</div>
+				</td>
+				<td style="padding: 3px 0 3px 5px;">
+					<input type="checkbox" name="checkbox-{{ route.id }}" style="width: 20px; height: 20px;">
+				</td>
+			</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 		</div>
-        <div class="fc-toolbar" style="margin-top: 40px;">
-            <h2>自动排班</h2>
-        </div>
-        <div>
-            <form action="/auto_schedule/" method="post">
-                <table class="table center" style="margin-bottom: 5px;">
-                    <tbody>
-                        <tr>
-                            <td><label><input type="radio" name="time_length" value="week1" checked="checked">1周</label></td>
-                            <td><label><input type="radio" name="time_length" value="week2">2周</label></td>
-                        </tr>
-                        <tr>
-                            <td><label><input type="radio" name="time_length" value="month1">1月</label></td>
-                            <td><label><input type="radio" name="time_length" value="month2">2月</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div style="float: right;">
-                    <button class="btn btn-sm btn-danger" type="submit" name="operation" value="delete">清除</button>
-                    <button class="btn btn-sm btn-success" type="submit" name="operation" value="copy">排班</button>
-                </div>
-            </form>
-        </div>
+		<div class="fc-toolbar" style="margin-top: 40px;">
+			<h2>自动排班</h2>
+			<h6>在路线列表中勾选要复制的路线</h6>
+		</div>
+		<div>
+			<form id="form-auto-schedule" action="/auto_schedule/" method="post">
+				<table class="table center" style="margin-bottom: 5px;">
+					<tbody>
+						<tr>
+							<td><label><input type="radio" name="time_length" value="week1" checked="checked">1周</label></td>
+							<td><label><input type="radio" name="time_length" value="week2">2周</label></td>
+						</tr>
+						<tr>
+							<td><label><input type="radio" name="time_length" value="month1">1月</label></td>
+							<td><label><input type="radio" name="time_length" value="month2">2月</label></td>
+						</tr>
+					</tbody>
+				</table>
+				<div style="float: right;">
+					<button class="btn btn-sm btn-danger" type="submit" name="operation" value="delete">清除</button>
+					<button class="btn btn-sm btn-success" type="submit" name="operation" value="copy">排班</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 
@@ -252,10 +264,39 @@
 			// $('#modal').modal('hide');
 		});
 
+		$('#form-auto-schedule').submit(function(e) {
+			var arr = [];
+			$('div#routes').find('input[type=checkbox]').each(function(e) {
+				if ($(this).prop('checked')) {
+					var reg = /checkbox-(\d+)/;
+					var match = reg.exec($(this).attr('name'));
+					arr.push(match[1]);
+				}
+			});
+
+			for (var i in arr) {
+				$('<input>').attr('type', 'hidden').prop('checked', true).attr('name', 'routes').attr('value', arr[i]).appendTo(this);
+			}
+
+			return true;
+		});
+
 		$.post('/view_schedule/', function(json){
+			var dayStart = new Date();
+			var offset = dayStart.getDay();
+			if (offset == 0) offset = 7;
+			dayStart.setDate(dayStart.getDate() - offset);
+			dayStart.setHours(23, 59, 59, 999);
+			var dayEnd = new Date(dayStart);
+			dayEnd.setDate(dayEnd.getDate() + 7);
+			dayEnd.setHours(23, 59, 59, 999);
+
 			for (var day in json.shifts){
+				var d = new Date(day);
+				var flag = (d > dayStart && d < dayEnd);
+
 				dayinfo = json.shifts[day];
-				for(var routeindex in dayinfo){
+				for (var routeindex in dayinfo){
 					routeinfo = dayinfo[routeindex];
 					$('#calendar').fullCalendar('renderEvent', {
 						title: routeinfo['name'],
@@ -265,6 +306,11 @@
 						data_id: routeinfo['id'],
 						users: routeinfo['users']
 					}, true);
+
+					if (flag) {
+						var name = 'checkbox-' + routeinfo['id'];
+						$('div#routes').find('input[name=' + name + ']').prop('checked', true);
+					}
 				}
 			}
 		},'json');
