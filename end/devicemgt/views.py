@@ -1210,7 +1210,7 @@ def deviceadd(request):
 
             _device.save()
             server_msg = '添加设备成功！'
-            return HttpResponseRedirect('/operate_device/?id='+str(_device.id)+'&msg='+server_msg)
+            return HttpResponseRedirect('/operate_device/?msg='+server_msg)
         if request.POST['phase'] == 'EDIT':
             _dev = _devs[0]
             _dev.brand = request.POST['brand']
