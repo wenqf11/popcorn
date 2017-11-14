@@ -4351,7 +4351,7 @@ def submit_sparecount(request):
         return HttpResponseRedirect('/view_sparecount')
 
     ## check if spare stock has enough quantity
-    _sparecount == None
+    _sparecount = None
     _sparecountcount = 0
     if _id != '':
         _sparecount = k_sparecount.objects.get(id=_id)
