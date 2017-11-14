@@ -2506,6 +2506,83 @@ def delete_form(request):
 
 
 @login_required
+def deviceplanbatch_add(request):
+    # 登陆成功
+    user = k_user.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username':user.username, 'useravatar': user.avatar})
+    return get_purviews_and_render_to_response(request.user.username, 'deviceplanbatchadd.html', variables)
+
+@login_required
+def deviceplanbatch_submit(request):
+    # 登陆成功
+    _user = k_user.objects.get(username=request.user.username)
+    # 读取权限，显示内容
+    variables = RequestContext(request, {'username': _user.username})
+    if request.method == "POST":
+        raw_post_data = request.body
+        json_data = json.loads(raw_post_data)
+        success_num = 0
+        try:
+            for json_key in json_data:
+                obj_datas = json_data[json_key]
+                for obj_data in obj_datas:
+                    _brief = obj_data['brief']
+                    _title = obj_data['title']
+                    _editor = obj_data['maintainer']
+                    _period = obj_data['period']
+                    _createcontent = obj_data['createcontent']
+                    _memo = obj_data['memo']
+                    try:
+                        _editor = k_user.objects.get(name=_editor)
+                        _device = k_device.objects.get(brief=_brief)
+                        _deviceid = str(_device.id)
+                        _periodstring = dict(k_deviceplan.DEVICEPLAN_PERIODS)[_period]
+                    except:
+                        server_msg = '已成功添加'+str(success_num)+'条数据，第'+str(success_num+1)+'条添加出错：'
+                        return HttpResponse(json.dumps({
+                                "server_msg":server_msg
+                                }), content_type="application/json")
+                    _maintenance = k_maintenance.objects.create(mtype=1,classid=_user.classid,deviceid_id=_deviceid,state=2)
+                    _deviceplan = k_deviceplan.objects.create(deviceid_id=_deviceid,maintenanceid=_maintenance)
+                    _maintenance.creatorid = _user.id
+                    _maintenance.assignorid = _user.id
+                    _maintenance.assigndatetime = get_current_time()
+                    _maintenance.title = _title
+                    _maintenance.createcontent = _createcontent
+                    _maintenance.editorid = _editor.id
+                    _maintenance.memo = _memo+"（周期为："+dict(k_deviceplan.DEVICEPLAN_PERIODS)[_period]+"）"
+                    _maintenance.state = 2
+                    _maintenance.save()
+
+                    _deviceplan.assignorid = _user.id
+                    _deviceplan.assigndatetime = get_current_date()
+                    _deviceplan.title = _title
+                    _deviceplan.period = _period
+                    _deviceplan.createcontent = _createcontent
+                    _deviceplan.editorid = _editor.id
+                    _deviceplan.memo = _memo
+                    _deviceplan.save()
+
+                    success_num += 1
+            server_msg = '成功添加'+str(success_num)+'条工具信息！'
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+        except Exception as e:
+            server_msg = '第'+str(success_num+1)+'条数据添加有误！请检查填写是否正确！'
+            print e
+            return HttpResponse(json.dumps({
+                "server_msg":server_msg
+                }), content_type="application/json")
+    server_msg = "导入失败，请检查数据格式是否符合模板要求！"
+    return HttpResponse(json.dumps({
+        "username": _user.username,
+        "server_msg":server_msg
+        }), content_type="application/json")
+
+
+@login_required
 def view_deviceplan(request):
     #权限判断
     # _msg = check_purview(request.user.username, 28)

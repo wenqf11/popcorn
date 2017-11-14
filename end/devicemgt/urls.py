@@ -138,6 +138,8 @@ urlpatterns = patterns(
     url(r'^submit_deviceplan/$', submit_deviceplan),
     url(r'^delete_deviceplan/$', delete_deviceplan),
     url(r'^add_deviceplan/$', add_deviceplan),
+    url(r'^deviceplanbatch_add/$', deviceplanbatch_add),
+    url(r'^deviceplanbatch_submit/$', deviceplanbatch_submit),
 
     url(r'^view_maintaining/$', view_maintaining),
     url(r'^view_maintained/$', view_maintained),
