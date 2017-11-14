@@ -2565,7 +2565,7 @@ def deviceplanbatch_submit(request):
                     _deviceplan.save()
 
                     success_num += 1
-            server_msg = '成功添加'+str(success_num)+'条工具信息！'
+            server_msg = '成功添加'+str(success_num)+'条保养计划！'
             return HttpResponse(json.dumps({
                 "server_msg":server_msg
                 }), content_type="application/json")
