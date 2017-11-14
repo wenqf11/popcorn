@@ -4349,6 +4349,40 @@ def submit_sparecount(request):
         _sparecount.auditdatetime = get_current_date()
         _sparecount.save()
         return HttpResponseRedirect('/view_sparecount')
+
+    ## check if the stock has enough quantity
+    _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+    _sparecount == None
+    _sparecountcount = 0
+    if _id != '':
+        _sparecount = k_sparecount.objects.get(id=_id)
+        _sparecountcount = _sparecount.count
+    calcueligible = 0
+    calcuineligible = 0
+    if _sparecount == None or _iseligible == _sparecount.iseligible:
+        if _iseligible == "1":
+            calcueligible = _spare.eligiblestock - _sparecountcount + _count
+        else:
+            calcuineligible = _spare.ineligiblestock - _sparecountcount + _count
+    else:
+        if _iseligible == "1":
+            calcuineligible = _spare.ineligiblestock - _sparecountcount
+            calcueligible = _spare.eligiblestock + _count
+        else:
+            calcueligible = _spare.eligiblestock - _sparecountcount
+            calcuineligible = _spare.ineligiblestock + _count
+    if calcueligible < 0:
+        if _state == "5":
+            return HttpResponseRedirect('/view_sparebill/?msg=合格品库存不足')
+        else:
+            return HttpResponseRedirect('/view_sparecount/?msg=合格品库存不足')
+    if calcuineligible < 0:
+        if _state == "5":
+            return HttpResponseRedirect('/view_sparebill/?msg=不合格品库存不足')
+        else:
+            return HttpResponseRedirect('/view_sparecount/?msg=不合格品库存不足')
+    ## end check
+
     if _id != '':
         _sparecount = k_sparecount.objects.get(id=_id)
         _sparecount.editorid = _user.id
@@ -4392,12 +4426,12 @@ def submit_sparecount(request):
     _sparecount.save()
     if _state == "5":
         if _spare.eligiblestock < _spare.minimum:
-            return HttpResponseRedirect('/view_sparebill/?msg=库存不足，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
+            return HttpResponseRedirect('/view_sparebill/?msg=合格品库存低于最小库存，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
         else:
             return HttpResponseRedirect('/view_sparebill')
     else:
         if _spare.eligiblestock < _spare.minimum:
-            return HttpResponseRedirect('/view_sparecount/?msg=库存不足，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
+            return HttpResponseRedirect('/view_sparecount/?msg=合格品库存低于最小库存，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
         else:
             return HttpResponseRedirect('/view_sparecount')
 
