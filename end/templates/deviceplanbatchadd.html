@@ -293,7 +293,7 @@ function process_wb(wb) {
             for (var key in obj) {
                 data_array.push(obj[key]);
             }
-            if (data_array.length == 11) {
+            if (data_array.length == 6) {
                 $('#maintenance').dataTable().fnAddData(data_array);
             } else {
                 $.gritter.add({
