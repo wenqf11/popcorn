@@ -4350,13 +4350,15 @@ def submit_sparecount(request):
         _sparecount.save()
         return HttpResponseRedirect('/view_sparecount')
 
-    ## check if the stock has enough quantity
-    _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+    ## check if spare stock has enough quantity
     _sparecount == None
     _sparecountcount = 0
     if _id != '':
         _sparecount = k_sparecount.objects.get(id=_id)
         _sparecountcount = _sparecount.count
+        _spare = k_spare.objects.get(id=_sparecount.spareid_id)
+    else:
+        _spare = k_spare.objects.get(brief=_brief)
     calcueligible = 0
     calcuineligible = 0
     if _sparecount == None or _iseligible == _sparecount.iseligible:
