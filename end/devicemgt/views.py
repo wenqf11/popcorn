@@ -4375,14 +4375,14 @@ def submit_sparecount(request):
             calcuineligible = _spare.ineligiblestock + _count
     if calcueligible < 0:
         if _state == "5":
-            return HttpResponseRedirect('/view_sparebill/?msg=合格品库存不足')
+            return HttpResponseRedirect('/view_sparebill/?msg=操作失败，合格品库存不足')
         else:
-            return HttpResponseRedirect('/view_sparecount/?msg=合格品库存不足')
+            return HttpResponseRedirect('/view_sparecount/?msg=操作失败，合格品库存不足')
     if calcuineligible < 0:
         if _state == "5":
-            return HttpResponseRedirect('/view_sparebill/?msg=不合格品库存不足')
+            return HttpResponseRedirect('/view_sparebill/?msg=操作失败，不合格品库存不足')
         else:
-            return HttpResponseRedirect('/view_sparecount/?msg=不合格品库存不足')
+            return HttpResponseRedirect('/view_sparecount/?msg=操作失败，不合格品库存不足')
     ## end check
 
     if _id != '':
@@ -4428,12 +4428,12 @@ def submit_sparecount(request):
     _sparecount.save()
     if _state == "5":
         if _spare.eligiblestock < _spare.minimum:
-            return HttpResponseRedirect('/view_sparebill/?msg=合格品库存低于最小库存，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
+            return HttpResponseRedirect('/view_sparebill/?msg=操作成功，但合格品库存低于最小库存，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
         else:
             return HttpResponseRedirect('/view_sparebill')
     else:
         if _spare.eligiblestock < _spare.minimum:
-            return HttpResponseRedirect('/view_sparecount/?msg=合格品库存低于最小库存，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
+            return HttpResponseRedirect('/view_sparecount/?msg=操作成功，但合格品库存低于最小库存，需补'+str(_spare.minimum-_spare.eligiblestock)+'个')
         else:
             return HttpResponseRedirect('/view_sparecount')
 
@@ -5137,6 +5137,41 @@ def submit_toolcount(request):
         _toolcount.auditdatetime = get_current_date()
         _toolcount.save()
         return HttpResponseRedirect('/view_toolcount')
+
+    ## check if tool stock has enough quantity
+    _toolcount = None
+    _toolcountcount = 0
+    if _id != '':
+        _toolcount = k_toolcount.objects.get(id=_id)
+        _toolcountcount = _toolcount.count
+        _tool = k_tool.objects.get(id=_toolcount.toolid_id)
+    else:
+        _tool = k_tool.objects.get(brief=_brief)
+    calcueligible = 0
+    calcuineligible = 0
+    if _toolcount == None or _iseligible == _toolcount.iseligible:
+        if _iseligible == "1":
+            calcueligible = _tool.eligiblestock - _toolcountcount + _count
+        else:
+            calcuineligible = _tool.ineligiblestock - _toolcountcount + _count
+    else:
+        if _iseligible == "1":
+            calcuineligible = _tool.ineligiblestock - _toolcountcount
+            calcueligible = _tool.eligiblestock + _count
+        else:
+            calcueligible = _tool.eligiblestock - _toolcountcount
+            calcuineligible = _tool.ineligiblestock + _count
+    if calcueligible < 0:
+        if _state == "5":
+            return HttpResponseRedirect('/view_tooluse/?msg=操作失败，合格品库存不足')
+        else:
+            return HttpResponseRedirect('/view_toolcount/?msg=操作失败，合格品库存不足')
+    if calcuineligible < 0:
+        if _state == "5":
+            return HttpResponseRedirect('/view_tooluse/?msg=操作失败，不合格品库存不足')
+        else:
+            return HttpResponseRedirect('/view_toolcount/?msg=操作失败，不合格品库存不足')
+    ## end check
     if _id != '':
         _toolcount = k_toolcount.objects.get(id=_id)
         _toolcount.editorid = _user.id
@@ -5180,12 +5215,12 @@ def submit_toolcount(request):
     _toolcount.save()
     if _state == "5":
         if _tool.eligiblestock < _tool.minimum:
-            return HttpResponseRedirect('/view_tooluse/?msg=库存不足，需补'+str(_tool.minimum-_tool.eligiblestock)+'个')
+            return HttpResponseRedirect('/view_tooluse/?msg=操作成功，但合格品库存低于最小库存，需补'+str(_tool.minimum-_tool.eligiblestock)+'个')
         else:
             return HttpResponseRedirect('/view_tooluse')
     else:
         if _tool.eligiblestock < _tool.minimum:
-            return HttpResponseRedirect('/view_toolcount/?msg=库存不足，需补'+str(_tool.minimum-_tool.eligiblestock)+'个')
+            return HttpResponseRedirect('/view_toolcount/?msg=操作成功，但合格品库存低于最小库存，需补'+str(_tool.minimum-_tool.eligiblestock)+'个')
         else:
             return HttpResponseRedirect('/view_toolcount')
 
