@@ -34,11 +34,7 @@ def perform_command(cmd, inc):
     	_startday = _maintenance.assigndatetime.date()
     	_endday = get_endday(_startday, _dp.period)
     	if _today <= _endday:
-    		if _maintenance.state != '4' and _maintenance.state != '5':
-    			_maintenance.createdatetime = get_current_time()
-    			_maintenance.assigndatetime = get_current_time()
-    			_maintenance.save()
-    		else:
+    		if _maintenance.state == '4' or _maintenance.state == '5':
     			_newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
     			_newmaintenance.creatorid = _maintenance.creatorid
     			_newmaintenance.assignorid = _maintenance.assignorid
@@ -51,6 +47,11 @@ def perform_command(cmd, inc):
     			_newmaintenance.save()
     			_dp.maintenanceid_id = _newmaintenance.id
     			_dp.save()
+        else:
+            if _maintenance.state != '4' and _maintenance.state != '5':
+                _maintenance.createdatetime = get_current_time()
+                _maintenance.assigndatetime = get_current_time()
+                _maintenance.save()
         
 def timming_exe(cmd, inc):
     schedule.enter(inc, 0, perform_command, (cmd, 86400))
