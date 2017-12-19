@@ -110,29 +110,29 @@ def perform_command():
     for _dp in _deviceplans:
         try:
             _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
+            _startday = _maintenance.assigndatetime.date()
+            _endday = get_endday(_startday, _dp.period)
+            if _today < _endday
+                if _maintenance.state == '4' or _maintenance.state == '5':
+                    _newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
+                    _newmaintenance.creatorid = _maintenance.creatorid
+                    _newmaintenance.assignorid = _maintenance.assignorid
+                    _newmaintenance.assigndatetime = get_current_time()
+                    _newmaintenance.title = _maintenance.title
+                    _newmaintenance.createcontent = _maintenance.createcontent
+                    _newmaintenance.editorid = _maintenance.editorid
+                    _newmaintenance.memo = _maintenance.memo
+                    _newmaintenance.state = 2
+                    _newmaintenance.save()
+                    _dp.maintenanceid_id = _newmaintenance.id
+                    _dp.save()
+            else:
+                if _maintenance.state != '4' and _maintenance.state != '5':
+                    _maintenance.createdatetime = get_current_time()
+                    _maintenance.assigndatetime = get_current_time()
+                    _maintenance.save()
         except:
-            continue
-        _startday = _maintenance.assigndatetime.date()
-        _endday = get_endday(_startday, _dp.period)
-        if _today < _endday
-            if _maintenance.state == '4' or _maintenance.state == '5':
-                _newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
-                _newmaintenance.creatorid = _maintenance.creatorid
-                _newmaintenance.assignorid = _maintenance.assignorid
-                _newmaintenance.assigndatetime = get_current_time()
-                _newmaintenance.title = _maintenance.title
-                _newmaintenance.createcontent = _maintenance.createcontent
-                _newmaintenance.editorid = _maintenance.editorid
-                _newmaintenance.memo = _maintenance.memo
-                _newmaintenance.state = 2
-                _newmaintenance.save()
-                _dp.maintenanceid_id = _newmaintenance.id
-                _dp.save()
-        else:
-            if _maintenance.state != '4' and _maintenance.state != '5':
-                _maintenance.createdatetime = get_current_time()
-                _maintenance.assigndatetime = get_current_time()
-                _maintenance.save()
+            donothing = True
 
 # 查找权限集合并返回
 def get_purviews_and_render_to_response(username, page, variables={}):
