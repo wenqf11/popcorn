@@ -26,6 +26,7 @@ def get_endday(st, prd):
 		return st + timedelta(days=730)
 
 def perform_command(cmd, inc):
+    print "haha"
     _deviceplans = k_deviceplan.objects.all()
     _today = date.today()
     for _dp in _deviceplans:
@@ -61,8 +62,14 @@ def timming_exe(cmd, inc):
 def thread_fun(remainedsec):
     timming_exe("123", remainedsec)
 
+print "123"
 schedule = sched.scheduler(time.time, time.sleep)
+print "123"
 nowtime = time.localtime(time.time())
+print "123"
 remainedsec = 86400-(nowtime.tm_hour*3600+nowtime.tm_min*60+nowtime.tm_sec)-60
+print "123"
 thread = threading.Thread(target = thread_fun, args = (remainedsec,))
+print "123"
 thread.start()
+print "123"
