@@ -19,6 +19,7 @@ from helper import handle_uploaded_file, get_current_time, get_current_date, get
 import json
 import xlwt
 import re
+import time
 
 
 purviewhash = {
@@ -176,7 +177,7 @@ def check_purview(username, pid):
 # 首页
 @login_required
 def index(request):
-    perform_command()
+    # perform_command()
     # 登陆成功
     user = k_user.objects.get(username=request.user.username)
     data = dict()
