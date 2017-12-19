@@ -108,16 +108,13 @@ def perform_command():
     _deviceplans = k_deviceplan.objects.all()
     _today = date.today()
     for _dp in _deviceplans:
-        _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
+        try:
+            _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
+        except:
+            continue
         _startday = _maintenance.assigndatetime.date()
-        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-            print >> f, "fds"
         _endday = get_endday(_startday, _dp.period)
-        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-            print >> f, "fds"
-        if _today < _endday:
-            with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-                print >> f, "fds"
+        if _today < _endday
             if _maintenance.state == '4' or _maintenance.state == '5':
                 _newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
                 _newmaintenance.creatorid = _maintenance.creatorid
@@ -132,8 +129,6 @@ def perform_command():
                 _dp.maintenanceid_id = _newmaintenance.id
                 _dp.save()
         else:
-            with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-                print >> f, "fds"
             if _maintenance.state != '4' and _maintenance.state != '5':
                 _maintenance.createdatetime = get_current_time()
                 _maintenance.assigndatetime = get_current_time()
