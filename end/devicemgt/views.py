@@ -105,13 +105,13 @@ def get_endday(self, st, prd):
         return st + timedelta(days=730)
 
 def perform_command():
-    with open("123.txt", 'a+') as f:
+    with open("E:\wwwroot\popcorn\end\123.txt", 'a+') as f:
         print >> f, "fds"
     _deviceplans = k_deviceplan.objects.all()
-    with open("123.txt", 'a+') as f:
+    with open("E:\wwwroot\popcorn\end\123.txt", 'a+') as f:
         print >> f, "fds"
     _today = date.today()
-    with open("123.txt", 'a+') as f:
+    with open("E:\wwwroot\popcorn\end\123.txt", 'a+') as f:
         print >> f, "fds"
     for _dp in _deviceplans:
         _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
