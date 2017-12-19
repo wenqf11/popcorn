@@ -112,7 +112,7 @@ def perform_command():
             _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
             _startday = _maintenance.assigndatetime.date()
             _endday = get_endday(_startday, _dp.period)
-            if _today < _endday
+            if _today < _endday:
                 if _maintenance.state == '4' or _maintenance.state == '5':
                     _newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
                     _newmaintenance.creatorid = _maintenance.creatorid
