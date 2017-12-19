@@ -81,6 +81,55 @@ purviewhash = {
 }
 
 
+def get_endday(self, st, prd):
+    if prd == "day":
+        return st + timedelta(days=1)
+    elif prd == "week":
+        return st + timedelta(days=7)
+    elif prd == "halfmonth":
+        return st + timedelta(days=15)
+    elif prd == "month":
+        return st + timedelta(days=30)
+    elif prd == "twomonth":
+        return st + timedelta(days=61)
+    elif prd == "threemonth":
+        return st + timedelta(days=91)
+    elif prd == "fourmonth":
+        return st + timedelta(days=121)
+    elif prd == "halfyear":
+        return st + timedelta(days=182)
+    elif prd == "year":
+        return st + timedelta(days=365)
+    elif prd == "twoyear":
+        return st + timedelta(days=730)
+
+def perform_command():
+    _deviceplans = k_deviceplan.objects.all()
+    _today = date.today()
+    for _dp in _deviceplans:
+        _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
+        _startday = _maintenance.assigndatetime.date()
+        _endday = get_endday(_startday, _dp.period)
+        if _today < _endday:
+            if _maintenance.state == '4' or _maintenance.state == '5':
+                _newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
+                _newmaintenance.creatorid = _maintenance.creatorid
+                _newmaintenance.assignorid = _maintenance.assignorid
+                _newmaintenance.assigndatetime = get_current_time()
+                _newmaintenance.title = _maintenance.title
+                _newmaintenance.createcontent = _maintenance.createcontent
+                _newmaintenance.editorid = _maintenance.editorid
+                _newmaintenance.memo = _maintenance.memo
+                _newmaintenance.state = 2
+                _newmaintenance.save()
+                _dp.maintenanceid_id = _newmaintenance.id
+                _dp.save()
+        else:
+            if _maintenance.state != '4' and _maintenance.state != '5':
+                _maintenance.createdatetime = get_current_time()
+                _maintenance.assigndatetime = get_current_time()
+                _maintenance.save()
+
 # 查找权限集合并返回
 def get_purviews_and_render_to_response(username, page, variables={}):
     _user = k_user.objects.get(username=username)
@@ -127,6 +176,7 @@ def check_purview(username, pid):
 # 首页
 @login_required
 def index(request):
+    perform_command()
     # 登陆成功
     user = k_user.objects.get(username=request.user.username)
     data = dict()
