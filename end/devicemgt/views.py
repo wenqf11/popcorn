@@ -105,8 +105,14 @@ def get_endday(self, st, prd):
         return st + timedelta(days=730)
 
 def perform_command():
+    with open("123.txt", 'a+') as f:
+        print >> f, "fds"
     _deviceplans = k_deviceplan.objects.all()
+    with open("123.txt", 'a+') as f:
+        print >> f, "fds"
     _today = date.today()
+    with open("123.txt", 'a+') as f:
+        print >> f, "fds"
     for _dp in _deviceplans:
         _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
         _startday = _maintenance.assigndatetime.date()
@@ -177,7 +183,6 @@ def check_purview(username, pid):
 # 首页
 @login_required
 def index(request):
-    # perform_command()
     # 登陆成功
     user = k_user.objects.get(username=request.user.username)
     data = dict()
@@ -208,6 +213,7 @@ def index(request):
         'useravatar': user.avatar,
         'data': data
     })
+    perform_command()
     return get_purviews_and_render_to_response(request.user.username, 'index.html', variables)
 
 
