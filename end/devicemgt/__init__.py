@@ -8,11 +8,17 @@ __All__ = ["InitThread"]
 class InitThread:
 
     def __init__(self):
+        print 1233
         self.schedule = sched.scheduler(time.time, time.sleep)
+        print 1233fd
         nowtime = time.localtime(time.time())
+        print 1233fdf
         remainedsec = 4#86400-(nowtime.tm_hour*3600+nowtime.tm_min*60+nowtime.tm_sec)-60
+        print 1233dfdfd
         thread = threading.Thread(target = self.thread_fun, args = (remainedsec,))
+        print 1233fffffffff
         thread.start()
+        print 1233fd
 
     def get_endday(self, st, prd):
         if prd == "day":
