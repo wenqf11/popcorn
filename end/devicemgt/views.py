@@ -105,18 +105,20 @@ def get_endday(self, st, prd):
         return st + timedelta(days=730)
 
 def perform_command():
-    with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-        print >> f, "fds"
     _deviceplans = k_deviceplan.objects.all()
-    with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-        print >> f, "fds"
     _today = date.today()
-    with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-        print >> f, "fds"
     for _dp in _deviceplans:
+        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
+            print >> f, "fds"
         _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
+        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
+            print >> f, "fds"
         _startday = _maintenance.assigndatetime.date()
+        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
+            print >> f, "fds"
         _endday = get_endday(_startday, _dp.period)
+        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
+            print >> f, "fds"
         if _today < _endday:
             if _maintenance.state == '4' or _maintenance.state == '5':
                 _newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
