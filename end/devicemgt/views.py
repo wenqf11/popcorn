@@ -82,7 +82,7 @@ purviewhash = {
 }
 
 
-def get_endday(self, st, prd):
+def get_endday(st, prd):
     if prd == "day":
         return st + timedelta(days=1)
     elif prd == "week":
@@ -108,17 +108,9 @@ def perform_command():
     _deviceplans = k_deviceplan.objects.all()
     _today = date.today()
     for _dp in _deviceplans:
-        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-            print >> f, "fds"
         _maintenance = k_maintenance.objects.get(id=_dp.maintenanceid_id)
-        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-            print >> f, "fds"
         _startday = _maintenance.assigndatetime.date()
-        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-            print >> f, "fds"
         _endday = get_endday(_startday, _dp.period)
-        with open("E:\\wwwroot\\popcorn\\end\\123.txt", 'a+') as f:
-            print >> f, "fds"
         if _today < _endday:
             if _maintenance.state == '4' or _maintenance.state == '5':
                 _newmaintenance = k_maintenance.objects.create(mtype=1,classid=_maintenance.classid,deviceid_id=_maintenance.deviceid_id,state=2)
