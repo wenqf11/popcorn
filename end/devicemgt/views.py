@@ -2338,13 +2338,16 @@ def operate_route(request):
         all_form = k_form.objects.filter(classid__in=result)
         data['forms'] = []
         for _form in all_form:
-            _device = k_device.objects.get(brief=_form.brief)
-            data['forms'].append({
-                'id': _form.id,
-                'brief': _form.brief,
-                'name': _device.name,
-                'selected': str(_form.id) in _forms
-            })
+            try:
+                _device = k_device.objects.get(brief=_form.brief)
+                data['forms'].append({
+                    'id': _form.id,
+                    'brief': _form.brief,
+                    'name': _device.name,
+                    'selected': str(_form.id) in _forms
+                })
+            except:
+                pass
 
         data['routeString'] = _route.formid
 
