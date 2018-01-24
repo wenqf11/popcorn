@@ -30,6 +30,32 @@ def get_current_date():
     return time.strftime('%Y-%m-%d',time.localtime(time.time()))
 
 
+from datetime import datetime, timedelta
+def get_end_time(prd):
+    end_time = datetime.now() + timedelta(days=30)
+    if prd == "day":
+        end_time = datetime.now() + timedelta(days=1)
+    elif prd == "week":
+        end_time = datetime.now() + timedelta(days=7)
+    elif prd == "halfmonth":
+        end_time = datetime.now() + timedelta(days=15)
+    elif prd == "month":
+        end_time = datetime.now() + timedelta(days=30)
+    elif prd == "twomonth":
+        end_time = datetime.now() + timedelta(days=61)
+    elif prd == "threemonth":
+        end_time = datetime.now() + timedelta(days=91)
+    elif prd == "fourmonth":
+        end_time = datetime.now() + timedelta(days=121)
+    elif prd == "halfyear":
+        end_time = datetime.now() + timedelta(days=182)
+    elif prd == "year":
+        end_time = datetime.now() + timedelta(days=365)
+    elif prd == "twoyear":
+        end_time = datetime.now() + timedelta(days=730)
+    return end_time.strftime('%Y-%m-%d %H:%M:%S')
+
+
 # 获取设备的节点树
 def get_device_node(devicetypes, type_parent, class_parent):
     datas = list()

@@ -9,7 +9,7 @@ from models import *
 from datetime import date, datetime, time, timedelta
 from django.contrib.auth.hashers import make_password, check_password
 from .views import get_class_set
-from helper import get_current_date
+from helper import get_current_date, get_end_time
 import json, random
 
 
@@ -460,7 +460,8 @@ def app_maintain_list_1(request, para, user):
     tasks = k_maintenance.objects.filter(
         mtype='1',
         editorid=user.id,
-        state__in=['2', '3','a']
+        state__in=['2', '3','a'],
+        assigndatetime__lte=date.today()
     )
 
     data = [{
@@ -618,6 +619,19 @@ def app_maintain_submit(request, para, user):
     task.state = '4'
     task.editcontent = para['note']
     task.save()
+    dp = k_deviceplan.objects.get(maintenanceid_id=task.id)
+    newtask = k_maintenance.objects.create(mtype=1,classid=task.classid,deviceid_id=task.deviceid_id,state=2)
+    newtask.creatorid = task.creatorid
+    newtask.assignorid = task.assignorid
+    newtask.assigndatetime = get_end_time(dp.period)
+    newtask.title = task.title
+    newtask.createcontent = task.createcontent
+    newtask.editorid = task.editorid
+    newtask.memo = task.memo
+    newtask.state = 2
+    newtask.save()
+    dp.maintenanceid_id = newtask.id
+    dp.save()
     return HttpResponse(json.dumps({
         'status': 'ok',
         'data': 'maintain task submitted'

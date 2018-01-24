@@ -210,7 +210,7 @@ def index(request):
         'useravatar': user.avatar,
         'data': data
     })
-    perform_command()
+    # perform_command()
     return get_purviews_and_render_to_response(request.user.username, 'index.html', variables)
 
 
